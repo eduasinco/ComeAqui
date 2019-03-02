@@ -2,8 +2,6 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:title="@string/nav_get" android:icon="@drawable/getfood" android:id="@+id/nav_getfood"/>
-    <item android:title="@string/nav_Go" android:icon="@drawable/goeat" android:id="@+id/nav_goeat"/>
-    <item android:title="@string/nav_do" android:icon="@drawable/prepare" android:id="@+id/nav_prepare"/>
-    <item android:title="@string/nav_cash" android:icon="@drawable/receipt" android:id="@+id/nav_cash"/>
+    <item android:title="Go" android:icon="@drawable/prepare" android:id="@+id/nav_go"/>
     <item android:title="@string/nav_profile" android:icon="@drawable/profile" android:id="@+id/nav_profile"/>
 </menu>

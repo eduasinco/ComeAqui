@@ -9,31 +9,42 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import com.google.gson.*;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
-
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class GetFoodFragment extends Fragment {
 
+    public static ArrayList<String[]> data = new ArrayList<>();
+
     public GetFoodFragment() {
         // Required empty public constructor
     }
 
+    public static void makeList(String d){
+        try {
+            JsonElement root = new JsonParser().parse(d);
+            JsonElement jsonArray = root.getAsJsonObject().getAsJsonArray("data");
+            for (JsonElement je: jsonArray.getAsJsonArray()){
+                String food_photo = je.getAsJsonObject().get("food_photo").getAsString();
+                String plate_name = je.getAsJsonObject().get("plate_name").getAsString();
+                String price = je.getAsJsonObject().get("price").getAsString();
+                String description = je.getAsJsonObject().get("description").getAsString();
+                data.add(new String[]{food_photo, plate_name, price, description});
+            }
+            System.out.println(data.toString());
+        } catch (Exception e){
+            System.out.println(data.toString());
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        String[][] data = {
-                {Integer.toString(R.drawable.hamburger), "Lugar de la Comida", "Precio - 10.20$", "Descripcion de la Comida"},
-                {Integer.toString(R.drawable.hamburger2), "Lugar de la Comida", "Precio - 6.80$", "Descripcion de la Comida"},
-                {Integer.toString(R.drawable.hamburger3), "Lugar de la Comida", "Precio - 5.95$", "Descripcion de la Comida"},
-                {Integer.toString(R.drawable.hamburger4), "Lugar de la Comida", "Precio - 3.25$", "Descripcion de la Comida"},
-                {Integer.toString(R.drawable.hamburger5), "Lugar de la Comida", "Precio - 4.50$", "Descripcion de la Comida"}
-        };
-
 
         View view = inflater.inflate(R.layout.fragment_get_food, container, false);
         ListView list;
@@ -51,4 +62,7 @@ public class GetFoodFragment extends Fragment {
         return view;
     }
 
+    public static void setList(){
+
+    }
 }
