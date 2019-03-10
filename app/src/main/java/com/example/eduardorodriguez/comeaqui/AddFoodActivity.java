@@ -13,6 +13,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.*;
 
+import java.io.*;
+
 public class AddFoodActivity extends AppCompatActivity {
     EditText foodName;
     TextView price;
@@ -27,6 +29,7 @@ public class AddFoodActivity extends AppCompatActivity {
     boolean[] pressed = {false, false, false, false, false, false, false};
     String description_data;
     Bitmap imageBitmap;
+    InputStream is;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     @Override
@@ -36,6 +39,11 @@ public class AddFoodActivity extends AppCompatActivity {
             Bundle extras = data.getExtras();
             imageBitmap = (Bitmap) extras.get("data");
             imagePhoto.setImageBitmap(imageBitmap);
+
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+            byte[] bitmapdata = outputStream.toByteArray();
+            is = new ByteArrayInputStream(bitmapdata);
         }
     }
 
@@ -57,6 +65,12 @@ public class AddFoodActivity extends AppCompatActivity {
         description = (EditText) findViewById(R.id.description);
         submit = (Button) findViewById(R.id.submitButton);
 
+        submit.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         initialAnimations();
         foodName.setOnTouchListener(new View.OnTouchListener() {

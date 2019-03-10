@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
         Menu menu = mMainNav.getMenu();
         menu.findItem(R.id.nav_getfood).setIcon(R.drawable.goeatfill);
         setFragment(getFoodFragment);
+        GetFoodAsyncTask process = new GetFoodAsyncTask();
+        process.execute();
         mMainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -56,10 +58,14 @@ public class MainActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()){
                     case R.id.nav_getfood:
                         setFragment(getFoodFragment);
+                        GetFoodAsyncTask process = new GetFoodAsyncTask();
+                        process.execute();
                         toolbar.setTitle("Get");
                         menuItem.setIcon(R.drawable.goeatfill);
                         return true;
                     case R.id.nav_go:
+                        setFragment(profileFragment);
+                        toolbar.setTitle("Go");
                         menuItem.setIcon(R.drawable.preparefill);
                         return true;
                     case R.id.nav_profile:
@@ -73,9 +79,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-        GetFoodAsyncTask process = new GetFoodAsyncTask();
-        process.execute();
     }
     private void setFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();

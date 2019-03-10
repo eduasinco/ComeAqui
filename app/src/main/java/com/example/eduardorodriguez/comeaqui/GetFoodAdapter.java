@@ -2,9 +2,6 @@ package com.example.eduardorodriguez.comeaqui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +9,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 public class GetFoodAdapter extends BaseAdapter {
 
@@ -33,6 +27,11 @@ public class GetFoodAdapter extends BaseAdapter {
         inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
     }
 
+    public void addNewRow(ArrayList<String[]> data){
+        this.data = data;
+        this.notifyDataSetChanged();
+    }
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
@@ -41,8 +40,6 @@ public class GetFoodAdapter extends BaseAdapter {
         TextView price = (TextView) view.findViewById(R.id.price);
         ImageView foodImage = (ImageView) view.findViewById(R.id.foodImage);
 
-        ImageLoadTask it = new ImageLoadTask("http://127.0.0.1:8000" + data.get(position)[0], foodImage);
-        it.execute();
         food.setText(data.get(position)[1]);
         price.setText(data.get(position)[2]);
 

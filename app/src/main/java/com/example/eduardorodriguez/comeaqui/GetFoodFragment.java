@@ -10,8 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import com.google.gson.*;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -19,14 +17,16 @@ import java.util.ArrayList;
  */
 public class GetFoodFragment extends Fragment {
 
-    public static ArrayList<String[]> data = new ArrayList<>();
-
+    public static ArrayList<String[]> data;
+    static GetFoodAdapter fa;
+    static View view;
     public GetFoodFragment() {
         // Required empty public constructor
     }
 
     public static void makeList(String d){
         try {
+            data = new ArrayList<>();
             JsonElement root = new JsonParser().parse(d);
             JsonElement jsonArray = root.getAsJsonObject().getAsJsonArray("data");
             for (JsonElement je: jsonArray.getAsJsonArray()){
@@ -36,7 +36,7 @@ public class GetFoodFragment extends Fragment {
                 String description = je.getAsJsonObject().get("description").getAsString();
                 data.add(new String[]{food_photo, plate_name, price, description});
             }
-            System.out.println(data.toString());
+            fa.addNewRow(data);
         } catch (Exception e){
             System.out.println(data.toString());
         }
@@ -46,10 +46,11 @@ public class GetFoodFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_get_food, container, false);
+        view = inflater.inflate(R.layout.fragment_get_food, container, false);
         ListView list;
         list = (ListView) view.findViewById(R.id.getfoodlist);
-        list.setAdapter(new GetFoodAdapter(getActivity(), data));
+        fa = new GetFoodAdapter(getActivity(), data);
+        list.setAdapter(fa);
 
         FloatingActionButton myFab = (FloatingActionButton) view.findViewById(R.id.fab);
         myFab.setOnClickListener(new View.OnClickListener() {
