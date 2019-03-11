@@ -24,21 +24,24 @@ public class GetFoodFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static void makeList(String d){
+    public static void makeList(String jsonString){
         try {
             data = new ArrayList<>();
-            JsonElement root = new JsonParser().parse(d);
-            JsonElement jsonArray = root.getAsJsonObject().getAsJsonArray("data");
-            for (JsonElement je: jsonArray.getAsJsonArray()){
-                String food_photo = je.getAsJsonObject().get("food_photo").getAsString();
-                String plate_name = je.getAsJsonObject().get("plate_name").getAsString();
-                String price = je.getAsJsonObject().get("price").getAsString();
-                String description = je.getAsJsonObject().get("description").getAsString();
-                data.add(new String[]{food_photo, plate_name, price, description});
+            JsonParser parser = new JsonParser();
+            JsonObject rootObj = parser.parse(jsonString).getAsJsonObject();
+            JsonArray paymentsArray = rootObj.getAsJsonArray("data");
+            for (JsonElement pa : paymentsArray) {
+                JsonObject jo = pa.getAsJsonObject();
+                String plate_name = jo.get("plate_name").getAsString();
+                String price = jo.get("price").getAsString();
+                String description = jo.get("description").getAsString();
+                String food_photo = jo.get("food_photo").getAsString();
+                String[] add = new String[]{plate_name, price, description, food_photo};
+                data.add(add);
             }
             fa.addNewRow(data);
         } catch (Exception e){
-            System.out.println(data.toString());
+            e.printStackTrace();
         }
     }
 

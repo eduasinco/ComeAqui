@@ -68,7 +68,9 @@ public class AddFoodActivity extends AppCompatActivity {
         submit.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                PostAsyncTask post = new PostAsyncTask();
+                post.bitmap = imageBitmap;
+                post.execute();
             }
         });
 
