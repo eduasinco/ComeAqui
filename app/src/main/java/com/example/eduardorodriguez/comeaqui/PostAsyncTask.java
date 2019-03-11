@@ -16,15 +16,15 @@ import org.json.JSONObject;
 
 import java.io.*;
 
-public class PostAsyncTask extends AsyncTask<Void, Void, JSONObject>
+public class PostAsyncTask extends AsyncTask<String, Void, JSONObject>
 {
     Bitmap bitmap;
     @Override
-    protected JSONObject doInBackground(Void... params)
+    protected JSONObject doInBackground(String... params)
     {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100,baos);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] imageBytes = baos.toByteArray();
 
         HttpClient httpclient = new DefaultHttpClient();
@@ -35,13 +35,17 @@ public class PostAsyncTask extends AsyncTask<Void, Void, JSONObject>
         httpPost.setHeader("Content-type","multipart/form-data; boundary="+boundary);
 
         ByteArrayBody bab = new ByteArrayBody(imageBytes, "ANDROID.png");
-        StringBody name = new StringBody("ANDROID", ContentType.TEXT_PLAIN);
-        StringBody description = new StringBody("ANDROID", ContentType.TEXT_PLAIN);
+        StringBody name = new StringBody(params[0], ContentType.TEXT_PLAIN);
+        StringBody price = new StringBody(params[1], ContentType.TEXT_PLAIN);
+        StringBody types = new StringBody(params[2], ContentType.TEXT_PLAIN);
+        StringBody description = new StringBody(params[3], ContentType.TEXT_PLAIN);
 
         HttpEntity entity = MultipartEntityBuilder.create()
                 .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
                 .setBoundary(boundary)
                 .addPart("plate_name", name)
+                .addPart("price", price)
+                .addPart("food_type", types)
                 .addPart("description", description)
                 .addPart("food_photo", bab)
                 .build();
@@ -50,8 +54,16 @@ public class PostAsyncTask extends AsyncTask<Void, Void, JSONObject>
 
         try {
             HttpResponse response = httpclient.execute(httpPost);
-            System.out.println(response.toString());
-            return new JSONObject(response.toString());
+            InputStream instream = response.getEntity().getContent();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(instream));
+            StringBuffer stringBuffer = new StringBuffer();
+            String line;
+            while ((line = bufferedReader.readLine()) != null)
+            {
+                stringBuffer.append(line);
+            }
+            return new JSONObject(stringBuffer.toString());
+
         }  catch (Exception e){
             e.printStackTrace();
             return null;
@@ -64,7 +76,7 @@ public class PostAsyncTask extends AsyncTask<Void, Void, JSONObject>
         if(response != null)
         {
             System.out.print(response.toString());
-            GetFoodFragment.makeList(response.toString());
+            GetFoodFragment.appendToList(response.toString());
         }
     }
 }

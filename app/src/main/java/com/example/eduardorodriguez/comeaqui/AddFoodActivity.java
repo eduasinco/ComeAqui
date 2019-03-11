@@ -34,17 +34,24 @@ public class AddFoodActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        ImageView imagePhoto = (ImageView) findViewById(R.id.imagePhoto);
+        ImageView imagePhoto = findViewById(R.id.imagePhoto);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             imageBitmap = (Bitmap) extras.get("data");
             imagePhoto.setImageBitmap(imageBitmap);
-
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-            byte[] bitmapdata = outputStream.toByteArray();
-            is = new ByteArrayInputStream(bitmapdata);
         }
+    }
+
+    public String setTypes(){
+        StringBuilder types = new StringBuilder();
+        for (boolean p: pressed){
+            if (p) {
+               types.append(1);
+            }else{
+                types.append(0);
+            }
+        }
+        return types.toString();
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -57,20 +64,26 @@ public class AddFoodActivity extends AppCompatActivity {
                 R.array.order_choices, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        foodName = (EditText) findViewById(R.id.foodName);
-        price = (TextView) findViewById(R.id.price);
-        image = (ImageView) findViewById(R.id.image);
-        seekbar = (SeekBar) findViewById(R.id.seekBar);
-        descriptionLayout = (ConstraintLayout) findViewById(R.id.descriptionLayout);
-        description = (EditText) findViewById(R.id.description);
-        submit = (Button) findViewById(R.id.submitButton);
+        foodName = findViewById(R.id.foodName);
+        price = findViewById(R.id.price);
+        image = findViewById(R.id.image);
+        seekbar = findViewById(R.id.seekBar);
+        descriptionLayout = findViewById(R.id.descriptionLayout);
+        description = findViewById(R.id.description);
+        submit = findViewById(R.id.submitButton);
 
         submit.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PostAsyncTask post = new PostAsyncTask();
                 post.bitmap = imageBitmap;
-                post.execute();
+                post.execute(
+                        plateName,
+                        price_data.toString(),
+                        setTypes(),
+                        description.getText().toString()
+                );
+
             }
         });
 
@@ -79,6 +92,7 @@ public class AddFoodActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 foodName.setHint("");
+                plateName = foodName.getText().toString();
                 return false;
             }
         });
