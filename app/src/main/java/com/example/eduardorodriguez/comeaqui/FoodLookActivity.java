@@ -3,8 +3,12 @@ package com.example.eduardorodriguez.comeaqui;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
 
 public class FoodLookActivity extends AppCompatActivity {
 
@@ -14,13 +18,44 @@ public class FoodLookActivity extends AppCompatActivity {
         setContentView(R.layout.activity_food_look);
 
         ImageView image = findViewById(R.id.foodLookImage);
+        TextView plateNameView = findViewById(R.id.name);
+        TextView descriptionView = findViewById(R.id.descriptionId);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
 
         if(b != null){
-            String path = b.getString("SRC");
+            String path = b.getString("src");
+            String name = b.getString("name");
+            String description = b.getString("des");
+            String types = b.getString("types");
+            plateNameView.setText(name);
+            descriptionView.setText(description);
             Glide.with(this).load(path).into(image);
+
+            ArrayList<ImageView> imageViewArrayList = new ArrayList<>();
+            imageViewArrayList.add((ImageView) findViewById(R.id.vegetarian));
+            imageViewArrayList.add((ImageView) findViewById(R.id.vegan));
+            imageViewArrayList.add((ImageView) findViewById(R.id.celiac));
+            imageViewArrayList.add((ImageView) findViewById(R.id.spicy));
+            imageViewArrayList.add((ImageView) findViewById(R.id.fish));
+            imageViewArrayList.add((ImageView) findViewById(R.id.meat));
+            imageViewArrayList.add((ImageView) findViewById(R.id.dairy));
+            int[] resources = new int[]{
+                    R.drawable.vegetarianfill,
+                    R.drawable.veganfill,
+                    R.drawable.cerealfill,
+                    R.drawable.spicyfill,
+                    R.drawable.fishfill,
+                    R.drawable.meatfill,
+                    R.drawable.dairyfill,
+            };
+
+            for (int i = 0; i < types.length(); i++){
+                if (types.charAt(i) == '1'){
+                    imageViewArrayList.get(i).setImageResource(resources[i]);
+                }
+            }
         }
     }
 }

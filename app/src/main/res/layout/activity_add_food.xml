@@ -76,6 +76,13 @@
             app:layout_constraintTop_toBottomOf="@+id/descriptionLayout"
             app:layout_constraintBottom_toTopOf="@+id/submitButton"/>
     <ImageView
+            android:background="@null"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" app:srcCompat="@android:drawable/ic_menu_camera"
+            android:id="@+id/photo"
+            app:layout_constraintEnd_toStartOf="@+id/guideline9" android:layout_marginEnd="8dp"
+            app:layout_constraintTop_toTopOf="@+id/description" android:layout_marginTop="8dp"/>
+    <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imagePhoto" app:layout_constraintEnd_toStartOf="@+id/guideline9"
@@ -90,44 +97,39 @@
     <android.support.constraint.ConstraintLayout
             android:layout_width="0dp"
             android:background="#ffffff"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             app:layout_constraintStart_toStartOf="@+id/guideline8"
             app:layout_constraintEnd_toStartOf="@+id/guideline9"
-            android:id="@+id/descriptionLayout" app:layout_constraintTop_toBottomOf="@+id/textView7">
+            android:id="@+id/descriptionLayout" app:layout_constraintTop_toBottomOf="@+id/textView7"
+            app:layout_constraintHorizontal_bias="0.0">
 
         <ImageView
-                android:background="@null"
-                android:layout_width="60dp"
-                android:layout_height="0dp" app:srcCompat="@android:drawable/ic_menu_camera"
-                android:id="@+id/photo"
-                app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-        />
-        <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="21dp"
                 android:layout_height="0dp" app:srcCompat="@drawable/vegetarian"
                 android:id="@+id/vegetarian"
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"/>
+                app:layout_constraintVertical_bias="0.0" app:layout_constraintEnd_toStartOf="@+id/vegan"
+                android:layout_marginEnd="16dp"/>
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="0dp" app:srcCompat="@drawable/vegan"
                 android:id="@+id/vegan"
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/vegetarian" android:layout_marginStart="16dp"/>
+                app:layout_constraintEnd_toStartOf="@+id/cereal" android:layout_marginEnd="16dp"/>
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="0dp" app:srcCompat="@drawable/cereal"
                 android:id="@+id/cereal" app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toEndOf="@+id/vegan"
-                android:layout_marginStart="16dp"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/spicy" android:layout_marginEnd="16dp"/>
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="0dp" app:srcCompat="@drawable/spicy"
                 android:id="@+id/spicy"
-                app:layout_constraintStart_toEndOf="@+id/cereal" android:layout_marginStart="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp"/>
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="0dp" app:srcCompat="@drawable/fish"
@@ -148,7 +150,8 @@
                 android:id="@+id/dairy"
                 app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/meat" android:layout_marginStart="16dp"/>
+                app:layout_constraintStart_toEndOf="@+id/meat" android:layout_marginStart="16dp"
+        />
     </android.support.constraint.ConstraintLayout>
     <Button
             android:text="Submit"

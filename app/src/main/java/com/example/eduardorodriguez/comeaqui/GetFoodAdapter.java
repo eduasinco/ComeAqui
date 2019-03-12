@@ -38,19 +38,25 @@ public class GetFoodAdapter extends BaseAdapter {
 
         final View view = inflater.inflate(R.layout.getfood_list_element, null);
         final TextView food_name = view.findViewById(R.id.foodName);
-        TextView price = view.findViewById(R.id.price);
-        TextView description = view.findViewById(R.id.description);
+        TextView priceView = view.findViewById(R.id.price);
+        TextView descriptionView = view.findViewById(R.id.description);
         ImageView imageView = view.findViewById(R.id.foodImage);
-        food_name.setText(data.get(position)[0]);
-        String priceText = data.get(position)[1] + "€";
-        price.setText(priceText);
-        setTypes(view, data.get(position)[2]);
-        String descriptionText = data.get(position)[3];
-        description.setText(descriptionText);
+
+        String nameText = data.get(position)[0];
+        String priceText = data.get(position)[1];
+        final String typesText = data.get(position)[2];
+        final String descriptionText = data.get(position)[3];
+        String pathText = data.get(position)[4];
+
+        food_name.setText(nameText);
+        String priceTextE = priceText + "€";
+        priceView.setText(priceTextE);
+        setTypes(view, typesText);
+        descriptionView.setText(descriptionText);
 
         final StringBuilder path = new StringBuilder();
         path.append("http://127.0.0.1:8000");
-        path.append(data.get(position)[4]);
+        path.append(pathText);
 
 
         Glide.with(context).load(path.toString()).into(imageView);
@@ -60,7 +66,10 @@ public class GetFoodAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent foodLook = new Intent(context, FoodLookActivity.class);
-                foodLook.putExtra("SRC", path.toString());
+                foodLook.putExtra("src", path.toString());
+                foodLook.putExtra("name", food_name.getText().toString());
+                foodLook.putExtra("des", descriptionText);
+                foodLook.putExtra("types", typesText);
                 context.startActivity(foodLook);
             }
 
