@@ -42,7 +42,7 @@ public class GetFoodAdapter extends BaseAdapter {
         TextView description = view.findViewById(R.id.description);
         ImageView imageView = view.findViewById(R.id.foodImage);
         food_name.setText(data.get(position)[0]);
-        String priceText = data.get(position)[1] + " €";
+        String priceText = data.get(position)[1] + "€";
         price.setText(priceText);
         setTypes(view, data.get(position)[2]);
         String descriptionText = data.get(position)[3];

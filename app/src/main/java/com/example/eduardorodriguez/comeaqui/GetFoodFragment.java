@@ -4,22 +4,29 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.google.gson.*;
 
 import java.util.ArrayList;
+
+import static com.example.eduardorodriguez.comeaqui.R.layout.fragment_get_food;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class GetFoodFragment extends Fragment {
 
+    SwipeRefreshLayout pullToRefresh;
+
     public static ArrayList<String[]> data;
     static GetFoodAdapter fa;
     static View view;
+
     public GetFoodFragment() {
         // Required empty public constructor
     }
@@ -62,11 +69,22 @@ public class GetFoodFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.fragment_get_food, container, false);
-        ListView list;
-        list =  view.findViewById(R.id.getfoodlist);
+        super.onCreate(savedInstanceState);
+        view = inflater.inflate(fragment_get_food, container, false);
+        pullToRefresh = view.findViewById(R.id.pullToRefresh);
         fa = new GetFoodAdapter(getActivity(), data);
-        list.setAdapter(fa);
+
+        ListView listView = view.findViewById(R.id.getfoodlist);
+        listView.setAdapter(fa);
+
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                GetFoodAsyncTask process = new GetFoodAsyncTask();
+                process.execute();
+                pullToRefresh.setRefreshing(false);
+            }
+        });
 
         FloatingActionButton myFab =  view.findViewById(R.id.fab);
         myFab.setOnClickListener(new View.OnClickListener() {

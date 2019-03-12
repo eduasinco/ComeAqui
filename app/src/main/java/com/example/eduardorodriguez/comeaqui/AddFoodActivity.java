@@ -127,7 +127,7 @@ public class AddFoodActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
                 price_data = (float) progress/100;
-                String priceText = String.format("%.02f", price_data) + " $";
+                String priceText = String.format("%.02f", price_data) + "€";
                 price.setText(priceText);
             }
         });
