@@ -2,10 +2,7 @@ package com.example.eduardorodriguez.comeaqui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +10,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -47,10 +42,11 @@ public class GetFoodAdapter extends BaseAdapter {
         TextView description = view.findViewById(R.id.description);
         ImageView imageView = view.findViewById(R.id.foodImage);
         food_name.setText(data.get(position)[0]);
-        String priceText = data.get(position)[1] + " $";
+        String priceText = data.get(position)[1] + " €";
         price.setText(priceText);
         setTypes(view, data.get(position)[2]);
-        description.setText(data.get(position)[3]);
+        String descriptionText = data.get(position)[3];
+        description.setText(descriptionText);
 
         final StringBuilder path = new StringBuilder();
         path.append("http://127.0.0.1:8000");

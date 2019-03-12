@@ -78,11 +78,17 @@ public class AddFoodActivity extends AppCompatActivity {
                 PostAsyncTask post = new PostAsyncTask();
                 post.bitmap = imageBitmap;
                 post.execute(
-                        plateName,
+                        foodName.getText().toString(),
                         price_data.toString(),
                         setTypes(),
                         description.getText().toString()
                 );
+                try {
+                    Intent k = new Intent(AddFoodActivity.this, MainActivity.class);
+                    startActivity(k);
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -92,7 +98,6 @@ public class AddFoodActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 foodName.setHint("");
-                plateName = foodName.getText().toString();
                 return false;
             }
         });
