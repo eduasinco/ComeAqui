@@ -29,7 +29,6 @@
                 android:layout_width="100dp"
                 android:scaleType="centerCrop"
                 android:layout_height="100dp"
-                app:srcCompat="@drawable/hamburger"
                 android:id="@+id/foodImage"
                 android:background="#257701ff"
                 app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="10dp"

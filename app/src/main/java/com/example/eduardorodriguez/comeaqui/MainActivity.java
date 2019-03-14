@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         mMainNav = findViewById(R.id.main_nav);
 
         getFoodFragment = new GetFoodFragment();
+        goEatFragment = new GoEatFragment();
         profileFragment = new ProfileFragment();
 
         toolbar = findViewById(R.id.toolbar);
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                         menuItem.setIcon(R.drawable.goeatfill);
                         return true;
                     case R.id.nav_go:
-                        setFragment(profileFragment);
+                        setFragment(goEatFragment);
                         toolbar.setTitle("Go");
                         menuItem.setIcon(R.drawable.preparefill);
                         return true;

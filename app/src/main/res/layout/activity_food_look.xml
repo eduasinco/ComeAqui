@@ -8,7 +8,6 @@
         tools:context=".FoodLookActivity">
 
     <ImageView
-            android:src="@drawable/hamburger4"
             android:scaleType="centerCrop"
             android:background="#257701ff"
             android:layout_width="0dp"
