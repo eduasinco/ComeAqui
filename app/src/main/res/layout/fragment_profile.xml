@@ -1,74 +1,74 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:context=".ScrollingActivity"
+        android:orientation="vertical">
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_width="match_parent"
+            app:layout_collapseMode="pin"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    <android.support.design.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+                android:id="@+id/app_bar"
+                android:fitsSystemWindows="true"
+                android:layout_height="300dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:theme="@style/AppTheme.AppBarOverlay">
 
-    <ImageView
-            android:id="@+id/header_imageview"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:scaleType="centerCrop"
-            android:adjustViewBounds="true"
-            android:src="@drawable/background"/>
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                <TextView android:layout_width="match_parent"
+                          android:layout_height="200dp"
+                          android:background="@color/colorAccent"
+                          android:gravity="center"/>
 
-    <LinearLayout
-            android:id="@+id/informations_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_below="@+id/header_imageview"
-            android:gravity="center"
-            android:paddingTop="32dp"
-            android:paddingBottom="32dp">
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp">
+                <TextView android:layout_width="match_parent"
+                          android:layout_height="56dp"
+                          android:gravity="center"/>
+
+            </LinearLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.widget.NestedScrollView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                tools:showIn="@layout/activity_scrolling"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".ScrollingActivity"
+                android:fillViewport="true">
+
+            <ListView
+                    android:id="@+id/fragment_dds_review_listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="vertical">
+            </ListView>
+
+        </android.support.v4.widget.NestedScrollView>
 
 
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="17dp" android:text="Eduardo Rodriguez Perez"/>
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:gravity="center"
-                android:textColor="#FF707070" android:text="eduasinco@gmail.com"/>
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textColor="#FF909090"
-                android:text="Pues soy un chico ejemplar que vive en la zona de guzman el buneo y hago unos platos que te cagas"
-                android:textAlignment="center"/>
-
-    </LinearLayout>
-
-    <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none"
-            android:layout_below="@+id/informations_container"
-            android:background="#FFF0F0F0">
-
-        <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-            <!-- Here are the tabs, Just TextViews with a selector and a clickListener... -->
-            <!-- There is also two views at each edge with a gradient drawable making the fade effect. But I find this pretty ugly. -->
-
-        </LinearLayout>
-    </HorizontalScrollView>
-
-    <!-- cheat code: negative margin -->
-    <ImageView
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_centerHorizontal="true"
-            android:layout_above="@+id/informations_container"
-            android:layout_marginBottom="-16dp" android:src="@drawable/no_profile_photo"
-            android:id="@+id/profile_photo"/>
-
-</RelativeLayout>
+    </android.support.design.widget.CoordinatorLayout>
+</LinearLayout>
