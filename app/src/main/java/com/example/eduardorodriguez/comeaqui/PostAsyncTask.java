@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -11,6 +12,7 @@ import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
@@ -28,10 +30,13 @@ public class PostAsyncTask extends AsyncTask<String, Void, JSONObject>
         byte[] imageBytes = baos.toByteArray();
 
         HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httpPost = new HttpPost("http://127.0.0.1:8000/get_food/");
+        HttpPost httpPost = new HttpPost("http://127.0.0.1:8000/foods/");
 
         String boundary = "-------------" + System.currentTimeMillis();
 
+        httpPost.addHeader(BasicScheme.authenticate(
+                new UsernamePasswordCredentials("eduasinco@gmail.com", "dQMLDQML1"),
+                "UTF-8", false));
         httpPost.setHeader("Content-type","multipart/form-data; boundary="+boundary);
 
         ByteArrayBody bab = new ByteArrayBody(imageBytes, "ANDROID.png");
