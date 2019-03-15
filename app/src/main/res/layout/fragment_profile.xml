@@ -90,40 +90,19 @@
                 </android.support.constraint.ConstraintLayout>
             </android.support.constraint.ConstraintLayout>
 
-            <android.support.constraint.ConstraintLayout
+            <android.support.design.widget.TabLayout
+                    android:id="@+id/tab_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                <TextView android:layout_width="0dp"
-                          android:layout_height="56dp"
-                          android:gravity="center" android:text="Previous posts"
-                          app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="24dp"
-                          app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="24dp"
-                          android:textAlignment="textStart" android:textStyle="bold"/>
-
-            </android.support.constraint.ConstraintLayout>
+                    android:layout_height="wrap_content"
+                    app:layout_scrollFlags="scroll|enterAlways"/>
 
         </android.support.design.widget.AppBarLayout>
 
-
-
-        <android.support.v4.widget.NestedScrollView
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        <android.support.v4.view.ViewPager
+                android:id="@+id/viewpager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".ProfileFragment"
-                android:fillViewport="true">
-
-            <ListView
-                    android:id="@+id/fragment_dds_review_listView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scrollbars="vertical">
-            </ListView>
-
-        </android.support.v4.widget.NestedScrollView>
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
     </android.support.design.widget.CoordinatorLayout>
