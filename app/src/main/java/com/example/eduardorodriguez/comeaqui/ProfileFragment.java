@@ -1,6 +1,5 @@
 package com.example.eduardorodriguez.comeaqui;
 
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -8,13 +7,9 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -23,6 +18,8 @@ import java.util.ArrayList;
 
 public class ProfileFragment extends Fragment {
 
+    public static ArrayList<String[]> data;
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -30,8 +27,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_profile, container, false);
 
         final CircularImageView circularImageView = view.findViewById(R.id.profile_image);
@@ -48,15 +43,10 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-
         ViewPager viewPager = view.findViewById(R.id.viewpager);
-        viewPager.setAdapter(new TestPagerAdapter(getFragmentManager()));
-
+        viewPager.setAdapter(new TestPagerAdapter(getChildFragmentManager()));
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
-
         tabLayout.setupWithViewPager(viewPager);
-
-
         return view;
     }
 
@@ -72,7 +62,6 @@ public class ProfileFragment extends Fragment {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
@@ -98,7 +87,8 @@ public class ProfileFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return "Tab " + (position + 1);
+            String[] titles = {"posts", "messages", "likes"};
+            return titles[position];
         }
     }
 
@@ -107,38 +97,31 @@ public class ProfileFragment extends Fragment {
         @Nullable
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
             View view = inflater.inflate(R.layout.tab_page, container, false);
-
-            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
+            RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView.setAdapter(new TestAdapter());
-
             return view;
         }
     }
 
     static class TestAdapter extends RecyclerView.Adapter<ViewHolder> {
-
         @Override
         public int getItemCount() {
-            return 100;
+            return GetFoodFragment.data.size();
         }
-
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.getfood_list_element, parent, false);
             return new ViewHolder(view);
         }
-
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            ((TextView) holder.itemView).setText("List Item " + (position + 1));
+            TextView foodNameView = holder.itemView.findViewById(R.id.foodName);
+            foodNameView.setText(GetFoodFragment.data.get(position)[0]);
         }
     }
-
     static class ViewHolder extends RecyclerView.ViewHolder {
-
         public ViewHolder(View itemView) {
             super(itemView);
         }
