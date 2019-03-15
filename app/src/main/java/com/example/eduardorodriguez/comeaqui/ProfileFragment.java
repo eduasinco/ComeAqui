@@ -1,7 +1,9 @@
 package com.example.eduardorodriguez.comeaqui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -77,7 +79,7 @@ public class ProfileFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            Fragment[] tabFragment = {new PostFragment(), new MessagesFragment(), new PostFragment()};
+            Fragment[] tabFragment = {new UserPostFragment(), new MessagesFragment(), new MessagesFragment()};
             return tabFragment[position];
         }
 
@@ -90,41 +92,6 @@ public class ProfileFragment extends Fragment {
         public CharSequence getPageTitle(int position) {
             String[] titles = {"posts", "messages", "likes"};
             return titles[position];
-        }
-    }
-
-    public static class PostFragment extends Fragment {
-
-        @Nullable
-        @Override
-        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.tab_page, container, false);
-            RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            recyclerView.setAdapter(new PostAdapter());
-            return view;
-        }
-    }
-
-    static class PostAdapter extends RecyclerView.Adapter<ViewHolder> {
-        @Override
-        public int getItemCount() {
-            return GetFoodFragment.data.size();
-        }
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.getfood_list_element, parent, false);
-            return new ViewHolder(view);
-        }
-        @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            TextView foodNameView = holder.itemView.findViewById(R.id.foodName);
-            foodNameView.setText(GetFoodFragment.data.get(position)[0]);
-        }
-    }
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        public ViewHolder(View itemView) {
-            super(itemView);
         }
     }
 
