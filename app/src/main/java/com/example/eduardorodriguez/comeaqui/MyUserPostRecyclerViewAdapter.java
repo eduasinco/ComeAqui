@@ -88,6 +88,7 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
                 foodLook.putExtra("name", food_name.getText().toString());
                 foodLook.putExtra("des", descriptionText);
                 foodLook.putExtra("types", typesText);
+                foodLook.putExtra("delete", true);
                 holder.mView.getContext().startActivity(foodLook);
             }
 

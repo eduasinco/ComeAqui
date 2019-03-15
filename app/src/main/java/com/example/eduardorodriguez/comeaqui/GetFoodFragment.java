@@ -35,9 +35,8 @@ public class GetFoodFragment extends Fragment {
         try {
             data = new ArrayList<>();
             JsonParser parser = new JsonParser();
-            JsonObject rootObj = parser.parse(jsonString).getAsJsonObject();
-            JsonArray paymentsArray = rootObj.getAsJsonArray("data");
-            for (JsonElement pa : paymentsArray) {
+            JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
+            for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
                 data.add(createStringArray(jo));
             }
@@ -80,7 +79,7 @@ public class GetFoodFragment extends Fragment {
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                GetFoodAsyncTask process = new GetFoodAsyncTask();
+                GetFoodAsyncTask process = new GetFoodAsyncTask("http://127.0.0.1:8000/foods/");
                 process.execute();
                 pullToRefresh.setRefreshing(false);
             }

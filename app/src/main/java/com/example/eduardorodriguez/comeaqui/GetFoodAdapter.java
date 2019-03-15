@@ -70,6 +70,7 @@ public class GetFoodAdapter extends BaseAdapter {
                 foodLook.putExtra("name", food_name.getText().toString());
                 foodLook.putExtra("des", descriptionText);
                 foodLook.putExtra("types", typesText);
+                foodLook.putExtra("delete", false);
                 context.startActivity(foodLook);
             }
 

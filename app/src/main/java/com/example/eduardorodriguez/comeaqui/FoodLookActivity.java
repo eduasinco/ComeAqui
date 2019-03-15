@@ -1,9 +1,11 @@
 package com.example.eduardorodriguez.comeaqui;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
@@ -20,6 +22,7 @@ public class FoodLookActivity extends AppCompatActivity {
         ImageView image = findViewById(R.id.foodLookImage);
         TextView plateNameView = findViewById(R.id.name);
         TextView descriptionView = findViewById(R.id.descriptionId);
+        Button addButtonView = findViewById(R.id.addButton);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -29,6 +32,7 @@ public class FoodLookActivity extends AppCompatActivity {
             String name = b.getString("name");
             String description = b.getString("des");
             String types = b.getString("types");
+            boolean delete = b.getBoolean("delete");
             plateNameView.setText(name);
             descriptionView.setText(description);
             Glide.with(this).load(path).into(image);
@@ -55,6 +59,10 @@ public class FoodLookActivity extends AppCompatActivity {
                 if (types.charAt(i) == '1'){
                     imageViewArrayList.get(i).setImageResource(resources[i]);
                 }
+            }
+            if (delete){
+                addButtonView.setText("Delete Post");
+                addButtonView.setBackgroundColor(Color.parseColor("#FFFF0E01"));
             }
         }
     }
