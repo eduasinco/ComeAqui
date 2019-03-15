@@ -70,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
                         menuItem.setIcon(R.drawable.preparefill);
                         return true;
                     case R.id.nav_profile:
+                        GetFoodAsyncTask process2 = new GetFoodAsyncTask();
+                        process2.execute();
                         setFragment(profileFragment);
                         toolbar.setTitle("Profile");
                         menuItem.setIcon(R.drawable.profilefill);

@@ -77,7 +77,8 @@ public class ProfileFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            return new TestFragment();
+            Fragment[] tabFragment = {new PostFragment(), new MessagesFragment(), new PostFragment()};
+            return tabFragment[position];
         }
 
         @Override
@@ -92,7 +93,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    public static class TestFragment extends Fragment {
+    public static class PostFragment extends Fragment {
 
         @Nullable
         @Override
@@ -100,12 +101,12 @@ public class ProfileFragment extends Fragment {
             View view = inflater.inflate(R.layout.tab_page, container, false);
             RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            recyclerView.setAdapter(new TestAdapter());
+            recyclerView.setAdapter(new PostAdapter());
             return view;
         }
     }
 
-    static class TestAdapter extends RecyclerView.Adapter<ViewHolder> {
+    static class PostAdapter extends RecyclerView.Adapter<ViewHolder> {
         @Override
         public int getItemCount() {
             return GetFoodFragment.data.size();
@@ -126,4 +127,5 @@ public class ProfileFragment extends Fragment {
             super(itemView);
         }
     }
+
 }
