@@ -11,7 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent;
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +31,10 @@ public class UserPostFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
+
+    private static ArrayList<String[]> data;
+    private static MyUserPostRecyclerViewAdapter adapter;
+
     private OnListFragmentInteractionListener mListener;
 
     /**
@@ -33,6 +42,39 @@ public class UserPostFragment extends Fragment {
      * fragment (e.g. upon screen orientation changes).
      */
     public UserPostFragment() {
+    }
+
+    public static void makeList(String jsonString){
+        try {
+            data = new ArrayList<>();
+            JsonParser parser = new JsonParser();
+            JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
+            for (JsonElement pa : jsonArray) {
+                JsonObject jo = pa.getAsJsonObject();
+                data.add(createStringArray(jo));
+            }
+            adapter.addNewRow(data);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void appendToList(String jsonString){
+        JsonParser parser = new JsonParser();
+        JsonObject rootObj = parser.parse(jsonString).getAsJsonObject();
+        JsonObject jo = rootObj.getAsJsonObject("data");
+        data.add(0, createStringArray(jo));
+        adapter.addNewRow(data);
+    }
+
+    public static String[] createStringArray(JsonObject jo){
+        String plate_name = jo.get("plate_name").getAsString();
+        String price = jo.get("price").getAsString();
+        String type = jo.get("food_type").getAsString();
+        String description = jo.get("description").getAsString();
+        String food_photo = jo.get("food_photo").getAsString();
+        String[] add = new String[]{plate_name, price, type, description, food_photo};
+        return add;
     }
 
     // TODO: Customize parameter initialization
@@ -68,7 +110,10 @@ public class UserPostFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyUserPostRecyclerViewAdapter(GetFoodFragment.data, mListener));
+            GetFoodAsyncTask process = new GetFoodAsyncTask(true);
+            process.execute();
+            this.adapter = new MyUserPostRecyclerViewAdapter(data, mListener);
+            recyclerView.setAdapter(this.adapter);
         }
         return view;
     }

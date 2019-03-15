@@ -25,12 +25,18 @@ import static com.example.eduardorodriguez.comeaqui.GetFoodAdapter.setTypes;
  */
 public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPostRecyclerViewAdapter.ViewHolder> {
 
-    private final ArrayList<String[]> mValues;
+    private ArrayList<String[]> mValues;
     private final OnListFragmentInteractionListener mListener;
+
 
     public MyUserPostRecyclerViewAdapter(ArrayList<String[]> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
+    }
+
+    public void addNewRow(ArrayList<String[]> data){
+        this.mValues = data;
+        this.notifyDataSetChanged();
     }
 
     @Override
@@ -97,8 +103,9 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mValues != null ? mValues.size(): 0;
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
@@ -108,7 +115,7 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            foodNameView = (TextView) view.findViewById(R.id.foodName);
+            foodNameView = view.findViewById(R.id.foodName);
         }
     }
 }

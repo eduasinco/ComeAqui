@@ -76,10 +76,11 @@ public class GetFoodFragment extends Fragment {
         ListView listView = view.findViewById(R.id.getfoodlist);
         listView.setAdapter(fa);
 
+        final GetFoodAsyncTask process = new GetFoodAsyncTask( false);
+        process.execute();
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                GetFoodAsyncTask process = new GetFoodAsyncTask("http://127.0.0.1:8000/foods/");
                 process.execute();
                 pullToRefresh.setRefreshing(false);
             }

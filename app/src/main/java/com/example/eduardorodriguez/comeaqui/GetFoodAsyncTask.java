@@ -1,9 +1,7 @@
 package com.example.eduardorodriguez.comeaqui;
 
 import android.os.AsyncTask;
-import android.util.Log;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonIOException;
+import android.widget.Adapter;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -13,17 +11,20 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import java.io.*;
-import java.net.URL;
 
 public class GetFoodAsyncTask extends AsyncTask<Void, Void, String>
 {
     String uri;
-    public GetFoodAsyncTask(String uri){
-        this.uri = uri;
+    boolean profile;
+    public GetFoodAsyncTask(boolean profile){
+        this.profile = profile;
+        this.uri = "http://127.0.0.1:8000/";
+        if (profile){
+            this.uri += "my_foods/";
+        }else{
+            this.uri += "foods/";
+        }
     }
     @Override
     protected String doInBackground(Void... params)
@@ -70,7 +71,11 @@ public class GetFoodAsyncTask extends AsyncTask<Void, Void, String>
     {
         if(response != null)
         {
-            GetFoodFragment.makeList(response);
+            if (this.profile){
+                UserPostFragment.makeList(response);
+            }else {
+                GetFoodFragment.makeList(response);
+            }
         }
     }
 }
