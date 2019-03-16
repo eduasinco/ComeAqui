@@ -2,11 +2,14 @@ package com.example.eduardorodriguez.comeaqui;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.util.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -29,14 +32,16 @@ public class PostAsyncTask extends AsyncTask<String, Void, JSONObject>
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] imageBytes = baos.toByteArray();
 
-        HttpClient httpclient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost("http://127.0.0.1:8000/foods/");
+        String credentials = "eduasinco@gmail.com" + ":" + "dQMLDQML1";
+        String auth = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+        httpPost.addHeader("Authorization", "Basic " + auth);
+
+        HttpClient httpclient = new DefaultHttpClient();
+
 
         String boundary = "-------------" + System.currentTimeMillis();
 
-        httpPost.addHeader(BasicScheme.authenticate(
-                new UsernamePasswordCredentials("eduasinco@gmail.com", "dQMLDQML1"),
-                "UTF-8", false));
         httpPost.setHeader("Content-type","multipart/form-data; boundary="+boundary);
 
         ByteArrayBody bab = new ByteArrayBody(imageBytes, "ANDROID.png");
