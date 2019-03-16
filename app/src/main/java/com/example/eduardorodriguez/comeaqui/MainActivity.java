@@ -10,6 +10,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import com.bumptech.glide.Glide;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
                         menuItem.setIcon(R.drawable.preparefill);
                         return true;
                     case R.id.nav_profile:
+                        GetFoodAsyncTask process = new GetFoodAsyncTask(2);
+                        process.execute(profileFragment);
                         setFragment(profileFragment);
                         toolbar.setTitle("Profile");
                         menuItem.setIcon(R.drawable.profilefill);

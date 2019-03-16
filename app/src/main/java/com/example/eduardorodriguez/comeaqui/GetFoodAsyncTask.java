@@ -1,7 +1,7 @@
 package com.example.eduardorodriguez.comeaqui;
 
+import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.Adapter;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -13,23 +13,24 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.*;
 
-public class GetFoodAsyncTask extends AsyncTask<Void, Void, String>
+public class GetFoodAsyncTask extends AsyncTask<ProfileFragment, Void, String>
 {
     String uri;
-    boolean profile;
-    public GetFoodAsyncTask(boolean profile){
-        this.profile = profile;
+    String[] url_end = {"my_foods/", "foods/", "my_profile/"};
+    ProfileFragment profileContext;
+    int url_index;
+    public GetFoodAsyncTask(int url_index){
+        this.url_index = url_index;
         this.uri = "http://127.0.0.1:8000/";
-        if (profile){
-            this.uri += "my_foods/";
-        }else{
-            this.uri += "foods/";
-        }
+        this.uri += url_end[url_index];
     }
     @Override
-    protected String doInBackground(Void... params)
+    protected String doInBackground(ProfileFragment... params)
     {
 
+        if (url_index == 2) {
+            profileContext = params[0];
+        }
         StringBuilder builder = new StringBuilder();
         HttpClient client = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(uri);
@@ -71,10 +72,16 @@ public class GetFoodAsyncTask extends AsyncTask<Void, Void, String>
     {
         if(response != null)
         {
-            if (this.profile){
-                UserPostFragment.makeList(response);
-            }else {
-                GetFoodFragment.makeList(response);
+            switch (url_index){
+                case 0:
+                    UserPostFragment.makeList(response);
+                    break;
+                case 1:
+                    GetFoodFragment.makeList(response);
+                    break;
+                case 2:
+                    profileContext.setProfile(profileContext, response);
+                    break;
             }
         }
     }

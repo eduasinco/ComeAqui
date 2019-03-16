@@ -8,7 +8,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.google.gson.*;
 
@@ -48,8 +47,8 @@ public class GetFoodFragment extends Fragment {
 
     public static void appendToList(String jsonString){
         JsonParser parser = new JsonParser();
-        JsonObject rootObj = parser.parse(jsonString).getAsJsonObject();
-        JsonObject jo = rootObj.getAsJsonObject("data");
+        JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
+        JsonObject jo = jsonArray.get(0).getAsJsonObject();
         data.add(0, createStringArray(jo));
         fa.addNewRow(data);
     }
@@ -76,11 +75,12 @@ public class GetFoodFragment extends Fragment {
         ListView listView = view.findViewById(R.id.getfoodlist);
         listView.setAdapter(fa);
 
-        final GetFoodAsyncTask process = new GetFoodAsyncTask( false);
+        GetFoodAsyncTask process = new GetFoodAsyncTask( 1);
         process.execute();
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                GetFoodAsyncTask process = new GetFoodAsyncTask( 1);
                 process.execute();
                 pullToRefresh.setRefreshing(false);
             }

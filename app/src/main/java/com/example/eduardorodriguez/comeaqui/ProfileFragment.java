@@ -1,7 +1,10 @@
 package com.example.eduardorodriguez.comeaqui;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
@@ -14,22 +17,50 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import android.widget.*;
+import com.bumptech.glide.Glide;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
+
+import static com.example.eduardorodriguez.comeaqui.GetFoodFragment.createStringArray;
 
 public class ProfileFragment extends Fragment {
 
-    public static ArrayList<String[]> data;
+    public static String[] data;
+    public View view;
 
     public ProfileFragment() {
         // Required empty public constructor
     }
 
+    public void setProfile(ProfileFragment view, String jsonString){
+        JsonParser parser = new JsonParser();
+        JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
+        JsonObject jo = jsonArray.get(0).getAsJsonObject();
+        String email = jo.get("email").getAsString();
+        String price = jo.get("favorite_color").getAsString();
+        String type = jo.get("bio").getAsString();
+        String profile_photo = jo.get("profile_photo").getAsString();
+
+        ImageView profileImageView = view.view.findViewById(R.id.profile_image);
+        TextView emailView = view.view.findViewById(R.id.email);
+
+        Glide.with(view.view.getContext()).load(profile_photo).into(profileImageView);
+        emailView.setText(email);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_profile, container, false);
+        view =  inflater.inflate(R.layout.fragment_profile, container, false);
 
         final CircularImageView circularImageView = view.findViewById(R.id.profile_image);
         circularImageView.setBorderColor(getResources().getColor(R.color.colorPrimary));
@@ -44,6 +75,7 @@ public class ProfileFragment extends Fragment {
                 circularImageView.setShadowRadius(0 - verticalOffset / 5);
             }
         });
+
 
         ViewPager viewPager = view.findViewById(R.id.viewpager);
         viewPager.setAdapter(new TestPagerAdapter(getChildFragmentManager()));

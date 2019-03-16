@@ -61,8 +61,8 @@ public class UserPostFragment extends Fragment {
 
     public static void appendToList(String jsonString){
         JsonParser parser = new JsonParser();
-        JsonObject rootObj = parser.parse(jsonString).getAsJsonObject();
-        JsonObject jo = rootObj.getAsJsonObject("data");
+        JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
+        JsonObject jo = jsonArray.get(0).getAsJsonObject();
         data.add(0, createStringArray(jo));
         adapter.addNewRow(data);
     }
@@ -110,7 +110,7 @@ public class UserPostFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            GetFoodAsyncTask process = new GetFoodAsyncTask(true);
+            GetFoodAsyncTask process = new GetFoodAsyncTask(0);
             process.execute();
             this.adapter = new MyUserPostRecyclerViewAdapter(data, mListener);
             recyclerView.setAdapter(this.adapter);
