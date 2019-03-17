@@ -46,17 +46,20 @@
                         app:civ_shadow="true"
                         app:civ_shadow_radius="10"
                         app:civ_shadow_color="@color/colorPrimaryDark"
-                        app:layout_constraintEnd_toEndOf="@+id/backGroundImage" android:layout_marginEnd="8dp"
-                        app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                        app:layout_constraintBottom_toTopOf="@+id/constraintLayout3" android:id="@+id/profile_image"
-                        app:srcCompat="@drawable/dairyfill"/>
+                        app:layout_constraintEnd_toEndOf="@+id/backGroundImage"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:id="@+id/profile_image"
+                        app:srcCompat="@drawable/dairyfill"
+                        app:layout_constraintHorizontal_bias="0.498"
+                        app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"/>
 
                 <android.support.constraint.ConstraintLayout
                         android:layout_width="0dp"
-                        android:layout_height="100dp"
+                        android:layout_height="wrap_content"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="@+id/backGroundImage" android:id="@+id/constraintLayout3">
+                        app:layout_constraintBottom_toBottomOf="@+id/backGroundImage"
+                        android:id="@+id/constraintLayout3">
 
                     <TextView
                             android:text="Eduardo Rodriguez"
@@ -64,10 +67,11 @@
                             android:background="#ffffff"
                             android:layout_height="wrap_content"
                             android:id="@+id/nameView"
-                            app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             android:textAlignment="center" android:textSize="18sp" android:textStyle="bold"
-                            android:textColor="@android:color/black" android:alpha="0.9"/>
+                            android:textColor="@android:color/black" android:alpha="0.9"
+                            app:layout_constraintBottom_toTopOf="@+id/email"/>
                     <TextView
                             android:text="eduasinco"
                             android:layout_width="0dp"
@@ -79,26 +83,21 @@
                             android:textAlignment="center" android:textSize="18sp" android:textStyle="bold"
                             android:textColor="@android:color/black"
                             app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintTop_toBottomOf="@+id/nameView" android:alpha="0.8"/>
+                            android:alpha="0.8"
+                            app:layout_constraintBottom_toTopOf="@+id/bioView"/>
                     <TextView
-                            android:text="Siempre busques algo de comer cerca yo soy tu hombre que tengo mucho para cocinar y mucho por crecer en el mundo de la cocina"
                             android:layout_width="0dp"
-                            android:layout_height="0dp"
+                            android:layout_height="wrap_content"
                             android:background="#FFFFFF"
+                            android:maxLines="3"
                             android:id="@+id/bioView"
                             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/email" android:textAlignment="center"
+                            android:textAlignment="center"
                             android:textColor="@color/colorPrimaryDark"
-                            android:alpha="0.7"/>
+                            android:alpha="0.7"
+                    />
                 </android.support.constraint.ConstraintLayout>
-                <ImageView
-                        android:src="@android:drawable/ic_menu_edit"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:id="@+id/imageView3"
-                        app:layout_constraintTop_toTopOf="@+id/profile_image"
-                        app:layout_constraintEnd_toEndOf="@+id/profile_image"/>
             </android.support.constraint.ConstraintLayout>
 
             <android.support.design.widget.TabLayout

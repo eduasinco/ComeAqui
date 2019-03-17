@@ -69,7 +69,7 @@ public class AddFoodActivity extends AppCompatActivity {
         image = findViewById(R.id.image);
         seekbar = findViewById(R.id.seekBar);
         descriptionLayout = findViewById(R.id.descriptionLayout);
-        description = findViewById(R.id.description);
+        description = findViewById(R.id.bio);
         submit = findViewById(R.id.submitButton);
 
         submit.setOnClickListener( new View.OnClickListener() {

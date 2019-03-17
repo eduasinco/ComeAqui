@@ -37,6 +37,12 @@ public class ProfileFragment extends Fragment {
     public static String[] data;
     public View view;
 
+    String email;
+    String firstName;
+    String lastName;
+    String bio;
+    String profile_photo;
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -45,10 +51,11 @@ public class ProfileFragment extends Fragment {
         JsonParser parser = new JsonParser();
         JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
         JsonObject jo = jsonArray.get(0).getAsJsonObject();
-        String email = jo.get("email").getAsString();
-        String name = jo.get("name").getAsString();
-        String bio = jo.get("bio").getAsString();
-        String profile_photo = jo.get("profile_photo").getAsString();
+        email = jo.get("email").getAsString();
+        firstName = jo.get("first_name").getAsString();
+        lastName = jo.get("last_name").getAsString();
+        bio = jo.get("bio").getAsString();
+        profile_photo = jo.get("profile_photo").getAsString();
 
         ImageView profileImageView = view.view.findViewById(R.id.profile_image);
         TextView emailView = view.view.findViewById(R.id.email);
@@ -56,7 +63,7 @@ public class ProfileFragment extends Fragment {
         TextView nameView = view.view.findViewById(R.id.nameView);
 
         if(!profile_photo.contains("no-image")) Glide.with(view.view.getContext()).load(profile_photo).into(profileImageView);
-        nameView.setText(name);
+        nameView.setText(firstName + " " + lastName);
         emailView.setText(email);
         bioView.setText(bio);
     }
@@ -87,6 +94,18 @@ public class ProfileFragment extends Fragment {
         viewPager.setAdapter(new TestPagerAdapter(getChildFragmentManager()));
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
+        mImage.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v) {
+                Intent editProfile = new Intent(getContext(), EditProfileActivity.class);
+                editProfile.putExtra("firstName", firstName);
+                editProfile.putExtra("lastName", lastName);
+                editProfile.putExtra("email", email);
+                editProfile.putExtra("bio", bio);
+                editProfile.putExtra("profile_photo", profile_photo);
+                getContext().startActivity(editProfile);
+            }
+        });
         return view;
     }
 

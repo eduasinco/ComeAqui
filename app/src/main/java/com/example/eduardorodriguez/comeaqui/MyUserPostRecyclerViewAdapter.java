@@ -14,7 +14,6 @@ import com.example.eduardorodriguez.comeaqui.UserPostFragment.OnListFragmentInte
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static com.example.eduardorodriguez.comeaqui.GetFoodAdapter.setTypes;
 
@@ -63,7 +62,7 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
 
         final TextView food_name = holder.mView.findViewById(R.id.foodName);
         TextView priceView = holder.mView.findViewById(R.id.price);
-        TextView descriptionView = holder.mView.findViewById(R.id.description);
+        TextView descriptionView = holder.mView.findViewById(R.id.bio);
         ImageView imageView = holder.mView.findViewById(R.id.foodImage);
 
         String nameText = mValues.get(position)[0];
