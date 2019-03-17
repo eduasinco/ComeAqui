@@ -5,21 +5,18 @@ import android.os.AsyncTask;
 import android.util.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.security.acl.LastOwnerException;
 
 public class PostAsyncTask extends AsyncTask<String, Void, JSONObject>
 {
@@ -33,9 +30,7 @@ public class PostAsyncTask extends AsyncTask<String, Void, JSONObject>
         byte[] imageBytes = baos.toByteArray();
 
         HttpPost httpPost = new HttpPost("http://127.0.0.1:8000/foods/");
-        String credentials = "eduasinco@gmail.com" + ":" + "dQMLDQML1";
-        String auth = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-        httpPost.addHeader("Authorization", "Basic " + auth);
+        httpPost.addHeader("Authorization", "Basic " + LoginActivity.getAuthoritation());
 
         HttpClient httpclient = new DefaultHttpClient();
 

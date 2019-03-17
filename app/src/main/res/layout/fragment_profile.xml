@@ -30,11 +30,11 @@
                         android:scaleType="centerCrop"
                         android:layout_height="0dp"
                         app:srcCompat="@drawable/background"
-                        android:id="@+id/imageView"
+                        android:id="@+id/backGroundImage"
                         android:layout_weight="1" app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
                         android:layout_width="0dp" app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintHorizontal_bias="1.0" app:layout_constraintVertical_bias="1.0"/>
+                        app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.0"/>
 
 
                 <com.mikhaellopez.circularimageview.CircularImageView
@@ -46,7 +46,7 @@
                         app:civ_shadow="true"
                         app:civ_shadow_radius="10"
                         app:civ_shadow_color="@color/colorPrimaryDark"
-                        app:layout_constraintEnd_toEndOf="@+id/imageView" android:layout_marginEnd="8dp"
+                        app:layout_constraintEnd_toEndOf="@+id/backGroundImage" android:layout_marginEnd="8dp"
                         app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
                         app:layout_constraintBottom_toTopOf="@+id/constraintLayout3" android:id="@+id/profile_image"
                         app:srcCompat="@drawable/dairyfill"/>
@@ -56,39 +56,49 @@
                         android:layout_height="100dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="@+id/imageView" android:id="@+id/constraintLayout3">
+                        app:layout_constraintBottom_toBottomOf="@+id/backGroundImage" android:id="@+id/constraintLayout3">
 
                     <TextView
                             android:text="Eduardo Rodriguez"
                             android:layout_width="0dp"
+                            android:background="#ffffff"
                             android:layout_height="wrap_content"
-                            android:id="@+id/textView2"
+                            android:id="@+id/nameView"
                             app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             android:textAlignment="center" android:textSize="18sp" android:textStyle="bold"
-                            android:textColor="@android:color/black"/>
+                            android:textColor="@android:color/black" android:alpha="0.9"/>
                     <TextView
                             android:text="eduasinco"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:id="@+id/email"
+                            android:background="#ffffff"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             android:textAlignment="center" android:textSize="18sp" android:textStyle="bold"
                             android:textColor="@android:color/black"
                             app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintTop_toBottomOf="@+id/textView2"/>
+                            app:layout_constraintTop_toBottomOf="@+id/nameView" android:alpha="0.8"/>
                     <TextView
                             android:text="Siempre busques algo de comer cerca yo soy tu hombre que tengo mucho para cocinar y mucho por crecer en el mundo de la cocina"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:id="@+id/textView4"
+                            android:background="#FFFFFF"
+                            android:id="@+id/bioView"
                             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/email" android:textAlignment="center"
-                            android:textColor="@color/colorPrimaryDark" android:layout_marginEnd="16dp"
-                            android:layout_marginStart="16dp"/>
+                            android:textColor="@color/colorPrimaryDark"
+                            android:alpha="0.7"/>
                 </android.support.constraint.ConstraintLayout>
+                <ImageView
+                        android:src="@android:drawable/ic_menu_edit"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:id="@+id/imageView3"
+                        app:layout_constraintTop_toTopOf="@+id/profile_image"
+                        app:layout_constraintEnd_toEndOf="@+id/profile_image"/>
             </android.support.constraint.ConstraintLayout>
 
             <android.support.design.widget.TabLayout
@@ -103,7 +113,8 @@
                 android:id="@+id/viewpager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        </android.support.v4.view.ViewPager>
 
 
     </android.support.design.widget.CoordinatorLayout>

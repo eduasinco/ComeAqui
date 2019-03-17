@@ -70,7 +70,7 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         String priceText = mValues.get(position)[1];
         final String typesText = mValues.get(position)[2];
         final String descriptionText = mValues.get(position)[3];
-        String pathText = mValues.get(position)[4];
+        final String pathText = mValues.get(position)[4];
 
         food_name.setText(nameText);
         String priceTextE = priceText + "€";
@@ -78,19 +78,15 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         setTypes(holder.mView, typesText);
         descriptionView.setText(descriptionText);
 
-        final StringBuilder path = new StringBuilder();
-        path.append("http://127.0.0.1:8000");
-        path.append(pathText);
 
-
-        Glide.with(holder.mView.getContext()).load(path.toString()).into(imageView);
+        Glide.with(holder.mView.getContext()).load(pathText).into(imageView);
 
         ConstraintLayout item = holder.mView.findViewById(R.id.listItem);
         item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent foodLook = new Intent(holder.mView.getContext(), FoodLookActivity.class);
-                foodLook.putExtra("src", path.toString());
+                foodLook.putExtra("src", pathText);
                 foodLook.putExtra("name", food_name.getText().toString());
                 foodLook.putExtra("des", descriptionText);
                 foodLook.putExtra("types", typesText);

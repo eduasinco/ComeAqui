@@ -46,21 +46,26 @@ public class ProfileFragment extends Fragment {
         JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
         JsonObject jo = jsonArray.get(0).getAsJsonObject();
         String email = jo.get("email").getAsString();
-        String price = jo.get("favorite_color").getAsString();
-        String type = jo.get("bio").getAsString();
+        String name = jo.get("name").getAsString();
+        String bio = jo.get("bio").getAsString();
         String profile_photo = jo.get("profile_photo").getAsString();
 
         ImageView profileImageView = view.view.findViewById(R.id.profile_image);
         TextView emailView = view.view.findViewById(R.id.email);
+        TextView bioView = view.view.findViewById(R.id.bioView);
+        TextView nameView = view.view.findViewById(R.id.nameView);
 
-        Glide.with(view.view.getContext()).load(profile_photo).into(profileImageView);
+        if(!profile_photo.contains("no-image")) Glide.with(view.view.getContext()).load(profile_photo).into(profileImageView);
+        nameView.setText(name);
         emailView.setText(email);
+        bioView.setText(bio);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view =  inflater.inflate(R.layout.fragment_profile, container, false);
+        final ImageView backGroundImageView = view.findViewById(R.id.backGroundImage);
 
         final CircularImageView circularImageView = view.findViewById(R.id.profile_image);
         circularImageView.setBorderColor(getResources().getColor(R.color.colorPrimary));
@@ -73,6 +78,7 @@ public class ProfileFragment extends Fragment {
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 mImage.setY(-verticalOffset / 2 + 100);
                 circularImageView.setShadowRadius(0 - verticalOffset / 5);
+                backGroundImageView.setY(-verticalOffset / 4);
             }
         });
 

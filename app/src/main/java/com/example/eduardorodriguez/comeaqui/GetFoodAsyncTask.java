@@ -36,9 +36,7 @@ public class GetFoodAsyncTask extends AsyncTask<ProfileFragment, Void, String>
         HttpGet httpGet = new HttpGet(uri);
 
 // Add authorization header
-        httpGet.addHeader(BasicScheme.authenticate(
-                new UsernamePasswordCredentials("eduasinco@gmail.com", "dQMLDQML1"),
-                "UTF-8", false));
+        httpGet.addHeader("Authorization", "Basic " + LoginActivity.getAuthoritation());
 
 // Set up the header types needed to properly transfer JSON
         httpGet.setHeader("Content-Type", "application/json");
