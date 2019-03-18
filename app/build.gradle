@@ -50,4 +50,7 @@ dependencies {
 
     implementation 'io.card:android-sdk:5.5.0'
 
+    implementation 'com.craftman.cardform:cardform:0.0.2'
+
+    implementation 'com.hbb20:ccp:2.2.5'
 }

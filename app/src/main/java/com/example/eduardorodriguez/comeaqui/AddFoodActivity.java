@@ -75,13 +75,14 @@ public class AddFoodActivity extends AppCompatActivity {
         submit.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PostAsyncTask post = new PostAsyncTask();
+                PostAsyncTask post = new PostAsyncTask("http://127.0.0.1:8000/foods/");
                 post.bitmap = imageBitmap;
                 post.execute(
-                        foodName.getText().toString(),
-                        price_data.toString(),
-                        setTypes(),
-                        description.getText().toString()
+                        new String[]{"plate_name", foodName.getText().toString()},
+                        new String[]{"price", price_data.toString()},
+                        new String[]{"food_type", setTypes()},
+                        new String[]{"description", description.getText().toString()},
+                        new String[]{"food_photo", "", "img"}
                 );
                 try {
                     Intent k = new Intent(AddFoodActivity.this, MainActivity.class);

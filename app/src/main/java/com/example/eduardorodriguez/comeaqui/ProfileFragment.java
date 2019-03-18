@@ -136,7 +136,7 @@ public class ProfileFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            Fragment[] tabFragment = {new UserPostFragment(), new MessagesFragment(), new MessagesFragment()};
+            Fragment[] tabFragment = {new UserPostFragment(), new MessagesFragment(), new OptionsFragment()};
             return tabFragment[position];
         }
 
@@ -147,7 +147,7 @@ public class ProfileFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            String[] titles = {"posts", "messages", "likes"};
+            String[] titles = {"posts", "messages", "options"};
             return titles[position];
         }
     }

@@ -18,42 +18,40 @@ import org.json.JSONObject;
 import java.io.*;
 import java.security.acl.LastOwnerException;
 
-public class PostAsyncTask extends AsyncTask<String, Void, JSONObject>
+public class PostAsyncTask extends AsyncTask<String[], Void, JSONObject>
 {
+    public PostAsyncTask(String uri){
+        this.uri = uri;
+    }
+    String uri;
     Bitmap bitmap;
     @Override
-    protected JSONObject doInBackground(String... params)
+    protected JSONObject doInBackground(String[]... params)
     {
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] imageBytes = baos.toByteArray();
-
-        HttpPost httpPost = new HttpPost("http://127.0.0.1:8000/foods/");
+        HttpPost httpPost = new HttpPost(uri);
         httpPost.addHeader("Authorization", "Basic " + LoginActivity.getAuthoritation());
 
         HttpClient httpclient = new DefaultHttpClient();
-
-
         String boundary = "-------------" + System.currentTimeMillis();
-
         httpPost.setHeader("Content-type","multipart/form-data; boundary="+boundary);
 
-        ByteArrayBody bab = new ByteArrayBody(imageBytes, "ANDROID.png");
-        StringBody name = new StringBody(params[0], ContentType.TEXT_PLAIN);
-        StringBody price = new StringBody(params[1], ContentType.TEXT_PLAIN);
-        StringBody types = new StringBody(params[2], ContentType.TEXT_PLAIN);
-        StringBody description = new StringBody(params[3], ContentType.TEXT_PLAIN);
-
-        HttpEntity entity = MultipartEntityBuilder.create()
+        MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create()
                 .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
-                .setBoundary(boundary)
-                .addPart("plate_name", name)
-                .addPart("price", price)
-                .addPart("food_type", types)
-                .addPart("description", description)
-                .addPart("food_photo", bab)
-                .build();
+                .setBoundary(boundary);
+
+        for(String[] ss: params){
+            if (ss[3] == "img") {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                byte[] imageBytes = baos.toByteArray();
+                multipartEntityBuilder.addPart(ss[0], new ByteArrayBody(imageBytes, "ANDROID.png"));
+            } else {
+                multipartEntityBuilder.addPart(ss[0], new StringBody(ss[1], ContentType.TEXT_PLAIN));
+            }
+        }
+
+        HttpEntity entity = multipartEntityBuilder.build();
 
         httpPost.setEntity(entity);
 
