@@ -78,10 +78,10 @@ public class AddFoodActivity extends AppCompatActivity {
                 PostAsyncTask post = new PostAsyncTask("http://127.0.0.1:8000/foods/");
                 post.bitmap = imageBitmap;
                 post.execute(
-                        new String[]{"plate_name", foodName.getText().toString()},
-                        new String[]{"price", price_data.toString()},
-                        new String[]{"food_type", setTypes()},
-                        new String[]{"description", description.getText().toString()},
+                        new String[]{"plate_name", foodName.getText().toString(), ""},
+                        new String[]{"price", price_data.toString(), ""},
+                        new String[]{"food_type", setTypes(), ""},
+                        new String[]{"description", description.getText().toString(), ""},
                         new String[]{"food_photo", "", "img"}
                 );
                 try {

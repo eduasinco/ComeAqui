@@ -22,7 +22,7 @@ public class CardInformationActivity extends AppCompatActivity {
     EditText expiryDateView;
     EditText cvvView;
     EditText zipCodeView;
-    String cardType;
+    String cardType = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,14 +39,14 @@ public class CardInformationActivity extends AppCompatActivity {
         saveCardButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PostAsyncTask post = new PostAsyncTask("http://127.0.0.1:8000/foods/");
+                PostAsyncTask post = new PostAsyncTask("http://127.0.0.1:8000/card/");
                 post.execute(
-                        new String[]{"card_number", creditCardView.getText().toString()},
-                        new String[]{"expiration_date", expiryDateView.toString()},
-                        new String[]{"card_type", cardType},
-                        new String[]{"cvv", cvvView.getText().toString()},
-                        new String[]{"zip_code", zipCodeView.getText().toString()},
-                        new String[]{"country", countryView.getDefaultCountryName()}
+                        new String[]{"card_number", creditCardView.getText().toString(), ""},
+                        new String[]{"expiration_date", expiryDateView.getText().toString(), ""},
+                        new String[]{"card_type", cardType, ""},
+                        new String[]{"cvv", cvvView.getText().toString(), ""},
+                        new String[]{"zip_code", zipCodeView.getText().toString(), ""},
+                        new String[]{"country", countryView.getDefaultCountryName(), ""}
                 );
                 Intent back = new Intent(CardInformationActivity.this, AddPaymentMethodActivity.class);
                 startActivity(back);
@@ -54,27 +54,6 @@ public class CardInformationActivity extends AppCompatActivity {
         });
 
         creditCardView.addTextChangedListener(new CreditCardNumberFormattingTextWatcher());
-        expiryDateView.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (before == 1 && count == 2 && s.charAt(s.length()-1) != '/') {
-                    expiryDateView.setText(expiryDateView.getText().toString() + "/");
-                }
-                if (expiryDateView.getText().toString().toCharArray().length < 3) {
-                    expiryDateView.setText(expiryDateView.getText().toString().replace("/", ""));
-                }
-            }
-        });
     }
 
     public void onScanPress(View v) {
@@ -131,7 +110,7 @@ public class CardInformationActivity extends AppCompatActivity {
                 // Never log a raw card number. Avoid displaying it, but if necessary use getFormattedCardNumber()
                 resultDisplayStr = "Card Number: " + scanResult.getRedactedCardNumber() + "\n";
                 creditCardView.setText(scanResult.getRedactedCardNumber());
-                cardType = scanResult.getCardType().toString();
+                cardType = (scanResult.getCardType() != null) ? scanResult.getCardType() + "" : " ";
 
                 resultDisplayStr += "Card Type: " + scanResult.getCardType() + "\n";
                 // Do something with the raw number, e.g.:

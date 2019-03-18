@@ -41,7 +41,7 @@ public class PostAsyncTask extends AsyncTask<String[], Void, JSONObject>
                 .setBoundary(boundary);
 
         for(String[] ss: params){
-            if (ss[3] == "img") {
+            if (ss[2] == "img") {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
                 byte[] imageBytes = baos.toByteArray();
@@ -78,8 +78,12 @@ public class PostAsyncTask extends AsyncTask<String[], Void, JSONObject>
     {
         if(response != null)
         {
-            System.out.print(response.toString());
-            GetFoodFragment.appendToList(response.toString());
+            if (uri.contains("foods")) {
+                GetFoodFragment.appendToList(response.toString());
+            }
+            if (uri.contains("card")) {
+
+            }
         }
     }
 }
