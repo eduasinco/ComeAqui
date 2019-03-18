@@ -1,5 +1,6 @@
 package com.example.eduardorodriguez.comeaqui;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -42,11 +43,21 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // load the store fragment by default
-        toolbar.setTitle("Get Food");
 
         Menu menu = mMainNav.getMenu();
-        menu.findItem(R.id.nav_getfood).setIcon(R.drawable.goeatfill);
-        setFragment(getFoodFragment);
+        Intent intent = getIntent();
+        Bundle b = intent.getExtras();
+        if(b != null){
+            GetFoodAsyncTask process = new GetFoodAsyncTask(2);
+            process.execute(profileFragment);
+            setFragment(profileFragment);
+            toolbar.setTitle("Profile");
+            menu.findItem(R.id.nav_profile).setIcon(R.drawable.profilefill);
+        }else{
+            setFragment(getFoodFragment);
+            toolbar.setTitle("Get Food");
+            menu.findItem(R.id.nav_getfood).setIcon(R.drawable.goeatfill);
+        }
         mMainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {

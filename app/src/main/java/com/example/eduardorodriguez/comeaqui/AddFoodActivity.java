@@ -46,7 +46,7 @@ public class AddFoodActivity extends AppCompatActivity {
         StringBuilder types = new StringBuilder();
         for (boolean p: pressed){
             if (p) {
-               types.append(1);
+                types.append(1);
             }else{
                 types.append(0);
             }
