@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.example.eduardorodriguez.comeaqui.dummy.DummyContent;
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -17,7 +16,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -110,7 +108,7 @@ public class UserPostFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            GetFoodAsyncTask process = new GetFoodAsyncTask(0);
+            GetAsyncTask process = new GetAsyncTask(0);
             process.execute();
             this.adapter = new MyUserPostRecyclerViewAdapter(data, mListener);
             recyclerView.setAdapter(this.adapter);

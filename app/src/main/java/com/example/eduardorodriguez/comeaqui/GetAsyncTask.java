@@ -13,13 +13,13 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.*;
 
-public class GetFoodAsyncTask extends AsyncTask<ProfileFragment, Void, String>
+public class GetAsyncTask extends AsyncTask<ProfileFragment, Void, String>
 {
     String uri;
-    String[] url_end = {"my_foods/", "foods/", "my_profile/"};
+    String[] url_end = {"my_foods/", "foods/", "my_profile/", "my_profile_card/"};
     ProfileFragment profileContext;
     int url_index;
-    public GetFoodAsyncTask(int url_index){
+    public GetAsyncTask(int url_index){
         this.url_index = url_index;
         this.uri = "http://127.0.0.1:8000/";
         this.uri += url_end[url_index];
@@ -79,6 +79,9 @@ public class GetFoodAsyncTask extends AsyncTask<ProfileFragment, Void, String>
                     break;
                 case 2:
                     profileContext.setProfile(profileContext, response);
+                    break;
+                case 3:
+                    PaymentMethodFragment.makeList(response);
                     break;
             }
         }

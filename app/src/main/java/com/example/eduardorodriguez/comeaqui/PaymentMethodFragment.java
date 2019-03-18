@@ -11,8 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent;
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * A fragment representing a list of Items.
@@ -27,12 +31,47 @@ public class PaymentMethodFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private static ArrayList<String[]> data;
+    private static MyPaymentMethodRecyclerViewAdapter fa;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
     public PaymentMethodFragment() {
+    }
+
+    public static void makeList(String jsonString){
+        try {
+            data = new ArrayList<>();
+            JsonParser parser = new JsonParser();
+            JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
+            for (JsonElement pa : jsonArray) {
+                JsonObject jo = pa.getAsJsonObject();
+                data.add(createStringArray(jo));
+            }
+            fa.notifyDataSetChanged();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void appendToList(String jsonString){
+        JsonParser parser = new JsonParser();
+        JsonObject jo = parser.parse(jsonString).getAsJsonObject();
+        data.add(0, createStringArray(jo));
+        fa.notifyDataSetChanged();
+    }
+
+    public static String[] createStringArray(JsonObject jo){
+        String card_number = jo.get("card_number").getAsString();
+        String expiration_date = jo.get("expiration_date").getAsString();
+        String card_type = jo.get("card_type").getAsString();
+        String cvv = jo.get("cvv").getAsString();
+        String zip_code = jo.get("zip_code").getAsString();
+        String country = jo.get("country").getAsString();
+        String[] add = new String[]{card_number, expiration_date, card_type, cvv, zip_code, country};
+        return add;
     }
 
     // TODO: Customize parameter initialization
@@ -68,7 +107,10 @@ public class PaymentMethodFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyPaymentMethodRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            GetAsyncTask getCards = new GetAsyncTask(3);
+            getCards.execute();
+            fa = new MyPaymentMethodRecyclerViewAdapter(data, mListener);
+            recyclerView.setAdapter(fa);
         }
         return view;
     }

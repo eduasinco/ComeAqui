@@ -4,11 +4,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.PaymentMethodFragment.OnListFragmentInteractionListener;
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,10 +24,11 @@ import java.util.List;
  */
 public class MyPaymentMethodRecyclerViewAdapter extends RecyclerView.Adapter<MyPaymentMethodRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final ArrayList<String[]> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyPaymentMethodRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+
+    public MyPaymentMethodRecyclerViewAdapter(ArrayList<String[]>  items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -35,17 +42,13 @@ public class MyPaymentMethodRecyclerViewAdapter extends RecyclerView.Adapter<MyP
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mIdView.setText(mValues.get(position)[0]);
+        holder.mContentView.setText(mValues.get(position)[1]);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
                 }
             }
         });
@@ -60,13 +63,12 @@ public class MyPaymentMethodRecyclerViewAdapter extends RecyclerView.Adapter<MyP
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mIdView = view.findViewById(R.id.item_number);
+            mContentView = view.findViewById(R.id.content);
         }
 
         @Override
