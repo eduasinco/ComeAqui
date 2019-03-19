@@ -48,6 +48,7 @@ public class GetFoodAdapter extends BaseAdapter {
         final String typesText = data.get(position)[3];
         final String descriptionText = data.get(position)[4];
         String pathText = data.get(position)[5];
+        final String ownerEmail = data.get(position)[6];
 
         food_name.setText(nameText);
         String priceTextE = priceText + "€";
@@ -72,6 +73,7 @@ public class GetFoodAdapter extends BaseAdapter {
                 foodLook.putExtra("name", food_name.getText().toString());
                 foodLook.putExtra("des", descriptionText);
                 foodLook.putExtra("types", typesText);
+                foodLook.putExtra("owner", ownerEmail);
                 foodLook.putExtra("delete", false);
                 context.startActivity(foodLook);
             }

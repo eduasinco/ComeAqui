@@ -35,6 +35,7 @@ public class FoodLookActivity extends AppCompatActivity {
             String name = b.getString("name");
             String description = b.getString("des");
             String types = b.getString("types");
+            final String ownerEmail = b.getString("owner");
             boolean delete = b.getBoolean("delete");
             plateNameView.setText(name);
             descriptionView.setText(description);
@@ -80,9 +81,9 @@ public class FoodLookActivity extends AppCompatActivity {
                 addButtonView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        PostAsyncTask emiMessage = new PostAsyncTask("http://127.0.0.1:8000/messages/");
+                        PostAsyncTask emiMessage = new PostAsyncTask("http://127.0.0.1:8000/send_message/");
                         emiMessage.execute(
-                                new String[]{"sender_email", LoginActivity.email, ""}
+                                new String[]{"owner", ownerEmail, ""}
                         );
                         Intent k = new Intent(FoodLookActivity.this, MainActivity.class);
                         startActivity(k);

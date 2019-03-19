@@ -59,7 +59,8 @@ public class GetFoodFragment extends Fragment {
         String type = jo.get("food_type").getAsString();
         String description = jo.get("description").getAsString();
         String food_photo = jo.get("food_photo").getAsString();
-        String[] add = new String[]{id, plate_name, price, type, description, food_photo};
+        String owner = jo.get("owner").getAsString();
+        String[] add = new String[]{id, plate_name, price, type, description, food_photo, owner};
         return add;
     }
 
