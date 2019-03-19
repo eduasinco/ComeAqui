@@ -71,14 +71,17 @@ public class FoodLookActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         DeleteAsyncTask deleteFoodPost = new DeleteAsyncTask(id);
                         deleteFoodPost.execute();
-
+                        Intent k = new Intent(FoodLookActivity.this, MainActivity.class);
+                        k.putExtra("s", " ");
+                        startActivity(k);
                     }
                 });
             }else{
                 addButtonView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        Intent k = new Intent(FoodLookActivity.this, MainActivity.class);
+                        startActivity(k);
                     }
                 });
             }
