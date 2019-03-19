@@ -71,12 +71,12 @@
                             app:layout_constraintStart_toStartOf="parent"
                             android:textAlignment="center" android:textSize="18sp" android:textStyle="bold"
                             android:textColor="@android:color/black" android:alpha="0.9"
-                            app:layout_constraintBottom_toTopOf="@+id/email"/>
+                            app:layout_constraintBottom_toTopOf="@+id/senderEmail"/>
                     <TextView
                             android:text="eduasinco"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:id="@+id/email"
+                            android:id="@+id/senderEmail"
                             android:background="#ffffff"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"

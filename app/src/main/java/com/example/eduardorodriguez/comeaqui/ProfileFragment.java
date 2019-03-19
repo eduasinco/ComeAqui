@@ -1,20 +1,13 @@
 package com.example.eduardorodriguez.comeaqui;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.*;
 import android.widget.*;
 import com.bumptech.glide.Glide;
@@ -22,15 +15,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mikhaellopez.circularimageview.CircularImageView;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.Date;
-
-import static com.example.eduardorodriguez.comeaqui.GetFoodFragment.createStringArray;
 
 public class ProfileFragment extends Fragment {
 
@@ -58,7 +42,7 @@ public class ProfileFragment extends Fragment {
         profile_photo = jo.get("profile_photo").getAsString();
 
         ImageView profileImageView = view.view.findViewById(R.id.profile_image);
-        TextView emailView = view.view.findViewById(R.id.email);
+        TextView emailView = view.view.findViewById(R.id.senderEmail);
         TextView bioView = view.view.findViewById(R.id.bioView);
         TextView nameView = view.view.findViewById(R.id.nameView);
 

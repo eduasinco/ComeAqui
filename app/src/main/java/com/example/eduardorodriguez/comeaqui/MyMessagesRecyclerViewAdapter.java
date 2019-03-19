@@ -4,13 +4,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.MessagesFragment.OnListFragmentInteractionListener;
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
@@ -41,9 +42,12 @@ public class MyMessagesRecyclerViewAdapter extends RecyclerView.Adapter<MyMessag
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mIdView.setText(mValues.get(position)[0]);
-        holder.mContentView.setText(mValues.get(position)[1]);
+        holder.fullNameView.setText(mValues.get(position)[0] + " " + mValues.get(position)[1]);
+        holder.messageView.setText(mValues.get(position)[0] + " wants to try what you prepared!");
+        holder.senderEmailView.setText(mValues.get(position)[2]);
+        holder.creationDateView.setText(mValues.get(position)[4].substring(0, 10) + " " + mValues.get(position)[4].substring(11, 16));
 
+        Glide.with(holder.mView.getContext()).load(mValues.get(position)[3]).into(holder.senderImageView);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,19 +65,26 @@ public class MyMessagesRecyclerViewAdapter extends RecyclerView.Adapter<MyMessag
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+        public final TextView fullNameView;
+        public final TextView messageView;
+        public final TextView creationDateView;
+        public final TextView senderEmailView;
+        public final ImageView senderImageView;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView =  view.findViewById(R.id.textView);
-            mContentView =  view.findViewById(R.id.textView5);
+            fullNameView =  view.findViewById(R.id.fullName);
+            messageView =  view.findViewById(R.id.messageText);
+            creationDateView =  view.findViewById(R.id.creationDate);
+            senderEmailView =  view.findViewById(R.id.senderEmail);
+            senderImageView =  view.findViewById(R.id.senderImage);
+
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return "";
         }
     }
 }

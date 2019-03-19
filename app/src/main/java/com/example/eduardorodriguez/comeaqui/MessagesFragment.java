@@ -67,9 +67,14 @@ public class MessagesFragment extends Fragment {
     }
 
     public static String[] createStringArray(JsonObject jo){
+        String firstName = jo.get("first_name").getAsString();
+        String lastName = jo.get("last_name").getAsString();
+        String senderEmail = jo.get("sender_email").getAsString();
+        String senderImage = jo.get("sender_image").getAsString();
+        String creationDate = jo.get("created_at").getAsString();
         String id = jo.get("id").getAsNumber().toString();
-        String sender_email = jo.get("sender_email").getAsString();
-        String[] add = new String[]{id, sender_email};
+        senderImage = senderImage;
+        String[] add = new String[]{firstName, lastName, senderEmail, senderImage, creationDate, id};
         return add;
     }
 
