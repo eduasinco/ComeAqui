@@ -53,12 +53,13 @@ public class GetFoodFragment extends Fragment {
     }
 
     public static String[] createStringArray(JsonObject jo){
+        String id = jo.get("id").getAsString();
         String plate_name = jo.get("plate_name").getAsString();
         String price = jo.get("price").getAsString();
         String type = jo.get("food_type").getAsString();
         String description = jo.get("description").getAsString();
         String food_photo = jo.get("food_photo").getAsString();
-        String[] add = new String[]{plate_name, price, type, description, food_photo};
+        String[] add = new String[]{id, plate_name, price, type, description, food_photo};
         return add;
     }
 

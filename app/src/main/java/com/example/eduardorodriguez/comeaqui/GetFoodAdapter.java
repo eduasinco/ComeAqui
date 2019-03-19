@@ -42,11 +42,12 @@ public class GetFoodAdapter extends BaseAdapter {
         TextView descriptionView = view.findViewById(R.id.bio);
         ImageView imageView = view.findViewById(R.id.foodImage);
 
-        String nameText = data.get(position)[0];
-        String priceText = data.get(position)[1];
-        final String typesText = data.get(position)[2];
-        final String descriptionText = data.get(position)[3];
-        String pathText = data.get(position)[4];
+        final String id = data.get(position)[0];
+        String nameText = data.get(position)[1];
+        String priceText = data.get(position)[2];
+        final String typesText = data.get(position)[3];
+        final String descriptionText = data.get(position)[4];
+        String pathText = data.get(position)[5];
 
         food_name.setText(nameText);
         String priceTextE = priceText + "€";
@@ -66,6 +67,7 @@ public class GetFoodAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent foodLook = new Intent(context, FoodLookActivity.class);
+                foodLook.putExtra("id", id);
                 foodLook.putExtra("src", path.toString());
                 foodLook.putExtra("name", food_name.getText().toString());
                 foodLook.putExtra("des", descriptionText);

@@ -30,6 +30,7 @@ public class FoodLookActivity extends AppCompatActivity {
         Bundle b = intent.getExtras();
 
         if(b != null){
+            final String id = b.getString("id");
             String path = b.getString("src");
             String name = b.getString("name");
             String description = b.getString("des");
@@ -65,6 +66,21 @@ public class FoodLookActivity extends AppCompatActivity {
             if (delete){
                 addButtonView.setText("Delete Post");
                 addButtonView.setBackgroundColor(Color.parseColor("#FFFF0E01"));
+                addButtonView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DeleteAsyncTask deleteFoodPost = new DeleteAsyncTask(id);
+                        deleteFoodPost.execute();
+
+                    }
+                });
+            }else{
+                addButtonView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
             }
         }
     }
