@@ -80,6 +80,10 @@ public class FoodLookActivity extends AppCompatActivity {
                 addButtonView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        PostAsyncTask emiMessage = new PostAsyncTask("http://127.0.0.1:8000/messages/");
+                        emiMessage.execute(
+                                new String[]{"sender_email", LoginActivity.email, ""}
+                        );
                         Intent k = new Intent(FoodLookActivity.this, MainActivity.class);
                         startActivity(k);
                     }

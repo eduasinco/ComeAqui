@@ -11,7 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent;
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,12 +32,45 @@ public class MessagesFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    static ArrayList<String[]> data;
+    static MyMessagesRecyclerViewAdapter adapter;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
     public MessagesFragment() {
+    }
+
+    public static void makeList(String jsonString){
+        try {
+            data = new ArrayList<>();
+            JsonParser parser = new JsonParser();
+            JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
+            for (JsonElement pa : jsonArray) {
+                JsonObject jo = pa.getAsJsonObject();
+                data.add(createStringArray(jo));
+            }
+            adapter.updateData(data);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void appendToList(String jsonString){
+        JsonParser parser = new JsonParser();
+        JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
+        JsonObject jo = jsonArray.get(0).getAsJsonObject();
+        data.add(0, createStringArray(jo));
+        adapter.updateData(data);
+    }
+
+    public static String[] createStringArray(JsonObject jo){
+        String id = jo.get("id").getAsNumber().toString();
+        String sender_email = jo.get("sender_email").getAsString();
+        String[] add = new String[]{id, sender_email};
+        return add;
     }
 
     // TODO: Customize parameter initialization
@@ -68,7 +106,10 @@ public class MessagesFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyMessagesRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            GetAsyncTask getMessages = new GetAsyncTask(4);
+            getMessages.execute();
+            adapter = new MyMessagesRecyclerViewAdapter(data, mListener);
+            recyclerView.setAdapter(adapter);
         }
         return view;
     }

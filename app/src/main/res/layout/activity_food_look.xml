@@ -38,7 +38,7 @@
             android:id="@+id/addButton" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintBottom_toBottomOf="parent" style="@style/Widget.AppCompat.Button.Borderless"
-            android:background="@color/colorPrimary" android:textColor="@android:color/white"/>
+            android:background="@android:color/holo_green_dark" android:textColor="@android:color/white"/>
     <android.support.constraint.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

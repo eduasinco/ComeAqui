@@ -24,13 +24,18 @@ import java.util.List;
  */
 public class MyPaymentMethodRecyclerViewAdapter extends RecyclerView.Adapter<MyPaymentMethodRecyclerViewAdapter.ViewHolder> {
 
-    private final ArrayList<String[]> mValues;
+    private ArrayList<String[]> mValues;
     private final OnListFragmentInteractionListener mListener;
 
 
     public MyPaymentMethodRecyclerViewAdapter(ArrayList<String[]>  items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
+    }
+
+    public void updateData(ArrayList<String[]> data){
+        this.mValues = data;
+        notifyDataSetChanged();
     }
 
     @Override

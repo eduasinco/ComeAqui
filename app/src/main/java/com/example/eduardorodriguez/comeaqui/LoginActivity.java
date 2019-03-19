@@ -77,6 +77,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
     private static String authoritation;
+    static String email;
 
     public static String getAuthoritation(){
         return authoritation;
@@ -346,6 +347,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 int statusCode = statusLine.getStatusCode();
                 if (statusCode == 200) {
                     String credentials = mEmail + ":" + mPassword;
+                    email = mEmail;
                     authoritation = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                     return true;
                 } else {

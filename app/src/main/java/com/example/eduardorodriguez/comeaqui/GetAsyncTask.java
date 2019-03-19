@@ -16,7 +16,7 @@ import java.io.*;
 public class GetAsyncTask extends AsyncTask<ProfileFragment, Void, String>
 {
     String uri;
-    String[] url_end = {"my_foods/", "foods/", "my_profile/", "my_profile_card/"};
+    String[] url_end = {"my_foods/", "foods/", "my_profile/", "my_profile_card/", "my_messages/"};
     ProfileFragment profileContext;
     int url_index;
     public GetAsyncTask(int url_index){
@@ -82,6 +82,9 @@ public class GetAsyncTask extends AsyncTask<ProfileFragment, Void, String>
                     break;
                 case 3:
                     PaymentMethodFragment.makeList(response);
+                    break;
+                case 4:
+                    MessagesFragment.makeList(response);
                     break;
             }
         }

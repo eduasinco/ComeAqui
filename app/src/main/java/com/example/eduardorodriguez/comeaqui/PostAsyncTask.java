@@ -84,6 +84,9 @@ public class PostAsyncTask extends AsyncTask<String[], Void, JSONObject>
             if (uri.contains("card")) {
 
             }
+            if (uri.contains("card")) {
+
+            }
         }
     }
 }

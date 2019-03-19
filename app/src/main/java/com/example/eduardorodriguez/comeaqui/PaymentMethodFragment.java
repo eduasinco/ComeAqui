@@ -50,7 +50,7 @@ public class PaymentMethodFragment extends Fragment {
                 JsonObject jo = pa.getAsJsonObject();
                 data.add(createStringArray(jo));
             }
-            fa.notifyDataSetChanged();
+            fa.updateData(data);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -60,7 +60,7 @@ public class PaymentMethodFragment extends Fragment {
         JsonParser parser = new JsonParser();
         JsonObject jo = parser.parse(jsonString).getAsJsonObject();
         data.add(0, createStringArray(jo));
-        fa.notifyDataSetChanged();
+        fa.updateData(data);
     }
 
     public static String[] createStringArray(JsonObject jo){
