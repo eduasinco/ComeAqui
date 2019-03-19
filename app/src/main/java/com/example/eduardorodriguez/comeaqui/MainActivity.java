@@ -1,8 +1,11 @@
 package com.example.eduardorodriguez.comeaqui;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
 
     private GetFoodFragment getFoodFragment;
-    private GoEatFragment goEatFragment;
+    private MapFragment mapFragment;
     private ProfileFragment profileFragment;
 
     @Override
@@ -28,11 +31,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+
         mMainFrame = findViewById(R.id.main_frame);
         mMainNav = findViewById(R.id.main_nav);
 
         getFoodFragment = new GetFoodFragment();
-        goEatFragment = new GoEatFragment();
+        mapFragment = new MapFragment();
         profileFragment = new ProfileFragment();
 
         toolbar = findViewById(R.id.toolbar);
@@ -68,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                         menuItem.setIcon(R.drawable.goeatfill);
                         return true;
                     case R.id.nav_go:
-                        setFragment(goEatFragment);
+                        setFragment(mapFragment);
                         toolbar.setTitle("Go");
                         menuItem.setIcon(R.drawable.preparefill);
                         return true;

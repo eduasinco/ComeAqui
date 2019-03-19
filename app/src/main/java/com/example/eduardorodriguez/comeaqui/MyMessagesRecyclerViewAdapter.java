@@ -52,6 +52,7 @@ public class MyMessagesRecyclerViewAdapter extends RecyclerView.Adapter<MyMessag
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
+
                 }
             }
         });
