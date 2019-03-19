@@ -65,11 +65,12 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         TextView descriptionView = holder.mView.findViewById(R.id.bio);
         ImageView imageView = holder.mView.findViewById(R.id.foodImage);
 
-        String nameText = mValues.get(position)[0];
-        String priceText = mValues.get(position)[1];
-        final String typesText = mValues.get(position)[2];
-        final String descriptionText = mValues.get(position)[3];
-        final String pathText = mValues.get(position)[4];
+        final String id = mValues.get(position)[0];
+        String nameText = mValues.get(position)[1];
+        String priceText = mValues.get(position)[2];
+        final String typesText = mValues.get(position)[3];
+        final String descriptionText = mValues.get(position)[4];
+        final String pathText = mValues.get(position)[5];
 
         food_name.setText(nameText);
         String priceTextE = priceText + "€";
@@ -85,6 +86,7 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
             @Override
             public void onClick(View v) {
                 Intent foodLook = new Intent(holder.mView.getContext(), FoodLookActivity.class);
+                foodLook.putExtra("id", id);
                 foodLook.putExtra("src", pathText);
                 foodLook.putExtra("name", food_name.getText().toString());
                 foodLook.putExtra("des", descriptionText);
