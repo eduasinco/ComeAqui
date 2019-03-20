@@ -1,6 +1,5 @@
 package com.example.eduardorodriguez.comeaqui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -82,7 +81,8 @@ public class OptionsFragment extends Fragment {
         settingsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent k = new Intent(getContext(), SettingsActivity.class);
+                startActivity(k);
             }
         });
         ordersView.setOnClickListener(new View.OnClickListener() {

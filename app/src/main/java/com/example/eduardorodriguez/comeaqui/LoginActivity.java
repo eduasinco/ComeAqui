@@ -76,6 +76,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     static String email;
 
     public static String getAuthoritation(){
+        String credentials =  "eduasinco@gmail.com:Dqmldqml1";
+        authoritation = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
         return authoritation;
     }
 

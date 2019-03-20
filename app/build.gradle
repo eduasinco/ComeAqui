@@ -26,6 +26,12 @@ android {
         exclude 'META-INF/notice.txt'
         exclude 'META-INF/ASL2.0'
     }
+    allprojects {
+        repositories {
+            jcenter()
+            maven { url "https://jitpack.io" }
+        }
+    }
 }
 
 dependencies {
@@ -53,5 +59,7 @@ dependencies {
 
     implementation 'com.craftman.cardform:cardform:0.0.2'
 
-    implementation 'com.hbb20:ccp:2.2.5'
+    implementation 'com.hbb20:ccp:2.2.4'
+
+    implementation 'com.github.joielechong:countrycodepicker:2.1.5'
 }
