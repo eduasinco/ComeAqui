@@ -27,7 +27,7 @@ public class GoogleAPIAsyncTask extends AsyncTask<ProfileFragment, Void, String>
                 this.uri += c;
             }
         }
-        this.uri += "&types=establishment&language=pt_BR&key=AIzaSyAY98SJhng3EjroCSGZ7yfhOWhbiqUB-tw";
+        this.uri += "&types=geocode&language=en&key=AIzaSyAY98SJhng3EjroCSGZ7yfhOWhbiqUB-tw";
     }
     @Override
     protected String doInBackground(ProfileFragment... params)
