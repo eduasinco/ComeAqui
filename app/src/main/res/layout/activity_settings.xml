@@ -81,7 +81,7 @@
                             android:text="SIGN OUT"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:id="@+id/textView13"
+                            android:id="@+id/signOut"
                             app:layout_constraintEnd_toEndOf="parent"
                             android:layout_marginEnd="32dp"
                             app:layout_constraintStart_toStartOf="parent"

@@ -3,15 +3,13 @@ package com.example.eduardorodriguez.comeaqui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Intent;
+import android.content.*;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
-import android.content.CursorLoader;
-import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -25,11 +23,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.*;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -57,11 +51,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     /**
      * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
      */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -73,14 +63,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
     private static String authoritation;
+    static Context context;
     static String email;
+    static String password;
 
     public static String getAuthoritation(){
-        String credentials =  "eduasinco@gmail.com:Dqmldqml1";
+        String credentials =  email + ":" + password;
         authoritation = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
         return authoritation;
     }
-
 
 
     @Override
@@ -88,6 +79,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         // Set up the login form.
+        context = getApplicationContext();
         mEmailView = (AutoCompleteTextView) findViewById(R.id.senderEmail);
         populateAutoComplete();
 
@@ -346,6 +338,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 if (statusCode == 200) {
                     String credentials = mEmail + ":" + mPassword;
                     email = mEmail;
+                    password = mPassword;
+
+                    SharedPreferences sp=getSharedPreferences("Login", MODE_PRIVATE);
+                    SharedPreferences.Editor Ed=sp.edit();
+                    Ed.putString("Unm", mEmail);
+                    Ed.putString("Psw", mPassword);
+                    Ed.commit();
+
+                    SharedPreferences pref = getSharedPreferences("ActivityPREF", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor edt = pref.edit();
+                    edt.putBoolean("activity_executed", true);
+                    edt.commit();
+
                     authoritation = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                     return true;
                 } else {

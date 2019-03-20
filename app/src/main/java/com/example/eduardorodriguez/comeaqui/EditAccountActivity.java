@@ -42,6 +42,7 @@ public class EditAccountActivity extends AppCompatActivity {
         profileImageView = findViewById(R.id.profile_image);
         final EditText editFirstNameView = findViewById(R.id.editFirstName);
         final EditText editLastNameView = findViewById(R.id.editLastName);
+        final EditText phoneView = findViewById(R.id.phone);
         final EditText emailView = findViewById(R.id.email);
         final EditText passwordView = findViewById(R.id.password);
         final Button saveButtonView = findViewById(R.id.saveButton);
@@ -51,6 +52,7 @@ public class EditAccountActivity extends AppCompatActivity {
         if(b != null){
             String firstName = b.getString("firstName");
             String lastName = b.getString("lastName");
+            String phoneCode = b.getString("phoneCode");
             String phoneNumber = b.getString("phoneNumber");
             String profilePhoto = b.getString("profilePhoto");
 
@@ -59,8 +61,8 @@ public class EditAccountActivity extends AppCompatActivity {
 
             editFirstNameView.setText(firstName);
             editLastNameView.setText(lastName);
-            emailView.setText(phoneNumber);
-            passwordView.setText("");
+            ccp.setCountryForPhoneCode(Integer.parseInt(phoneCode));
+            phoneView.setText(phoneNumber);
         }
 
         FloatingActionButton myFab =  findViewById(R.id.fabCamera);
@@ -89,11 +91,13 @@ public class EditAccountActivity extends AppCompatActivity {
                 PatchAsyncTask putTast2 = new PatchAsyncTask();
                 putTast2.execute("last_name", editLastNameView.getText().toString());
                 PatchAsyncTask putTast3 = new PatchAsyncTask();
-                putTast3.execute("phone_number", ccp.getDefaultCountryCode() + phoneNumberView.getText().toString());
+                putTast3.execute("phone_code", ccp.getSelectedCountryCode());
+                PatchAsyncTask putTast4 = new PatchAsyncTask();
+                putTast4.execute("phone_number", phoneNumberView.getText().toString());
                 if (imageBitmap != null){
-                    PatchAsyncTask putTast6 = new PatchAsyncTask();
-                    putTast6.imageBitmap = imageBitmap;
-                    putTast6.execute("profile_photo", "", "true");
+                    PatchAsyncTask putTast5 = new PatchAsyncTask();
+                    putTast5.imageBitmap = imageBitmap;
+                    putTast5.execute("profile_photo", "", "true");
                 }
                 Intent k = new Intent(EditAccountActivity.this, SettingsActivity.class);
                 startActivity(k);
