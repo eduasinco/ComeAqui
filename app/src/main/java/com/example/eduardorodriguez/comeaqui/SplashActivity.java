@@ -10,6 +10,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 public class SplashActivity extends AppCompatActivity {
+    private static String credentials;
+
+    public static String getCredemtials(){
+        return credentials;
+    }
+
+    public static String setCredenditals(String cred){
+        credentials = cred;
+        return credentials;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +28,8 @@ public class SplashActivity extends AppCompatActivity {
 
         SharedPreferences pref = getSharedPreferences("ActivityPREF", Context.MODE_PRIVATE);
         if (pref.getBoolean("activity_executed", false)) {
+            SharedPreferences sp = getSharedPreferences("Credentials", MODE_PRIVATE);
+            credentials = sp.getString("cred", "");
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();

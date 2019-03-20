@@ -30,7 +30,7 @@ public class PostAsyncTask extends AsyncTask<String[], Void, JSONObject>
     {
 
         HttpPost httpPost = new HttpPost(uri);
-        httpPost.addHeader("Authorization", "Basic " + LoginActivity.getAuthoritation());
+        httpPost.addHeader("Authorization", "Basic " + SplashActivity.getCredemtials());
 
         HttpClient httpclient = new DefaultHttpClient();
         String boundary = "-------------" + System.currentTimeMillis();

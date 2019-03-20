@@ -29,7 +29,7 @@ public class PutAsyncTask extends AsyncTask<String[], Void, JSONObject> {
     {
 
         HttpPut httpPut = new HttpPut("http://127.0.0.1:8000/password_change/");
-        httpPut.addHeader("Authorization", "Basic " + LoginActivity.getAuthoritation());
+        httpPut.addHeader("Authorization", "Basic " + SplashActivity.getCredemtials());
 
         HttpClient httpclient = new DefaultHttpClient();
         String boundary = "-------------" + System.currentTimeMillis();

@@ -1,6 +1,8 @@
 package com.example.eduardorodriguez.comeaqui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,7 +31,7 @@ public class PatchAsyncTask extends AsyncTask<String, Void, JSONObject> {
     {
 
         HttpPatch httpPatch = new HttpPatch("http://127.0.0.1:8000/edit_profile/");
-        httpPatch.addHeader("Authorization", "Basic " + LoginActivity.getAuthoritation());
+        httpPatch.addHeader("Authorization", "Basic " + SplashActivity.getCredemtials());
 
         HttpClient httpclient = new DefaultHttpClient();
         String boundary = "-------------" + System.currentTimeMillis();

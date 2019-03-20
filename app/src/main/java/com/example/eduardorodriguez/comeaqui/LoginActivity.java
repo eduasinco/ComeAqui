@@ -62,17 +62,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-    private static String authoritation;
     static Context context;
     static String email;
     static String password;
-
-    public static String getAuthoritation(){
-        String credentials =  email + ":" + password;
-        authoritation = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-        return authoritation;
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -337,14 +329,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 int statusCode = statusLine.getStatusCode();
                 if (statusCode == 200) {
                     String credentials = mEmail + ":" + mPassword;
-                    email = mEmail;
-                    password = mPassword;
 
-                    SharedPreferences sp=getSharedPreferences("Login", MODE_PRIVATE);
+                    SharedPreferences sp=getSharedPreferences("Credentials", MODE_PRIVATE);
+                    String authoritation = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                     SharedPreferences.Editor Ed=sp.edit();
-                    Ed.putString("Unm", mEmail);
-                    Ed.putString("Psw", mPassword);
+                    Ed.putString("cred", authoritation);
                     Ed.commit();
+
+                    SplashActivity.setCredenditals(authoritation);
 
                     SharedPreferences pref = getSharedPreferences("ActivityPREF", Context.MODE_PRIVATE);
                     SharedPreferences.Editor edt = pref.edit();

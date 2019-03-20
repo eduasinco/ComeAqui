@@ -32,7 +32,7 @@ public class DeleteAsyncTask extends AsyncTask<String, Void, JSONObject>
     {
 
         HttpDelete hhtpDelete = new HttpDelete(uri);
-        hhtpDelete.addHeader("Authorization", "Basic " + LoginActivity.getAuthoritation());
+        hhtpDelete.addHeader("Authorization", "Basic " + SplashActivity.getCredemtials());
 
         HttpClient httpclient = new DefaultHttpClient();
         String boundary = "-------------" + System.currentTimeMillis();

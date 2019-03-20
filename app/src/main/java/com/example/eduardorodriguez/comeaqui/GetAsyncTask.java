@@ -42,7 +42,7 @@ public class GetAsyncTask extends AsyncTask<String, Void, String>
         HttpGet httpGet = new HttpGet(uri);
 
 // Add authorization header
-        httpGet.addHeader("Authorization", "Basic " + LoginActivity.getAuthoritation());
+        httpGet.addHeader("Authorization", "Basic " + SplashActivity.getCredemtials());
 
 // Set up the header types needed to properly transfer JSON
         httpGet.setHeader("Content-Type", "application/json");
