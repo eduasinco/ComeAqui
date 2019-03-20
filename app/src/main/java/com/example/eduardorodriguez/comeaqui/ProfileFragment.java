@@ -19,34 +19,35 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 public class ProfileFragment extends Fragment {
 
     public static String[] data;
-    public View view;
+    static public View view;
 
-    String email;
-    String firstName;
-    String lastName;
-    String bio;
-    String profile_photo;
+    static ImageView profileImageView;
+    static TextView emailView;
+    static TextView bioView;
+    static TextView nameView;
+
+    static String email;
+    static String firstName;
+    static String lastName;
+    static String bio;
+    static String profile_photo;
 
     public ProfileFragment() {
         // Required empty public constructor
     }
 
-    public void setProfile(ProfileFragment view, String jsonString){
+    public static void setProfile(String jsonString){
         JsonParser parser = new JsonParser();
         JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
         JsonObject jo = jsonArray.get(0).getAsJsonObject();
+
         email = jo.get("email").getAsString();
         firstName = jo.get("first_name").getAsString();
         lastName = jo.get("last_name").getAsString();
         bio = jo.get("bio").getAsString();
         profile_photo = jo.get("profile_photo").getAsString();
 
-        ImageView profileImageView = view.view.findViewById(R.id.profile_image);
-        TextView emailView = view.view.findViewById(R.id.senderEmail);
-        TextView bioView = view.view.findViewById(R.id.bioView);
-        TextView nameView = view.view.findViewById(R.id.nameView);
-
-        if(!profile_photo.contains("no-image")) Glide.with(view.view.getContext()).load(profile_photo).into(profileImageView);
+        if(!profile_photo.contains("no-image")) Glide.with(view.getContext()).load(profile_photo).into(profileImageView);
         nameView.setText(firstName + " " + lastName);
         emailView.setText(email);
         bioView.setText(bio);
@@ -57,6 +58,11 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         view =  inflater.inflate(R.layout.fragment_profile, container, false);
         final ImageView backGroundImageView = view.findViewById(R.id.backGroundImage);
+
+        profileImageView = view.findViewById(R.id.profile_image);
+        emailView = view.findViewById(R.id.senderEmail);
+        bioView = view.findViewById(R.id.bioView);
+        nameView = view.findViewById(R.id.nameView);
 
         final CircularImageView circularImageView = view.findViewById(R.id.profile_image);
         circularImageView.setBorderColor(getResources().getColor(R.color.colorPrimary));

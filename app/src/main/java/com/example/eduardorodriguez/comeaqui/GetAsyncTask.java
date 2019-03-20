@@ -13,7 +13,7 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.*;
 
-public class GetAsyncTask extends AsyncTask<ProfileFragment, Void, String>
+public class GetAsyncTask extends AsyncTask<String, Void, String>
 {
     String uri;
     String[] url_end = {
@@ -31,12 +31,9 @@ public class GetAsyncTask extends AsyncTask<ProfileFragment, Void, String>
         this.uri += url_end[url_index];
     }
     @Override
-    protected String doInBackground(ProfileFragment... params)
+    protected String doInBackground(String... params)
     {
 
-        if (url_index == 2) {
-            profileContext = params[0];
-        }
         StringBuilder builder = new StringBuilder();
         HttpClient client = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(uri);
@@ -84,7 +81,7 @@ public class GetAsyncTask extends AsyncTask<ProfileFragment, Void, String>
                     GetFoodFragment.makeList(response);
                     break;
                 case 2:
-                    profileContext.setProfile(profileContext, response);
+                    ProfileFragment.setProfile(response);
                     break;
                 case 3:
                     PaymentMethodFragment.makeList(response);
