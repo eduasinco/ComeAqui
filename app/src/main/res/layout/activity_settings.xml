@@ -14,7 +14,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="save" style="@style/Widget.AppCompat.Button.Borderless"
-                android:textColor="@android:color/white" android:background="@android:color/holo_green_dark"/>
+                android:textColor="@android:color/white" android:background="@android:color/holo_green_dark"
+                android:id="@+id/saveButton"/>
     </LinearLayout>
 
     <ScrollView

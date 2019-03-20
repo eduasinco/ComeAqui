@@ -1,7 +1,10 @@
 package com.example.eduardorodriguez.comeaqui;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.widget.ImageView;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -15,37 +18,47 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
-public class PutAsyncTask extends AsyncTask<String[], Void, JSONObject> {
+public class PatchAsyncTask extends AsyncTask<String, Void, JSONObject> {
 
     Bitmap imageBitmap;
 
     @Override
-    protected JSONObject doInBackground(String[]... params)
+    protected JSONObject doInBackground(String... params)
     {
 
-        HttpPut httpPut = new HttpPut("http://127.0.0.1:8000/password_change/");
-        httpPut.addHeader("Authorization", "Basic " + LoginActivity.getAuthoritation());
+        HttpPatch httpPatch = new HttpPatch("http://127.0.0.1:8000/edit_profile/");
+        httpPatch.addHeader("Authorization", "Basic " + LoginActivity.getAuthoritation());
 
         HttpClient httpclient = new DefaultHttpClient();
         String boundary = "-------------" + System.currentTimeMillis();
-        httpPut.setHeader("Content-type","multipart/form-data; boundary="+boundary);
+        httpPatch.setHeader("Content-type","multipart/form-data; boundary="+boundary);
 
-        MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create()
-                .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
-                .setBoundary(boundary);
+        StringBody value = new StringBody(params[1], ContentType.TEXT_PLAIN);
+        HttpEntity entity;
 
-        for (String[] ss: params){
-            multipartEntityBuilder.addPart(ss[0], new StringBody(ss[1], ContentType.TEXT_PLAIN));
+        if (params.length == 3) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            byte[] imageBytes = baos.toByteArray();
+            ByteArrayBody bab = new ByteArrayBody(imageBytes, "ANDROID.png");
+            entity = MultipartEntityBuilder.create()
+                    .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
+                    .setBoundary(boundary)
+                    .addPart(params[0], bab)
+                    .build();
+        } else {
+            entity = MultipartEntityBuilder.create()
+                    .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
+                    .setBoundary(boundary)
+                    .addPart(params[0], value)
+                    .build();
         }
-        HttpEntity entity = multipartEntityBuilder.build();
-        httpPut.setEntity(entity);
+
+        httpPatch.setEntity(entity);
         try {
-            HttpResponse response = httpclient.execute(httpPut);
+            HttpResponse response = httpclient.execute(httpPatch);
             InputStream instream = response.getEntity().getContent();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(instream));
             StringBuffer stringBuffer = new StringBuffer();

@@ -33,6 +33,9 @@ public class GetAsyncTask extends AsyncTask<String, Void, String>
     @Override
     protected String doInBackground(String... params)
     {
+        if (params.length != 0 && params[0] == "editAccount"){
+            this.url_index = 5;
+        }
 
         StringBuilder builder = new StringBuilder();
         HttpClient client = new DefaultHttpClient();
@@ -88,6 +91,9 @@ public class GetAsyncTask extends AsyncTask<String, Void, String>
                     break;
                 case 4:
                     MessagesFragment.makeList(response);
+                    break;
+                case 5:
+                    SettingsActivity.setProfile(response);
                     break;
             }
         }

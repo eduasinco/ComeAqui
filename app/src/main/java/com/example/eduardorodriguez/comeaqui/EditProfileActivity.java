@@ -2,11 +2,9 @@ package com.example.eduardorodriguez.comeaqui;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -14,10 +12,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
-
-import java.util.ArrayList;
-
-import static com.example.eduardorodriguez.comeaqui.AddFoodActivity.REQUEST_IMAGE_CAPTURE;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -41,25 +35,14 @@ public class EditProfileActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Intent intent = getIntent();
-        Bundle b = intent.getExtras();
-
         final ImageView profileImageView = findViewById(R.id.profile_image);
         final TextView editFirstNameView = findViewById(R.id.editFirstName);
         final TextView editLastNameView = findViewById(R.id.editLastName);
         final TextView bioView = findViewById(R.id.bio);
         final Button saveButtonView = findViewById(R.id.saveButton);
 
-        FloatingActionButton myFab =  findViewById(R.id.fabCamera);
-        myFab.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                }
-            }
-        });
-
+        Intent intent = getIntent();
+        Bundle b = intent.getExtras();
         if(b != null){
             String firstName = b.getString("firstName");
             String lastName = b.getString("lastName");
@@ -72,17 +55,27 @@ public class EditProfileActivity extends AppCompatActivity {
             bioView.setText(bio);
         }
 
+        FloatingActionButton myFab =  findViewById(R.id.fabCamera);
+        myFab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
+            }
+        });
+
         saveButtonView.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PutAsyncTask putTast = new PutAsyncTask();
+                PatchAsyncTask putTast = new PatchAsyncTask();
                 putTast.execute("first_name", editFirstNameView.getText().toString());
-                PutAsyncTask putTast2 = new PutAsyncTask();
+                PatchAsyncTask putTast2 = new PatchAsyncTask();
                 putTast2.execute("last_name", editLastNameView.getText().toString());
-                PutAsyncTask putTast3 = new PutAsyncTask();
+                PatchAsyncTask putTast3 = new PatchAsyncTask();
                 putTast3.execute("bio", bioView.getText().toString());
                 if (imageBitmap != null){
-                    PutAsyncTask putTast4 = new PutAsyncTask();
+                    PatchAsyncTask putTast4 = new PatchAsyncTask();
                     putTast4.imageBitmap = imageBitmap;
                     putTast4.execute("profile_photo", "", "true");
                 }

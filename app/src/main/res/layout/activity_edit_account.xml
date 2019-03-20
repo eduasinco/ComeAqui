@@ -15,7 +15,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="save" style="@style/Widget.AppCompat.Button.Borderless"
-                android:textColor="@android:color/white" android:background="@android:color/holo_green_dark"/>
+                android:textColor="@android:color/white" android:background="@android:color/holo_green_dark"
+                android:id="@+id/saveButton"/>
     </LinearLayout>
 
     <ScrollView
@@ -90,7 +91,8 @@
                             android:text="Name"
                             android:ems="10"
                             android:id="@+id/editLastName"
-                            app:layout_constraintTop_toBottomOf="@+id/textView4" app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textView4"
+                            app:layout_constraintStart_toStartOf="parent"
                             android:layout_marginStart="32dp"/>
 
                     <android.support.design.widget.FloatingActionButton
@@ -127,7 +129,7 @@
                         />
 
                         <EditText
-                                android:id="@+id/editText_carrierNumber"
+                                android:id="@+id/phone"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:editable="false"
@@ -154,23 +156,26 @@
                             android:layout_height="wrap_content"
                             android:inputType="textEmailAddress"
                             android:ems="10"
-                            android:id="@+id/editText3"
-                            app:layout_constraintTop_toBottomOf="@+id/textView10" app:layout_constraintStart_toStartOf="parent"
+                            android:id="@+id/email"
+                            app:layout_constraintTop_toBottomOf="@+id/textView10"
+                            app:layout_constraintStart_toStartOf="parent"
                             android:layout_marginStart="32dp"/>
                     <TextView
                             android:text="Password"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView12"
-                            app:layout_constraintTop_toBottomOf="@+id/editText3" app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/email"
+                            app:layout_constraintStart_toStartOf="parent"
                             android:layout_marginStart="32dp"/>
                     <EditText
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:inputType="textPassword"
                             android:ems="10"
-                            android:id="@+id/editText5"
-                            app:layout_constraintTop_toBottomOf="@+id/textView12" app:layout_constraintStart_toStartOf="parent"
+                            android:id="@+id/password"
+                            app:layout_constraintTop_toBottomOf="@+id/textView12"
+                            app:layout_constraintStart_toStartOf="parent"
                             android:layout_marginStart="32dp"/>
 
                 </android.support.constraint.ConstraintLayout>
