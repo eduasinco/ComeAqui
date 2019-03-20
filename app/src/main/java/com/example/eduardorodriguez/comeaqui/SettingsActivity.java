@@ -12,6 +12,12 @@ import android.widget.EditText;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    private static EditText addressView;
+
+    public static void setAddress(String text){
+        addressView.setText(text);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,7 +27,7 @@ public class SettingsActivity extends AppCompatActivity {
                 .replace(R.id.container, new PlacesAutocompleteFragment())
                 .commit();
 
-        final EditText addressView = findViewById(R.id.address);
+        addressView = findViewById(R.id.address);
         addressView.addTextChangedListener(new TextWatcher() {
 
             @Override
