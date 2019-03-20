@@ -1,51 +1,42 @@
 package com.example.eduardorodriguez.comeaqui;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
-import java.io.*;
 
-public class GetAsyncTask extends AsyncTask<ProfileFragment, Void, String>
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+public class GoogleAPIAsyncTask extends AsyncTask<ProfileFragment, Void, String>
 {
-    String uri;
-    String[] url_end = {
-            "my_foods/",
-            "foods/",
-            "my_profile/",
-            "my_profile_card/",
-            "my_messages/"
-    };
-    ProfileFragment profileContext;
-    int url_index;
-    public GetAsyncTask(int url_index){
-        this.url_index = url_index;
-        this.uri = "http://127.0.0.1:8000/";
-        this.uri += url_end[url_index];
+
+    private static String uri;
+    public GoogleAPIAsyncTask(String uri){
+        this.uri = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=";
+        for (char c: uri.toCharArray()){
+            if(c == ' '){
+                this.uri += "+";
+            }else{
+                this.uri += c;
+            }
+        }
+        this.uri += "&types=establishment&language=pt_BR&key=AIzaSyAY98SJhng3EjroCSGZ7yfhOWhbiqUB-tw";
     }
     @Override
     protected String doInBackground(ProfileFragment... params)
     {
 
-        if (url_index == 2) {
-            profileContext = params[0];
-        }
         StringBuilder builder = new StringBuilder();
         HttpClient client = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(uri);
 
-// Add authorization header
-        httpGet.addHeader("Authorization", "Basic " + LoginActivity.getAuthoritation());
-
-// Set up the header types needed to properly transfer JSON
-        httpGet.setHeader("Content-Type", "application/json");
         try {
             HttpResponse response = client.execute(httpGet);
             StatusLine statusLine = response.getStatusLine();
@@ -76,23 +67,7 @@ public class GetAsyncTask extends AsyncTask<ProfileFragment, Void, String>
     {
         if(response != null)
         {
-            switch (url_index){
-                case 0:
-                    UserPostFragment.makeList(response);
-                    break;
-                case 1:
-                    GetFoodFragment.makeList(response);
-                    break;
-                case 2:
-                    profileContext.setProfile(profileContext, response);
-                    break;
-                case 3:
-                    PaymentMethodFragment.makeList(response);
-                    break;
-                case 4:
-                    MessagesFragment.makeList(response);
-                    break;
-            }
+            PlacesAutocompleteFragment.makeList(response);
         }
     }
 }
