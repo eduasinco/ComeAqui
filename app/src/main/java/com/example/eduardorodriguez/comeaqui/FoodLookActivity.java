@@ -9,8 +9,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
-import io.card.payment.CardIOActivity;
-import io.card.payment.CreditCard;
 
 import java.util.ArrayList;
 
@@ -21,9 +19,9 @@ public class FoodLookActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_look);
 
-        ImageView image = findViewById(R.id.foodLookImage);
-        TextView plateNameView = findViewById(R.id.name);
-        TextView descriptionView = findViewById(R.id.descriptionId);
+        ImageView image = findViewById(R.id.postFoodPhoto);
+        TextView plateNameView = findViewById(R.id.postPlateName);
+        TextView descriptionView = findViewById(R.id.postDescription);
         Button addButtonView = findViewById(R.id.addButton);
 
         Intent intent = getIntent();

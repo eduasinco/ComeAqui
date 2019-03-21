@@ -66,6 +66,7 @@ public class MyMessagesRecyclerViewAdapter extends RecyclerView.Adapter<MyMessag
                 orderLook.putExtra("postFoodPhoto", mValues.get(pos)[7]);
                 orderLook.putExtra("postPrice", mValues.get(pos)[8]);
                 orderLook.putExtra("postDescription", mValues.get(pos)[9]);
+                holder.mView.getContext().startActivity(orderLook);
             }
         });
     }
