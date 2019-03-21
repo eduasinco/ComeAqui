@@ -88,7 +88,8 @@ public class OptionsFragment extends Fragment {
         ordersView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent k = new Intent(getContext(), OrdersActivity.class);
+                startActivity(k);
             }
         });
         return view;

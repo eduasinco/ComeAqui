@@ -89,7 +89,7 @@ public class FoodLookActivity extends AppCompatActivity {
                         createOrder.execute(
                                 new String[]{"post_id", id}
                         );
-                        Intent goToOrders = new Intent(FoodLookActivity.this, OrdersActivity.class);
+                        Intent goToOrders = new Intent(FoodLookActivity.this, OrderLookActivity.class);
                         startActivity(goToOrders);
                     }
                 });

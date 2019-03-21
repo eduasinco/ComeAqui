@@ -41,14 +41,17 @@
     <TextView
             android:text="Message"
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="0dp"
             android:id="@+id/orderMessage"
             android:textSize="14sp" android:gravity="center" android:textAlignment="textStart"
             android:scrollHorizontally="true"
             android:ellipsize="end"
             android:maxLines="2" tools:ignore="RtlCompat"
             app:layout_constraintStart_toEndOf="@+id/orderImage"
-            android:layout_marginStart="16dp" tools:layout_editor_absoluteY="40dp"/>
+            android:layout_marginStart="16dp" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/foodName"
+            app:layout_constraintBottom_toTopOf="@+id/posterEmail"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"/>
 
         <View
                 android:layout_height="1dp"

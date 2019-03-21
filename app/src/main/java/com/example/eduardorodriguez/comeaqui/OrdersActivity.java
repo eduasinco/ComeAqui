@@ -14,6 +14,8 @@ public class OrdersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders);
 
-
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, new OrderFragment())
+                .commit();
     }
 }

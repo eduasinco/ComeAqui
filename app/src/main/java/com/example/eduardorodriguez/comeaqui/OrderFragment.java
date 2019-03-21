@@ -46,8 +46,7 @@ public class OrderFragment extends Fragment {
         try {
             data = new ArrayList<>();
             JsonParser parser = new JsonParser();
-            JsonObject joo = parser.parse(jsonString).getAsJsonObject();
-            JsonArray jsonArray = joo.get("predictions").getAsJsonArray();
+            JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
                 data.add(createStringArray(jo));
@@ -67,8 +66,21 @@ public class OrderFragment extends Fragment {
     }
 
     public static String[] createStringArray(JsonObject jo){
-        String description = jo.get("description").getAsNumber().toString();
-        String[] add = new String[]{description};
+        String id = jo.get("id").getAsNumber().toString();
+        String owner = jo.get("owner").getAsString();
+        String orderStatus = jo.get("order_status").getAsString();
+        String postPlateName = jo.get("post_plate_name").getAsString();
+        String postFoodPhoto = jo.get("post_food_photo").getAsString();
+        String postPrice = jo.get("post_price").getAsString();
+        String postDescription = jo.get("post_description").getAsString();
+        String posterFirstName = jo.get("poster_first_name").getAsString();
+        String posterLastName = jo.get("poster_last_name").getAsString();
+        String posterEmail = jo.get("poster_email").getAsString();
+        String posterImage = jo.get("poster_image").getAsString();
+        String posterLocation = jo.get("poster_location").getAsString();
+        String posterPhoneNumber = jo.get("poster_phone_number").getAsString();
+        String posterPhoneCode = jo.get("poster_phone_code").getAsString();
+        String[] add = new String[]{id, owner, orderStatus, postPlateName, postFoodPhoto, postPrice, postDescription, posterFirstName, posterLastName, posterEmail, posterImage, posterLocation, posterPhoneNumber, posterPhoneCode};
         return add;
     }
 

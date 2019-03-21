@@ -91,6 +91,8 @@
                 android:label="@string/title_activity_orders"
                 android:theme="@style/AppTheme">
         </activity>
+        <activity android:name=".OrderLookActivity">
+        </activity>
     </application>
 
 </manifest>

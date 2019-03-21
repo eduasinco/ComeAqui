@@ -22,6 +22,7 @@ public class GetAsyncTask extends AsyncTask<String, Void, String>
             "my_profile/",
             "my_profile_card/",
             "my_messages/",
+            "",
             "my_orders/"
     };
     ProfileFragment profileContext;
