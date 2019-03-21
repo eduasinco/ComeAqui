@@ -61,9 +61,9 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         });
 
         final TextView food_name = holder.mView.findViewById(R.id.foodName);
-        TextView priceView = holder.mView.findViewById(R.id.price);
-        TextView descriptionView = holder.mView.findViewById(R.id.bio);
-        ImageView imageView = holder.mView.findViewById(R.id.foodImage);
+        TextView priceView = holder.mView.findViewById(R.id.posterEmail);
+        TextView descriptionView = holder.mView.findViewById(R.id.orderMessage);
+        ImageView imageView = holder.mView.findViewById(R.id.orderImage);
 
         final String id = mValues.get(position)[0];
         String nameText = mValues.get(position)[1];

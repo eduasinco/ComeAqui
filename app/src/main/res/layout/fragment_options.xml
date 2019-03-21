@@ -14,9 +14,11 @@
 
         <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="100dp" app:layout_constraintTop_toTopOf="parent"
+                android:layout_height="100dp"
                 app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                android:id="@+id/paymentMethod">
+                android:id="@+id/paymentMethod"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintTop_toBottomOf="@+id/orders">
 
             <ImageView
                     android:layout_width="25dp"
@@ -61,9 +63,10 @@
         <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                app:layout_constraintTop_toBottomOf="@+id/settings"
                 app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                android:id="@+id/orders">
+                android:id="@+id/orders"
+                app:layout_constraintHorizontal_bias="0.0" app:layout_constraintTop_toTopOf="parent"
+        >
 
             <ImageView
                     android:layout_width="25dp"

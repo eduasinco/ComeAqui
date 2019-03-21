@@ -21,7 +21,8 @@ public class GetAsyncTask extends AsyncTask<String, Void, String>
             "foods/",
             "my_profile/",
             "my_profile_card/",
-            "my_messages/"
+            "my_messages/",
+            "my_orders/"
     };
     ProfileFragment profileContext;
     int url_index;
@@ -94,6 +95,9 @@ public class GetAsyncTask extends AsyncTask<String, Void, String>
                     break;
                 case 5:
                     SettingsActivity.setProfile(response);
+                    break;
+                case 6:
+                    OrderFragment.makeList(response);
                     break;
             }
         }

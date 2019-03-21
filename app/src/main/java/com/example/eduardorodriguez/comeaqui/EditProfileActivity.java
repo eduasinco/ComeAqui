@@ -38,7 +38,7 @@ public class EditProfileActivity extends AppCompatActivity {
         final ImageView profileImageView = findViewById(R.id.profile_image);
         final TextView editFirstNameView = findViewById(R.id.editFirstName);
         final TextView editLastNameView = findViewById(R.id.editLastName);
-        final TextView bioView = findViewById(R.id.bio);
+        final TextView bioView = findViewById(R.id.orderMessage);
         final Button saveButtonView = findViewById(R.id.saveButton);
 
         Intent intent = getIntent();

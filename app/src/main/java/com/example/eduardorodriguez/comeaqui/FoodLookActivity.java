@@ -81,12 +81,16 @@ public class FoodLookActivity extends AppCompatActivity {
                 addButtonView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        PostAsyncTask emiMessage = new PostAsyncTask("http://127.0.0.1:8000/send_message/");
-                        emiMessage.execute(
+                        PostAsyncTask emitMessage = new PostAsyncTask("http://127.0.0.1:8000/send_message/");
+                        emitMessage.execute(
                                 new String[]{"owner", ownerEmail, ""}
                         );
-                        Intent k = new Intent(FoodLookActivity.this, MainActivity.class);
-                        startActivity(k);
+                        PostAsyncTask createOrder = new PostAsyncTask("http://127.0.0.1:8000/create_order/");
+                        createOrder.execute(
+                                new String[]{"post_id", id}
+                        );
+                        Intent goToOrders = new Intent(FoodLookActivity.this, OrdersActivity.class);
+                        startActivity(goToOrders);
                     }
                 });
             }

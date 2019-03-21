@@ -65,11 +65,11 @@ public class AddFoodActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         foodName = findViewById(R.id.foodName);
-        price = findViewById(R.id.price);
+        price = findViewById(R.id.posterEmail);
         image = findViewById(R.id.image);
         seekbar = findViewById(R.id.seekBar);
         descriptionLayout = findViewById(R.id.descriptionLayout);
-        description = findViewById(R.id.bio);
+        description = findViewById(R.id.orderMessage);
         submit = findViewById(R.id.submitButton);
 
         submit.setOnClickListener( new View.OnClickListener() {

@@ -16,9 +16,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         final TextView oldPasswordView = findViewById(R.id.oldPassword);
         final TextView newPasswordView = findViewById(R.id.newPassword);
-        final Button resetbButtonView = findViewById(R.id.ressetButton);
+        final Button resetButtonView = findViewById(R.id.ressetButton);
 
-        resetbButtonView.setOnClickListener(new View.OnClickListener() {
+        resetButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PutAsyncTask resetPassword = new PutAsyncTask();
@@ -26,7 +26,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                         new String[]{"old_password", oldPasswordView.getText().toString()},
                         new String[]{"new_password", newPasswordView.getText().toString()}
                 );
-                Intent k = new Intent(ChangePasswordActivity.this, EditAccountActivity.class);
+                Intent k = new Intent(ChangePasswordActivity.this, LoginActivity.class);
                 startActivity(k);
             }
         });

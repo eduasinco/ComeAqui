@@ -38,9 +38,9 @@ public class GetFoodAdapter extends BaseAdapter {
 
         final View view = inflater.inflate(R.layout.getfood_list_element, null);
         final TextView food_name = view.findViewById(R.id.foodName);
-        TextView priceView = view.findViewById(R.id.price);
-        TextView descriptionView = view.findViewById(R.id.bio);
-        ImageView imageView = view.findViewById(R.id.foodImage);
+        TextView priceView = view.findViewById(R.id.posterEmail);
+        TextView descriptionView = view.findViewById(R.id.orderMessage);
+        ImageView imageView = view.findViewById(R.id.orderImage);
 
         final String id = data.get(position)[0];
         String nameText = data.get(position)[1];

@@ -25,29 +25,29 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class MessagesFragment extends Fragment {
+public class OrderFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
+    private static ArrayList<String[]> data;
+    private static MyOrderRecyclerViewAdapter adapter;
     private OnListFragmentInteractionListener mListener;
-    static ArrayList<String[]> data;
-    static MyMessagesRecyclerViewAdapter adapter;
-
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public MessagesFragment() {
+    public OrderFragment() {
     }
 
     public static void makeList(String jsonString){
         try {
             data = new ArrayList<>();
             JsonParser parser = new JsonParser();
-            JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
+            JsonObject joo = parser.parse(jsonString).getAsJsonObject();
+            JsonArray jsonArray = joo.get("predictions").getAsJsonArray();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
                 data.add(createStringArray(jo));
@@ -67,21 +67,17 @@ public class MessagesFragment extends Fragment {
     }
 
     public static String[] createStringArray(JsonObject jo){
-        String firstName = jo.get("sender_first_name").getAsString();
-        String lastName = jo.get("sender_last_name").getAsString();
-        String senderEmail = jo.get("sender_email").getAsString();
-        String senderImage = jo.get("sender_image").getAsString();
-        String creationDate = jo.get("created_at").getAsString();
-        String id = jo.get("id").getAsNumber().toString();
-        senderImage = senderImage;
-        String[] add = new String[]{firstName, lastName, senderEmail, senderImage, creationDate, id};
+        String description = jo.get("description").getAsNumber().toString();
+        String[] add = new String[]{description};
         return add;
     }
 
+
+
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static MessagesFragment newInstance(int columnCount) {
-        MessagesFragment fragment = new MessagesFragment();
+    public static OrderFragment newInstance(int columnCount) {
+        OrderFragment fragment = new OrderFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -100,7 +96,7 @@ public class MessagesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_messages_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_order_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -111,9 +107,9 @@ public class MessagesFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            GetAsyncTask getMessages = new GetAsyncTask(4);
-            getMessages.execute();
-            adapter = new MyMessagesRecyclerViewAdapter(data, mListener);
+            GetAsyncTask getOrders = new GetAsyncTask(6);
+            getOrders.execute();
+            adapter = new MyOrderRecyclerViewAdapter(data, mListener);
             recyclerView.setAdapter(adapter);
         }
         return view;

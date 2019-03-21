@@ -318,10 +318,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             HttpClient client = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet("http://127.0.0.1:8000/login/");
 
-            httpGet.addHeader(BasicScheme.authenticate(
-                    new UsernamePasswordCredentials(mEmail, mPassword),
-                    "UTF-8", false));
-
+            String cred = mEmail + ":" + mPassword;
+            httpGet.addHeader("Authorization", "Basic " + Base64.encodeToString(cred.getBytes(), Base64.NO_WRAP));
             httpGet.setHeader("Content-Type", "application/json");
             try {
                 HttpResponse response = client.execute(httpGet);
@@ -331,19 +329,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     String credentials = mEmail + ":" + mPassword;
 
                     SharedPreferences sp=getSharedPreferences("Credentials", MODE_PRIVATE);
-                    String authoritation = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                    String authorization = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                     SharedPreferences.Editor Ed=sp.edit();
-                    Ed.putString("cred", authoritation);
+                    Ed.putString("cred", authorization);
                     Ed.commit();
 
-                    SplashActivity.setCredenditals(authoritation);
+                    SplashActivity.setCredenditals(authorization);
 
                     SharedPreferences pref = getSharedPreferences("ActivityPREF", Context.MODE_PRIVATE);
                     SharedPreferences.Editor edt = pref.edit();
                     edt.putBoolean("activity_executed", true);
                     edt.commit();
-
-                    authoritation = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                     return true;
                 } else {
                     return false;

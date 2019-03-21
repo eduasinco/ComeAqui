@@ -75,7 +75,7 @@
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="32dp"/>
 
             <EditText
-                    android:id="@+id/bio"
+                    android:id="@+id/orderMessage"
                     android:gravity="top|left"
                     android:background="#ffffff"
                     android:inputType="textMultiLine"
@@ -108,8 +108,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/saveButton"
-                    app:layout_constraintTop_toBottomOf="@+id/bio" app:layout_constraintEnd_toEndOf="@+id/bio"
-                    app:layout_constraintStart_toStartOf="@+id/bio" style="@style/Widget.AppCompat.Button.Borderless"
+                    app:layout_constraintTop_toBottomOf="@+id/orderMessage" app:layout_constraintEnd_toEndOf="@+id/orderMessage"
+                    app:layout_constraintStart_toStartOf="@+id/orderMessage" style="@style/Widget.AppCompat.Button.Borderless"
                     android:background="@color/colorPrimary" android:textColor="@android:color/white"/>
 
         </android.support.constraint.ConstraintLayout>

@@ -24,12 +24,12 @@
                 android:textSize="16sp" tools:ignore="RtlCompat"
                 android:layout_marginTop="8dp"
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="@+id/guideline6"
-                app:layout_constraintEnd_toStartOf="@+id/foodImage" android:layout_marginEnd="24dp"/>
+                app:layout_constraintEnd_toStartOf="@+id/orderImage" android:layout_marginEnd="24dp"/>
         <ImageView
                 android:layout_width="100dp"
                 android:scaleType="centerCrop"
                 android:layout_height="100dp"
-                android:id="@+id/foodImage"
+                android:id="@+id/orderImage"
                 android:background="#257701ff"
                 app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="10dp"
                 app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="10dp"
@@ -38,14 +38,14 @@
                 android:text="30€"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/price"
+                android:id="@+id/posterEmail"
                 android:width="200dp"
                 android:fontFamily="sans-serif"
                 android:gravity="center" android:textAlignment="textStart"
                 android:textSize="16sp"
-                app:layout_constraintTop_toBottomOf="@+id/bio"
+                app:layout_constraintTop_toBottomOf="@+id/orderMessage"
                 app:layout_constraintStart_toStartOf="@+id/guideline6"
-                app:layout_constraintEnd_toStartOf="@+id/foodImage" android:layout_marginEnd="24dp"
+                app:layout_constraintEnd_toStartOf="@+id/orderImage" android:layout_marginEnd="24dp"
                 tools:ignore="RtlCompat"/>
         <android.support.constraint.Guideline android:layout_width="wrap_content" android:layout_height="wrap_content"
                                               android:id="@+id/guideline6"
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/constraintLayout"
                 app:layout_constraintStart_toStartOf="@+id/guideline6"
-                app:layout_constraintTop_toBottomOf="@+id/price" android:layout_marginTop="8dp">
+                app:layout_constraintTop_toBottomOf="@+id/posterEmail" android:layout_marginTop="8dp">
 
             <ImageView
                     android:layout_width="wrap_content"
@@ -112,13 +112,13 @@
                 android:text="TextView"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
-                android:id="@+id/bio"
+                android:id="@+id/orderMessage"
                 android:textSize="14sp" android:gravity="center" android:textAlignment="textStart"
                 android:scrollHorizontally="true"
                 android:ellipsize="end"
                 android:maxLines="2" tools:ignore="RtlCompat"
                 app:layout_constraintStart_toStartOf="@+id/guideline6"
-                app:layout_constraintTop_toBottomOf="@+id/foodName" app:layout_constraintEnd_toStartOf="@+id/foodImage"
+                app:layout_constraintTop_toBottomOf="@+id/foodName" app:layout_constraintEnd_toStartOf="@+id/orderImage"
                 android:layout_marginEnd="24dp"/>
 
         <View
