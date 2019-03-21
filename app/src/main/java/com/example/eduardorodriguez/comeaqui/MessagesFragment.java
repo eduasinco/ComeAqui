@@ -78,8 +78,10 @@ public class MessagesFragment extends Fragment {
         String postFoodPhoto = jo.get("post_food_photo").getAsString();
         String postPrice = jo.get("post_price").getAsString();
         String postDescription = jo.get("post_description").getAsString();
+        String post = jo.get("post").getAsNumber().toString();
+        String poster = jo.get("sender").getAsNumber().toString();
 
-        String[] add = new String[]{firstName, lastName, senderEmail, senderImage, creationDate, id, postPlateName, postFoodPhoto, postPrice, postDescription};
+        String[] add = new String[]{firstName, lastName, senderEmail, senderImage, creationDate, id, postPlateName, postFoodPhoto, postPrice, postDescription, post, poster};
         return add;
     }
 

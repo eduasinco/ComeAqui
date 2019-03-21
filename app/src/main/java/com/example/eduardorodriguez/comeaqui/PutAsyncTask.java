@@ -23,12 +23,16 @@ import java.io.InputStreamReader;
 public class PutAsyncTask extends AsyncTask<String[], Void, JSONObject> {
 
     Bitmap imageBitmap;
+    String uri;
 
+    public PutAsyncTask(String uri){
+        this.uri = uri;
+    }
     @Override
     protected JSONObject doInBackground(String[]... params)
     {
 
-        HttpPut httpPut = new HttpPut("http://127.0.0.1:8000/password_change/");
+        HttpPut httpPut = new HttpPut(this.uri);
         httpPut.addHeader("Authorization", "Basic " + SplashActivity.getCredemtials());
 
         HttpClient httpclient = new DefaultHttpClient();
@@ -65,8 +69,6 @@ public class PutAsyncTask extends AsyncTask<String[], Void, JSONObject> {
     @Override
     protected void onPostExecute(JSONObject response)
     {
-        if(response != null)
-        {
-        }
+        if(response != null) {}
     }
 }

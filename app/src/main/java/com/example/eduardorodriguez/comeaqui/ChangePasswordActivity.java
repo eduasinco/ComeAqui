@@ -21,7 +21,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         resetButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PutAsyncTask resetPassword = new PutAsyncTask();
+                PutAsyncTask resetPassword = new PutAsyncTask("http://127.0.0.1:8000/password_change/");
                 resetPassword.execute(
                         new String[]{"old_password", oldPasswordView.getText().toString()},
                         new String[]{"new_password", newPasswordView.getText().toString()}
