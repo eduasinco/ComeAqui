@@ -49,7 +49,7 @@ public class EditProfileActivity extends AppCompatActivity {
             String bio = b.getString("bio");
             String profile_photo = b.getString("profile_photo");
 
-            if(!profile_photo.contains("no-image")) Glide.with(this).load(profile_photo).into(profileImageView);
+            if(profile_photo != null && !profile_photo.contains("no-image")) Glide.with(this).load(profile_photo).into(profileImageView);
             editFirstNameView.setText(firstName);
             editLastNameView.setText(lastName);
             bioView.setText(bio);

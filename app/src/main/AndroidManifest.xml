@@ -93,6 +93,8 @@
         </activity>
         <activity android:name=".OrderLookActivity">
         </activity>
+        <activity android:name=".MessageLookActivity">
+        </activity>
     </application>
 
 </manifest>

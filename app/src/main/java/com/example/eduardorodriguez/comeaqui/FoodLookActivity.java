@@ -83,7 +83,8 @@ public class FoodLookActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         PostAsyncTask emitMessage = new PostAsyncTask("http://127.0.0.1:8000/send_message/");
                         emitMessage.execute(
-                                new String[]{"owner", ownerEmail}
+                                new String[]{"owner", ownerEmail},
+                                new String[]{"post_id", id}
                         );
                         PostAsyncTask createOrder = new PostAsyncTask("http://127.0.0.1:8000/create_order/");
                         createOrder.execute(

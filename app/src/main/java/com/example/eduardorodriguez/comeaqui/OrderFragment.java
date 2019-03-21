@@ -72,7 +72,7 @@ public class OrderFragment extends Fragment {
         String postPlateName = jo.get("post_plate_name").getAsString();
         String postFoodPhoto = jo.get("post_food_photo").getAsString();
         String postPrice = jo.get("post_price").getAsString();
-        String postDescription = jo.get("post_description").getAsString();
+        String postDescription = jo.get("poster_first_name").getAsString();
         String posterFirstName = jo.get("poster_first_name").getAsString();
         String posterLastName = jo.get("poster_last_name").getAsString();
         String posterEmail = jo.get("poster_email").getAsString();

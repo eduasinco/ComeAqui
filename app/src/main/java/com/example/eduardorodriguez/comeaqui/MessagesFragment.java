@@ -73,8 +73,13 @@ public class MessagesFragment extends Fragment {
         String senderImage = jo.get("sender_image").getAsString();
         String creationDate = jo.get("created_at").getAsString();
         String id = jo.get("id").getAsNumber().toString();
-        senderImage = senderImage;
-        String[] add = new String[]{firstName, lastName, senderEmail, senderImage, creationDate, id};
+
+        String postPlateName = jo.get("post_plate_name").getAsString();
+        String postFoodPhoto = jo.get("post_food_photo").getAsString();
+        String postPrice = jo.get("post_price").getAsString();
+        String postDescription = jo.get("post_description").getAsString();
+
+        String[] add = new String[]{firstName, lastName, senderEmail, senderImage, creationDate, id, postPlateName, postFoodPhoto, postPrice, postDescription};
         return add;
     }
 
