@@ -21,9 +21,11 @@ import com.google.gson.JsonParser;
 public class SettingsActivity extends AppCompatActivity {
 
     private static EditText addressView;
-    public static void setAddress(String text){
+    private static String place_id;
+    public static void setAddress(String text, String id){
         addressView.setText(text);
         addressView.setFocusable(false);
+        place_id = id;
     }
 
     static String email;
@@ -112,10 +114,26 @@ public class SettingsActivity extends AppCompatActivity {
         saveButtonView.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 PatchAsyncTask putTast = new PatchAsyncTask();
                 putTast.execute("location", addressView.getText().toString());
                 PatchAsyncTask putTast2 = new PatchAsyncTask();
                 putTast2.execute("deliver_radius", Integer.toString(delivery_radious));
+
+                if (place_id != null) {
+                    GoogleAPIAsyncTask gAPI2 = new GoogleAPIAsyncTask(
+                            "https://maps.googleapis.com/maps/api/place/details/json?placeid=",
+                            place_id,
+                            "&fields=geometry&", 1);
+                    gAPI2.execute();
+                } else {
+                    GoogleAPIAsyncTask gAPI2 = new GoogleAPIAsyncTask(
+                            "https://maps.googleapis.com/maps/api/place/textsearch/json?query=",
+                            addressView.getText().toString(),
+                            "&", 2);
+                    gAPI2.execute();
+                }
 
                 Intent k = new Intent(SettingsActivity.this, MainActivity.class);
                 k.putExtra("profile", "profile");
@@ -143,7 +161,10 @@ public class SettingsActivity extends AppCompatActivity {
         final Runnable input_finish_checker = new Runnable() {
             public void run() {
                 if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
-                    GoogleAPIAsyncTask gAPI = new GoogleAPIAsyncTask(addressView.getText().toString());
+                    GoogleAPIAsyncTask gAPI = new GoogleAPIAsyncTask(
+                            "https://maps.googleapis.com/maps/api/place/autocomplete/json?input="
+                            ,addressView.getText().toString(),
+                            "&types=geocode&language=en&", 0);
                     gAPI.execute();
                 }
             }

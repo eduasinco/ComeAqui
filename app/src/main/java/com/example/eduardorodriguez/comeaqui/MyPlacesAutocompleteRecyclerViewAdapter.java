@@ -41,13 +41,12 @@ public class MyPlacesAutocompleteRecyclerViewAdapter extends RecyclerView.Adapte
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-
+        final int pos = position;
         holder.contentView.setText(mValues.get(position)[0]);
-
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SettingsActivity.setAddress(holder.contentView.getText().toString());
+                SettingsActivity.setAddress(holder.contentView.getText().toString(), mValues.get(pos)[1]);
             }
         });
     }

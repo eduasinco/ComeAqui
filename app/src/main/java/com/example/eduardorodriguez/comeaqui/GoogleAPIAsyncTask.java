@@ -14,23 +14,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class GoogleAPIAsyncTask extends AsyncTask<ProfileFragment, Void, String>
+public class GoogleAPIAsyncTask extends AsyncTask<String, Void, String>
 {
 
     private static String uri;
-    public GoogleAPIAsyncTask(String uri){
-        this.uri = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=";
-        for (char c: uri.toCharArray()){
+    private static int index;
+    public GoogleAPIAsyncTask(String uri1, String place, String uri2, int ix){
+        index = ix;
+        this.uri = uri1;
+        for (char c: place.toCharArray()){
             if(c == ' '){
                 this.uri += "+";
             }else{
                 this.uri += c;
             }
         }
-        this.uri += "&types=geocode&language=en&key=AIzaSyAY98SJhng3EjroCSGZ7yfhOWhbiqUB-tw";
+        this.uri += uri2;
+        this.uri += "key=AIzaSyAY98SJhng3EjroCSGZ7yfhOWhbiqUB-tw";
     }
     @Override
-    protected String doInBackground(ProfileFragment... params)
+    protected String doInBackground(String... params)
     {
 
         StringBuilder builder = new StringBuilder();
@@ -67,7 +70,17 @@ public class GoogleAPIAsyncTask extends AsyncTask<ProfileFragment, Void, String>
     {
         if(response != null)
         {
-            PlacesAutocompleteFragment.makeList(response);
+            switch (index){
+                case 0:
+                    PlacesAutocompleteFragment.makeList(response);
+                    break;
+                case 1:
+                    PlacesAutocompleteFragment.parseLatLng(response);
+                    break;
+                case 2:
+                    PlacesAutocompleteFragment.makeList2(response);
+                    break;
+            }
         }
     }
 }

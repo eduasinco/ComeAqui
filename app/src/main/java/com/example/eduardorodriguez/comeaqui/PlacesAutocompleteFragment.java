@@ -42,6 +42,49 @@ public class PlacesAutocompleteFragment extends Fragment {
     public PlacesAutocompleteFragment() {
     }
 
+    public static void parseLatLng(String jsonString){
+        try {
+            JsonParser parser = new JsonParser();
+            JsonObject joo = parser.parse(jsonString).getAsJsonObject();
+            JsonObject res = joo.get("result").getAsJsonObject();
+            saveLatLng(res);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void makeList2(String jsonString){
+        try {
+            JsonParser parser = new JsonParser();
+            JsonObject joo = parser.parse(jsonString).getAsJsonObject();
+            JsonArray jsonArray = joo.get("results").getAsJsonArray();
+            for (JsonElement pa : jsonArray) {
+                JsonObject jo = pa.getAsJsonObject();
+                saveLatLng(jo);
+                break;
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void saveLatLng(JsonObject jo){
+        try {
+            JsonObject geo = jo.get("geometry").getAsJsonObject();
+            JsonObject loc = geo.get("location").getAsJsonObject();
+            Float lat = loc.get("lat").getAsFloat();
+            Float lng = loc.get("lng").getAsFloat();
+
+            PatchAsyncTask putTast = new PatchAsyncTask();
+            putTast.execute("lat", lat.toString());
+            PatchAsyncTask putTast2 = new PatchAsyncTask();
+            putTast2.execute("lng", lng.toString());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
     public static void makeList(String jsonString){
         try {
             data = new ArrayList<>();
@@ -58,17 +101,10 @@ public class PlacesAutocompleteFragment extends Fragment {
         }
     }
 
-    public static void appendToList(String jsonString){
-        JsonParser parser = new JsonParser();
-        JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
-        JsonObject jo = jsonArray.get(0).getAsJsonObject();
-        data.add(0, createStringArray(jo));
-        adapter.updateData(data);
-    }
-
     public static String[] createStringArray(JsonObject jo){
         String description = jo.get("description").getAsNumber().toString();
-        String[] add = new String[]{description};
+        String place_id = jo.get("place_id").getAsNumber().toString();
+        String[] add = new String[]{description, place_id};
         return add;
     }
 
