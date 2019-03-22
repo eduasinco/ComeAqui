@@ -36,13 +36,15 @@
                 android:id="@+id/foodImage" app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="10dp"
                 app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="10dp"
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="10dp"/>
+
+
         <TextView
                 android:text="No data"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/foodName"
                 app:layout_constraintTop_toTopOf="@+id/foodImage" app:layout_constraintStart_toEndOf="@+id/foodImage"
-                android:layout_marginStart="16dp"/>
+                android:layout_marginStart="16dp" android:textStyle="bold" android:textColor="@color/colorPrimaryDark"/>
         <TextView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -58,20 +60,31 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/posterEmail"
                 app:layout_constraintBottom_toBottomOf="@+id/foodImage"
-                app:layout_constraintEnd_toStartOf="@+id/posterImage" android:layout_marginEnd="8dp"/>
+                app:layout_constraintEnd_toStartOf="@+id/posterImage" android:layout_marginEnd="8dp"
+                android:textSize="10sp"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/posterName"
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toTopOf="@+id/posterEmail"
-                app:layout_constraintEnd_toStartOf="@+id/posterImage" android:layout_marginEnd="8dp"/>
-        <ImageView
-                android:layout_width="50dp"
-                android:scaleType="centerCrop"
-                android:layout_height="50dp" app:srcCompat="@drawable/no_profile_photo"
-                android:id="@+id/posterImage" android:layout_marginEnd="16dp" app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="@+id/posterEmail"/>
+                app:layout_constraintEnd_toStartOf="@+id/posterImage" android:layout_marginEnd="8dp"
+                android:textSize="12sp" android:textStyle="bold" android:textColor="@android:color/black"/>
+
+        <com.mikhaellopez.circularimageview.CircularImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/no_profile_photo"
+                app:civ_border_color="@color/colorPrimaryDark"
+                app:civ_border_width="2dp"
+                app:civ_shadow="true"
+                app:civ_shadow_radius="1"
+                app:civ_shadow_color="@color/colorPrimaryDark"
+                android:id="@+id/posterImage"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="8dp" app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="8dp"/>
+
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>
