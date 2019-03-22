@@ -18,12 +18,13 @@ public class GetAsyncTask extends AsyncTask<String, Void, String>
     String uri;
     String[] url_end = {
             "my_foods/",
-            "foods/",
+            "get_foods/",
             "my_profile/",
             "my_profile_card/",
             "my_messages/",
             "",
-            "my_orders/"
+            "my_orders/",
+            "go_foods/"
     };
     ProfileFragment profileContext;
     int url_index;
@@ -99,6 +100,9 @@ public class GetAsyncTask extends AsyncTask<String, Void, String>
                     break;
                 case 6:
                     OrderFragment.makeList(response);
+                    break;
+                case 7:
+                    MapFragment.makeList(response);
                     break;
             }
         }

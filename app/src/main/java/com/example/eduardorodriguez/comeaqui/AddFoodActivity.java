@@ -12,6 +12,7 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.*;
+import com.bumptech.glide.Glide;
 
 import java.io.*;
 
@@ -75,13 +76,21 @@ public class AddFoodActivity extends AppCompatActivity {
         submit.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Intent intent = getIntent();
+                Bundle b = intent.getExtras();
+                String isGoFood = "false";
+                if(b != null) {
+                    isGoFood = b.getString("isGoFood");
+                }
                 PostAsyncTask post = new PostAsyncTask("http://127.0.0.1:8000/foods/");
                 post.bitmap = imageBitmap;
                 post.execute(
-                        new String[]{"plate_name", foodName.getText().toString(), ""},
-                        new String[]{"price", price_data.toString(), ""},
+                        new String[]{"plate_name", foodName.getText().toString()},
+                        new String[]{"price", price_data.toString()},
                         new String[]{"food_type", setTypes(), ""},
-                        new String[]{"description", description.getText().toString(), ""},
+                        new String[]{"description", description.getText().toString()},
+                        new String[]{"is_go_food", isGoFood},
                         new String[]{"food_photo", "", "img"}
                 );
                 try {

@@ -17,6 +17,12 @@ import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import java.util.ArrayList;
 
 
 /**
@@ -28,7 +34,57 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapFragment extends Fragment {
 
     MapView mMapView;
-    private GoogleMap googleMap;
+    private static GoogleMap googleMap;
+    public static ArrayList<String[]> data;
+
+    public static void setMarkers(){
+        for (String[] posterInfo: data){
+            float lat = Float.parseFloat(posterInfo[14]);
+            float lng = Float.parseFloat(posterInfo[15]);
+            LatLng place2 = new LatLng(lat, lng);
+            googleMap.addMarker(new MarkerOptions().position(place2).title(posterInfo[2]).snippet(posterInfo[5]));
+        }
+    }
+
+    public static void makeList(String jsonString){
+        try {
+            data = new ArrayList<>();
+            JsonParser parser = new JsonParser();
+            JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
+            for (JsonElement pa : jsonArray) {
+                JsonObject jo = pa.getAsJsonObject();
+                data.add(createStringArray(jo));
+            }
+            setMarkers();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static String[] createStringArray(JsonObject jo){
+        String id = jo.get("id").getAsNumber().toString();
+        String owner = jo.get("owner").getAsNumber().toString();
+        String plateName = jo.get("plate_name").getAsString();
+        String price = jo.get("price").getAsString();
+        String foodType = jo.get("food_type").getAsString();
+        String description = jo.get("description").getAsString();
+        String foodPhoto = jo.get("food_photo").getAsString();
+
+        String posterFirstName = jo.get("poster_first_name").getAsString();
+        String posterLastName = jo.get("poster_last_name").getAsString();
+        String posterEmail = jo.get("poster_email").getAsString();
+        String posterImage = jo.get("poster_image").getAsString();
+        String posterLocation = jo.get("poster_location").getAsString();
+        String posterPhoneNumber = jo.get("poster_phone_number").getAsString();
+        String posterPhoneCode = jo.get("poster_phone_code").getAsString();
+        String posterLat = jo.get("poster_lat").getAsString();
+        String posterLng = jo.get("poster_lng").getAsString();
+        String[] add = new String[]{
+                id, owner, plateName, price, foodType, description, foodPhoto,
+                posterFirstName, posterLastName, posterEmail, posterImage, posterLocation, posterPhoneNumber, posterPhoneCode, posterLat, posterLng
+        };
+        return add;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,15 +117,18 @@ public class MapFragment extends Fragment {
                         double lat = location.getLatitude();
 
                         LatLng place = new LatLng(lat, lng);
-                        googleMap.addMarker(new MarkerOptions().position(place).title("Marker Title").snippet("Marker Description"));
-
                         // For zooming automatically to the location of the marker
                         CameraPosition cameraPosition = new CameraPosition.Builder().target(place).zoom(12).build();
                         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
                     }
                 };
                 MyLocation myLocation = new MyLocation();
                 myLocation.getLocation(getContext(), locationResult);
+
+                GetAsyncTask getPostLocations = new GetAsyncTask(7);
+                getPostLocations.execute();
+
             }
         });
 
@@ -77,6 +136,7 @@ public class MapFragment extends Fragment {
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
+                addFood.putExtra("isGoFood", "true");
                 getActivity().startActivity(addFood);
             }
         });
