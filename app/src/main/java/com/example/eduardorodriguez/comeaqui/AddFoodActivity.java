@@ -12,7 +12,6 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.*;
-import com.bumptech.glide.Glide;
 
 import java.io.*;
 
@@ -65,7 +64,7 @@ public class AddFoodActivity extends AppCompatActivity {
                 R.array.order_choices, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        foodName = findViewById(R.id.foodName);
+        foodName = findViewById(R.id.foodImage);
         price = findViewById(R.id.posterEmail);
         image = findViewById(R.id.image);
         seekbar = findViewById(R.id.seekBar);

@@ -67,20 +67,20 @@ public class MainActivity extends AppCompatActivity {
         }else{
             setFragment(getFoodFragment);
             toolbar.setTitle("Get Food");
-            menu.findItem(R.id.nav_getfood).setIcon(R.drawable.goeatfill);
+            menu.findItem(R.id.nav_getfood).setIcon(R.drawable.getfoodfill);
         }
         mMainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 Menu menu = mMainNav.getMenu();
-                menu.findItem(R.id.nav_getfood).setIcon(R.drawable.goeat);
+                menu.findItem(R.id.nav_getfood).setIcon(R.drawable.getfood);
                 menu.findItem(R.id.nav_go).setIcon(R.drawable.prepare);
                 menu.findItem(R.id.nav_profile).setIcon(R.drawable.profile);
                 switch (menuItem.getItemId()){
                     case R.id.nav_getfood:
                         setFragment(getFoodFragment);
                         toolbar.setTitle("Get");
-                        menuItem.setIcon(R.drawable.goeatfill);
+                        menuItem.setIcon(R.drawable.getfoodfill);
                         return true;
                     case R.id.nav_go:
                         setFragment(mapFragment);

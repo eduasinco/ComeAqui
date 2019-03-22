@@ -1,22 +1,22 @@
 package com.example.eduardorodriguez.comeaqui;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.graphics.*;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.*;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.*;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -34,16 +34,36 @@ import java.util.ArrayList;
 public class MapFragment extends Fragment {
 
     MapView mMapView;
+    static View rootView;
     private static GoogleMap googleMap;
     public static ArrayList<String[]> data;
 
     public static void setMarkers(){
-        for (String[] posterInfo: data){
-            float lat = Float.parseFloat(posterInfo[14]);
-            float lng = Float.parseFloat(posterInfo[15]);
-            LatLng place2 = new LatLng(lat, lng);
-            googleMap.addMarker(new MarkerOptions().position(place2).title(posterInfo[2]).snippet(posterInfo[5]));
+        for (int i = 0; i < data.size(); i++){
+            float lat = Float.parseFloat(data.get(i)[14]);
+            float lng = Float.parseFloat(data.get(i)[15]);
+
+            Marker marker =  googleMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(lat, lng)));
+            marker.setTag(i);
+
+            Drawable myIcon = rootView.getResources().getDrawable( R.drawable.map_food_icon);
+            ColorFilter filter = new LightingColorFilter(
+                    ContextCompat.getColor(rootView.getContext(), R.color.colorPrimary),
+                    ContextCompat.getColor(rootView.getContext(), R.color.colorPrimary)
+            );
+            myIcon.setColorFilter(filter);
+            marker.setIcon(getMarkerIconFromDrawable(myIcon));
         }
+    }
+
+    private static BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable) {
+        Canvas canvas = new Canvas();
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        canvas.setBitmap(bitmap);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        drawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
     public static void makeList(String jsonString){
@@ -88,9 +108,18 @@ public class MapFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_map, container, false);
+        rootView = inflater.inflate(R.layout.fragment_map, container, false);
 
-        mMapView = (MapView) rootView.findViewById(R.id.mapView);
+        mMapView = rootView.findViewById(R.id.mapView);
+        final ConstraintLayout postInfoView = rootView.findViewById(R.id.postInfo);
+
+        final TextView foodNameView = rootView.findViewById(R.id.foodName);
+        final TextView foodDescriptionView = rootView.findViewById(R.id.foodDescription);
+        final TextView posterEmailView = rootView.findViewById(R.id.posterEmail);
+        final TextView posterNameView = rootView.findViewById(R.id.posterName);
+        final ImageView foodImageView = rootView.findViewById(R.id.foodImage);
+        final ImageView posterImageView = rootView.findViewById(R.id.posterImage);
+        postInfoView.setVisibility(View.GONE);
         mMapView.onCreate(savedInstanceState);
 
         mMapView.onResume(); // needed to get the map to display immediately
@@ -118,7 +147,7 @@ public class MapFragment extends Fragment {
 
                         LatLng place = new LatLng(lat, lng);
                         // For zooming automatically to the location of the marker
-                        CameraPosition cameraPosition = new CameraPosition.Builder().target(place).zoom(12).build();
+                        CameraPosition cameraPosition = new CameraPosition.Builder().target(place).zoom(15).build();
                         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                     }
@@ -128,6 +157,33 @@ public class MapFragment extends Fragment {
 
                 GetAsyncTask getPostLocations = new GetAsyncTask(7);
                 getPostLocations.execute();
+
+                googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    public boolean onMarkerClick(Marker marker) {
+                        postInfoView.setVisibility(View.VISIBLE);
+                        int index = (int) (marker.getTag());
+                        foodNameView.setText(data.get(index)[2]);
+                        foodDescriptionView.setText(data.get(index)[5]);
+                        posterNameView.setText(data.get(index)[7] + " " + data.get(index)[8]);
+                        posterEmailView.setText(data.get(index)[9]);
+
+                        String profile_photo = "http://127.0.0.1:8000";
+                        profile_photo += data.get(index)[6];
+                        if(!profile_photo.contains("no-image")) Glide.with(rootView.getContext()).load(profile_photo).into(foodImageView);
+
+                        profile_photo = "http://127.0.0.1:8000/media/";
+                        profile_photo += data.get(index)[10];
+                        if(!profile_photo.contains("no-image")) Glide.with(rootView.getContext()).load(profile_photo).into(posterImageView);
+                        return false;
+                    }
+                });
+
+                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                    @Override
+                    public void onMapClick(LatLng latLng) {
+                        postInfoView.setVisibility(View.GONE);
+                    }
+                });
 
             }
         });

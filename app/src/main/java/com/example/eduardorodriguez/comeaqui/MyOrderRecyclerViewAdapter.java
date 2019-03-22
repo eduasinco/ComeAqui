@@ -16,7 +16,6 @@ import com.example.eduardorodriguez.comeaqui.OrderFragment.OnListFragmentInterac
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
@@ -113,7 +112,7 @@ public class MyOrderRecyclerViewAdapter extends RecyclerView.Adapter<MyOrderRecy
             listItemView = view.findViewById(R.id.listItem);
             mIdView = view.findViewById(R.id.item_number);
             messageView = view.findViewById(R.id.orderMessage);
-            foodNameView = view.findViewById(R.id.foodName);
+            foodNameView = view.findViewById(R.id.foodImage);
             posterEmailView = view.findViewById(R.id.posterEmail);
             orderImageView = view.findViewById(R.id.orderImage);
 

@@ -37,7 +37,7 @@ public class GetFoodAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         final View view = inflater.inflate(R.layout.getfood_list_element, null);
-        final TextView food_name = view.findViewById(R.id.foodName);
+        final TextView food_name = view.findViewById(R.id.foodImage);
         TextView priceView = view.findViewById(R.id.posterEmail);
         TextView descriptionView = view.findViewById(R.id.orderMessage);
         ImageView imageView = view.findViewById(R.id.orderImage);
