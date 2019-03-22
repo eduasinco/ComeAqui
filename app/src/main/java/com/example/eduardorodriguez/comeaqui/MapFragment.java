@@ -2,10 +2,12 @@ package com.example.eduardorodriguez.comeaqui;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -68,6 +70,14 @@ public class MapFragment extends Fragment {
                 };
                 MyLocation myLocation = new MyLocation();
                 myLocation.getLocation(getContext(), locationResult);
+            }
+        });
+
+        FloatingActionButton myFab =  rootView.findViewById(R.id.fab);
+        myFab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
+                getActivity().startActivity(addFood);
             }
         });
 
