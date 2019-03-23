@@ -115,7 +115,7 @@ public class AddFoodActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    foodName.setHint("What are you preparing?");
+                    foodName.setHint("What are you making?");
                 }
             }
         });

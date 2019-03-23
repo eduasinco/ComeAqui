@@ -10,7 +10,7 @@
     <EditText
             android:textAlignment="center"
             android:textColorHint="#a9000000"
-            android:hint="What are you Preparing?"
+            android:hint="What are you making?"
             android:background="#d6ffffff"
             android:layout_width="0dp"
             android:layout_height="50dp"

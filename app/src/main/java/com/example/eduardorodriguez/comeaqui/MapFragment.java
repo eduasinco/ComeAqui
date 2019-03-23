@@ -111,7 +111,18 @@ public class MapFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_map, container, false);
 
         mMapView = rootView.findViewById(R.id.mapView);
+
         final ConstraintLayout postInfoView = rootView.findViewById(R.id.postInfo);
+        final ConstraintLayout bigPostInfoView = rootView.findViewById(R.id.bigPostInfo);
+        final TextView bigPosterNameView = rootView.findViewById(R.id.bigPosterName);
+        final TextView bigPosterEmailView = rootView.findViewById(R.id.bigPosterEmail);
+        final TextView bigPosterPhoneView = rootView.findViewById(R.id.bigPosterPhone);
+        final TextView bigPosterLocationView = rootView.findViewById(R.id.bigPosterLocation);
+        final TextView bigPostDescriptionView = rootView.findViewById(R.id.bigPostDescription);
+
+
+        final ImageView bigFoodImageView = rootView.findViewById(R.id.bigFoodImage);
+        final ImageView bigPosterImageView = rootView.findViewById(R.id.bigPosterImage);
 
         final TextView foodNameView = rootView.findViewById(R.id.foodName);
         final TextView foodDescriptionView = rootView.findViewById(R.id.foodDescription);
@@ -161,7 +172,7 @@ public class MapFragment extends Fragment {
                 googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     public boolean onMarkerClick(Marker marker) {
                         postInfoView.setVisibility(View.VISIBLE);
-                        int index = (int) (marker.getTag());
+                        final int index = (int) (marker.getTag());
                         foodNameView.setText(data.get(index)[2]);
                         foodDescriptionView.setText(data.get(index)[5]);
                         posterNameView.setText(data.get(index)[7] + " " + data.get(index)[8]);
@@ -170,10 +181,20 @@ public class MapFragment extends Fragment {
                         String profile_photo = "http://127.0.0.1:8000";
                         profile_photo += data.get(index)[6];
                         if(!profile_photo.contains("no-image")) Glide.with(rootView.getContext()).load(profile_photo).into(foodImageView);
+                        if(!profile_photo.contains("no-image")) Glide.with(rootView.getContext()).load(profile_photo).into(bigFoodImageView);
 
                         profile_photo = "http://127.0.0.1:8000/media/";
                         profile_photo += data.get(index)[10];
                         if(!profile_photo.contains("no-image")) Glide.with(rootView.getContext()).load(profile_photo).into(posterImageView);
+                        if(!profile_photo.contains("no-image")) Glide.with(rootView.getContext()).load(profile_photo).into(bigPosterImageView);
+
+
+
+                        bigPosterNameView.setText(data.get(index)[7] + " " + data.get(index)[8]);
+                        bigPosterEmailView.setText(data.get(index)[9]);
+                        bigPostDescriptionView.setText(data.get(index)[5]);
+                        if (data.get(index)[12] != "") bigPosterPhoneView.setText("+" + data.get(index)[13] + data.get(index)[12]);
+                        bigPosterLocationView.setText(data.get(index)[11]);
                         return false;
                     }
                 });
@@ -182,6 +203,8 @@ public class MapFragment extends Fragment {
                     @Override
                     public void onMapClick(LatLng latLng) {
                         postInfoView.setVisibility(View.GONE);
+                        bigPostInfoView.setVisibility(View.GONE);
+                        bigPosterImageView.setVisibility(View.GONE);
                     }
                 });
 
@@ -194,6 +217,16 @@ public class MapFragment extends Fragment {
                 Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
                 addFood.putExtra("isGoFood", "true");
                 getActivity().startActivity(addFood);
+            }
+        });
+
+        postInfoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postInfoView.setVisibility(View.GONE);
+                bigPostInfoView.setVisibility(View.VISIBLE);
+                bigPosterImageView.setVisibility(View.VISIBLE);
+
             }
         });
 

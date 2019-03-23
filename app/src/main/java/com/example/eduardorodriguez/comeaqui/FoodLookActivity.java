@@ -1,5 +1,6 @@
 package com.example.eduardorodriguez.comeaqui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -9,15 +10,30 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 public class FoodLookActivity extends AppCompatActivity {
 
+    static Context context;
+
+    public static void goToOrder(JSONObject jsonObject){
+        try{
+            String id = jsonObject.get("id").toString();
+            Intent goToOrders = new Intent(context, OrderLookActivity.class);
+            goToOrders.putExtra("id", id);
+            context.startActivity(goToOrders);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_look);
+        context = getApplicationContext();
 
         ImageView image = findViewById(R.id.postFoodPhoto);
         TextView plateNameView = findViewById(R.id.postPlateName);
@@ -88,8 +104,6 @@ public class FoodLookActivity extends AppCompatActivity {
                         createOrder.execute(
                                 new String[]{"post_id", id}
                         );
-                        Intent goToOrders = new Intent(FoodLookActivity.this, OrderLookActivity.class);
-                        startActivity(goToOrders);
                     }
                 });
             }
