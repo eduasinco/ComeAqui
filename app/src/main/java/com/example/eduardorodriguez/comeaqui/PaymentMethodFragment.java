@@ -107,7 +107,7 @@ public class PaymentMethodFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            GetAsyncTask getCards = new GetAsyncTask(3);
+            GetAsyncTask getCards = new GetAsyncTask(3, "my_profile_card/");
             getCards.execute();
             fa = new MyPaymentMethodRecyclerViewAdapter(data, mListener);
             recyclerView.setAdapter(fa);

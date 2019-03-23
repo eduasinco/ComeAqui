@@ -109,7 +109,7 @@ public class UserPostFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            GetAsyncTask process = new GetAsyncTask(0);
+            GetAsyncTask process = new GetAsyncTask(0, "my_foods/");
             process.execute();
             this.adapter = new MyUserPostRecyclerViewAdapter(data, mListener);
             recyclerView.setAdapter(this.adapter);

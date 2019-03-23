@@ -80,7 +80,7 @@ public class ProfileFragment extends Fragment {
         });
 
 
-        GetAsyncTask process = new GetAsyncTask(2);
+        GetAsyncTask process = new GetAsyncTask(2, "my_profile/");
         process.execute();
 
         ViewPager viewPager = view.findViewById(R.id.viewpager);

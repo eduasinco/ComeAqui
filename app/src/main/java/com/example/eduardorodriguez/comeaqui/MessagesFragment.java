@@ -118,7 +118,7 @@ public class MessagesFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            GetAsyncTask getMessages = new GetAsyncTask(4);
+            GetAsyncTask getMessages = new GetAsyncTask(4, "my_messages/");
             getMessages.execute();
             adapter = new MyMessagesRecyclerViewAdapter(data, mListener);
             recyclerView.setAdapter(adapter);

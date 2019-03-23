@@ -155,7 +155,7 @@ public class MapFragment extends Fragment {
                 MyLocation myLocation = new MyLocation();
                 myLocation.getLocation(getContext(), locationResult);
 
-                GetAsyncTask getPostLocations = new GetAsyncTask(7);
+                GetAsyncTask getPostLocations = new GetAsyncTask(7, "go_foods/");
                 getPostLocations.execute();
 
                 googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {

@@ -64,7 +64,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        GetAsyncTask profileInfo = new GetAsyncTask(2);
+        GetAsyncTask profileInfo = new GetAsyncTask(2, "my_profile/");
         profileInfo.execute("editAccount");
 
         Button editAccountView = findViewById(R.id.editAccount);

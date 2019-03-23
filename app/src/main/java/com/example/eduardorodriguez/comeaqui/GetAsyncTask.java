@@ -16,22 +16,12 @@ import java.io.*;
 public class GetAsyncTask extends AsyncTask<String, Void, String>
 {
     String uri;
-    String[] url_end = {
-            "my_foods/",
-            "get_foods/",
-            "my_profile/",
-            "my_profile_card/",
-            "my_messages/",
-            "",
-            "my_orders/",
-            "go_foods/"
-    };
-    ProfileFragment profileContext;
+
     int url_index;
-    public GetAsyncTask(int url_index){
+    public GetAsyncTask(int url_index, String uri){
         this.url_index = url_index;
         this.uri = "http://127.0.0.1:8000/";
-        this.uri += url_end[url_index];
+        this.uri += uri;
     }
     @Override
     protected String doInBackground(String... params)
@@ -103,6 +93,9 @@ public class GetAsyncTask extends AsyncTask<String, Void, String>
                     break;
                 case 7:
                     MapFragment.makeList(response);
+                    break;
+                case 8:
+                    OrderLookActivity.putData(response);
                     break;
             }
         }

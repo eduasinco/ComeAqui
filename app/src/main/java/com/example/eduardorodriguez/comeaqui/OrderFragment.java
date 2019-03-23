@@ -119,7 +119,7 @@ public class OrderFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            GetAsyncTask getOrders = new GetAsyncTask(6);
+            GetAsyncTask getOrders = new GetAsyncTask(6, "my_orders/");
             getOrders.execute();
             adapter = new MyOrderRecyclerViewAdapter(data, mListener);
             recyclerView.setAdapter(adapter);

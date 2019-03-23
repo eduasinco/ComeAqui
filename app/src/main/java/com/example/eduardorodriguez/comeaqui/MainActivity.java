@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if(b != null){
-            GetAsyncTask process = new GetAsyncTask(2);
+            GetAsyncTask process = new GetAsyncTask(2, "my_prfile/");
             process.execute();
             setFragment(profileFragment);
             toolbar.setTitle("Profile");
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                         menuItem.setIcon(R.drawable.preparefill);
                         return true;
                     case R.id.nav_profile:
-                        GetAsyncTask process = new GetAsyncTask(2);
+                        GetAsyncTask process = new GetAsyncTask(2, "my_profile/");
                         process.execute();
                         setFragment(profileFragment);
                         menuItem.setIcon(R.drawable.profilefill);
