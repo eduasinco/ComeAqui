@@ -79,19 +79,16 @@ public class MainActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()){
                     case R.id.nav_getfood:
                         setFragment(getFoodFragment);
-                        toolbar.setTitle("Get");
                         menuItem.setIcon(R.drawable.getfoodfill);
                         return true;
                     case R.id.nav_go:
                         setFragment(mapFragment);
-                        toolbar.setTitle("Go");
                         menuItem.setIcon(R.drawable.preparefill);
                         return true;
                     case R.id.nav_profile:
                         GetAsyncTask process = new GetAsyncTask(2);
                         process.execute();
                         setFragment(profileFragment);
-                        toolbar.setTitle("Profile");
                         menuItem.setIcon(R.drawable.profilefill);
                         return true;
                         default:

@@ -201,6 +201,13 @@ public class MapFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        //Save the fragment's state here
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         mMapView.onResume();

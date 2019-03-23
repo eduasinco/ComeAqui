@@ -80,6 +80,9 @@ public class ProfileFragment extends Fragment {
         });
 
 
+        GetAsyncTask process = new GetAsyncTask(2);
+        process.execute();
+
         ViewPager viewPager = view.findViewById(R.id.viewpager);
         viewPager.setAdapter(new TestPagerAdapter(getChildFragmentManager()));
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
