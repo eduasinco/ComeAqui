@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
@@ -32,6 +33,24 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class MapFragment extends Fragment {
+
+    static String id;
+    static String owner;
+    static String plateName;
+    static String price;
+    static String foodType;
+    static String description;
+    static String foodPhoto;
+
+    static String posterFirstName;
+    static String posterLastName;
+    static String posterEmail;
+    static String posterImage;
+    static String posterLocation;
+    static String posterPhoneNumber;
+    static String posterPhoneCode;
+    static String posterLat;
+    static String posterLng;
 
     MapView mMapView;
     static View rootView;
@@ -82,26 +101,27 @@ public class MapFragment extends Fragment {
     }
 
     public static String[] createStringArray(JsonObject jo){
-        String id = jo.get("id").getAsNumber().toString();
-        String owner = jo.get("owner").getAsNumber().toString();
-        String plateName = jo.get("plate_name").getAsString();
-        String price = jo.get("price").getAsString();
-        String foodType = jo.get("food_type").getAsString();
-        String description = jo.get("description").getAsString();
-        String foodPhoto = jo.get("food_photo").getAsString();
+        id = jo.get("id").getAsNumber().toString();
+        owner = jo.get("owner").getAsNumber().toString();
+        plateName = jo.get("plate_name").getAsString();
+        price = jo.get("price").getAsString();
+        foodType = jo.get("food_type").getAsString();
+        description = jo.get("description").getAsString();
+        foodPhoto = jo.get("food_photo").getAsString();
 
-        String posterFirstName = jo.get("poster_first_name").getAsString();
-        String posterLastName = jo.get("poster_last_name").getAsString();
-        String posterEmail = jo.get("poster_email").getAsString();
-        String posterImage = jo.get("poster_image").getAsString();
-        String posterLocation = jo.get("poster_location").getAsString();
-        String posterPhoneNumber = jo.get("poster_phone_number").getAsString();
-        String posterPhoneCode = jo.get("poster_phone_code").getAsString();
-        String posterLat = jo.get("poster_lat").getAsString();
-        String posterLng = jo.get("poster_lng").getAsString();
+        posterFirstName = jo.get("poster_first_name").getAsString();
+        posterLastName = jo.get("poster_last_name").getAsString();
+        posterEmail = jo.get("poster_email").getAsString();
+        posterImage = jo.get("poster_image").getAsString();
+        posterLocation = jo.get("poster_location").getAsString();
+        posterPhoneNumber = jo.get("poster_phone_number").getAsString();
+        posterPhoneCode = jo.get("poster_phone_code").getAsString();
+        posterLat = jo.get("poster_lat").getAsString();
+        posterLng = jo.get("poster_lng").getAsString();
         String[] add = new String[]{
                 id, owner, plateName, price, foodType, description, foodPhoto,
-                posterFirstName, posterLastName, posterEmail, posterImage, posterLocation, posterPhoneNumber, posterPhoneCode, posterLat, posterLng
+                posterFirstName, posterLastName, posterEmail, posterImage, posterLocation,
+                posterPhoneNumber, posterPhoneCode, posterLat, posterLng
         };
         return add;
     }
@@ -112,6 +132,7 @@ public class MapFragment extends Fragment {
 
         mMapView = rootView.findViewById(R.id.mapView);
 
+        final FloatingActionButton myFab =  rootView.findViewById(R.id.fab);
         final ConstraintLayout postInfoView = rootView.findViewById(R.id.postInfo);
         final ConstraintLayout bigPostInfoView = rootView.findViewById(R.id.bigPostInfo);
         final TextView bigPosterNameView = rootView.findViewById(R.id.bigPosterName);
@@ -130,6 +151,10 @@ public class MapFragment extends Fragment {
         final TextView posterNameView = rootView.findViewById(R.id.posterName);
         final ImageView foodImageView = rootView.findViewById(R.id.foodImage);
         final ImageView posterImageView = rootView.findViewById(R.id.posterImage);
+
+        final Button confirmButtonView = rootView.findViewById(R.id.confirmButton);
+
+
         postInfoView.setVisibility(View.GONE);
         mMapView.onCreate(savedInstanceState);
 
@@ -171,6 +196,8 @@ public class MapFragment extends Fragment {
 
                 googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     public boolean onMarkerClick(Marker marker) {
+                        bigPosterImageView.setVisibility(View.GONE);
+                        bigPostInfoView.setVisibility(View.GONE);
                         postInfoView.setVisibility(View.VISIBLE);
                         final int index = (int) (marker.getTag());
                         foodNameView.setText(data.get(index)[2]);
@@ -195,6 +222,7 @@ public class MapFragment extends Fragment {
                         bigPostDescriptionView.setText(data.get(index)[5]);
                         if (data.get(index)[12] != "") bigPosterPhoneView.setText("+" + data.get(index)[13] + data.get(index)[12]);
                         bigPosterLocationView.setText(data.get(index)[11]);
+
                         return false;
                     }
                 });
@@ -210,8 +238,6 @@ public class MapFragment extends Fragment {
 
             }
         });
-
-        FloatingActionButton myFab =  rootView.findViewById(R.id.fab);
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
@@ -227,6 +253,21 @@ public class MapFragment extends Fragment {
                 bigPostInfoView.setVisibility(View.VISIBLE);
                 bigPosterImageView.setVisibility(View.VISIBLE);
 
+            }
+        });
+
+        confirmButtonView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PostAsyncTask emitMessage = new PostAsyncTask("http://127.0.0.1:8000/send_message/");
+                emitMessage.execute(
+                        new String[]{"owner", posterEmail},
+                        new String[]{"post_id", id}
+                );
+                PostAsyncTask createOrder = new PostAsyncTask("http://127.0.0.1:8000/create_order/");
+                createOrder.execute(
+                        new String[]{"post_id", id}
+                );
             }
         });
 
