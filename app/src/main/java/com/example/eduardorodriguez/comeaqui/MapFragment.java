@@ -87,6 +87,9 @@ public class MapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_map, container, false);
 
+        GetAsyncTask getPostLocations = new GetAsyncTask(7, "go_foods/");
+        getPostLocations.execute();
+
         mMapView = rootView.findViewById(R.id.mapView);
 
         final FloatingActionButton myFab =  rootView.findViewById(R.id.fab);
@@ -148,9 +151,6 @@ public class MapFragment extends Fragment {
                 };
                 MyLocation myLocation = new MyLocation();
                 myLocation.getLocation(getContext(), locationResult);
-
-                GetAsyncTask getPostLocations = new GetAsyncTask(7, "go_foods/");
-                getPostLocations.execute();
 
                 googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     public boolean onMarkerClick(Marker marker) {
@@ -300,8 +300,8 @@ class MapPost{
         poster_location = jo.get("poster_location").getAsString();
         poster_phone_number = jo.get("poster_phone_number").getAsString();
         poster_phone_code = jo.get("poster_phone_code").getAsString();
-        poster_lat = jo.get("poster_lat").getAsString();
-        poster_lng = jo.get("poster_lng").getAsString();
+        poster_lat = jo.get("poster_lat").isJsonNull() ? "0": jo.get("poster_lat").getAsString();
+        poster_lng = jo.get("poster_lng").isJsonNull() ? "0": jo.get("poster_lng").getAsString();
     }
 
 }

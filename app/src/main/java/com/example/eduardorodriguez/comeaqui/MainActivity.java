@@ -58,16 +58,20 @@ public class MainActivity extends AppCompatActivity {
         Menu menu = mMainNav.getMenu();
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
-        if(b != null){
-            GetAsyncTask process = new GetAsyncTask(2, "my_prfile/");
+        if(b == null){
+            setFragment(getFoodFragment);
+            toolbar.setTitle("Get Food");
+            menu.findItem(R.id.nav_getfood).setIcon(R.drawable.getfoodfill);
+        }else if(b.getBoolean("map")){
+            setFragment(mapFragment);
+            toolbar.setTitle("Get Food");
+            menu.findItem(R.id.nav_getfood).setIcon(R.drawable.preparefill);
+        }else if(b.getBoolean("profile")){
+            GetAsyncTask process = new GetAsyncTask(2, "my_profile/");
             process.execute();
             setFragment(profileFragment);
             toolbar.setTitle("Profile");
             menu.findItem(R.id.nav_profile).setIcon(R.drawable.profilefill);
-        }else{
-            setFragment(getFoodFragment);
-            toolbar.setTitle("Get Food");
-            menu.findItem(R.id.nav_getfood).setIcon(R.drawable.getfoodfill);
         }
         mMainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override

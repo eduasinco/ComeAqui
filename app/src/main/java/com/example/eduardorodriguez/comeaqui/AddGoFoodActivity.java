@@ -96,6 +96,7 @@ public class AddGoFoodActivity extends AppCompatActivity {
                 );
                 try {
                     Intent k = new Intent(AddGoFoodActivity.this, MainActivity.class);
+                    k.putExtra("map", true);
                     startActivity(k);
                 } catch(Exception e) {
                     e.printStackTrace();

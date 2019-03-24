@@ -87,7 +87,7 @@ public class FoodLookActivity extends AppCompatActivity {
                         DeleteAsyncTask deleteFoodPost = new DeleteAsyncTask(id);
                         deleteFoodPost.execute();
                         Intent k = new Intent(FoodLookActivity.this, MainActivity.class);
-                        k.putExtra("s", " ");
+                        k.putExtra("profile", true);
                         startActivity(k);
                     }
                 });

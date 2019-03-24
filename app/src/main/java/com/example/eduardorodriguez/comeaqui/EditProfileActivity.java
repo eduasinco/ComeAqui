@@ -80,7 +80,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     putTast4.execute("profile_photo", "", "true");
                 }
                 Intent k = new Intent(EditProfileActivity.this, MainActivity.class);
-                k.putExtra("profile", "profile");
+                k.putExtra("profile", true);
                 startActivity(k);
             }
         });

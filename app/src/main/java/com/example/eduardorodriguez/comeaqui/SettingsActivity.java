@@ -136,7 +136,7 @@ public class SettingsActivity extends AppCompatActivity {
                 }
 
                 Intent k = new Intent(SettingsActivity.this, MainActivity.class);
-                k.putExtra("profile", "profile");
+                k.putExtra("profile", true);
                 startActivity(k);
             }
         });
