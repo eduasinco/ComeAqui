@@ -24,6 +24,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -34,33 +35,15 @@ import java.util.ArrayList;
  */
 public class MapFragment extends Fragment {
 
-    static String id;
-    static String owner;
-    static String plateName;
-    static String price;
-    static String foodType;
-    static String description;
-    static String foodPhoto;
-
-    static String posterFirstName;
-    static String posterLastName;
-    static String posterEmail;
-    static String posterImage;
-    static String posterLocation;
-    static String posterPhoneNumber;
-    static String posterPhoneCode;
-    static String posterLat;
-    static String posterLng;
-
     MapView mMapView;
     static View rootView;
     private static GoogleMap googleMap;
-    public static ArrayList<String[]> data;
+    public static ArrayList<MapPost> data;
 
     public static void setMarkers(){
         for (int i = 0; i < data.size(); i++){
-            float lat = Float.parseFloat(data.get(i)[14]);
-            float lng = Float.parseFloat(data.get(i)[15]);
+            float lat = Float.parseFloat(data.get(i).poster_lat);
+            float lng = Float.parseFloat(data.get(i).poster_lng);
 
             Marker marker =  googleMap.addMarker(new MarkerOptions()
                     .position(new LatLng(lat, lng)));
@@ -92,7 +75,7 @@ public class MapFragment extends Fragment {
             JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
-                data.add(createStringArray(jo));
+                data.add(new MapPost(jo));
             }
             setMarkers();
         } catch (Exception e){
@@ -100,39 +83,11 @@ public class MapFragment extends Fragment {
         }
     }
 
-    public static String[] createStringArray(JsonObject jo){
-        id = jo.get("id").getAsNumber().toString();
-        owner = jo.get("owner").getAsNumber().toString();
-        plateName = jo.get("plate_name").getAsString();
-        price = jo.get("price").getAsString();
-        foodType = jo.get("food_type").getAsString();
-        description = jo.get("description").getAsString();
-        foodPhoto = jo.get("food_photo").getAsString();
-
-        posterFirstName = jo.get("poster_first_name").getAsString();
-        posterLastName = jo.get("poster_last_name").getAsString();
-        posterEmail = jo.get("poster_email").getAsString();
-        posterImage = jo.get("poster_image").getAsString();
-        posterLocation = jo.get("poster_location").getAsString();
-        posterPhoneNumber = jo.get("poster_phone_number").getAsString();
-        posterPhoneCode = jo.get("poster_phone_code").getAsString();
-        posterLat = jo.get("poster_lat").getAsString();
-        posterLng = jo.get("poster_lng").getAsString();
-        String[] add = new String[]{
-                id, owner, plateName, price, foodType, description, foodPhoto,
-                posterFirstName, posterLastName, posterEmail, posterImage, posterLocation,
-                posterPhoneNumber, posterPhoneCode, posterLat, posterLng
-        };
-        return add;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_map, container, false);
 
         mMapView = rootView.findViewById(R.id.mapView);
-
-
 
         final FloatingActionButton myFab =  rootView.findViewById(R.id.fab);
         final ConstraintLayout postInfoView = rootView.findViewById(R.id.postInfo);
@@ -151,6 +106,7 @@ public class MapFragment extends Fragment {
         final TextView foodDescriptionView = rootView.findViewById(R.id.foodDescription);
         final TextView posterEmailView = rootView.findViewById(R.id.priceText);
         final TextView posterNameView = rootView.findViewById(R.id.posterName);
+        final TextView eatTimeView = rootView.findViewById(R.id.eatTime);
         final ImageView foodImageView = rootView.findViewById(R.id.plateName);
         final ImageView posterImageView = rootView.findViewById(R.id.posterImage);
 
@@ -202,28 +158,45 @@ public class MapFragment extends Fragment {
                         bigPostInfoView.setVisibility(View.GONE);
                         postInfoView.setVisibility(View.VISIBLE);
                         final int index = (int) (marker.getTag());
-                        foodNameView.setText(data.get(index)[2]);
-                        foodDescriptionView.setText(data.get(index)[5]);
-                        posterNameView.setText(data.get(index)[7] + " " + data.get(index)[8]);
-                        posterEmailView.setText(data.get(index)[9]);
+                        foodNameView.setText(data.get(index).plate_name);
+                        foodDescriptionView.setText(data.get(index).description);
+                        posterNameView.setText(data.get(index).poster_first_name + " " + data.get(index).poster_last_name);
+                        posterEmailView.setText(data.get(index).poster_email);
 
                         String profile_photo = "http://127.0.0.1:8000";
-                        profile_photo += data.get(index)[6];
+                        profile_photo += data.get(index).food_photo;
                         if(!profile_photo.contains("no-image")) Glide.with(rootView.getContext()).load(profile_photo).into(foodImageView);
                         if(!profile_photo.contains("no-image")) Glide.with(rootView.getContext()).load(profile_photo).into(bigFoodImageView);
 
                         profile_photo = "http://127.0.0.1:8000/media/";
-                        profile_photo += data.get(index)[10];
+                        profile_photo += data.get(index).poster_image;
                         if(!profile_photo.contains("no-image")) Glide.with(rootView.getContext()).load(profile_photo).into(posterImageView);
                         if(!profile_photo.contains("no-image")) Glide.with(rootView.getContext()).load(profile_photo).into(bigPosterImageView);
 
 
 
-                        bigPosterNameView.setText(data.get(index)[7] + " " + data.get(index)[8]);
-                        bigPosterEmailView.setText(data.get(index)[9]);
-                        bigPostDescriptionView.setText(data.get(index)[5]);
-                        if (data.get(index)[12] != "") bigPosterPhoneView.setText("+" + data.get(index)[13] + data.get(index)[12]);
-                        bigPosterLocationView.setText(data.get(index)[11]);
+                        bigPosterNameView.setText(data.get(index).poster_first_name + " " + data.get(index).poster_last_name);
+                        bigPosterEmailView.setText(data.get(index).poster_email);
+                        bigPostDescriptionView.setText(data.get(index).description);
+                        if (data.get(index).poster_phone_number != "") bigPosterPhoneView.setText("+" + data.get(index).poster_phone_code + data.get(index).poster_phone_number);
+                        bigPosterLocationView.setText(data.get(index).poster_location);
+                        eatTimeView.setText(data.get(index).go_food_time);
+
+
+                        confirmButtonView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                PostAsyncTask emitMessage = new PostAsyncTask("http://127.0.0.1:8000/send_message/");
+                                emitMessage.execute(
+                                        new String[]{"owner", data.get(index).poster_email},
+                                        new String[]{"post_id", data.get(index).id}
+                                );
+                                PostAsyncTask createOrder = new PostAsyncTask("http://127.0.0.1:8000/create_order/");
+                                createOrder.execute(
+                                        new String[]{"post_id", data.get(index).id}
+                                );
+                            }
+                        });
 
                         return false;
                     }
@@ -254,21 +227,6 @@ public class MapFragment extends Fragment {
                 bigPostInfoView.setVisibility(View.VISIBLE);
                 bigPosterImageView.setVisibility(View.VISIBLE);
 
-            }
-        });
-
-        confirmButtonView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PostAsyncTask emitMessage = new PostAsyncTask("http://127.0.0.1:8000/send_message/");
-                emitMessage.execute(
-                        new String[]{"owner", posterEmail},
-                        new String[]{"post_id", id}
-                );
-                PostAsyncTask createOrder = new PostAsyncTask("http://127.0.0.1:8000/create_order/");
-                createOrder.execute(
-                        new String[]{"post_id", id}
-                );
             }
         });
 
@@ -305,4 +263,45 @@ public class MapFragment extends Fragment {
         super.onLowMemory();
         mMapView.onLowMemory();
     }
+}
+
+class MapPost{
+    String plate_name;
+    String id;
+    String owner;
+    String price;
+    String food_type;
+    String description;
+    String food_photo;
+    String poster_first_name;
+    String poster_last_name;
+    String poster_email;
+    String poster_image;
+    String poster_location;
+    String poster_phone_number;
+    String poster_phone_code;
+    String poster_lat;
+    String poster_lng;
+    String go_food_time;
+    public MapPost(JsonObject jo) {
+        plate_name = jo.get("plate_name").getAsString();
+        owner = jo.get("owner").getAsNumber().toString();
+        id = jo.get("id").getAsNumber().toString();
+        price = jo.get("price").getAsString();
+        food_type = jo.get("food_type").getAsString();
+        description = jo.get("description").getAsString();
+        food_photo = jo.get("food_photo").getAsString();
+        go_food_time = jo.get("go_food_time").getAsString();
+
+        poster_first_name = jo.get("poster_first_name").getAsString();
+        poster_last_name = jo.get("poster_last_name").getAsString();
+        poster_email = jo.get("poster_email").getAsString();
+        poster_image = jo.get("poster_image").getAsString();
+        poster_location = jo.get("poster_location").getAsString();
+        poster_phone_number = jo.get("poster_phone_number").getAsString();
+        poster_phone_code = jo.get("poster_phone_code").getAsString();
+        poster_lat = jo.get("poster_lat").getAsString();
+        poster_lng = jo.get("poster_lng").getAsString();
+    }
+
 }

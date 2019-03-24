@@ -18,9 +18,9 @@ public class GetFoodAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
 
     Context context;
-    ArrayList<String[]> data;
+    ArrayList<GetFoodObject> data;
 
-    public GetFoodAdapter(Context context, ArrayList<String[]> data){
+    public GetFoodAdapter(Context context, ArrayList<GetFoodObject> data){
 
         this.context = context;
         this.data = data;
@@ -28,7 +28,7 @@ public class GetFoodAdapter extends BaseAdapter {
         inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void addNewRow(ArrayList<String[]> data){
+    public void addNewRow(ArrayList<GetFoodObject> data){
         this.data = data;
         this.notifyDataSetChanged();
     }
@@ -42,13 +42,13 @@ public class GetFoodAdapter extends BaseAdapter {
         TextView descriptionView = view.findViewById(R.id.orderMessage);
         ImageView imageView = view.findViewById(R.id.orderImage);
 
-        final String id = data.get(position)[0];
-        String nameText = data.get(position)[1];
-        String priceText = data.get(position)[2];
-        final String typesText = data.get(position)[3];
-        final String descriptionText = data.get(position)[4];
-        String pathText = data.get(position)[5];
-        final String ownerEmail = data.get(position)[6];
+        final String id = data.get(position).id;
+        String nameText = data.get(position).plate_name;
+        String priceText = data.get(position).price;
+        final String typesText = data.get(position).type;
+        final String descriptionText = data.get(position).description;
+        String pathText = data.get(position).food_photo;
+        final String ownerEmail = data.get(position).owner;
 
         food_name.setText(nameText);
         String priceTextE = priceText + "€";

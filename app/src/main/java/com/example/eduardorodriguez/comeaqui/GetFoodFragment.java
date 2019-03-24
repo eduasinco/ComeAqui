@@ -22,7 +22,7 @@ public class GetFoodFragment extends Fragment {
 
     SwipeRefreshLayout pullToRefresh;
 
-    public static ArrayList<String[]> data;
+    public static ArrayList<GetFoodObject> data;
     static GetFoodAdapter fa;
     static View view;
 
@@ -37,7 +37,7 @@ public class GetFoodFragment extends Fragment {
             JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
-                data.add(createStringArray(jo));
+                data.add(new GetFoodObject(jo));
             }
             fa.addNewRow(data);
         } catch (Exception e){
@@ -48,20 +48,8 @@ public class GetFoodFragment extends Fragment {
     public static void appendToList(String jsonString){
         JsonParser parser = new JsonParser();
         JsonObject jo = parser.parse(jsonString).getAsJsonObject();
-        data.add(0, createStringArray(jo));
+        data.add(0, new GetFoodObject(jo));
         fa.addNewRow(data);
-    }
-
-    public static String[] createStringArray(JsonObject jo){
-        String id = jo.get("id").getAsNumber().toString();
-        String plate_name = jo.get("plate_name").getAsString();
-        String price = jo.get("price").getAsString();
-        String type = jo.get("food_type").getAsString();
-        String description = jo.get("description").getAsString();
-        String food_photo = jo.get("food_photo").getAsString();
-        String owner = jo.get("owner").getAsString();
-        String[] add = new String[]{id, plate_name, price, type, description, food_photo, owner};
-        return add;
     }
 
     @Override
@@ -99,6 +87,26 @@ public class GetFoodFragment extends Fragment {
     }
 
     public static void setList(){
+
+    }
+}
+
+class GetFoodObject{
+    String id;
+    String plate_name;
+    String price;
+    String type;
+    String description;
+    String food_photo;
+    String owner;
+    public GetFoodObject(JsonObject jo){
+        id = jo.get("id").getAsNumber().toString();
+        plate_name = jo.get("plate_name").getAsString();
+        price = jo.get("price").getAsString();
+        type = jo.get("food_type").getAsString();
+        description = jo.get("description").getAsString();
+        food_photo = jo.get("food_photo").getAsString();
+        owner = jo.get("owner").getAsString();
 
     }
 }
