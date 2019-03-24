@@ -1,5 +1,6 @@
 package com.example.eduardorodriguez.comeaqui;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
@@ -24,8 +25,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,6 +38,16 @@ public class MapFragment extends Fragment {
     static View rootView;
     private static GoogleMap googleMap;
     public static ArrayList<MapPost> data;
+
+    public static OrderObject goOrder;
+    static ConstraintLayout constraintLayoutView;
+    static TextView confirmPosterNameView;
+    static TextView confirmLocationView;
+    static TextView confirmTimeView;
+    static ImageView confrimFoodImageView;
+    static TextView enjoyView;
+    static Button detailsButtonView;
+    static ImageView confirmPosterImageView;
 
     public static void setMarkers(){
         for (int i = 0; i < data.size(); i++){
@@ -83,6 +92,65 @@ public class MapFragment extends Fragment {
         }
     }
 
+    public static void makeOrderList(String jsonString){
+        try {
+            goOrder = null;
+            JsonParser parser = new JsonParser();
+            JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
+            for (JsonElement pa : jsonArray) {
+                JsonObject jo = pa.getAsJsonObject();
+                goOrder = new OrderObject(jo);
+                break;
+            }
+            if (goOrder != null){
+                constraintLayoutView.setVisibility(View.VISIBLE);
+                confirmPosterImageView.setVisibility(View.VISIBLE);
+                switch (goOrder.orderStatus){
+                    case "PENDING":
+                        confirmPosterNameView.setTextColor(Color.parseColor("#FFC60000"));
+                        confirmPosterNameView.setText("Pending meal with " + goOrder.posterFirstName + " " + goOrder.posterLastName);
+                        confirmLocationView.setText(goOrder.posterLocation);
+                        confirmTimeView.setText(goOrder.postGoFoodTime);
+                        enjoyView.setVisibility(View.GONE);
+                        break;
+                    case "CONFIRMED":
+                        confirmPosterNameView.setTextColor(Color.parseColor("#FF1EB600"));
+                        confirmPosterNameView.setText("Meal has been confirmed with " + goOrder.posterFirstName + " " + goOrder.posterLastName);
+                        confirmLocationView.setText(goOrder.posterLocation);
+                        confirmTimeView.setText(goOrder.postGoFoodTime.substring(0, 5));
+                        enjoyView.setVisibility(View.VISIBLE);
+                        break;
+                    case "DELIVERED":
+                        confirmPosterNameView.setTextColor(ContextCompat.getColor(rootView.getContext(), R.color.colorPrimaryDark));
+                        confirmPosterNameView.setText("Meal has been done with " + goOrder.posterFirstName + " " + goOrder.posterLastName);
+                        confirmLocationView.setVisibility(View.GONE);
+                        confirmTimeView.setVisibility(View.GONE);
+                        enjoyView.setVisibility(View.VISIBLE);
+                        enjoyView.setText("Thank you! :)");
+                        break;
+                }
+                if(!goOrder.postFoodPhoto.contains("no-image")) Glide.with(rootView.getContext())
+                        .load("http://127.0.0.1:8000/media/" + goOrder.postFoodPhoto)
+                        .into(confrimFoodImageView);
+                if(!goOrder.postFoodPhoto.contains("no-image")) Glide.with(rootView.getContext())
+                        .load("http://127.0.0.1:8000/media/" + goOrder.posterImage)
+                        .into(confirmPosterImageView);
+
+                detailsButtonView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                });
+            }else {
+                constraintLayoutView.setVisibility(View.GONE);
+                confirmPosterImageView.setVisibility(View.GONE);
+            }
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_map, container, false);
@@ -109,9 +177,23 @@ public class MapFragment extends Fragment {
         final TextView eatTimeView = rootView.findViewById(R.id.eatTime);
         final ImageView foodImageView = rootView.findViewById(R.id.plateName);
         final ImageView posterImageView = rootView.findViewById(R.id.posterImage);
-
         final Button confirmButtonView = rootView.findViewById(R.id.confirmButton);
 
+
+        constraintLayoutView = rootView.findViewById(R.id.confirmedInfo);
+        confirmPosterNameView = rootView.findViewById(R.id.confirmPosterName);
+        confirmLocationView = rootView.findViewById(R.id.confirmLocation);
+        confirmTimeView = rootView.findViewById(R.id.confirmTime);
+        enjoyView = rootView.findViewById(R.id.enjoy);
+        confrimFoodImageView = rootView.findViewById(R.id.confrimFoodImage);
+        confirmPosterImageView = rootView.findViewById(R.id.confirmPosterImage);
+        detailsButtonView = rootView.findViewById(R.id.detailsButton);
+
+
+        constraintLayoutView.setVisibility(View.GONE);
+        confirmPosterImageView.setVisibility(View.GONE);
+        GetAsyncTask getPostLocations = new GetAsyncTask(9, "my_go_orders/");
+        getPostLocations.execute();
 
         postInfoView.setVisibility(View.GONE);
         mMapView.onCreate(savedInstanceState);
@@ -179,12 +261,15 @@ public class MapFragment extends Fragment {
                         bigPostDescriptionView.setText(data.get(index).description);
                         if (data.get(index).poster_phone_number != "") bigPosterPhoneView.setText("+" + data.get(index).poster_phone_code + data.get(index).poster_phone_number);
                         bigPosterLocationView.setText(data.get(index).poster_location);
-                        eatTimeView.setText(data.get(index).go_food_time);
+                        eatTimeView.setText(data.get(index).go_food_time.substring(0,5));
 
 
                         confirmButtonView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                confirmButtonView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                                confirmButtonView.setTextColor(Color.parseColor("#FF1EB600"));
+                                confirmButtonView.setText("Confirmed");
                                 PostAsyncTask emitMessage = new PostAsyncTask("http://127.0.0.1:8000/send_message/");
                                 emitMessage.execute(
                                         new String[]{"owner", data.get(index).poster_email},
@@ -302,5 +387,4 @@ class MapPost{
         poster_lat = jo.get("poster_lat").isJsonNull() ? "0": jo.get("poster_lat").getAsString();
         poster_lng = jo.get("poster_lng").isJsonNull() ? "0": jo.get("poster_lng").getAsString();
     }
-
 }

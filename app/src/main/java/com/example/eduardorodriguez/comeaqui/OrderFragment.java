@@ -144,6 +144,7 @@ class OrderObject{
     String posterLocation;
     String posterPhoneNumber;
     String posterPhoneCode;
+    String postGoFoodTime;
     public OrderObject(JsonObject jo){
         id = jo.get("id").getAsNumber().toString();
         owner = jo.get("owner").getAsString();
@@ -159,5 +160,6 @@ class OrderObject{
         posterLocation = jo.get("poster_location").getAsString();
         posterPhoneNumber = jo.get("poster_phone_number").getAsString();
         posterPhoneCode = jo.get("poster_phone_code").getAsString();
+        postGoFoodTime = jo.get("post_go_food_time").getAsString();
     }
 }

@@ -97,6 +97,9 @@ public class GetAsyncTask extends AsyncTask<String, Void, String>
                 case 8:
                     OrderLookActivity.putData(response);
                     break;
+                case 9:
+                    MapFragment.makeOrderList(response);
+                    break;
             }
         }
     }
