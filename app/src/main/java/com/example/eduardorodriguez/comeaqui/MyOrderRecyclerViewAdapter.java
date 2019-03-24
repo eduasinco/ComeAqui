@@ -112,8 +112,8 @@ public class MyOrderRecyclerViewAdapter extends RecyclerView.Adapter<MyOrderRecy
             listItemView = view.findViewById(R.id.listItem);
             mIdView = view.findViewById(R.id.item_number);
             messageView = view.findViewById(R.id.orderMessage);
-            foodNameView = view.findViewById(R.id.foodImage);
-            posterEmailView = view.findViewById(R.id.posterEmail);
+            foodNameView = view.findViewById(R.id.plateName);
+            posterEmailView = view.findViewById(R.id.priceText);
             orderImageView = view.findViewById(R.id.orderImage);
 
         }

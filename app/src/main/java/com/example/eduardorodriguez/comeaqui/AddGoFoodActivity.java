@@ -13,15 +13,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.*;
 
-import java.io.*;
+import java.io.InputStream;
 
-public class AddFoodActivity extends AppCompatActivity {
+public class AddGoFoodActivity extends AppCompatActivity {
+
     EditText foodName;
     TextView price;
     ImageView image;
     SeekBar seekbar;
     ConstraintLayout descriptionLayout;
     EditText description;
+    TimePicker timePicker;
     Button submit;
 
     String plateName;
@@ -58,7 +60,7 @@ public class AddFoodActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_food);
+        setContentView(R.layout.activity_add_go_food);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.order_choices, android.R.layout.simple_spinner_item);
@@ -70,6 +72,7 @@ public class AddFoodActivity extends AppCompatActivity {
         seekbar = findViewById(R.id.seekBar);
         descriptionLayout = findViewById(R.id.descriptionLayout);
         description = findViewById(R.id.orderMessage);
+        timePicker = findViewById(R.id.simpleTimePicker);
         submit = findViewById(R.id.submitButton);
 
         submit.setOnClickListener( new View.OnClickListener() {
@@ -78,19 +81,21 @@ public class AddFoodActivity extends AppCompatActivity {
 
                 Intent intent = getIntent();
                 Bundle b = intent.getExtras();
-                String isGoFood = "false";
+
                 PostAsyncTask post = new PostAsyncTask("http://127.0.0.1:8000/foods/");
                 post.bitmap = imageBitmap;
+                String time = timePicker.getHour() + ":" + timePicker.getMinute();
                 post.execute(
                         new String[]{"plate_name", foodName.getText().toString()},
                         new String[]{"price", price_data.toString()},
-                        new String[]{"food_type", setTypes(), ""},
+                        new String[]{"food_type", setTypes()},
                         new String[]{"description", description.getText().toString()},
-                        new String[]{"is_go_food", "false"},
+                        new String[]{"is_go_food", "true"},
+                        new String[]{"go_food_time", time},
                         new String[]{"food_photo", "", "img"}
                 );
                 try {
-                    Intent k = new Intent(AddFoodActivity.this, MainActivity.class);
+                    Intent k = new Intent(AddGoFoodActivity.this, MainActivity.class);
                     startActivity(k);
                 } catch(Exception e) {
                     e.printStackTrace();
@@ -284,6 +289,4 @@ public class AddFoodActivity extends AppCompatActivity {
         );
         return px;
     }
-
 }
-

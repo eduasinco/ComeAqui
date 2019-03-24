@@ -50,7 +50,6 @@
                         app:layout_constraintEnd_toEndOf="@+id/backGroundImage"
                         app:layout_constraintStart_toStartOf="parent"
                         android:id="@+id/profile_image"
-                        app:srcCompat="@drawable/dairyfill"
                         app:layout_constraintHorizontal_bias="0.498"
                         app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"/>
 
@@ -66,13 +65,14 @@
                             android:text="Eduardo Rodriguez"
                             android:layout_width="0dp"
                             android:background="#ffffff"
-                            android:layout_height="wrap_content"
+                            android:layout_height="30dp"
                             android:id="@+id/nameView"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             android:textAlignment="center" android:textSize="18sp" android:textStyle="bold"
                             android:textColor="@android:color/black" android:alpha="0.9"
-                            app:layout_constraintBottom_toTopOf="@+id/senderEmail"/>
+                            app:layout_constraintBottom_toTopOf="@+id/senderEmail"
+                            app:layout_constraintTop_toTopOf="parent" android:gravity="center_vertical"/>
                     <TextView
                             android:text="eduasinco"
                             android:layout_width="0dp"

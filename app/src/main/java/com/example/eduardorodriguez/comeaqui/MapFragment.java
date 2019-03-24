@@ -132,6 +132,8 @@ public class MapFragment extends Fragment {
 
         mMapView = rootView.findViewById(R.id.mapView);
 
+
+
         final FloatingActionButton myFab =  rootView.findViewById(R.id.fab);
         final ConstraintLayout postInfoView = rootView.findViewById(R.id.postInfo);
         final ConstraintLayout bigPostInfoView = rootView.findViewById(R.id.bigPostInfo);
@@ -147,9 +149,9 @@ public class MapFragment extends Fragment {
 
         final TextView foodNameView = rootView.findViewById(R.id.foodName);
         final TextView foodDescriptionView = rootView.findViewById(R.id.foodDescription);
-        final TextView posterEmailView = rootView.findViewById(R.id.posterEmail);
+        final TextView posterEmailView = rootView.findViewById(R.id.priceText);
         final TextView posterNameView = rootView.findViewById(R.id.posterName);
-        final ImageView foodImageView = rootView.findViewById(R.id.foodImage);
+        final ImageView foodImageView = rootView.findViewById(R.id.plateName);
         final ImageView posterImageView = rootView.findViewById(R.id.posterImage);
 
         final Button confirmButtonView = rootView.findViewById(R.id.confirmButton);
@@ -240,8 +242,7 @@ public class MapFragment extends Fragment {
         });
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
-                addFood.putExtra("isGoFood", "true");
+                Intent addFood = new Intent(getActivity(), AddGoFoodActivity.class);
                 getActivity().startActivity(addFood);
             }
         });

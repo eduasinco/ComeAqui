@@ -60,8 +60,8 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
             }
         });
 
-        final TextView food_name = holder.mView.findViewById(R.id.foodImage);
-        TextView priceView = holder.mView.findViewById(R.id.posterEmail);
+        final TextView food_name = holder.mView.findViewById(R.id.plateName);
+        TextView priceView = holder.mView.findViewById(R.id.priceText);
         TextView descriptionView = holder.mView.findViewById(R.id.orderMessage);
         ImageView imageView = holder.mView.findViewById(R.id.orderImage);
 
@@ -112,7 +112,7 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            foodNameView = view.findViewById(R.id.foodImage);
+            foodNameView = view.findViewById(R.id.plateName);
         }
     }
 }
