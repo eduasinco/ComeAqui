@@ -24,16 +24,16 @@ import java.util.List;
  */
 public class MyPaymentMethodRecyclerViewAdapter extends RecyclerView.Adapter<MyPaymentMethodRecyclerViewAdapter.ViewHolder> {
 
-    private ArrayList<String[]> mValues;
+    private ArrayList<PaymentObject> mValues;
     private final OnListFragmentInteractionListener mListener;
 
 
-    public MyPaymentMethodRecyclerViewAdapter(ArrayList<String[]>  items, OnListFragmentInteractionListener listener) {
+    public MyPaymentMethodRecyclerViewAdapter(ArrayList<PaymentObject>  items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
 
-    public void updateData(ArrayList<String[]> data){
+    public void updateData(ArrayList<PaymentObject> data){
         this.mValues = data;
         notifyDataSetChanged();
     }
@@ -47,8 +47,8 @@ public class MyPaymentMethodRecyclerViewAdapter extends RecyclerView.Adapter<MyP
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mIdView.setText(mValues.get(position)[0]);
-        holder.mContentView.setText(mValues.get(position)[1]);
+        holder.mIdView.setText(mValues.get(position).card_number);
+        holder.mContentView.setText(mValues.get(position).card_type);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

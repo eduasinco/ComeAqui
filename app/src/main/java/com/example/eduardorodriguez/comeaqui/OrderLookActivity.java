@@ -27,6 +27,8 @@ public class OrderLookActivity extends AppCompatActivity {
     static ImageView posterImageView;
     static ImageView postImageView;
 
+    static OrderObject order;
+
     static Context context;
 
 
@@ -37,46 +39,33 @@ public class OrderLookActivity extends AppCompatActivity {
     }
 
     public static void createStringArray(JsonObject jo){
-        String id = jo.get("id").getAsNumber().toString();
-        String owner = jo.get("owner").getAsString();
-        String orderStatus = jo.get("order_status").getAsString();
-        String postPlateName = jo.get("post_plate_name").getAsString();
-        String postFoodPhoto = jo.get("post_food_photo").getAsString();
-        String postPrice = jo.get("post_price").getAsString();
-        String postDescription = jo.get("poster_first_name").getAsString();
-        String posterFirstName = jo.get("poster_first_name").getAsString();
-        String posterLastName = jo.get("poster_last_name").getAsString();
-        String posterEmail = jo.get("poster_email").getAsString();
-        String posterImage = jo.get("poster_image").getAsString();
-        String posterLocation = jo.get("poster_location").getAsString();
-        String posterPhoneNumber = jo.get("poster_phone_number").getAsString();
-        String posterPhoneCode = jo.get("poster_phone_code").getAsString();
+        order = new OrderObject(jo);
 
-        switch (orderStatus){
+        switch (order.orderStatus){
             case "PENDING":
-                postStatusView.setText(orderStatus);
+                postStatusView.setText(order.orderStatus);
                 postStatusView.setTextColor(Color.parseColor("#FFC60000"));
                 break;
             case "CONFIRMED":
-                postStatusView.setText(orderStatus);
+                postStatusView.setText(order.orderStatus);
                 postStatusView.setTextColor(Color.parseColor("#FF1EB600"));
                 break;
             case "DELIVERED":
-                postStatusView.setText(orderStatus);
+                postStatusView.setText(order.orderStatus);
                 postStatusView.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
                 break;
         }
 
-        postNameView.setText(postPlateName);
-        posterMessageView.setText(posterFirstName + " is preparing your order");
-        posterLocationView.setText(posterLocation);
-        postPriceView.setText("€" + postPrice);
-        subtotalView.setText("€" + postPrice);
-        totalPriceView.setText("€" + postPrice);
+        postNameView.setText(order.postPlateName);
+        posterMessageView.setText(order.posterFirstName + " is preparing your order");
+        posterLocationView.setText(order.posterLocation);
+        postPriceView.setText("€" + order.postPrice);
+        subtotalView.setText("€" + order.postPrice);
+        totalPriceView.setText("€" + order.postPrice);
 
         String initialUri = "http://127.0.0.1:8000/media/";
-        if(!posterImage.contains("no-image")) Glide.with(context).load(initialUri + posterImage).into(posterImageView);
-        if(!postFoodPhoto.contains("no-image")) Glide.with(context).load(initialUri + postFoodPhoto).into(postImageView);
+        if(!order.posterImage.contains("no-image")) Glide.with(context).load(initialUri + order.posterImage).into(posterImageView);
+        if(!order.postFoodPhoto.contains("no-image")) Glide.with(context).load(initialUri + order.postFoodPhoto).into(postImageView);
     }
 
     @Override

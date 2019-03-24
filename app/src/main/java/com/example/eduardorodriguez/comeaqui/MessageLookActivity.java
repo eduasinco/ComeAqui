@@ -28,18 +28,21 @@ public class MessageLookActivity extends AppCompatActivity {
         Bundle b = intent.getExtras();
 
         if(b != null){
-            String lastName = b.getString("lastName");
-            String firstName = b.getString("firstName");
-            String senderEmail = b.getString("senderEmail");
-            String senderImage = b.getString("senderImage");
-            String creationDate = b.getString("creationDate");
-            final String id = b.getString("id");
-            String postPlateName = b.getString("postPlateName");
-            String postFoodPhoto = b.getString("postFoodPhoto");
-            String postPrice = b.getString("postPrice");
-            String postDescription = b.getString("postDescription");
-            final String post = b.getString("post");
-            final String poster = b.getString("poster");
+            int pos = b.getInt("pos");
+            MessageObject message = MyMessagesRecyclerViewAdapter.mValues.get(pos);
+            String lastName = message.lastName;
+            String firstName = message.firstName;
+            String senderEmail = message.senderEmail;
+            String senderImage = message.senderImage;
+            String creationDate = message.creationDate;
+            final String id = message.id;
+            String postPlateName = message.postPlateName;
+            String postFoodPhoto = message.postFoodPhoto;
+            String postPrice = message.postPrice;
+            String postDescription = message.postDescription;
+            final String post = message.post;
+            final String poster = message.poster;
+
 
             String url = "http://127.0.0.1:8000/media/";
             Glide.with(this).load(url + postFoodPhoto).into(postFoodPhotoView);

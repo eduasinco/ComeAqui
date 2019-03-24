@@ -24,16 +24,16 @@ import static com.example.eduardorodriguez.comeaqui.GetFoodAdapter.setTypes;
  */
 public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPostRecyclerViewAdapter.ViewHolder> {
 
-    private ArrayList<String[]> mValues;
+    private ArrayList<UserPostObject> mValues;
     private final OnListFragmentInteractionListener mListener;
 
 
-    public MyUserPostRecyclerViewAdapter(ArrayList<String[]> items, OnListFragmentInteractionListener listener) {
+    public MyUserPostRecyclerViewAdapter(ArrayList<UserPostObject> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
 
-    public void addNewRow(ArrayList<String[]> data){
+    public void addNewRow(ArrayList<UserPostObject> data){
         this.mValues = data;
         this.notifyDataSetChanged();
     }
@@ -48,7 +48,7 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.foodNameView.setText(mValues.get(position)[0]);
+        holder.foodNameView.setText(mValues.get(position).plate_name);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,12 +65,12 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         TextView descriptionView = holder.mView.findViewById(R.id.orderMessage);
         ImageView imageView = holder.mView.findViewById(R.id.orderImage);
 
-        final String id = mValues.get(position)[0];
-        String nameText = mValues.get(position)[1];
-        String priceText = mValues.get(position)[2];
-        final String typesText = mValues.get(position)[3];
-        final String descriptionText = mValues.get(position)[4];
-        final String pathText = mValues.get(position)[5];
+        final String id = mValues.get(position).id;
+        String nameText = mValues.get(position).plate_name;
+        String priceText = mValues.get(position).price;
+        final String typesText = mValues.get(position).type;
+        final String descriptionText = mValues.get(position).description;
+        final String pathText = mValues.get(position).food_photo;
 
         food_name.setText(nameText);
         String priceTextE = priceText + "€";

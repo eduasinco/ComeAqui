@@ -30,7 +30,7 @@ public class UserPostFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
 
-    private static ArrayList<String[]> data;
+    private static ArrayList<UserPostObject> data;
     private static MyUserPostRecyclerViewAdapter adapter;
 
     private OnListFragmentInteractionListener mListener;
@@ -49,7 +49,7 @@ public class UserPostFragment extends Fragment {
             JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
-                data.add(createStringArray(jo));
+                data.add(new UserPostObject(jo));
             }
             adapter.addNewRow(data);
         } catch (Exception e){
@@ -61,19 +61,8 @@ public class UserPostFragment extends Fragment {
         JsonParser parser = new JsonParser();
         JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
         JsonObject jo = jsonArray.get(0).getAsJsonObject();
-        data.add(0, createStringArray(jo));
+        data.add(0, new UserPostObject(jo));
         adapter.addNewRow(data);
-    }
-
-    public static String[] createStringArray(JsonObject jo){
-        String id = jo.get("id").getAsNumber().toString();
-        String plate_name = jo.get("plate_name").getAsString();
-        String price = jo.get("price").getAsString();
-        String type = jo.get("food_type").getAsString();
-        String description = jo.get("description").getAsString();
-        String food_photo = jo.get("food_photo").getAsString();
-        String[] add = new String[]{id, plate_name, price, type, description, food_photo};
-        return add;
     }
 
     // TODO: Customize parameter initialization
@@ -137,5 +126,22 @@ public class UserPostFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(DummyItem item);
+    }
+}
+
+class UserPostObject{
+    String id;
+    String plate_name;
+    String price;
+    String type;
+    String description;
+    String food_photo;
+    public UserPostObject(JsonObject jo){
+        id = jo.get("id").getAsNumber().toString();
+        plate_name = jo.get("plate_name").getAsString();
+        price = jo.get("price").getAsString();
+        type = jo.get("food_type").getAsString();
+        description = jo.get("description").getAsString();
+        food_photo = jo.get("food_photo").getAsString();
     }
 }

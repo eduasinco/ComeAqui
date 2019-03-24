@@ -24,15 +24,15 @@ import java.util.ArrayList;
  */
 public class MyOrderRecyclerViewAdapter extends RecyclerView.Adapter<MyOrderRecyclerViewAdapter.ViewHolder> {
 
-    private ArrayList<String[]> mValues;
+    private ArrayList<OrderObject> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyOrderRecyclerViewAdapter(ArrayList<String[]> items, OnListFragmentInteractionListener listener) {
+    public MyOrderRecyclerViewAdapter(ArrayList<OrderObject> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
 
-    public void updateData(ArrayList<String[]> data){
+    public void updateData(ArrayList<OrderObject> data){
         this.mValues = data;
         notifyDataSetChanged();
     }
@@ -48,8 +48,8 @@ public class MyOrderRecyclerViewAdapter extends RecyclerView.Adapter<MyOrderRecy
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final int pos = position;
 
-        holder.posterEmailView.setText(mValues.get(position)[1]);
-        String status = mValues.get(position)[2];
+        holder.posterEmailView.setText(mValues.get(position).posterEmail);
+        String status = mValues.get(position).orderStatus;
         switch (status){
             case "PENDING":
                 holder.messageView.setText(status);
@@ -65,27 +65,14 @@ public class MyOrderRecyclerViewAdapter extends RecyclerView.Adapter<MyOrderRecy
                 break;
 
         }
-        holder.foodNameView.setText(mValues.get(position)[3]);
-        Glide.with(holder.mView.getContext()).load("http://127.0.0.1:8000/media/" + mValues.get(position)[4]).into(holder.orderImageView);
+        holder.foodNameView.setText(mValues.get(position).postPlateName);
+        Glide.with(holder.mView.getContext()).load("http://127.0.0.1:8000/media/" + mValues.get(position).posterImage).into(holder.orderImageView);
 
         holder.listItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent orderLook = new Intent(holder.mView.getContext(), OrderLookActivity.class);
-                orderLook.putExtra("id", mValues.get(pos)[0]);
-                orderLook.putExtra("owner", mValues.get(pos)[1]);
-                orderLook.putExtra("orderStatus", mValues.get(pos)[2]);
-                orderLook.putExtra("postPlateName", mValues.get(pos)[3]);
-                orderLook.putExtra("postFoodPhoto", mValues.get(pos)[4]);
-                orderLook.putExtra("postPrice", mValues.get(pos)[5]);
-                orderLook.putExtra("postDescription", mValues.get(pos)[6]);
-                orderLook.putExtra("posterFirstName", mValues.get(pos)[7]);
-                orderLook.putExtra("posterLastName", mValues.get(pos)[8]);
-                orderLook.putExtra("posterEmail", mValues.get(pos)[9]);
-                orderLook.putExtra("posterImage", mValues.get(pos)[10]);
-                orderLook.putExtra("posterLocation", mValues.get(pos)[11]);
-                orderLook.putExtra("posterPhoneNumber", mValues.get(pos)[12]);
-                orderLook.putExtra("posterPhoneCode", mValues.get(pos)[13]);
+                orderLook.putExtra("pos", pos);
                 holder.mView.getContext().startActivity(orderLook);
             }
         });

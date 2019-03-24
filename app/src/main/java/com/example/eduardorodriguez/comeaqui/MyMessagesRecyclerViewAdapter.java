@@ -22,15 +22,15 @@ import java.util.ArrayList;
  */
 public class MyMessagesRecyclerViewAdapter extends RecyclerView.Adapter<MyMessagesRecyclerViewAdapter.ViewHolder> {
 
-    private ArrayList<String[]> mValues;
+    static ArrayList<MessageObject> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyMessagesRecyclerViewAdapter(ArrayList<String[]> items, OnListFragmentInteractionListener listener) {
+    public MyMessagesRecyclerViewAdapter(ArrayList<MessageObject> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
 
-    public void updateData(ArrayList<String[]> data){
+    public void updateData(ArrayList<MessageObject> data){
         this.mValues = data;
         notifyDataSetChanged();
     }
@@ -46,28 +46,17 @@ public class MyMessagesRecyclerViewAdapter extends RecyclerView.Adapter<MyMessag
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final int pos = position;
 
-        holder.fullNameView.setText(mValues.get(position)[0] + " " + mValues.get(position)[1]);
-        holder.messageView.setText(mValues.get(position)[0] + " wants to try what you prepared!");
-        holder.senderEmailView.setText(mValues.get(position)[2]);
-        holder.creationDateView.setText(mValues.get(position)[4].substring(0, 10) + " " + mValues.get(position)[4].substring(11, 16));
+        holder.fullNameView.setText(mValues.get(position).firstName + " " + mValues.get(position).lastName);
+        holder.messageView.setText(mValues.get(position).firstName + " wants to try what you prepared!");
+        holder.senderEmailView.setText(mValues.get(position).senderEmail);
+        holder.creationDateView.setText(mValues.get(position).creationDate.substring(0, 10) + " " + mValues.get(position).creationDate.substring(11, 16));
 
-        Glide.with(holder.mView.getContext()).load("http://127.0.0.1:8000/media/" + mValues.get(position)[3]).into(holder.senderImageView);
+        Glide.with(holder.mView.getContext()).load("http://127.0.0.1:8000/media/" + mValues.get(position).senderImage).into(holder.senderImageView);
         holder.messageWholeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent orderLook = new Intent(holder.mView.getContext(), MessageLookActivity.class);
-                orderLook.putExtra("firstName", mValues.get(pos)[0]);
-                orderLook.putExtra("lastName", mValues.get(pos)[1]);
-                orderLook.putExtra("senderEmail", mValues.get(pos)[2]);
-                orderLook.putExtra("senderImage", mValues.get(pos)[3]);
-                orderLook.putExtra("creationDate", mValues.get(pos)[4]);
-                orderLook.putExtra("id", mValues.get(pos)[5]);
-                orderLook.putExtra("postPlateName", mValues.get(pos)[6]);
-                orderLook.putExtra("postFoodPhoto", mValues.get(pos)[7]);
-                orderLook.putExtra("postPrice", mValues.get(pos)[8]);
-                orderLook.putExtra("postDescription", mValues.get(pos)[9]);
-                orderLook.putExtra("post", mValues.get(pos)[10]);
-                orderLook.putExtra("poster", mValues.get(pos)[11]);
+                orderLook.putExtra("pos", pos);
                 holder.mView.getContext().startActivity(orderLook);
             }
         });

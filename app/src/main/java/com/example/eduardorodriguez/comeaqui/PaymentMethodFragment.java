@@ -31,7 +31,7 @@ public class PaymentMethodFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-    private static ArrayList<String[]> data;
+    private static ArrayList<PaymentObject> data;
     private static MyPaymentMethodRecyclerViewAdapter fa;
 
     /**
@@ -48,7 +48,7 @@ public class PaymentMethodFragment extends Fragment {
             JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
-                data.add(createStringArray(jo));
+                data.add(new PaymentObject(jo));
             }
             fa.updateData(data);
         } catch (Exception e){
@@ -59,19 +59,8 @@ public class PaymentMethodFragment extends Fragment {
     public static void appendToList(String jsonString){
         JsonParser parser = new JsonParser();
         JsonObject jo = parser.parse(jsonString).getAsJsonObject();
-        data.add(0, createStringArray(jo));
+        data.add(0, new PaymentObject(jo));
         fa.updateData(data);
-    }
-
-    public static String[] createStringArray(JsonObject jo){
-        String card_number = jo.get("card_number").getAsString();
-        String expiration_date = jo.get("expiration_date").getAsString();
-        String card_type = jo.get("card_type").getAsString();
-        String cvv = jo.get("cvv").getAsString();
-        String zip_code = jo.get("zip_code").getAsString();
-        String country = jo.get("country").getAsString();
-        String[] add = new String[]{card_number, expiration_date, card_type, cvv, zip_code, country};
-        return add;
     }
 
     // TODO: Customize parameter initialization
@@ -135,5 +124,22 @@ public class PaymentMethodFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(DummyItem item);
+    }
+}
+
+class PaymentObject{
+    String card_number;
+    String expiration_date;
+    String card_type;
+    String cvv;
+    String zip_code;
+    String country;
+    public PaymentObject(JsonObject jo){
+        card_number = jo.get("card_number").getAsString();
+        expiration_date = jo.get("expiration_date").getAsString();
+        card_type = jo.get("card_type").getAsString();
+        cvv = jo.get("cvv").getAsString();
+        zip_code = jo.get("zip_code").getAsString();
+        country = jo.get("country").getAsString();
     }
 }

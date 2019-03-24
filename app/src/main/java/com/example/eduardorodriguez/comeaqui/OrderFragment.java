@@ -31,7 +31,7 @@ public class OrderFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
-    private static ArrayList<String[]> data;
+    static ArrayList<OrderObject> data;
     private static MyOrderRecyclerViewAdapter adapter;
     private OnListFragmentInteractionListener mListener;
 
@@ -49,7 +49,7 @@ public class OrderFragment extends Fragment {
             JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
-                data.add(createStringArray(jo));
+                data.add(new OrderObject(jo));
             }
             adapter.updateData(data);
         } catch (Exception e){
@@ -61,30 +61,9 @@ public class OrderFragment extends Fragment {
         JsonParser parser = new JsonParser();
         JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
         JsonObject jo = jsonArray.get(0).getAsJsonObject();
-        data.add(0, createStringArray(jo));
+        data.add(0, new OrderObject(jo));
         adapter.updateData(data);
     }
-
-    public static String[] createStringArray(JsonObject jo){
-        String id = jo.get("id").getAsNumber().toString();
-        String owner = jo.get("owner").getAsString();
-        String orderStatus = jo.get("order_status").getAsString();
-        String postPlateName = jo.get("post_plate_name").getAsString();
-        String postFoodPhoto = jo.get("post_food_photo").getAsString();
-        String postPrice = jo.get("post_price").getAsString();
-        String postDescription = jo.get("poster_first_name").getAsString();
-        String posterFirstName = jo.get("poster_first_name").getAsString();
-        String posterLastName = jo.get("poster_last_name").getAsString();
-        String posterEmail = jo.get("poster_email").getAsString();
-        String posterImage = jo.get("poster_image").getAsString();
-        String posterLocation = jo.get("poster_location").getAsString();
-        String posterPhoneNumber = jo.get("poster_phone_number").getAsString();
-        String posterPhoneCode = jo.get("poster_phone_code").getAsString();
-        String[] add = new String[]{id, owner, orderStatus, postPlateName, postFoodPhoto, postPrice, postDescription, posterFirstName, posterLastName, posterEmail, posterImage, posterLocation, posterPhoneNumber, posterPhoneCode};
-        return add;
-    }
-
-
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
@@ -147,5 +126,38 @@ public class OrderFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(DummyItem item);
+    }
+}
+
+class OrderObject{
+    String id;
+    String owner;
+    String orderStatus;
+    String postPlateName;
+    String postFoodPhoto;
+    String postPrice;
+    String postDescription;
+    String posterFirstName;
+    String posterLastName;
+    String posterEmail;
+    String posterImage;
+    String posterLocation;
+    String posterPhoneNumber;
+    String posterPhoneCode;
+    public OrderObject(JsonObject jo){
+        id = jo.get("id").getAsNumber().toString();
+        owner = jo.get("owner").getAsString();
+        orderStatus = jo.get("order_status").getAsString();
+        postPlateName = jo.get("post_plate_name").getAsString();
+        postFoodPhoto = jo.get("post_food_photo").getAsString();
+        postPrice = jo.get("post_price").getAsString();
+        postDescription = jo.get("poster_first_name").getAsString();
+        posterFirstName = jo.get("poster_first_name").getAsString();
+        posterLastName = jo.get("poster_last_name").getAsString();
+        posterEmail = jo.get("poster_email").getAsString();
+        posterImage = jo.get("poster_image").getAsString();
+        posterLocation = jo.get("poster_location").getAsString();
+        posterPhoneNumber = jo.get("poster_phone_number").getAsString();
+        posterPhoneCode = jo.get("poster_phone_code").getAsString();
     }
 }

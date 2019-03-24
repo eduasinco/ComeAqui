@@ -32,7 +32,7 @@ public class MessagesFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-    static ArrayList<String[]> data;
+    static ArrayList<MessageObject> data;
     static MyMessagesRecyclerViewAdapter adapter;
 
 
@@ -50,7 +50,7 @@ public class MessagesFragment extends Fragment {
             JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
-                data.add(createStringArray(jo));
+                data.add(new MessageObject(jo));
             }
             adapter.updateData(data);
         } catch (Exception e){
@@ -62,27 +62,8 @@ public class MessagesFragment extends Fragment {
         JsonParser parser = new JsonParser();
         JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
         JsonObject jo = jsonArray.get(0).getAsJsonObject();
-        data.add(0, createStringArray(jo));
+        data.add(0, new MessageObject(jo));
         adapter.updateData(data);
-    }
-
-    public static String[] createStringArray(JsonObject jo){
-        String firstName = jo.get("sender_first_name").getAsString();
-        String lastName = jo.get("sender_last_name").getAsString();
-        String senderEmail = jo.get("sender_email").getAsString();
-        String senderImage = jo.get("sender_image").getAsString();
-        String creationDate = jo.get("created_at").getAsString();
-        String id = jo.get("id").getAsNumber().toString();
-
-        String postPlateName = jo.get("post_plate_name").getAsString();
-        String postFoodPhoto = jo.get("post_food_photo").getAsString();
-        String postPrice = jo.get("post_price").getAsString();
-        String postDescription = jo.get("post_description").getAsString();
-        String post = jo.get("post").getAsNumber().toString();
-        String poster = jo.get("sender").getAsNumber().toString();
-
-        String[] add = new String[]{firstName, lastName, senderEmail, senderImage, creationDate, id, postPlateName, postFoodPhoto, postPrice, postDescription, post, poster};
-        return add;
     }
 
     // TODO: Customize parameter initialization
@@ -146,5 +127,35 @@ public class MessagesFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(DummyItem item);
+    }
+}
+
+class MessageObject{
+    String firstName;
+    String lastName;
+    String senderEmail;
+    String senderImage;
+    String creationDate;
+    String id;
+    String postPlateName;
+    String postFoodPhoto;
+    String postPrice;
+    String postDescription;
+    String post;
+    String poster;
+    public MessageObject(JsonObject jo){
+        firstName = jo.get("sender_first_name").getAsString();
+        lastName = jo.get("sender_last_name").getAsString();
+        senderEmail = jo.get("sender_email").getAsString();
+        senderImage = jo.get("sender_image").getAsString();
+        creationDate = jo.get("created_at").getAsString();
+        id = jo.get("id").getAsNumber().toString();
+
+        postPlateName = jo.get("post_plate_name").getAsString();
+        postFoodPhoto = jo.get("post_food_photo").getAsString();
+        postPrice = jo.get("post_price").getAsString();
+        postDescription = jo.get("post_description").getAsString();
+        post = jo.get("post").getAsNumber().toString();
+        poster = jo.get("sender").getAsNumber().toString();
     }
 }
