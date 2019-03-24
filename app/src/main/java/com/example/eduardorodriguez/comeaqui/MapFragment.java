@@ -38,6 +38,7 @@ public class MapFragment extends Fragment {
     static View rootView;
     private static GoogleMap googleMap;
     public static ArrayList<MapPost> data;
+    static boolean entered = false;
 
     public static OrderObject goOrder;
     static ConstraintLayout constraintLayoutView;
@@ -263,22 +264,24 @@ public class MapFragment extends Fragment {
                         bigPosterLocationView.setText(data.get(index).poster_location);
                         eatTimeView.setText(data.get(index).go_food_time.substring(0,5));
 
-
                         confirmButtonView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 confirmButtonView.setBackgroundColor(Color.parseColor("#FFFFFF"));
                                 confirmButtonView.setTextColor(Color.parseColor("#FF1EB600"));
                                 confirmButtonView.setText("Confirmed");
-                                PostAsyncTask emitMessage = new PostAsyncTask("http://127.0.0.1:8000/send_message/");
-                                emitMessage.execute(
-                                        new String[]{"owner", data.get(index).poster_email},
-                                        new String[]{"post_id", data.get(index).id}
-                                );
-                                PostAsyncTask createOrder = new PostAsyncTask("http://127.0.0.1:8000/create_order/");
-                                createOrder.execute(
-                                        new String[]{"post_id", data.get(index).id}
-                                );
+                                if (!entered){
+                                    PostAsyncTask emitMessage = new PostAsyncTask("http://127.0.0.1:8000/send_message/");
+                                    emitMessage.execute(
+                                            new String[]{"owner", data.get(index).poster_email},
+                                            new String[]{"post_id", data.get(index).id}
+                                    );
+                                    PostAsyncTask createOrder = new PostAsyncTask("http://127.0.0.1:8000/create_order/");
+                                    createOrder.execute(
+                                            new String[]{"post_id", data.get(index).id}
+                                    );
+                                    entered = true;
+                                }
                             }
                         });
 
