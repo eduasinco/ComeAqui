@@ -22,7 +22,8 @@ public class MessageLookActivity extends AppCompatActivity {
         TextView postPlateNameView = findViewById(R.id.postPlateName);
         TextView postDescriptionView = findViewById(R.id.postDescription);
         TextView senderEmailView = findViewById(R.id.senderEmail);
-        Button confrimButton = findViewById(R.id.confrimButton);
+        final Button confrimButton = findViewById(R.id.confrimButton);
+        final Button cancelButtonView = findViewById(R.id.cancelButton);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -57,9 +58,21 @@ public class MessageLookActivity extends AppCompatActivity {
             confrimButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    confrimButton.setVisibility(View.GONE);
                     PutAsyncTask createOrder = new PutAsyncTask("http://127.0.0.1:8000/order_detail/" + id + "/");
                     createOrder.execute(
                             new String[]{"order_status", "CONFIRMED"},
+                            new String[]{"post", post},
+                            new String[]{"poster", poster}
+                    );
+                }
+            });
+            cancelButtonView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PutAsyncTask createOrder = new PutAsyncTask("http://127.0.0.1:8000/order_detail/" + id + "/");
+                    createOrder.execute(
+                            new String[]{"order_status", "CANCELED"},
                             new String[]{"post", post},
                             new String[]{"poster", poster}
                     );

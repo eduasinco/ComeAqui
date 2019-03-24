@@ -129,6 +129,14 @@ public class MapFragment extends Fragment {
                         enjoyView.setVisibility(View.VISIBLE);
                         enjoyView.setText("Thank you! :)");
                         break;
+                    case "CANCELED":
+                        confirmPosterNameView.setTextColor(Color.parseColor("#FFC60000"));
+                        confirmPosterNameView.setText("Meal has been canceled by " + goOrder.posterFirstName + " " + goOrder.posterLastName);
+                        confirmLocationView.setVisibility(View.GONE);
+                        confirmTimeView.setVisibility(View.GONE);
+                        enjoyView.setVisibility(View.VISIBLE);
+                        enjoyView.setText("Sorry for the inconveniences");
+                        break;
                 }
                 if(!goOrder.postFoodPhoto.contains("no-image")) Glide.with(rootView.getContext())
                         .load("http://127.0.0.1:8000/media/" + goOrder.postFoodPhoto)

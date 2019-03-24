@@ -32,13 +32,23 @@
             android:layout_marginEnd="32dp" android:textSize="18sp" android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/postPlateName"/>
     <Button
+            android:text="cancel"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:id="@+id/cancelButton" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintBottom_toBottomOf="parent" style="@style/Widget.AppCompat.Button.Borderless"
+            android:background="@android:color/holo_red_light" android:textColor="@android:color/white"
+            android:visibility="visible"/>
+    <Button
             android:text="confrim order"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:id="@+id/confrimButton" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintBottom_toBottomOf="parent" style="@style/Widget.AppCompat.Button.Borderless"
-            android:background="@android:color/holo_green_dark" android:textColor="@android:color/white"/>
+            android:background="@android:color/holo_green_dark" android:textColor="@android:color/white"
+            android:visibility="visible"/>
     <ImageView
             android:layout_width="92dp"
             android:scaleType="centerCrop"
