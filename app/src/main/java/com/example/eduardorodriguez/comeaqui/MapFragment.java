@@ -87,9 +87,6 @@ public class MapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_map, container, false);
 
-        GetAsyncTask getPostLocations = new GetAsyncTask(7, "go_foods/");
-        getPostLocations.execute();
-
         mMapView = rootView.findViewById(R.id.mapView);
 
         final FloatingActionButton myFab =  rootView.findViewById(R.id.fab);
@@ -131,6 +128,8 @@ public class MapFragment extends Fragment {
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
+                GetAsyncTask getPostLocations = new GetAsyncTask(7, "go_foods/");
+                getPostLocations.execute();
 
                 googleMap.setMyLocationEnabled(true);
 

@@ -64,11 +64,9 @@ public class MainActivity extends AppCompatActivity {
             menu.findItem(R.id.nav_getfood).setIcon(R.drawable.getfoodfill);
         }else if(b.getBoolean("map")){
             setFragment(mapFragment);
-            toolbar.setTitle("Get Food");
-            menu.findItem(R.id.nav_getfood).setIcon(R.drawable.preparefill);
+            toolbar.setTitle("Go");
+            menu.findItem(R.id.nav_go).setIcon(R.drawable.preparefill);
         }else if(b.getBoolean("profile")){
-            GetAsyncTask process = new GetAsyncTask(2, "my_profile/");
-            process.execute();
             setFragment(profileFragment);
             toolbar.setTitle("Profile");
             menu.findItem(R.id.nav_profile).setIcon(R.drawable.profilefill);
@@ -90,8 +88,6 @@ public class MainActivity extends AppCompatActivity {
                         menuItem.setIcon(R.drawable.preparefill);
                         return true;
                     case R.id.nav_profile:
-                        GetAsyncTask process = new GetAsyncTask(2, "my_profile/");
-                        process.execute();
                         setFragment(profileFragment);
                         menuItem.setIcon(R.drawable.profilefill);
                         return true;
