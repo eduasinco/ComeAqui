@@ -47,14 +47,14 @@
 
         <activity android:name=".FoodLookActivity">
         </activity>
-        <activity android:name=".AddFoodActivity">
+        <activity android:name=".get.AddFoodActivity">
         </activity>
         <activity
-                android:name=".EditProfileActivity"
+                android:name=".profile.EditProfileActivity"
                 android:label="@string/title_activity_edit_profile"
                 android:theme="@style/AppTheme">
         </activity>
-        <activity android:name=".AddPaymentMethodActivity">
+        <activity android:name=".profile.AddPaymentMethodActivity">
         </activity>
         <activity android:name=".CardInformationActivity">
         </activity>
@@ -71,31 +71,31 @@
                 android:value="@string/google_maps_key"/>
 
         <activity
-                android:name=".MapsActivity"
+                android:name=".go.MapsActivity"
                 android:label="@string/title_activity_maps">
         </activity>
         <activity
-                android:name=".EditAccountActivity"
+                android:name=".profile.EditAccountActivity"
                 android:label="@string/title_activity_settings"
                 android:theme="@style/AppTheme">
         </activity>
         <activity
-                android:name=".SettingsActivity"
+                android:name=".profile.SettingsActivity"
                 android:label="@string/title_activity_settings"
                 android:theme="@style/AppTheme">
         </activity>
-        <activity android:name=".ChangePasswordActivity">
+        <activity android:name=".profile.ChangePasswordActivity">
         </activity>
         <activity
-                android:name=".OrdersActivity"
+                android:name=".profile.OrdersActivity"
                 android:label="@string/title_activity_orders"
                 android:theme="@style/AppTheme">
         </activity>
-        <activity android:name=".OrderLookActivity">
+        <activity android:name=".profile.OrderLookActivity">
         </activity>
-        <activity android:name=".MessageLookActivity">
+        <activity android:name=".profile.MessageLookActivity">
         </activity>
-        <activity android:name=".AddGoFoodActivity">
+        <activity android:name=".go.AddGoFoodActivity">
         </activity>
     </application>
 

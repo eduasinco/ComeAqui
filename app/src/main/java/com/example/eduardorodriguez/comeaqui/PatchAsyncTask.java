@@ -24,7 +24,7 @@ import java.io.*;
 
 public class PatchAsyncTask extends AsyncTask<String, Void, JSONObject> {
 
-    Bitmap imageBitmap;
+    public Bitmap imageBitmap;
 
     @Override
     protected JSONObject doInBackground(String... params)

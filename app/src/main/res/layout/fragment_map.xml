@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".OrderLookActivity">
+    tools:context=".profile.OrderLookActivity">
     <com.google.android.gms.maps.MapView
             android:id="@+id/mapView"
             android:layout_width="0dp"
@@ -38,7 +38,7 @@
                 android:layout_height="400dp" android:id="@+id/confirmedInfo"
                 app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="24dp" app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="24dp" android:visibility="visible">
+                android:layout_marginStart="24dp" android:visibility="gone">
 
             <ImageView
                     android:layout_width="130dp"

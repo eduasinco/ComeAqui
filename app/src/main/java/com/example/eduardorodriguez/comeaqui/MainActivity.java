@@ -15,6 +15,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import com.example.eduardorodriguez.comeaqui.get.GetFoodFragment;
+import com.example.eduardorodriguez.comeaqui.go.MapFragment;
+import com.example.eduardorodriguez.comeaqui.profile.ProfileFragment;
 
 public class MainActivity extends AppCompatActivity {
 

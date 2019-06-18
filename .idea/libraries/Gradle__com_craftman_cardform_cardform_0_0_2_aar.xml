@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.craftman.cardform:cardform:0.0.2@aar">
+    <ANNOTATIONS>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/cardform-0.0.2.aar/073e74fb7f4297d8a3ebfb77e72c1f0c/annotations.zip!/" />
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/cardform-0.0.2.aar/073e74fb7f4297d8a3ebfb77e72c1f0c/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/cardform-0.0.2.aar/073e74fb7f4297d8a3ebfb77e72c1f0c/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.craftman.cardform/cardform/0.0.2/9d2f8e685a18b1668b63e59dc7d0249ad858d739/cardform-0.0.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

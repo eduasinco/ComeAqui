@@ -1,15 +1,15 @@
 package com.example.eduardorodriguez.comeaqui;
 
-import android.content.Context;
 import android.os.AsyncTask;
+import com.example.eduardorodriguez.comeaqui.get.GetFoodFragment;
+import com.example.eduardorodriguez.comeaqui.go.MapFragment;
+import com.example.eduardorodriguez.comeaqui.profile.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.*;
 

@@ -9,15 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.example.eduardorodriguez.comeaqui.dummy.DummyContent;
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
+import com.example.eduardorodriguez.comeaqui.profile.MyPlacesAutocompleteRecyclerViewAdapter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A fragment representing a list of Items.

@@ -9,15 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.example.eduardorodriguez.comeaqui.dummy.DummyContent;
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
+import com.example.eduardorodriguez.comeaqui.profile.MyOrderRecyclerViewAdapter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -126,40 +125,5 @@ public class OrderFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(DummyItem item);
-    }
-}
-
-class OrderObject{
-    String id;
-    String owner;
-    String orderStatus;
-    String postPlateName;
-    String postFoodPhoto;
-    String postPrice;
-    String postDescription;
-    String posterFirstName;
-    String posterLastName;
-    String posterEmail;
-    String posterImage;
-    String posterLocation;
-    String posterPhoneNumber;
-    String posterPhoneCode;
-    String postGoFoodTime;
-    public OrderObject(JsonObject jo){
-        id = jo.get("id").getAsNumber().toString();
-        owner = jo.get("owner").getAsString();
-        orderStatus = jo.get("order_status").getAsString();
-        postPlateName = jo.get("post_plate_name").getAsString();
-        postFoodPhoto = jo.get("post_food_photo").getAsString();
-        postPrice = jo.get("post_price").getAsString();
-        postDescription = jo.get("poster_first_name").getAsString();
-        posterFirstName = jo.get("poster_first_name").getAsString();
-        posterLastName = jo.get("poster_last_name").getAsString();
-        posterEmail = jo.get("poster_email").getAsString();
-        posterImage = jo.get("poster_image").getAsString();
-        posterLocation = jo.get("poster_location").getAsString();
-        posterPhoneNumber = jo.get("poster_phone_number").getAsString();
-        posterPhoneCode = jo.get("poster_phone_code").getAsString();
-        postGoFoodTime = jo.get("post_go_food_time").getAsString();
     }
 }

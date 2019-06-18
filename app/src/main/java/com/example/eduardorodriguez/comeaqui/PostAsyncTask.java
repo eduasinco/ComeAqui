@@ -2,7 +2,7 @@ package com.example.eduardorodriguez.comeaqui;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.util.Base64;
+import com.example.eduardorodriguez.comeaqui.get.GetFoodFragment;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -16,7 +16,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
 import java.io.*;
-import java.security.acl.LastOwnerException;
 
 public class PostAsyncTask extends AsyncTask<String[], Void, JSONObject>
 {
@@ -24,7 +23,7 @@ public class PostAsyncTask extends AsyncTask<String[], Void, JSONObject>
         this.uri = uri;
     }
     String uri;
-    Bitmap bitmap;
+    public Bitmap bitmap;
     @Override
     protected JSONObject doInBackground(String[]... params)
     {

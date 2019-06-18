@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.joielechong:countrycodepicker:2.3.0@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/countrycodepicker-2.3.0.aar/1564a729eb80fb4552fec0c8eaa5ebf3/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/countrycodepicker-2.3.0.aar/1564a729eb80fb4552fec0c8eaa5ebf3/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.joielechong/countrycodepicker/2.3.0/bf941df5b6abb9a1be5aa38ae79d52d44187f505/countrycodepicker-2.3.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
