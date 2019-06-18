@@ -1,12 +1,13 @@
-package com.example.eduardorodriguez.comeaqui;
+package com.example.eduardorodriguez.comeaqui.server;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import com.example.eduardorodriguez.comeaqui.SplashActivity;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPatch;
-import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -20,36 +21,26 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class PutAsyncTask extends AsyncTask<String[], Void, JSONObject> {
+public class DeleteAsyncTask extends AsyncTask<String, Void, JSONObject>
+{
+    String uri = "http://127.0.0.1:8000/foods/";
+    public DeleteAsyncTask(String index) {
 
-    Bitmap imageBitmap;
-    String uri;
-
-    public PutAsyncTask(String uri){
-        this.uri = uri;
+        this.uri += index + "/";
     }
     @Override
-    protected JSONObject doInBackground(String[]... params)
+    protected JSONObject doInBackground(String... params)
     {
 
-        HttpPut httpPut = new HttpPut(this.uri);
-        httpPut.addHeader("Authorization", "Basic " + SplashActivity.getCredemtials());
+        HttpDelete hhtpDelete = new HttpDelete(uri);
+        hhtpDelete.addHeader("Authorization", "Basic " + SplashActivity.getCredemtials());
 
         HttpClient httpclient = new DefaultHttpClient();
         String boundary = "-------------" + System.currentTimeMillis();
-        httpPut.setHeader("Content-type","multipart/form-data; boundary="+boundary);
+        hhtpDelete.setHeader("Content-type","multipart/form-data; boundary="+boundary);
 
-        MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create()
-                .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
-                .setBoundary(boundary);
-
-        for (String[] ss: params){
-            multipartEntityBuilder.addPart(ss[0], new StringBody(ss[1], ContentType.TEXT_PLAIN));
-        }
-        HttpEntity entity = multipartEntityBuilder.build();
-        httpPut.setEntity(entity);
         try {
-            HttpResponse response = httpclient.execute(httpPut);
+            HttpResponse response = httpclient.execute(hhtpDelete);
             InputStream instream = response.getEntity().getContent();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(instream));
             StringBuffer stringBuffer = new StringBuffer();
@@ -69,6 +60,9 @@ public class PutAsyncTask extends AsyncTask<String[], Void, JSONObject> {
     @Override
     protected void onPostExecute(JSONObject response)
     {
-        if(response != null) {}
+        if(response != null)
+        {
+
+        }
     }
 }

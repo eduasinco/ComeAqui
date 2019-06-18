@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.profile;
+package com.example.eduardorodriguez.comeaqui.profile.messages;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
-import com.example.eduardorodriguez.comeaqui.PutAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.PutAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
 
 public class MessageLookActivity extends AppCompatActivity {

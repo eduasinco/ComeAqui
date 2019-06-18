@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.eduardorodriguez.comeaqui.PlacesAutocompleteFragment.OnListFragmentInteractionListener;
+import com.example.eduardorodriguez.comeaqui.profile.PlacesAutocompleteFragment.OnListFragmentInteractionListener;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
 

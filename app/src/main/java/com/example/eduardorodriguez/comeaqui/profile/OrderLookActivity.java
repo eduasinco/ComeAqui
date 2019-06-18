@@ -9,9 +9,8 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
-import com.example.eduardorodriguez.comeaqui.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.OrderObject;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 

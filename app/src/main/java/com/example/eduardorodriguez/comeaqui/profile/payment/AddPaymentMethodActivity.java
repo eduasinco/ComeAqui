@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.profile;
+package com.example.eduardorodriguez.comeaqui.profile.payment;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;

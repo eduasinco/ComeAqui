@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
-import com.example.eduardorodriguez.comeaqui.PatchAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
 
 public class EditProfileActivity extends AppCompatActivity {

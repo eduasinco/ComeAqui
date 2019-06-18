@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.profile;
+package com.example.eduardorodriguez.comeaqui.profile.settings;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import com.example.eduardorodriguez.comeaqui.LoginActivity;
-import com.example.eduardorodriguez.comeaqui.PutAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.PutAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
 
 public class ChangePasswordActivity extends AppCompatActivity {

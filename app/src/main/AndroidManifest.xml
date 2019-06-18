@@ -54,7 +54,7 @@
                 android:label="@string/title_activity_edit_profile"
                 android:theme="@style/AppTheme">
         </activity>
-        <activity android:name=".profile.AddPaymentMethodActivity">
+        <activity android:name=".profile.payment.AddPaymentMethodActivity">
         </activity>
         <activity android:name=".CardInformationActivity">
         </activity>
@@ -84,7 +84,7 @@
                 android:label="@string/title_activity_settings"
                 android:theme="@style/AppTheme">
         </activity>
-        <activity android:name=".profile.ChangePasswordActivity">
+        <activity android:name=".profile.settings.ChangePasswordActivity">
         </activity>
         <activity
                 android:name=".profile.OrdersActivity"
@@ -93,7 +93,7 @@
         </activity>
         <activity android:name=".profile.OrderLookActivity">
         </activity>
-        <activity android:name=".profile.MessageLookActivity">
+        <activity android:name=".profile.messages.MessageLookActivity">
         </activity>
         <activity android:name=".go.AddGoFoodActivity">
         </activity>

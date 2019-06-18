@@ -11,8 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
-import com.example.eduardorodriguez.comeaqui.PatchAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.profile.settings.ChangePasswordActivity;
 import com.hbb20.CountryCodePicker;
 
 public class EditAccountActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui;
+package com.example.eduardorodriguez.comeaqui.profile.payment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,8 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
-import com.example.eduardorodriguez.comeaqui.profile.MyPlacesAutocompleteRecyclerViewAdapter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -24,93 +25,49 @@ import java.util.ArrayList;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class PlacesAutocompleteFragment extends Fragment {
+public class PaymentMethodFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-    private static ArrayList<String[]> data;
-    private static MyPlacesAutocompleteRecyclerViewAdapter adapter;
+    private static ArrayList<PaymentObject> data;
+    private static MyPaymentMethodRecyclerViewAdapter fa;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public PlacesAutocompleteFragment() {
+    public PaymentMethodFragment() {
     }
-
-    public static void parseLatLng(String jsonString){
-        try {
-            JsonParser parser = new JsonParser();
-            JsonObject joo = parser.parse(jsonString).getAsJsonObject();
-            JsonObject res = joo.get("result").getAsJsonObject();
-            saveLatLng(res);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public static void makeList2(String jsonString){
-        try {
-            JsonParser parser = new JsonParser();
-            JsonObject joo = parser.parse(jsonString).getAsJsonObject();
-            JsonArray jsonArray = joo.get("results").getAsJsonArray();
-            for (JsonElement pa : jsonArray) {
-                JsonObject jo = pa.getAsJsonObject();
-                saveLatLng(jo);
-                break;
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public static void saveLatLng(JsonObject jo){
-        try {
-            JsonObject geo = jo.get("geometry").getAsJsonObject();
-            JsonObject loc = geo.get("location").getAsJsonObject();
-            Float lat = loc.get("lat").getAsFloat();
-            Float lng = loc.get("lng").getAsFloat();
-
-            PatchAsyncTask putTast = new PatchAsyncTask();
-            putTast.execute("lat", lat.toString());
-            PatchAsyncTask putTast2 = new PatchAsyncTask();
-            putTast2.execute("lng", lng.toString());
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
 
     public static void makeList(String jsonString){
         try {
             data = new ArrayList<>();
             JsonParser parser = new JsonParser();
-            JsonObject joo = parser.parse(jsonString).getAsJsonObject();
-            JsonArray jsonArray = joo.get("predictions").getAsJsonArray();
+            JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
-                data.add(createStringArray(jo));
+                data.add(new PaymentObject(jo));
             }
-            adapter.updateData(data);
+            fa.updateData(data);
         } catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    public static String[] createStringArray(JsonObject jo){
-        String description = jo.get("description").getAsNumber().toString();
-        String place_id = jo.get("place_id").getAsNumber().toString();
-        String[] add = new String[]{description, place_id};
-        return add;
+    public static void appendToList(String jsonString){
+        JsonParser parser = new JsonParser();
+        JsonObject jo = parser.parse(jsonString).getAsJsonObject();
+        data.add(0, new PaymentObject(jo));
+        fa.updateData(data);
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static PlacesAutocompleteFragment newInstance(int columnCount) {
-        PlacesAutocompleteFragment fragment = new PlacesAutocompleteFragment();
+    public static PaymentMethodFragment newInstance(int columnCount) {
+        PaymentMethodFragment fragment = new PaymentMethodFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -129,7 +86,7 @@ public class PlacesAutocompleteFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_placesautocomplete_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_paymentmethod_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -140,8 +97,10 @@ public class PlacesAutocompleteFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            adapter = new MyPlacesAutocompleteRecyclerViewAdapter(data, mListener);
-            recyclerView.setAdapter(adapter);
+            GetAsyncTask getCards = new GetAsyncTask(3, "my_profile_card/");
+            getCards.execute();
+            fa = new MyPaymentMethodRecyclerViewAdapter(data, mListener);
+            recyclerView.setAdapter(fa);
         }
         return view;
     }
@@ -166,5 +125,22 @@ public class PlacesAutocompleteFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(DummyItem item);
+    }
+}
+
+class PaymentObject{
+    String card_number;
+    String expiration_date;
+    String card_type;
+    String cvv;
+    String zip_code;
+    String country;
+    public PaymentObject(JsonObject jo){
+        card_number = jo.get("card_number").getAsString();
+        expiration_date = jo.get("expiration_date").getAsString();
+        card_type = jo.get("card_type").getAsString();
+        cvv = jo.get("cvv").getAsString();
+        zip_code = jo.get("zip_code").getAsString();
+        country = jo.get("country").getAsString();
     }
 }
