@@ -17,6 +17,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -131,7 +132,7 @@ public class UserPostFragment extends Fragment {
     }
 }
 
-class UserPostObject{
+class UserPostObject implements Serializable {
     String id;
     String plate_name;
     String price;

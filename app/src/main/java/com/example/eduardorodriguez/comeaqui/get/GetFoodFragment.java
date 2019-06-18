@@ -92,23 +92,3 @@ public class GetFoodFragment extends Fragment {
 
     }
 }
-
-class GetFoodObject{
-    String id;
-    String plate_name;
-    String price;
-    String type;
-    String description;
-    String food_photo;
-    String owner;
-    public GetFoodObject(JsonObject jo){
-        id = jo.get("id").getAsNumber().toString();
-        plate_name = jo.get("plate_name").getAsString();
-        price = jo.get("price").getAsString();
-        type = jo.get("food_type").getAsString();
-        description = jo.get("description").getAsString();
-        food_photo = jo.get("food_photo").getAsString();
-        owner = jo.get("owner").getAsString();
-
-    }
-}

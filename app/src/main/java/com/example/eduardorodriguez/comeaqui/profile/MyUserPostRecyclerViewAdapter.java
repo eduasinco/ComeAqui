@@ -15,6 +15,7 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.profile.UserPostFragment.OnListFragmentInteractionListener;
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import static com.example.eduardorodriguez.comeaqui.get.GetFoodAdapter.setTypes;
@@ -67,32 +68,22 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         TextView descriptionView = holder.mView.findViewById(R.id.orderMessage);
         ImageView imageView = holder.mView.findViewById(R.id.orderImage);
 
-        final String id = mValues.get(position).id;
-        String nameText = mValues.get(position).plate_name;
-        String priceText = mValues.get(position).price;
-        final String typesText = mValues.get(position).type;
-        final String descriptionText = mValues.get(position).description;
-        final String pathText = mValues.get(position).food_photo;
+        final UserPostObject userPostObject = mValues.get(position);
 
-        food_name.setText(nameText);
-        String priceTextE = priceText + "€";
+        food_name.setText(userPostObject.plate_name);
+        String priceTextE = userPostObject.price + "€";
         priceView.setText(priceTextE);
-        setTypes(holder.mView, typesText);
-        descriptionView.setText(descriptionText);
+        setTypes(holder.mView, userPostObject.type);
+        descriptionView.setText(userPostObject.description);
 
-
-        Glide.with(holder.mView.getContext()).load(pathText).into(imageView);
+        Glide.with(holder.mView.getContext()).load(userPostObject.food_photo).into(imageView);
 
         ConstraintLayout item = holder.mView.findViewById(R.id.listItem);
         item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent foodLook = new Intent(holder.mView.getContext(), FoodLookActivity.class);
-                foodLook.putExtra("id", id);
-                foodLook.putExtra("src", pathText);
-                foodLook.putExtra("name", food_name.getText().toString());
-                foodLook.putExtra("des", descriptionText);
-                foodLook.putExtra("types", typesText);
+                foodLook.putExtra("userPostObject", userPostObject);
                 foodLook.putExtra("delete", true);
                 holder.mView.getContext().startActivity(foodLook);
             }

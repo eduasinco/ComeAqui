@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.example.eduardorodriguez.comeaqui.get.GetFoodObject;
 import com.example.eduardorodriguez.comeaqui.profile.orders.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.server.DeleteAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
@@ -41,22 +42,21 @@ public class FoodLookActivity extends AppCompatActivity {
         ImageView image = findViewById(R.id.postFoodPhoto);
         TextView plateNameView = findViewById(R.id.postPlateName);
         TextView descriptionView = findViewById(R.id.postDescription);
-        Button addButtonView = findViewById(R.id.addButton);
+        Button placeOrderButton = findViewById(R.id.placeOrderButton);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
 
         if(b != null){
-            final String id = b.getString("id");
-            String path = b.getString("src");
-            String name = b.getString("name");
-            String description = b.getString("des");
-            String types = b.getString("types");
-            final String ownerEmail = b.getString("owner");
+            final GetFoodObject fo = (GetFoodObject) b.get("name_of_extra");
             boolean delete = b.getBoolean("delete");
-            plateNameView.setText(name);
-            descriptionView.setText(description);
-            Glide.with(this).load(path).into(image);
+            plateNameView.setText(fo.plate_name);
+            descriptionView.setText(fo.description);
+
+            final StringBuilder path = new StringBuilder();
+            path.append("http://127.0.0.1:8000");
+            path.append(fo.food_photo);
+            Glide.with(this).load(path.toString()).into(image);
 
             ArrayList<ImageView> imageViewArrayList = new ArrayList<>();
             imageViewArrayList.add((ImageView) findViewById(R.id.vegetarian));
@@ -76,18 +76,18 @@ public class FoodLookActivity extends AppCompatActivity {
                     R.drawable.dairyfill,
             };
 
-            for (int i = 0; i < types.length(); i++){
-                if (types.charAt(i) == '1'){
+            for (int i = 0; i < fo.type.length(); i++){
+                if (fo.type.charAt(i) == '1'){
                     imageViewArrayList.get(i).setImageResource(resources[i]);
                 }
             }
             if (delete){
-                addButtonView.setText("Delete Post");
-                addButtonView.setBackgroundColor(Color.parseColor("#FFFF0E01"));
-                addButtonView.setOnClickListener(new View.OnClickListener() {
+                placeOrderButton.setText("Delete Post");
+                placeOrderButton.setBackgroundColor(Color.parseColor("#FFFF0E01"));
+                placeOrderButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        DeleteAsyncTask deleteFoodPost = new DeleteAsyncTask(id);
+                        DeleteAsyncTask deleteFoodPost = new DeleteAsyncTask(fo.id);
                         deleteFoodPost.execute();
                         Intent k = new Intent(FoodLookActivity.this, MainActivity.class);
                         k.putExtra("profile", true);
@@ -95,17 +95,17 @@ public class FoodLookActivity extends AppCompatActivity {
                     }
                 });
             }else{
-                addButtonView.setOnClickListener(new View.OnClickListener() {
+                placeOrderButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         PostAsyncTask emitMessage = new PostAsyncTask("http://127.0.0.1:8000/send_message/");
                         emitMessage.execute(
-                                new String[]{"owner", ownerEmail},
-                                new String[]{"post_id", id}
+                                new String[]{"owner", fo.owner},
+                                new String[]{"post_id", fo.id}
                         );
                         PostAsyncTask createOrder = new PostAsyncTask("http://127.0.0.1:8000/create_order/");
                         createOrder.execute(
-                                new String[]{"post_id", id}
+                                new String[]{"post_id", fo.id}
                         );
                     }
                 });

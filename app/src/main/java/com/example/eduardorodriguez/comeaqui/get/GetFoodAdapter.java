@@ -2,6 +2,7 @@ package com.example.eduardorodriguez.comeaqui.get;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.FoodLookActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -45,23 +47,18 @@ public class GetFoodAdapter extends BaseAdapter {
         TextView descriptionView = view.findViewById(R.id.orderMessage);
         ImageView imageView = view.findViewById(R.id.orderImage);
 
-        final String id = data.get(position).id;
-        String nameText = data.get(position).plate_name;
-        String priceText = data.get(position).price;
-        final String typesText = data.get(position).type;
-        final String descriptionText = data.get(position).description;
-        String pathText = data.get(position).food_photo;
-        final String ownerEmail = data.get(position).owner;
 
-        food_name.setText(nameText);
-        String priceTextE = priceText + "€";
+        final GetFoodObject foodObject = data.get(position);
+
+        food_name.setText(foodObject.plate_name);
+        String priceTextE = foodObject.price + "€";
         priceView.setText(priceTextE);
-        setTypes(view, typesText);
-        descriptionView.setText(descriptionText);
+        setTypes(view, foodObject.type);
+        descriptionView.setText(foodObject.description);
 
         final StringBuilder path = new StringBuilder();
         path.append("http://127.0.0.1:8000");
-        path.append(pathText);
+        path.append(foodObject.food_photo);
 
 
         Glide.with(context).load(path.toString()).into(imageView);
@@ -71,12 +68,7 @@ public class GetFoodAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent foodLook = new Intent(context, FoodLookActivity.class);
-                foodLook.putExtra("id", id);
-                foodLook.putExtra("src", path.toString());
-                foodLook.putExtra("name", food_name.getText().toString());
-                foodLook.putExtra("des", descriptionText);
-                foodLook.putExtra("types", typesText);
-                foodLook.putExtra("owner", ownerEmail);
+                foodLook.putExtra("name_of_extra", foodObject);
                 foodLook.putExtra("delete", false);
                 context.startActivity(foodLook);
             }
