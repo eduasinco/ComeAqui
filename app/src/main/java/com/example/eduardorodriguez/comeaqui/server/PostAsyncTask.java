@@ -2,9 +2,9 @@ package com.example.eduardorodriguez.comeaqui.server;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import com.example.eduardorodriguez.comeaqui.FoodLookActivity;
 import com.example.eduardorodriguez.comeaqui.SplashActivity;
-import com.example.eduardorodriguez.comeaqui.get.GetFoodFragment;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -15,11 +15,10 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONObject;
 
 import java.io.*;
 
-public class PostAsyncTask extends AsyncTask<String[], Void, JSONObject>
+public class PostAsyncTask extends AsyncTask<String[], Void, JsonObject>
 {
     public PostAsyncTask(String uri){
         this.uri = uri;
@@ -27,7 +26,7 @@ public class PostAsyncTask extends AsyncTask<String[], Void, JSONObject>
     String uri;
     public Bitmap bitmap;
     @Override
-    protected JSONObject doInBackground(String[]... params)
+    protected JsonObject doInBackground(String[]... params)
     {
 
         HttpPost httpPost = new HttpPost(uri);
@@ -66,7 +65,9 @@ public class PostAsyncTask extends AsyncTask<String[], Void, JSONObject>
             {
                 stringBuffer.append(line);
             }
-            return new JSONObject(stringBuffer.toString());
+            JsonParser parser = new JsonParser();
+            JsonObject jo = parser.parse(stringBuffer.toString()).getAsJsonObject();
+            return jo;
 
         }  catch (Exception e){
             e.printStackTrace();
@@ -75,19 +76,5 @@ public class PostAsyncTask extends AsyncTask<String[], Void, JSONObject>
     }
 
     @Override
-    protected void onPostExecute(JSONObject response)
-    {
-        if(response != null)
-        {
-            if (uri.contains("foods")) {
-                GetFoodFragment.appendToList(response.toString());
-            }
-            if (uri.contains("card")) {
-
-            }
-            if (uri.contains("create_order")) {
-                FoodLookActivity.goToOrder(response);
-            }
-        }
-    }
+    protected void onPostExecute(JsonObject response) { if(response != null) {}}
 }

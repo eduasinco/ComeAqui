@@ -13,10 +13,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.*;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
+import com.example.eduardorodriguez.comeaqui.get.GetFoodFragment;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.google.gson.JsonObject;
+import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.util.concurrent.ExecutionException;
 
 public class AddGoFoodActivity extends AppCompatActivity {
 
@@ -82,28 +86,26 @@ public class AddGoFoodActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = getIntent();
-                Bundle b = intent.getExtras();
-
                 PostAsyncTask post = new PostAsyncTask("http://127.0.0.1:8000/go_foods/");
                 post.bitmap = imageBitmap;
                 String time = timePicker.getHour() + ":" + timePicker.getMinute();
-                post.execute(
-                        new String[]{"plate_name", foodName.getText().toString()},
-                        new String[]{"price", price_data.toString()},
-                        new String[]{"food_type", setTypes()},
-                        new String[]{"description", description.getText().toString()},
-                        new String[]{"time", time},
-                        new String[]{"food_photo", "", "img"}
-                );
+
                 try {
-                    Intent k = new Intent(AddGoFoodActivity.this, MainActivity.class);
-                    k.putExtra("map", true);
-                    startActivity(k);
-                } catch(Exception e) {
+                    JsonObject response = post.execute(
+                            new String[]{"plate_name", foodName.getText().toString()},
+                            new String[]{"price", price_data.toString()},
+                            new String[]{"food_type", setTypes()},
+                            new String[]{"description", description.getText().toString()},
+                            new String[]{"time", time},
+                            new String[]{"food_photo", "", "img"}
+                    ).get();
+                    GetFoodFragment.appendToList(response);
+                } catch (ExecutionException | InterruptedException e) {
                     e.printStackTrace();
                 }
-
+                Intent k = new Intent(AddGoFoodActivity.this, MainActivity.class);
+                k.putExtra("map", true);
+                startActivity(k);
             }
         });
 

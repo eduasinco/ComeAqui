@@ -29,6 +29,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -289,9 +290,14 @@ public class MapFragment extends Fragment {
                                             new String[]{"post_id", data.get(index).id}
                                     );
                                     PostAsyncTask createOrder = new PostAsyncTask("http://127.0.0.1:8000/create_order/");
-                                    createOrder.execute(
-                                            new String[]{"post_id", data.get(index).id}
-                                    );
+                                    try {
+                                        JsonObject response = createOrder.execute(
+                                                new String[]{"post_id", data.get(index).id}
+                                        ).get();
+                                        FoodLookActivity.goToOrder(response);
+                                    } catch (ExecutionException | InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
                                     entered = true;
                                 }
                             }

@@ -47,9 +47,7 @@ public class GetFoodFragment extends Fragment {
         }
     }
 
-    public static void appendToList(String jsonString){
-        JsonParser parser = new JsonParser();
-        JsonObject jo = parser.parse(jsonString).getAsJsonObject();
+    public static void appendToList(JsonObject jo){
         data.add(0, new GetFoodObject(jo));
         fa.addNewRow(data);
     }

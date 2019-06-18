@@ -15,8 +15,10 @@ import android.widget.*;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.google.gson.JsonObject;
 
 import java.io.*;
+import java.util.concurrent.ExecutionException;
 
 public class AddFoodActivity extends AppCompatActivity {
     EditText foodName;
@@ -78,25 +80,22 @@ public class AddFoodActivity extends AppCompatActivity {
         submit.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent intent = getIntent();
-                Bundle b = intent.getExtras();
-                String isGoFood = "false";
                 PostAsyncTask post = new PostAsyncTask("http://127.0.0.1:8000/get_foods/");
                 post.bitmap = imageBitmap;
-                post.execute(
-                        new String[]{"plate_name", foodName.getText().toString()},
-                        new String[]{"price", price_data.toString()},
-                        new String[]{"food_type", setTypes(), ""},
-                        new String[]{"description", description.getText().toString()},
-                        new String[]{"food_photo", "", "img"}
-                );
                 try {
-                    Intent k = new Intent(AddFoodActivity.this, MainActivity.class);
-                    startActivity(k);
-                } catch(Exception e) {
+                    JsonObject response = post.execute(
+                            new String[]{"plate_name", foodName.getText().toString()},
+                            new String[]{"price", price_data.toString()},
+                            new String[]{"food_type", setTypes(), ""},
+                            new String[]{"description", description.getText().toString()},
+                            new String[]{"food_photo", "", "img"}
+                    ).get();
+                    GetFoodFragment.appendToList(response);
+                } catch (ExecutionException | InterruptedException e) {
                     e.printStackTrace();
                 }
+                Intent k = new Intent(AddFoodActivity.this, MainActivity.class);
+                startActivity(k);
 
             }
         });

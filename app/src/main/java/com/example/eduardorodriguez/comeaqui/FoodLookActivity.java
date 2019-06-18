@@ -14,15 +14,17 @@ import com.example.eduardorodriguez.comeaqui.get.GetFoodObject;
 import com.example.eduardorodriguez.comeaqui.profile.orders.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.server.DeleteAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
+import com.google.gson.JsonObject;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class FoodLookActivity extends AppCompatActivity {
 
     static Context context;
 
-    public static void goToOrder(JSONObject jsonObject){
+    public static void goToOrder(JsonObject jsonObject){
         try{
             String id = jsonObject.get("id").toString();
             Intent goToOrders = new Intent(context, OrderLookActivity.class);
@@ -104,9 +106,14 @@ public class FoodLookActivity extends AppCompatActivity {
                                 new String[]{"post_id", fo.id}
                         );
                         PostAsyncTask createOrder = new PostAsyncTask("http://127.0.0.1:8000/create_order/");
-                        createOrder.execute(
-                                new String[]{"post_id", fo.id}
-                        );
+                        try {
+                            JsonObject response = createOrder.execute(
+                                    new String[]{"post_id", fo.id}
+                            ).get();
+                            FoodLookActivity.goToOrder(response);
+                        } catch (ExecutionException | InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
             }
