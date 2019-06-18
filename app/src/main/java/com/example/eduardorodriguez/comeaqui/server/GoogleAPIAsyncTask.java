@@ -1,7 +1,7 @@
 package com.example.eduardorodriguez.comeaqui.server;
 
 import android.os.AsyncTask;
-import com.example.eduardorodriguez.comeaqui.profile.PlacesAutocompleteFragment;
+import com.example.eduardorodriguez.comeaqui.profile.settings.PlacesAutocompleteFragment;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;

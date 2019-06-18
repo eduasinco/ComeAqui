@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.*;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.profile.OrderObject;
+import com.example.eduardorodriguez.comeaqui.profile.orders.OrderObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.google.android.gms.maps.*;

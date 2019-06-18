@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
-import com.example.eduardorodriguez.comeaqui.profile.OrderLookActivity;
+import com.example.eduardorodriguez.comeaqui.profile.orders.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.server.DeleteAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import org.json.JSONObject;

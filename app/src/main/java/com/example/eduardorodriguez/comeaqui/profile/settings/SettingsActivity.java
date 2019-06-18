@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.profile;
+package com.example.eduardorodriguez.comeaqui.profile.settings;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import com.example.eduardorodriguez.comeaqui.*;
+import com.example.eduardorodriguez.comeaqui.profile.EditAccountActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.GoogleAPIAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;

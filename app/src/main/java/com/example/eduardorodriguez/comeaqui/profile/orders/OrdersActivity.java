@@ -1,8 +1,9 @@
-package com.example.eduardorodriguez.comeaqui.profile;
+package com.example.eduardorodriguez.comeaqui.profile.orders;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.profile.orders.OrderFragment;
 
 public class OrdersActivity extends AppCompatActivity {
 

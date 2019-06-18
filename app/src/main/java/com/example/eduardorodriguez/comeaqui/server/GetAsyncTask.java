@@ -1,13 +1,15 @@
 package com.example.eduardorodriguez.comeaqui.server;
 
 import android.os.AsyncTask;
-import com.example.eduardorodriguez.comeaqui.profile.OrderFragment;
+import com.example.eduardorodriguez.comeaqui.profile.orders.OrderFragment;
 import com.example.eduardorodriguez.comeaqui.SplashActivity;
 import com.example.eduardorodriguez.comeaqui.get.GetFoodFragment;
 import com.example.eduardorodriguez.comeaqui.go.MapFragment;
 import com.example.eduardorodriguez.comeaqui.profile.*;
 import com.example.eduardorodriguez.comeaqui.profile.messages.MessagesFragment;
+import com.example.eduardorodriguez.comeaqui.profile.orders.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.profile.payment.PaymentMethodFragment;
+import com.example.eduardorodriguez.comeaqui.profile.settings.SettingsActivity;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;

@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.profile;
+package com.example.eduardorodriguez.comeaqui.profile.orders;
 
 import android.content.Context;
 import android.content.Intent;
