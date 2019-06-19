@@ -1,8 +1,7 @@
-package com.example.eduardorodriguez.comeaqui.get;
+package com.example.eduardorodriguez.comeaqui.food;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,6 @@ import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.FoodLookActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -23,9 +21,9 @@ public class GetFoodAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
 
     Context context;
-    ArrayList<GetFoodObject> data;
+    ArrayList<FoodPost> data;
 
-    public GetFoodAdapter(Context context, ArrayList<GetFoodObject> data){
+    public GetFoodAdapter(Context context, ArrayList<FoodPost> data){
 
         this.context = context;
         this.data = data;
@@ -33,7 +31,7 @@ public class GetFoodAdapter extends BaseAdapter {
         inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void addNewRow(ArrayList<GetFoodObject> data){
+    public void addNewRow(ArrayList<FoodPost> data){
         this.data = data;
         this.notifyDataSetChanged();
     }
@@ -48,17 +46,17 @@ public class GetFoodAdapter extends BaseAdapter {
         ImageView imageView = view.findViewById(R.id.orderImage);
 
 
-        final GetFoodObject foodObject = data.get(position);
+        final FoodPost foodPost = data.get(position);
 
-        food_name.setText(foodObject.plate_name);
-        String priceTextE = foodObject.price + "€";
+        food_name.setText(foodPost.plate_name);
+        String priceTextE = foodPost.price + "€";
         priceView.setText(priceTextE);
-        setTypes(view, foodObject.type);
-        descriptionView.setText(foodObject.description);
+        setTypes(view, foodPost.type);
+        descriptionView.setText(foodPost.description);
 
         final StringBuilder path = new StringBuilder();
         path.append("http://127.0.0.1:8000");
-        path.append(foodObject.food_photo);
+        path.append(foodPost.food_photo);
 
 
         Glide.with(context).load(path.toString()).into(imageView);
@@ -68,7 +66,7 @@ public class GetFoodAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent foodLook = new Intent(context, FoodLookActivity.class);
-                foodLook.putExtra("name_of_extra", foodObject);
+                foodLook.putExtra("object", foodPost);
                 foodLook.putExtra("delete", false);
                 context.startActivity(foodLook);
             }

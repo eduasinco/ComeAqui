@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.go;
+package com.example.eduardorodriguez.comeaqui.eat;
 
 import android.content.Intent;
 import android.graphics.*;

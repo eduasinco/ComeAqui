@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.get;
+package com.example.eduardorodriguez.comeaqui.food;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,7 +24,7 @@ public class GetFoodFragment extends Fragment {
 
     SwipeRefreshLayout pullToRefresh;
 
-    public static ArrayList<GetFoodObject> data;
+    public static ArrayList<FoodPost> data;
     static GetFoodAdapter fa;
     static View view;
 
@@ -39,7 +39,7 @@ public class GetFoodFragment extends Fragment {
             JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
-                data.add(new GetFoodObject(jo));
+                data.add(new FoodPost(jo));
             }
             fa.addNewRow(data);
         } catch (Exception e){
@@ -48,7 +48,7 @@ public class GetFoodFragment extends Fragment {
     }
 
     public static void appendToList(JsonObject jo){
-        data.add(0, new GetFoodObject(jo));
+        data.add(0, new FoodPost(jo));
         fa.addNewRow(data);
     }
 

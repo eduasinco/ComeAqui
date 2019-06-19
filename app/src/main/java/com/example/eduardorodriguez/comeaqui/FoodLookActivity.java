@@ -10,12 +10,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
-import com.example.eduardorodriguez.comeaqui.get.GetFoodObject;
+import com.example.eduardorodriguez.comeaqui.food.FoodPost;
 import com.example.eduardorodriguez.comeaqui.profile.orders.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.server.DeleteAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.google.gson.JsonObject;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -49,15 +48,16 @@ public class FoodLookActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
 
-        if(b != null){
-            final GetFoodObject fo = (GetFoodObject) b.get("name_of_extra");
+        if(b != null && b.get("object") != null){
+            final FoodPost getFoodObject = (FoodPost) b.get("object");
             boolean delete = b.getBoolean("delete");
-            plateNameView.setText(fo.plate_name);
-            descriptionView.setText(fo.description);
 
+            plateNameView.setText(getFoodObject.plate_name);
+            descriptionView.setText(getFoodObject.description);
             final StringBuilder path = new StringBuilder();
             path.append("http://127.0.0.1:8000");
-            path.append(fo.food_photo);
+            path.append(getFoodObject.food_photo);
+
             Glide.with(this).load(path.toString()).into(image);
 
             ArrayList<ImageView> imageViewArrayList = new ArrayList<>();
@@ -78,8 +78,8 @@ public class FoodLookActivity extends AppCompatActivity {
                     R.drawable.dairyfill,
             };
 
-            for (int i = 0; i < fo.type.length(); i++){
-                if (fo.type.charAt(i) == '1'){
+            for (int i = 0; i < getFoodObject.type.length(); i++){
+                if (getFoodObject.type.charAt(i) == '1'){
                     imageViewArrayList.get(i).setImageResource(resources[i]);
                 }
             }
@@ -89,7 +89,7 @@ public class FoodLookActivity extends AppCompatActivity {
                 placeOrderButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        DeleteAsyncTask deleteFoodPost = new DeleteAsyncTask(fo.id);
+                        DeleteAsyncTask deleteFoodPost = new DeleteAsyncTask(getFoodObject.id);
                         deleteFoodPost.execute();
                         Intent k = new Intent(FoodLookActivity.this, MainActivity.class);
                         k.putExtra("profile", true);
@@ -102,13 +102,13 @@ public class FoodLookActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         PostAsyncTask emitMessage = new PostAsyncTask("http://127.0.0.1:8000/send_message/");
                         emitMessage.execute(
-                                new String[]{"owner", fo.owner},
-                                new String[]{"post_id", fo.id}
+                                new String[]{"owner", getFoodObject.owner},
+                                new String[]{"post_id", getFoodObject.id}
                         );
                         PostAsyncTask createOrder = new PostAsyncTask("http://127.0.0.1:8000/create_order/");
                         try {
                             JsonObject response = createOrder.execute(
-                                    new String[]{"post_id", fo.id}
+                                    new String[]{"post_id", getFoodObject.id}
                             ).get();
                             FoodLookActivity.goToOrder(response);
                         } catch (ExecutionException | InterruptedException e) {

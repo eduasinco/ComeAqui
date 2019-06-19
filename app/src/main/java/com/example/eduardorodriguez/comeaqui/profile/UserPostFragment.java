@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.example.eduardorodriguez.comeaqui.food.FoodPost;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
@@ -19,6 +20,7 @@ import com.google.gson.JsonParser;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * A fragment representing a list of Items.
@@ -33,7 +35,7 @@ public class UserPostFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
 
-    private static ArrayList<UserPostObject> data;
+    private static ArrayList<FoodPost> data;
     private static MyUserPostRecyclerViewAdapter adapter;
 
     private OnListFragmentInteractionListener mListener;
@@ -52,7 +54,7 @@ public class UserPostFragment extends Fragment {
             JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
-                data.add(new UserPostObject(jo));
+                data.add(new FoodPost(jo));
             }
             adapter.addNewRow(data);
         } catch (Exception e){
@@ -64,7 +66,7 @@ public class UserPostFragment extends Fragment {
         JsonParser parser = new JsonParser();
         JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
         JsonObject jo = jsonArray.get(0).getAsJsonObject();
-        data.add(0, new UserPostObject(jo));
+        data.add(0, new FoodPost(jo));
         adapter.addNewRow(data);
     }
 
@@ -102,7 +104,12 @@ public class UserPostFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             GetAsyncTask process = new GetAsyncTask(0, "my_foods/");
-            process.execute();
+            try {
+                String response = process.execute().get();
+                UserPostFragment.makeList(response);
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
             this.adapter = new MyUserPostRecyclerViewAdapter(data, mListener);
             recyclerView.setAdapter(this.adapter);
         }
@@ -129,22 +136,5 @@ public class UserPostFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(DummyItem item);
-    }
-}
-
-class UserPostObject implements Serializable {
-    String id;
-    String plate_name;
-    String price;
-    String type;
-    String description;
-    String food_photo;
-    public UserPostObject(JsonObject jo){
-        id = jo.get("id").getAsNumber().toString();
-        plate_name = jo.get("plate_name").getAsString();
-        price = jo.get("price").getAsString();
-        type = jo.get("food_type").getAsString();
-        description = jo.get("description").getAsString();
-        food_photo = jo.get("food_photo").getAsString();
     }
 }

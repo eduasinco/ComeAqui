@@ -12,13 +12,13 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.FoodLookActivity;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.food.FoodPost;
 import com.example.eduardorodriguez.comeaqui.profile.UserPostFragment.OnListFragmentInteractionListener;
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-import static com.example.eduardorodriguez.comeaqui.get.GetFoodAdapter.setTypes;
+import static com.example.eduardorodriguez.comeaqui.food.GetFoodAdapter.setTypes;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
@@ -27,16 +27,16 @@ import static com.example.eduardorodriguez.comeaqui.get.GetFoodAdapter.setTypes;
  */
 public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPostRecyclerViewAdapter.ViewHolder> {
 
-    private ArrayList<UserPostObject> mValues;
+    private ArrayList<FoodPost> mValues;
     private final OnListFragmentInteractionListener mListener;
 
 
-    public MyUserPostRecyclerViewAdapter(ArrayList<UserPostObject> items, OnListFragmentInteractionListener listener) {
+    public MyUserPostRecyclerViewAdapter(ArrayList<FoodPost> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
 
-    public void addNewRow(ArrayList<UserPostObject> data){
+    public void addNewRow(ArrayList<FoodPost> data){
         this.mValues = data;
         this.notifyDataSetChanged();
     }
@@ -68,7 +68,7 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         TextView descriptionView = holder.mView.findViewById(R.id.orderMessage);
         ImageView imageView = holder.mView.findViewById(R.id.orderImage);
 
-        final UserPostObject userPostObject = mValues.get(position);
+        final FoodPost userPostObject = mValues.get(position);
 
         food_name.setText(userPostObject.plate_name);
         String priceTextE = userPostObject.price + "€";
@@ -83,7 +83,7 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
             @Override
             public void onClick(View v) {
                 Intent foodLook = new Intent(holder.mView.getContext(), FoodLookActivity.class);
-                foodLook.putExtra("userPostObject", userPostObject);
+                foodLook.putExtra("object", userPostObject);
                 foodLook.putExtra("delete", true);
                 holder.mView.getContext().startActivity(foodLook);
             }

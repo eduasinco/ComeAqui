@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.go;
+package com.example.eduardorodriguez.comeaqui.eat;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;

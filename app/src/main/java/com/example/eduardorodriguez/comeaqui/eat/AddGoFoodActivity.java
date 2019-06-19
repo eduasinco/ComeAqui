@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.get;
+package com.example.eduardorodriguez.comeaqui.eat;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -13,20 +13,23 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.*;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
+import com.example.eduardorodriguez.comeaqui.food.GetFoodFragment;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.google.gson.JsonObject;
 
-import java.io.*;
+import java.io.InputStream;
 import java.util.concurrent.ExecutionException;
 
-public class AddFoodActivity extends AppCompatActivity {
+public class AddGoFoodActivity extends AppCompatActivity {
+
     EditText foodName;
     TextView price;
     ImageView image;
     SeekBar seekbar;
     ConstraintLayout descriptionLayout;
     EditText description;
+    TimePicker timePicker;
     Button submit;
 
     String plateName;
@@ -63,7 +66,7 @@ public class AddFoodActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_food);
+        setContentView(R.layout.activity_add_go_food);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.order_choices, android.R.layout.simple_spinner_item);
@@ -75,28 +78,33 @@ public class AddFoodActivity extends AppCompatActivity {
         seekbar = findViewById(R.id.seekBar);
         descriptionLayout = findViewById(R.id.descriptionLayout);
         description = findViewById(R.id.orderMessage);
+        timePicker = findViewById(R.id.simpleTimePicker);
         submit = findViewById(R.id.submitButton);
 
         submit.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PostAsyncTask post = new PostAsyncTask("http://127.0.0.1:8000/get_foods/");
+
+                PostAsyncTask post = new PostAsyncTask("http://127.0.0.1:8000/go_foods/");
                 post.bitmap = imageBitmap;
+                String time = timePicker.getHour() + ":" + timePicker.getMinute();
+
                 try {
                     JsonObject response = post.execute(
                             new String[]{"plate_name", foodName.getText().toString()},
                             new String[]{"price", price_data.toString()},
-                            new String[]{"food_type", setTypes(), ""},
+                            new String[]{"food_type", setTypes()},
                             new String[]{"description", description.getText().toString()},
+                            new String[]{"time", time},
                             new String[]{"food_photo", "", "img"}
                     ).get();
                     GetFoodFragment.appendToList(response);
                 } catch (ExecutionException | InterruptedException e) {
                     e.printStackTrace();
                 }
-                Intent k = new Intent(AddFoodActivity.this, MainActivity.class);
+                Intent k = new Intent(AddGoFoodActivity.this, MainActivity.class);
+                k.putExtra("map", true);
                 startActivity(k);
-
             }
         });
 
@@ -285,6 +293,4 @@ public class AddFoodActivity extends AppCompatActivity {
         );
         return px;
     }
-
 }
-
