@@ -80,7 +80,7 @@ public class AddFoodActivity extends AppCompatActivity {
         submit.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PostAsyncTask post = new PostAsyncTask("http://127.0.0.1:8000/get_foods/");
+                PostAsyncTask post = new PostAsyncTask("http://127.0.0.1:8000/foods/");
                 post.bitmap = imageBitmap;
                 try {
                     JsonObject response = post.execute(

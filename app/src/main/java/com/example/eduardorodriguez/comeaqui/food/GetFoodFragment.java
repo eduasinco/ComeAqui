@@ -64,12 +64,12 @@ public class GetFoodFragment extends Fragment {
         ListView listView = view.findViewById(R.id.getfoodlist);
         listView.setAdapter(fa);
 
-        GetAsyncTask process = new GetAsyncTask( 1, "get_foods/");
+        GetAsyncTask process = new GetAsyncTask( 1, "foods/");
         process.execute();
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                GetAsyncTask process = new GetAsyncTask( 1, "get_foods/");
+                GetAsyncTask process = new GetAsyncTask( 1, "foods/");
                 process.execute();
                 pullToRefresh.setRefreshing(false);
             }

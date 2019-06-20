@@ -76,7 +76,8 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         setTypes(holder.mView, userPostObject.type);
         descriptionView.setText(userPostObject.description);
 
-        Glide.with(holder.mView.getContext()).load(userPostObject.food_photo).into(imageView);
+        if (!userPostObject.food_photo.contains("no-image"))
+            Glide.with(holder.mView.getContext()).load(userPostObject.food_photo).into(imageView);
 
         ConstraintLayout item = holder.mView.findViewById(R.id.listItem);
         item.setOnClickListener(new View.OnClickListener() {

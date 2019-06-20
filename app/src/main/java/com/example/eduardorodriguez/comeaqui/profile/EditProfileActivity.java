@@ -16,6 +16,8 @@ import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
 
+import java.util.concurrent.ExecutionException;
+
 public class EditProfileActivity extends AppCompatActivity {
 
     Bitmap imageBitmap;
@@ -72,16 +74,21 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 PatchAsyncTask putTast = new PatchAsyncTask();
-                putTast.execute("first_name", editFirstNameView.getText().toString());
-                PatchAsyncTask putTast2 = new PatchAsyncTask();
-                putTast2.execute("last_name", editLastNameView.getText().toString());
-                PatchAsyncTask putTast3 = new PatchAsyncTask();
-                putTast3.execute("bio", bioView.getText().toString());
-                if (imageBitmap != null){
-                    PatchAsyncTask putTast4 = new PatchAsyncTask();
-                    putTast4.imageBitmap = imageBitmap;
-                    putTast4.execute("profile_photo", "", "true");
+                try {
+                    putTast.execute("first_name", editFirstNameView.getText().toString()).get();
+                    PatchAsyncTask putTast2 = new PatchAsyncTask();
+                    putTast2.execute("last_name", editLastNameView.getText().toString()).get();
+                    PatchAsyncTask putTast3 = new PatchAsyncTask();
+                    putTast3.execute("bio", bioView.getText().toString()).get();
+                    if (imageBitmap != null){
+                        PatchAsyncTask putTast4 = new PatchAsyncTask();
+                        putTast4.imageBitmap = imageBitmap;
+                        putTast4.execute("profile_photo", "", "true").get();
+                    }
+                } catch (ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
                 }
+
                 Intent k = new Intent(EditProfileActivity.this, MainActivity.class);
                 k.putExtra("profile", true);
                 startActivity(k);

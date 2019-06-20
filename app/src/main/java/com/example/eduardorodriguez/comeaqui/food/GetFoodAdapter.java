@@ -63,7 +63,9 @@ public class GetFoodAdapter extends BaseAdapter {
         if(SplashActivity.mock){
             imageView.setImageResource(R.drawable.food_post);
         } else {
-            Glide.with(context).load(path.toString()).into(imageView);
+            if (!path.toString().contains("no-image")){
+                Glide.with(context).load(path.toString()).into(imageView);
+            }
         }
 
         ConstraintLayout item = view.findViewById(R.id.listItem);
