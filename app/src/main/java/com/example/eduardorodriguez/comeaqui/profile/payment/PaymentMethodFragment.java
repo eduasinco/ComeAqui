@@ -18,6 +18,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * A fragment representing a list of Items.
@@ -96,8 +97,12 @@ public class PaymentMethodFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            GetAsyncTask getCards = new GetAsyncTask(3, "my_profile_card/");
-            getCards.execute();
+            GetAsyncTask getCards = new GetAsyncTask("my_profile_card/");
+            try {
+                makeList(getCards.execute().get());
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
             fa = new MyPaymentMethodRecyclerViewAdapter(data, mListener);
             recyclerView.setAdapter(fa);
         }

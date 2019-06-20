@@ -18,6 +18,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * A fragment representing a list of Items.
@@ -97,8 +98,13 @@ public class OrderFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            GetAsyncTask getOrders = new GetAsyncTask(6, "my_get_orders/");
-            getOrders.execute();
+
+            GetAsyncTask getOrders = new GetAsyncTask("my_get_orders/");
+            try {
+                makeList(getOrders.execute().get());
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
             adapter = new MyOrderRecyclerViewAdapter(data, mListener);
             recyclerView.setAdapter(adapter);
         }

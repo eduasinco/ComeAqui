@@ -14,6 +14,8 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.util.concurrent.ExecutionException;
+
 public class OrderLookActivity extends AppCompatActivity {
 
     static String[] data;
@@ -83,8 +85,12 @@ public class OrderLookActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if (b != null){
-            GetAsyncTask getOrders = new GetAsyncTask(8, "order_detail/" + b.getString("id") + "/");
-            getOrders.execute();
+            GetAsyncTask getOrders = new GetAsyncTask("order_detail/" + b.getString("id") + "/");
+            try {
+                createStringArray(getOrders.execute().get());
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
     }

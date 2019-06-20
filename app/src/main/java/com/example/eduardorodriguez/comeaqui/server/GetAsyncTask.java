@@ -4,15 +4,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import com.example.eduardorodriguez.comeaqui.mock.GetMock;
-import com.example.eduardorodriguez.comeaqui.profile.orders.OrderFragment;
 import com.example.eduardorodriguez.comeaqui.SplashActivity;
-import com.example.eduardorodriguez.comeaqui.food.GetFoodFragment;
-import com.example.eduardorodriguez.comeaqui.eat.MapFragment;
-import com.example.eduardorodriguez.comeaqui.profile.*;
-import com.example.eduardorodriguez.comeaqui.profile.messages.MessagesFragment;
-import com.example.eduardorodriguez.comeaqui.profile.orders.OrderLookActivity;
-import com.example.eduardorodriguez.comeaqui.profile.payment.PaymentMethodFragment;
-import com.example.eduardorodriguez.comeaqui.profile.settings.SettingsActivity;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -28,9 +20,7 @@ public class GetAsyncTask extends AsyncTask<String, Void, JsonObject>
 {
     String uri;
 
-    int url_index;
-    public GetAsyncTask(int url_index, String uri){
-        this.url_index = url_index;
+    public GetAsyncTask(String uri){
         this.uri = "http://127.0.0.1:8000/";
         this.uri += uri;
     }
@@ -39,12 +29,8 @@ public class GetAsyncTask extends AsyncTask<String, Void, JsonObject>
     protected JsonObject doInBackground(String... params)
     {
         if (SplashActivity.mock){
-            return GetMock.get(url_index);
-        }
-
-        if (params.length != 0 && params[0] == "editAccount"){
-            this.url_index = 5;
-        }
+            return GetMock.get(uri);
+}
 
         StringBuilder builder = new StringBuilder();
         HttpClient client = new DefaultHttpClient();
@@ -84,40 +70,6 @@ public class GetAsyncTask extends AsyncTask<String, Void, JsonObject>
     @Override
     protected void onPostExecute(JsonObject response)
     {
-        if(response != null)
-        {
-            switch (url_index){
-                case 0:
-                    UserPostFragment.makeList(response);
-                    break;
-                case 1:
-                    GetFoodFragment.makeList(response);
-                    break;
-                case 2:
-                    ProfileFragment.setProfile(response);
-                    break;
-                case 3:
-                    PaymentMethodFragment.makeList(response);
-                    break;
-                case 4:
-                    MessagesFragment.makeList(response);
-                    break;
-                case 5:
-                    SettingsActivity.setProfile(response);
-                    break;
-                case 6:
-                    OrderFragment.makeList(response);
-                    break;
-                case 7:
-                    MapFragment.makeList(response);
-                    break;
-                case 8:
-                    OrderLookActivity.createStringArray(response);;
-                    break;
-                case 9:
-                    MapFragment.makeOrderList(response);
-                    break;
-            }
-        }
+        if(response != null) {}
     }
 }

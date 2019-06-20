@@ -20,6 +20,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
+import java.util.concurrent.ExecutionException;
+
 public class ProfileFragment extends Fragment {
 
     public static String[] data;
@@ -36,10 +38,7 @@ public class ProfileFragment extends Fragment {
     }
 
     public static void setProfile(JsonObject jsonObject){
-        JsonArray jsonArray = jsonObject.getAsJsonArray();
-        JsonObject jo = jsonArray.get(0).getAsJsonObject();
-
-        user = new User(jo);
+        user = new User(jsonObject);
 
         if(!user.profile_photo.contains("no-image")) Glide.with(view.getContext()).load(user.profile_photo).into(profileImageView);
         nameView.setText(user.first_name + " " + user.last_name);
@@ -73,10 +72,6 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-
-        GetAsyncTask process = new GetAsyncTask(2, "my_profile/");
-        process.execute();
-
         ViewPager viewPager = view.findViewById(R.id.viewpager);
         viewPager.setAdapter(new TestPagerAdapter(getChildFragmentManager()));
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
@@ -89,6 +84,13 @@ public class ProfileFragment extends Fragment {
                 getContext().startActivity(editProfile);
             }
         });
+
+        GetAsyncTask process = new GetAsyncTask("my_profile/");
+        try {
+            setProfile(process.execute().get());
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
         return view;
     }
 

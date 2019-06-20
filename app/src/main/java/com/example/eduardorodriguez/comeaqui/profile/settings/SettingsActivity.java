@@ -23,6 +23,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.util.concurrent.ExecutionException;
+
 public class SettingsActivity extends AppCompatActivity {
 
     private static EditText addressView;
@@ -68,8 +70,12 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        GetAsyncTask profileInfo = new GetAsyncTask(2, "my_profile/");
-        profileInfo.execute("editAccount");
+        GetAsyncTask profileInfo = new GetAsyncTask("my_profile/");
+        try {
+            setProfile(profileInfo.execute().get());
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
 
         Button editAccountView = findViewById(R.id.editAccount);
         Button saveButtonView = findViewById(R.id.saveButton);

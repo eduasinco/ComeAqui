@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.FoodLookActivity;
+import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.SplashActivity;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileFragment;
@@ -71,14 +72,13 @@ public class GetFoodAdapter extends BaseAdapter {
         }
         ConstraintLayout item = view.findViewById(R.id.listItem);
 
-
         item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent foodLook = new Intent(context, FoodLookActivity.class);
                 foodLook.putExtra("object", foodPost);
                 boolean delete = false;
-                if (foodPost.owner_id == ProfileFragment.user.id){
+                if (foodPost.owner_id == MainActivity.user.id){
                     delete = true;
                 }
                 foodLook.putExtra("delete", delete);

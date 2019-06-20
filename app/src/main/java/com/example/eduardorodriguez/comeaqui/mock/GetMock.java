@@ -9,22 +9,22 @@ import java.io.*;
 
 public class GetMock extends AppCompatActivity {
 
-    public static JsonObject get(int index){
+    public static JsonObject get(String index){
         String path = "";
         switch (index){
-            case 1:
+            case "food":
                 path = "mock/food.txt";
                 break;
-            case 2:
+            case "my_profile":
                 path = "mock/my_profile.txt";
                 break;
-            case 3:
+            case "my_profile_card":
                 path = "mock/my_profile_card.txt";
                 break;
-            case 4:
+            case "my_messages":
                 path = "mock/my_messages.txt";
                 break;
-            case 6:
+            case "my_get_orders":
                 path = "mock/my_get_orders.txt";
                 break;
 

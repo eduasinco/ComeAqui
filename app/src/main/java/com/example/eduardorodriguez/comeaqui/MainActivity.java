@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        initializeUser();
     }
     private void setFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeUser(){
-        GetAsyncTask process = new GetAsyncTask(2, "my_profile/");
+        GetAsyncTask process = new GetAsyncTask("my_profile/");
         try {
             user = new User(process.execute().get());
         } catch (ExecutionException | InterruptedException e) {

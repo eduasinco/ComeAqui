@@ -102,7 +102,7 @@ public class UserPostFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            GetAsyncTask process = new GetAsyncTask(0, "my_foods/");
+            GetAsyncTask process = new GetAsyncTask("my_foods/");
             try {
                 JsonObject response = process.execute().get();
                 UserPostFragment.makeList(response);

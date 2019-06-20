@@ -204,13 +204,18 @@ public class MapFragment extends Fragment {
 
         constraintLayoutView.setVisibility(View.GONE);
         confirmPosterImageView.setVisibility(View.GONE);
-        GetAsyncTask getPostLocations = new GetAsyncTask(9, "my_go_orders/");
-        getPostLocations.execute();
 
         postInfoView.setVisibility(View.GONE);
         mMapView.onCreate(savedInstanceState);
 
         mMapView.onResume(); // needed to get the map to display immediately
+
+        GetAsyncTask getPostLocations = new GetAsyncTask("my_orders/");
+        try {
+            makeOrderList(getPostLocations.execute().get());
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -222,8 +227,12 @@ public class MapFragment extends Fragment {
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
-                GetAsyncTask getPostLocations = new GetAsyncTask(7, "go_foods/");
-                getPostLocations.execute();
+                GetAsyncTask getPostLocations = new GetAsyncTask("foods/");
+                try {
+                    makeList(getPostLocations.execute().get());
+                } catch (ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
+                }
 
                 googleMap.setMyLocationEnabled(true);
 
@@ -332,7 +341,6 @@ public class MapFragment extends Fragment {
 
             }
         });
-
         return rootView;
     }
 

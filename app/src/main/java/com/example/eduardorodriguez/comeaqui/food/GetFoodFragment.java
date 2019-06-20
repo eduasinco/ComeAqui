@@ -14,6 +14,7 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.google.gson.*;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import static com.example.eduardorodriguez.comeaqui.R.layout.fragment_get_food;
 
@@ -63,13 +64,11 @@ public class GetFoodFragment extends Fragment {
         ListView listView = view.findViewById(R.id.getfoodlist);
         listView.setAdapter(fa);
 
-        GetAsyncTask process = new GetAsyncTask( 1, "foods/");
-        process.execute();
+        getDataAndSet();
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                GetAsyncTask process = new GetAsyncTask( 1, "foods/");
-                process.execute();
+                getDataAndSet();
                 pullToRefresh.setRefreshing(false);
             }
         });
@@ -85,7 +84,12 @@ public class GetFoodFragment extends Fragment {
         return view;
     }
 
-    public static void setList(){
-
+    void getDataAndSet(){
+        GetAsyncTask process = new GetAsyncTask("foods/");
+        try {
+            makeList(process.execute().get());
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
