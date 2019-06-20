@@ -42,11 +42,10 @@ public class OrderFragment extends Fragment {
     public OrderFragment() {
     }
 
-    public static void makeList(String jsonString){
+    public static void makeList(JsonObject jsonObject){
         try {
             data = new ArrayList<>();
-            JsonParser parser = new JsonParser();
-            JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
+            JsonArray jsonArray = jsonObject.getAsJsonArray();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
                 data.add(new OrderObject(jo));

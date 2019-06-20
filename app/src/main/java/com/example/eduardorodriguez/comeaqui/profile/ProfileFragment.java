@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.view.*;
 import android.widget.*;
 import com.bumptech.glide.Glide;
+import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.profile.messages.MessagesFragment;
@@ -22,7 +23,7 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 public class ProfileFragment extends Fragment {
 
     public static String[] data;
-    static public User user;
+    static public User user = MainActivity.user;
     static public View view;
 
     static ImageView profileImageView;
@@ -34,9 +35,8 @@ public class ProfileFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static void setProfile(String jsonString){
-        JsonParser parser = new JsonParser();
-        JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
+    public static void setProfile(JsonObject jsonObject){
+        JsonArray jsonArray = jsonObject.getAsJsonArray();
         JsonObject jo = jsonArray.get(0).getAsJsonObject();
 
         user = new User(jo);

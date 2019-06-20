@@ -1,11 +1,15 @@
 package com.example.eduardorodriguez.comeaqui.mock;
 import android.support.v7.app.AppCompatActivity;
 import com.example.eduardorodriguez.comeaqui.SplashActivity;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.io.*;
 
 public class GetMock extends AppCompatActivity {
 
-    public static String get(int index){
+    public static JsonObject get(int index){
         String path = "";
         switch (index){
             case 1:
@@ -35,7 +39,10 @@ public class GetMock extends AppCompatActivity {
             while ((mLine = reader.readLine()) != null) {
                 content.append(mLine);
             }
-            return content.toString();
+            JsonParser parser = new JsonParser();
+            JsonArray jsonArray = parser.parse(content.toString()).getAsJsonArray();
+            JsonObject jo = jsonArray.get(0).getAsJsonObject();
+            return jo;
         } catch (IOException e){
             e.printStackTrace();
         }

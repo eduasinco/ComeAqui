@@ -34,12 +34,6 @@ public class OrderLookActivity extends AppCompatActivity {
     static Context context;
 
 
-    public static void putData(String jsonString){
-        JsonParser parser = new JsonParser();
-        JsonObject jo = parser.parse(jsonString).getAsJsonObject();
-        createStringArray(jo);
-    }
-
     public static void createStringArray(JsonObject jo){
         order = new OrderObject(jo);
 

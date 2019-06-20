@@ -46,9 +46,8 @@ public class SettingsActivity extends AppCompatActivity {
     static long last_text_edit = 0;
 
 
-    public static void setProfile(String jsonString){
-        JsonParser parser = new JsonParser();
-        JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
+    public static void setProfile(JsonObject jsonObject){
+        JsonArray jsonArray = jsonObject.getAsJsonArray();
         JsonObject jo = jsonArray.get(0).getAsJsonObject();
 
         firstName = jo.get("first_name").getAsString();

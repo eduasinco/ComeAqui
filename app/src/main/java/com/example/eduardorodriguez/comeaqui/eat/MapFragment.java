@@ -83,11 +83,10 @@ public class MapFragment extends Fragment {
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-    public static void makeList(String jsonString){
+    public static void makeList(JsonObject jsonObject){
         try {
             data = new ArrayList<>();
-            JsonParser parser = new JsonParser();
-            JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
+            JsonArray jsonArray = jsonObject.getAsJsonArray();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
                 data.add(new MapPost(jo));
@@ -98,11 +97,10 @@ public class MapFragment extends Fragment {
         }
     }
 
-    public static void makeOrderList(String jsonString){
+    public static void makeOrderList(JsonObject jsonObject){
         try {
             goOrder = null;
-            JsonParser parser = new JsonParser();
-            JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
+            JsonArray jsonArray = jsonObject.getAsJsonArray();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
                 goOrder = new OrderObject(jo);

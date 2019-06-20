@@ -18,6 +18,10 @@ import android.widget.FrameLayout;
 import com.example.eduardorodriguez.comeaqui.food.GetFoodFragment;
 import com.example.eduardorodriguez.comeaqui.eat.MapFragment;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileFragment;
+import com.example.eduardorodriguez.comeaqui.profile.User;
+import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private GetFoodFragment getFoodFragment;
     private MapFragment mapFragment;
     private ProfileFragment profileFragment;
+
+    public static User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,5 +112,14 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentTransaction.replace(R.id.main_frame, fragment);
         fragmentTransaction.commit();
+    }
+
+    private void initializeUser(){
+        GetAsyncTask process = new GetAsyncTask(2, "my_profile/");
+        try {
+            user = new User(process.execute().get());
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

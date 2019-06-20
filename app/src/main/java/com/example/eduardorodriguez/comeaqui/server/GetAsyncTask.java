@@ -13,16 +13,18 @@ import com.example.eduardorodriguez.comeaqui.profile.messages.MessagesFragment;
 import com.example.eduardorodriguez.comeaqui.profile.orders.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.profile.payment.PaymentMethodFragment;
 import com.example.eduardorodriguez.comeaqui.profile.settings.SettingsActivity;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.*;
 
-public class GetAsyncTask extends AsyncTask<String, Void, String>
+public class GetAsyncTask extends AsyncTask<String, Void, JsonObject>
 {
     String uri;
 
@@ -34,7 +36,7 @@ public class GetAsyncTask extends AsyncTask<String, Void, String>
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    protected String doInBackground(String... params)
+    protected JsonObject doInBackground(String... params)
     {
         if (SplashActivity.mock){
             return GetMock.get(url_index);
@@ -65,13 +67,14 @@ public class GetAsyncTask extends AsyncTask<String, Void, String>
                 while ((line = reader.readLine()) != null) {
                     builder.append(line);
                 }
-                return builder.toString();
+
+                JsonParser parser = new JsonParser();
+                JsonArray jsonArray = parser.parse(builder.toString()).getAsJsonArray();
+                JsonObject jo = jsonArray.get(0).getAsJsonObject();
+                return jo;
             } else {
                 return null;
             }
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-            return null;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -79,7 +82,7 @@ public class GetAsyncTask extends AsyncTask<String, Void, String>
     }
 
     @Override
-    protected void onPostExecute(String response)
+    protected void onPostExecute(JsonObject response)
     {
         if(response != null)
         {
@@ -109,7 +112,7 @@ public class GetAsyncTask extends AsyncTask<String, Void, String>
                     MapFragment.makeList(response);
                     break;
                 case 8:
-                    OrderLookActivity.putData(response);
+                    OrderLookActivity.createStringArray(response);;
                     break;
                 case 9:
                     MapFragment.makeOrderList(response);
