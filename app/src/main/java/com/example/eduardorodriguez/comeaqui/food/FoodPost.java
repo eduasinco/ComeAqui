@@ -4,8 +4,8 @@ import com.google.gson.JsonObject;
 import java.io.Serializable;
 
 public class FoodPost implements Serializable {
-    public String id;
-    public String owner_id;
+    public int id;
+    public int owner_id;
     public String plate_name;
     public String price;
     public String type;
@@ -13,8 +13,8 @@ public class FoodPost implements Serializable {
     public String food_photo;
     public String owner;
     public FoodPost(JsonObject jo){
-        id = jo.get("id").getAsNumber().toString();
-        owner_id = jo.get("owner_id").getAsNumber().toString();
+        id = jo.get("id").getAsInt();
+        owner_id = jo.get("owner_id").getAsInt();
         plate_name = jo.get("plate_name").getAsString();
         price = jo.get("price").getAsString();
         type = jo.get("food_type").getAsString();
