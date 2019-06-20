@@ -49,15 +49,12 @@ public class EditProfileActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if(b != null){
-            String firstName = b.getString("firstName");
-            String lastName = b.getString("lastName");
-            String bio = b.getString("bio");
-            String profile_photo = b.getString("profile_photo");
+            User user = (User) b.get("object");
 
-            if(profile_photo != null && !profile_photo.contains("no-image")) Glide.with(this).load(profile_photo).into(profileImageView);
-            editFirstNameView.setText(firstName);
-            editLastNameView.setText(lastName);
-            bioView.setText(bio);
+            if(user.profile_photo != null && !user.profile_photo.contains("no-image")) Glide.with(this).load(user.profile_photo).into(profileImageView);
+            editFirstNameView.setText(user.first_name);
+            editLastNameView.setText(user.last_name);
+            bioView.setText(user.bio);
         }
 
         FloatingActionButton myFab =  findViewById(R.id.fabCamera);

@@ -22,18 +22,13 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 public class ProfileFragment extends Fragment {
 
     public static String[] data;
+    static public User user;
     static public View view;
 
     static ImageView profileImageView;
     static TextView emailView;
     static TextView bioView;
     static TextView nameView;
-
-    static String email;
-    static String firstName;
-    static String lastName;
-    static String bio;
-    static String profile_photo;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -44,16 +39,12 @@ public class ProfileFragment extends Fragment {
         JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
         JsonObject jo = jsonArray.get(0).getAsJsonObject();
 
-        email = jo.get("email").getAsString();
-        firstName = jo.get("first_name").getAsString();
-        lastName = jo.get("last_name").getAsString();
-        bio = jo.get("bio").getAsString();
-        profile_photo = jo.get("profile_photo").getAsString();
+        user = new User(jo);
 
-        if(!profile_photo.contains("no-image")) Glide.with(view.getContext()).load(profile_photo).into(profileImageView);
-        nameView.setText(firstName + " " + lastName);
-        emailView.setText(email);
-        bioView.setText(bio);
+        if(!user.profile_photo.contains("no-image")) Glide.with(view.getContext()).load(user.profile_photo).into(profileImageView);
+        nameView.setText(user.first_name + " " + user.last_name);
+        emailView.setText(user.email);
+        bioView.setText(user.bio);
     }
 
     @Override
@@ -94,11 +85,7 @@ public class ProfileFragment extends Fragment {
         {
             public void onClick(View v) {
                 Intent editProfile = new Intent(getContext(), EditProfileActivity.class);
-                editProfile.putExtra("firstName", firstName);
-                editProfile.putExtra("lastName", lastName);
-                editProfile.putExtra("email", email);
-                editProfile.putExtra("bio", bio);
-                editProfile.putExtra("profile_photo", profile_photo);
+                editProfile.putExtra("object", user);
                 getContext().startActivity(editProfile);
             }
         });
