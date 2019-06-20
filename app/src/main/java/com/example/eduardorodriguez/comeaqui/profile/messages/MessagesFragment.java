@@ -44,10 +44,9 @@ public class MessagesFragment extends Fragment {
     public MessagesFragment() {
     }
 
-    public static void makeList(JsonObject jsonObject){
+    public static void makeList(JsonArray jsonArray){
         try {
             data = new ArrayList<>();
-            JsonArray jsonArray = jsonObject.getAsJsonArray();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
                 data.add(new MessageObject(jo));

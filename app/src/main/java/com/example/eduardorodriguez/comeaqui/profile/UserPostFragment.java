@@ -47,10 +47,9 @@ public class UserPostFragment extends Fragment {
     public UserPostFragment() {
     }
 
-    public static void makeList(JsonObject jsonObject){
+    public static void makeList(JsonArray jsonArray){
         try {
             data = new ArrayList<>();
-            JsonArray jsonArray = jsonObject.getAsJsonArray();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
                 data.add(new FoodPost(jo));
@@ -104,8 +103,7 @@ public class UserPostFragment extends Fragment {
             }
             GetAsyncTask process = new GetAsyncTask("my_foods/");
             try {
-                JsonObject response = process.execute().get();
-                UserPostFragment.makeList(response);
+                UserPostFragment.makeList(process.execute().get());
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }

@@ -72,7 +72,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         GetAsyncTask profileInfo = new GetAsyncTask("my_profile/");
         try {
-            setProfile(profileInfo.execute().get());
+            setProfile(profileInfo.execute().get().get(0).getAsJsonObject());
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }

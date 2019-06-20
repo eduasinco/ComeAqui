@@ -9,7 +9,7 @@ import java.io.*;
 
 public class GetMock extends AppCompatActivity {
 
-    public static JsonObject get(String index){
+    public static JsonArray get(String index){
         String path = "";
         switch (index){
             case "food":
@@ -41,8 +41,7 @@ public class GetMock extends AppCompatActivity {
             }
             JsonParser parser = new JsonParser();
             JsonArray jsonArray = parser.parse(content.toString()).getAsJsonArray();
-            JsonObject jo = jsonArray.get(0).getAsJsonObject();
-            return jo;
+            return jsonArray;
         } catch (IOException e){
             e.printStackTrace();
         }
