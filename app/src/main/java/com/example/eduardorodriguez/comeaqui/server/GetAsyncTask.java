@@ -1,6 +1,9 @@
 package com.example.eduardorodriguez.comeaqui.server;
 
 import android.os.AsyncTask;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import com.example.eduardorodriguez.comeaqui.mock.GetMock;
 import com.example.eduardorodriguez.comeaqui.profile.orders.OrderFragment;
 import com.example.eduardorodriguez.comeaqui.SplashActivity;
 import com.example.eduardorodriguez.comeaqui.food.GetFoodFragment;
@@ -29,9 +32,14 @@ public class GetAsyncTask extends AsyncTask<String, Void, String>
         this.uri = "http://127.0.0.1:8000/";
         this.uri += uri;
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected String doInBackground(String... params)
     {
+        if (SplashActivity.mock){
+            return GetMock.get(url_index);
+        }
+
         if (params.length != 0 && params[0] == "editAccount"){
             this.url_index = 5;
         }

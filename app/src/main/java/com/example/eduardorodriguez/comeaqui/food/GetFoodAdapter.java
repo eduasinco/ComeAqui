@@ -2,6 +2,7 @@ package com.example.eduardorodriguez.comeaqui.food;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.FoodLookActivity;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.SplashActivity;
 
 import java.util.ArrayList;
 
@@ -58,8 +60,11 @@ public class GetFoodAdapter extends BaseAdapter {
         path.append("http://127.0.0.1:8000");
         path.append(foodPost.food_photo);
 
-
-        Glide.with(context).load(path.toString()).into(imageView);
+        if(SplashActivity.mock){
+            imageView.setImageResource(R.drawable.food_post);
+        } else {
+            Glide.with(context).load(path.toString()).into(imageView);
+        }
 
         ConstraintLayout item = view.findViewById(R.id.listItem);
         item.setOnClickListener(new View.OnClickListener() {

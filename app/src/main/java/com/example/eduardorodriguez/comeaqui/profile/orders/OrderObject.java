@@ -4,7 +4,8 @@ import com.google.gson.JsonObject;
 
 public class OrderObject{
     public String id;
-    public String owner;
+    public String owner_id;
+    public String owner_username;
     public String orderStatus;
     public String postPlateName;
     public String postFoodPhoto;
@@ -20,7 +21,8 @@ public class OrderObject{
     public String postGoFoodTime;
     public OrderObject(JsonObject jo){
         id = jo.get("id").getAsNumber().toString();
-        owner = jo.get("owner").getAsString();
+        owner_id = jo.get("owner_id").getAsNumber().toString();
+        owner_username = jo.get("owner_username").getAsString();
         orderStatus = jo.get("order_status").getAsString();
         postPlateName = jo.get("post_plate_name").getAsString();
         postFoodPhoto = jo.get("post_food_photo").getAsString();

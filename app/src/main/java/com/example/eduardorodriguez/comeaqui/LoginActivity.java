@@ -313,6 +313,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
+            if (SplashActivity.mock) return true;
 
             HttpClient client = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet("http://127.0.0.1:8000/login/");

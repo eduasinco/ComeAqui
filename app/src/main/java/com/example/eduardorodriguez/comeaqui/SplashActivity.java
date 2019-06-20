@@ -8,7 +8,8 @@ import android.os.Bundle;
 
 public class SplashActivity extends AppCompatActivity {
     private static String credentials;
-    private static boolean mock = true;
+    public static boolean mock = true;
+    public static Context context;
 
     public static String getCredemtials(){
         return credentials;
@@ -23,6 +24,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        context = getBaseContext();
 
         SharedPreferences pref = getSharedPreferences("ActivityPREF", Context.MODE_PRIVATE);
         if (pref.getBoolean("activity_executed", false)) {
