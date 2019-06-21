@@ -41,7 +41,7 @@ public class PostAsyncTask extends AsyncTask<String[], Void, JsonObject>
                 .setBoundary(boundary);
 
         for(String[] ss: params){
-            if (ss.length == 3 && ss[2] == "img") {
+            if (ss[0].equals("food_photo") && bitmap != null) {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
                 byte[] imageBytes = baos.toByteArray();

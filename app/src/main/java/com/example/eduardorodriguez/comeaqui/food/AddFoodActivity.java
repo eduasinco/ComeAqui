@@ -32,7 +32,7 @@ public class AddFoodActivity extends AppCompatActivity {
     Button submit;
 
     String plateName;
-    Float price_data;
+    Float price_data = 0f;
     boolean[] pressed = {false, false, false, false, false, false, false};
     String description_data;
     Bitmap imageBitmap;
@@ -93,11 +93,12 @@ public class AddFoodActivity extends AppCompatActivity {
                     JsonObject response = post.execute(
                             new String[]{"plate_name", foodName.getText().toString()},
                             new String[]{"price", price_data.toString()},
-                            new String[]{"food_type", setTypes(), ""},
+                            new String[]{"food_type", setTypes()},
                             new String[]{"description", description.getText().toString()},
-                            new String[]{"food_photo", "", "img"}
+                            new String[]{"food_photo", ""}
                     ).get();
-                    GetFoodFragment.appendToList(response);
+                    if (response != null)
+                        GetFoodFragment.appendToList(response);
                 } catch (ExecutionException | InterruptedException e) {
                     e.printStackTrace();
                 }

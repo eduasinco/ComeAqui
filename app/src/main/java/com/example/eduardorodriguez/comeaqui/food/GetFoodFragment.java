@@ -47,6 +47,9 @@ public class GetFoodFragment extends Fragment {
     }
 
     public static void appendToList(JsonObject jo){
+        if (data == null){
+            data = new ArrayList<>();
+        }
         data.add(0, new FoodPost(jo));
         fa.addNewRow(data);
     }
