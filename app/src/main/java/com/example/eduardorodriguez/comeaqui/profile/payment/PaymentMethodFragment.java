@@ -98,7 +98,7 @@ public class PaymentMethodFragment extends Fragment {
             }
             GetAsyncTask getCards = new GetAsyncTask("my_profile_card/");
             try {
-                makeList(getCards.execute().get());
+                makeList(new JsonParser().parse(getCards.execute().get()).getAsJsonArray());
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }

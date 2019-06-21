@@ -98,9 +98,9 @@ public class OrderFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            GetAsyncTask getOrders = new GetAsyncTask("my_get_orders/");
+            GetAsyncTask getOrders = new GetAsyncTask("my_orders/");
             try {
-                makeList(getOrders.execute().get());
+                makeList(new JsonParser().parse(getOrders.execute().get()).getAsJsonArray());
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }

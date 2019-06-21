@@ -102,13 +102,12 @@ public class FoodLookActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         PostAsyncTask emitMessage = new PostAsyncTask("http://127.0.0.1:8000/send_message/");
                         emitMessage.execute(
-                                new String[]{"owner_id", "" + getFoodObject.owner_id},
-                                new String[]{"post_id", "" + getFoodObject.id}
+                                new String[]{"food_post_id", "" + getFoodObject.id}
                         );
                         PostAsyncTask createOrder = new PostAsyncTask("http://127.0.0.1:8000/create_order/");
                         try {
                             JsonObject response = createOrder.execute(
-                                    new String[]{"post_id", "" + getFoodObject.id}
+                                    new String[]{"food_post_id", "" + getFoodObject.id}
                             ).get();
                             FoodLookActivity.goToOrder(response);
                         } catch (ExecutionException | InterruptedException e) {

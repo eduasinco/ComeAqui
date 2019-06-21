@@ -210,7 +210,7 @@ public class MapFragment extends Fragment {
 
         GetAsyncTask getPostLocations = new GetAsyncTask("my_orders/");
         try {
-            makeOrderList(getPostLocations.execute().get());
+            makeOrderList(new JsonParser().parse(getPostLocations.execute().get()).getAsJsonArray());
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -227,7 +227,7 @@ public class MapFragment extends Fragment {
                 googleMap = mMap;
                 GetAsyncTask getPostLocations = new GetAsyncTask("foods/");
                 try {
-                    makeList(getPostLocations.execute().get());
+                    makeList(new JsonParser().parse(getPostLocations.execute().get()).getAsJsonArray());
                 } catch (ExecutionException | InterruptedException e) {
                     e.printStackTrace();
                 }

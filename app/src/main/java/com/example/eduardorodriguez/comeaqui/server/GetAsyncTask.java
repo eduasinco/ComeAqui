@@ -16,7 +16,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.*;
 
-public class GetAsyncTask extends AsyncTask<String, Void, JsonArray>
+public class GetAsyncTask extends AsyncTask<String, Void, String>
 {
     String uri;
 
@@ -26,7 +26,7 @@ public class GetAsyncTask extends AsyncTask<String, Void, JsonArray>
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    protected JsonArray doInBackground(String... params)
+    protected String doInBackground(String... params)
     {
         if (SplashActivity.mock){
             return GetMock.get(uri);
@@ -53,21 +53,18 @@ public class GetAsyncTask extends AsyncTask<String, Void, JsonArray>
                 while ((line = reader.readLine()) != null) {
                     builder.append(line);
                 }
-
-                JsonParser parser = new JsonParser();
-                JsonArray jsonArray = parser.parse(builder.toString()).getAsJsonArray();
-                return jsonArray;
+                return builder.toString();
             } else {
-                return null;
+                return "[]";
             }
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
+            return "[]";
         }
     }
 
     @Override
-    protected void onPostExecute(JsonArray response)
+    protected void onPostExecute(String response)
     {
         if(response != null) {}
     }

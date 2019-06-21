@@ -100,7 +100,7 @@ public class MessagesFragment extends Fragment {
             }
             GetAsyncTask getMessages = new GetAsyncTask("my_messages/");
             try {
-                makeList(getMessages.execute().get());
+                makeList(new JsonParser().parse(getMessages.execute().get()).getAsJsonArray());
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }

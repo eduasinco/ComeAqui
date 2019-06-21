@@ -20,6 +20,8 @@ import com.example.eduardorodriguez.comeaqui.eat.MapFragment;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileFragment;
 import com.example.eduardorodriguez.comeaqui.profile.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
 
 import java.util.concurrent.ExecutionException;
 
@@ -118,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
     private void initializeUser(){
         GetAsyncTask process = new GetAsyncTask("my_profile/");
         try {
-            user = new User(process.execute().get().get(0).getAsJsonObject());
+            user = new User(new JsonParser().parse(process.execute().get()).getAsJsonArray().get(0).getAsJsonObject());
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }

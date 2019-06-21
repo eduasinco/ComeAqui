@@ -35,6 +35,5 @@ public class OrderObject{
         posterLocation = jo.get("poster_location").getAsString();
         posterPhoneNumber = jo.get("poster_phone_number").getAsString();
         posterPhoneCode = jo.get("poster_phone_code").getAsString();
-        postGoFoodTime = jo.get("post_go_food_time").getAsString();
     }
 }

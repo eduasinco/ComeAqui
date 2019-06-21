@@ -103,7 +103,7 @@ public class UserPostFragment extends Fragment {
             }
             GetAsyncTask process = new GetAsyncTask("my_foods/");
             try {
-                UserPostFragment.makeList(process.execute().get());
+                UserPostFragment.makeList(new JsonParser().parse(process.execute().get()).getAsJsonArray());
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
