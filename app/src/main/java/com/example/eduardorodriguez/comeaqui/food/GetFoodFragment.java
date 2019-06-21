@@ -86,7 +86,9 @@ public class GetFoodFragment extends Fragment {
     void getDataAndSet(){
         GetAsyncTask process = new GetAsyncTask("foods/");
         try {
-            makeList(new JsonParser().parse(process.execute().get()).getAsJsonArray());
+            String response = process.execute().get();
+            if (response != null)
+                makeList(new JsonParser().parse(response).getAsJsonArray());
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }

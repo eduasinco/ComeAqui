@@ -87,7 +87,9 @@ public class ProfileFragment extends Fragment {
 
         GetAsyncTask process = new GetAsyncTask("my_profile/");
         try {
-            setProfile(new JsonParser().parse(process.execute().get()).getAsJsonArray().get(0).getAsJsonObject());
+            String response = process.execute().get();
+            if (response != null)
+                setProfile(new JsonParser().parse(response).getAsJsonArray().get(0).getAsJsonObject());
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }

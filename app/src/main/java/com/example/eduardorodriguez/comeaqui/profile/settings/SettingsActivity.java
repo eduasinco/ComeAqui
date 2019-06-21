@@ -64,7 +64,9 @@ public class SettingsActivity extends AppCompatActivity {
     public static void getData(){
         GetAsyncTask profileInfo = new GetAsyncTask("my_profile/");
         try {
-            setProfile(new JsonParser().parse(profileInfo.execute().get()).getAsJsonArray().get(0).getAsJsonObject());
+            String response = profileInfo.execute().get();
+            if (response != null)
+                setProfile(new JsonParser().parse(response).getAsJsonArray().get(0).getAsJsonObject());
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }

@@ -100,7 +100,9 @@ public class OrderFragment extends Fragment {
 
             GetAsyncTask getOrders = new GetAsyncTask("my_orders/");
             try {
-                makeList(new JsonParser().parse(getOrders.execute().get()).getAsJsonArray());
+                String response = getOrders.execute().get();
+                if (response != null)
+                    makeList(new JsonParser().parse(response).getAsJsonArray());
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }

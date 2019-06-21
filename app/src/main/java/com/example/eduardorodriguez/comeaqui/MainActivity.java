@@ -120,7 +120,9 @@ public class MainActivity extends AppCompatActivity {
     private void initializeUser(){
         GetAsyncTask process = new GetAsyncTask("my_profile/");
         try {
-            user = new User(new JsonParser().parse(process.execute().get()).getAsJsonArray().get(0).getAsJsonObject());
+            String response = process.execute().get();
+            if (response != null)
+                user = new User(new JsonParser().parse(response).getAsJsonArray().get(0).getAsJsonObject());
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }

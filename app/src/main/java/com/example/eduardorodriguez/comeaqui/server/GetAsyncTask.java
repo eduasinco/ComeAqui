@@ -55,11 +55,11 @@ public class GetAsyncTask extends AsyncTask<String, Void, String>
                 }
                 return builder.toString();
             } else {
-                return "[]";
+                return null;
             }
         } catch (IOException e) {
             e.printStackTrace();
-            return "[]";
+            return null;
         }
     }
 

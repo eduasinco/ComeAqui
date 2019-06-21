@@ -88,7 +88,9 @@ public class OrderLookActivity extends AppCompatActivity {
             OrderObject orderObject = (OrderObject) b.get("object");
             GetAsyncTask getOrders = new GetAsyncTask("order_detail/" + orderObject.id + "/");
             try {
-                createStringArray(new JsonParser().parse(getOrders.execute().get()).getAsJsonObject());
+                String response = getOrders.execute().get();
+                if (response != null)
+                createStringArray(new JsonParser().parse(response).getAsJsonObject());
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
