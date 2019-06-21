@@ -2,7 +2,9 @@ package com.example.eduardorodriguez.comeaqui.profile.orders;
 
 import com.google.gson.JsonObject;
 
-public class OrderObject{
+import java.io.Serializable;
+
+public class OrderObject implements Serializable {
     public String id;
     public String owner_id;
     public String owner_username;

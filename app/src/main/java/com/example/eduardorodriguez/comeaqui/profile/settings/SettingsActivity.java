@@ -48,10 +48,7 @@ public class SettingsActivity extends AppCompatActivity {
     static long last_text_edit = 0;
 
 
-    public static void setProfile(JsonObject jsonObject){
-        JsonArray jsonArray = jsonObject.getAsJsonArray();
-        JsonObject jo = jsonArray.get(0).getAsJsonObject();
-
+    public static void setProfile(JsonObject jo){
         firstName = jo.get("first_name").getAsString();
         lastName = jo.get("last_name").getAsString();
         phoneCode = jo.get("phone_code").getAsString();
@@ -64,18 +61,20 @@ public class SettingsActivity extends AppCompatActivity {
         addressView.setText(location);
     }
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
-
+    public static void getData(){
         GetAsyncTask profileInfo = new GetAsyncTask("my_profile/");
         try {
             setProfile(new JsonParser().parse(profileInfo.execute().get()).getAsJsonArray().get(0).getAsJsonObject());
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_settings);
 
         Button editAccountView = findViewById(R.id.editAccount);
         Button saveButtonView = findViewById(R.id.saveButton);
@@ -205,5 +204,6 @@ public class SettingsActivity extends AppCompatActivity {
             }
 
         );
+        getData();
     }
 }

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.food.FoodPost;
 import com.example.eduardorodriguez.comeaqui.profile.orders.OrderLookActivity;
+import com.example.eduardorodriguez.comeaqui.profile.orders.OrderObject;
 import com.example.eduardorodriguez.comeaqui.server.DeleteAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.google.gson.JsonObject;
@@ -25,9 +26,9 @@ public class FoodLookActivity extends AppCompatActivity {
 
     public static void goToOrder(JsonObject jsonObject){
         try{
-            String id = jsonObject.get("id").toString();
+            OrderObject orderObject = new OrderObject(jsonObject);
             Intent goToOrders = new Intent(context, OrderLookActivity.class);
-            goToOrders.putExtra("id", id);
+            goToOrders.putExtra("object", orderObject);
             context.startActivity(goToOrders);
         }catch (Exception e){
             e.printStackTrace();

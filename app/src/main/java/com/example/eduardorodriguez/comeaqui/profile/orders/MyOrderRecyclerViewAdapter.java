@@ -47,7 +47,7 @@ public class MyOrderRecyclerViewAdapter extends RecyclerView.Adapter<MyOrderRecy
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final int pos = position;
+        final OrderObject orderObject = mValues.get(position);
 
         holder.posterEmailView.setText(mValues.get(position).posterEmail);
         String status = mValues.get(position).orderStatus;
@@ -73,7 +73,7 @@ public class MyOrderRecyclerViewAdapter extends RecyclerView.Adapter<MyOrderRecy
             @Override
             public void onClick(View v) {
                 Intent orderLook = new Intent(holder.mView.getContext(), OrderLookActivity.class);
-                orderLook.putExtra("pos", pos);
+                orderLook.putExtra("object", orderObject);
                 holder.mView.getContext().startActivity(orderLook);
             }
         });
