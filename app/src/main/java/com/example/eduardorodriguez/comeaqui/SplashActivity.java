@@ -8,7 +8,7 @@ import android.os.Bundle;
 
 public class SplashActivity extends AppCompatActivity {
     private static String credentials;
-    public static boolean mock = false;
+    public static boolean mock = true;
     public static Context context;
 
     public static String getCredemtials(){

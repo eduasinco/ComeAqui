@@ -6,11 +6,13 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
@@ -39,11 +41,16 @@ public class AddFoodActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        ImageView imagePhoto = findViewById(R.id.imagePhoto);
+        ImageView photo = findViewById(R.id.photo);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             imageBitmap = (Bitmap) extras.get("data");
-            imagePhoto.setImageBitmap(imageBitmap);
+            photo.setImageBitmap(imageBitmap);
+
+            ViewGroup.LayoutParams params = photo.getLayoutParams();
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            photo.setLayoutParams(params);
+
         }
     }
 
