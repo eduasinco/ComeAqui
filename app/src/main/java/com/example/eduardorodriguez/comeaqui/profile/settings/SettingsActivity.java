@@ -140,14 +140,13 @@ public class SettingsActivity extends AppCompatActivity {
                 String place_id = AutocompleteLocationFragment.place_id;
                 if (place_id != null) {
                     GoogleAPIAsyncTask gAPI2 = new GoogleAPIAsyncTask(
-                            "https://maps.googleapis.com/maps/api/place/details/json?placeid=",
-                            place_id,
+                            "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + place_id +
                             "&fields=geometry&", 1);
                     gAPI2.execute();
                 } else {
                     GoogleAPIAsyncTask gAPI2 = new GoogleAPIAsyncTask(
-                            "https://maps.googleapis.com/maps/api/place/textsearch/json?query=",
-                            AutocompleteLocationFragment.addressView.getText().toString(),
+                            "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" +
+                                    AutocompleteLocationFragment.addressView.getText().toString() +
                             "&", 2);
                     gAPI2.execute();
                 }

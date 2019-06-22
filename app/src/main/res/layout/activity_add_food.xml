@@ -117,7 +117,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="@+id/guideline8"
                 app:layout_constraintEnd_toStartOf="@+id/guideline9" app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintTop_toBottomOf="@+id/textView13" android:id="@+id/frameLayout">
+                app:layout_constraintTop_toBottomOf="@+id/textView13" android:id="@+id/locationAutocomplete">
 
         </FrameLayout>
         <android.support.constraint.ConstraintLayout
@@ -191,7 +191,7 @@
                 style="@style/Widget.AppCompat.Button.Borderless" android:textColor="@android:color/white"
                 android:textSize="18sp" android:fontFamily="sans-serif" android:textStyle="bold"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintTop_toBottomOf="@+id/frameLayout"/>
+                app:layout_constraintTop_toBottomOf="@+id/locationAutocomplete"/>
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

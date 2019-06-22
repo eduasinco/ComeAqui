@@ -86,7 +86,7 @@ public class AddFoodActivity extends AppCompatActivity {
         descriptionLayout = findViewById(R.id.descriptionLayout);
         description = findViewById(R.id.orderMessage);
         submit = findViewById(R.id.submitButton);
-        doPhoto = (ImageView) findViewById(R.id.photo);
+        doPhoto = findViewById(R.id.photo);
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.locationAutocomplete, new AutocompleteLocationFragment())

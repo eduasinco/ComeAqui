@@ -21,6 +21,13 @@ import android.widget.TextView;
 import com.example.eduardorodriguez.comeaqui.profile.settings.PlacesAutocompleteFragment;
 import com.example.eduardorodriguez.comeaqui.server.GoogleAPIAsyncTask;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import java.util.concurrent.ExecutionException;
 
 public class AutocompleteLocationFragment extends Fragment {
 
@@ -49,8 +56,10 @@ public class AutocompleteLocationFragment extends Fragment {
         addressView = view.findViewById(R.id.address);
 
         context = getContext();
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
 
         detectTypingAndSetLocationPrediction();
+        setLastLocation();
 
         assert getFragmentManager() != null;
         getFragmentManager().beginTransaction()
@@ -72,10 +81,9 @@ public class AutocompleteLocationFragment extends Fragment {
         final Runnable input_finish_checker = new Runnable() {
             public void run() {
                 if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
-                    GoogleAPIAsyncTask gAPI = new GoogleAPIAsyncTask(
-                            "https://maps.googleapis.com/maps/api/place/autocomplete/json?input="
-                            ,addressView.getText().toString(),
-                            "&types=geocode&language=en&", 0);
+                    String uri = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + addressView.getText().toString() +
+                    "&types=geocode&language=en&";
+                    GoogleAPIAsyncTask gAPI = new GoogleAPIAsyncTask(uri, 0);
                     gAPI.execute();
                 }
             }
@@ -109,12 +117,23 @@ public class AutocompleteLocationFragment extends Fragment {
     void setLastLocation(){
         if (fetchLocation())
             mFusedLocationClient.getLastLocation()
-                    .addOnSuccessListener((Activity) context, location -> {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-
+                .addOnSuccessListener((Activity) context, location -> {
+                    // Got last known location. In some rare situations this can be null.
+                    if (location != null) {
+                        String locationLatAndLng = location.getLatitude() + "," + location.getLongitude();
+                        String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + locationLatAndLng + "&";
+                        GoogleAPIAsyncTask gAPI = new GoogleAPIAsyncTask(uri, 0);
+                        try {
+                            String jsonString = gAPI.execute().get();
+                            JsonParser parser = new JsonParser();
+                            JsonObject joo = parser.parse(jsonString).getAsJsonObject();
+                            JsonArray jsonArray = joo.get("results").getAsJsonArray();
+                            addressView.setText(jsonArray.get(0).getAsJsonObject().get("formatted_address").getAsString());
+                        } catch (ExecutionException | InterruptedException e) {
+                            e.printStackTrace();
                         }
-                    });
+                    }
+                });
     }
 
 

@@ -20,17 +20,10 @@ public class GoogleAPIAsyncTask extends AsyncTask<String, Void, String>
 
     private static String uri;
     private static int index;
-    public GoogleAPIAsyncTask(String uri1, String place, String uri2, int ix){
-        index = ix;
-        this.uri = uri1;
-        for (char c: place.toCharArray()){
-            if(c == ' '){
-                this.uri += "+";
-            }else{
-                this.uri += c;
-            }
-        }
-        this.uri += uri2;
+    public GoogleAPIAsyncTask(String uri, int ix){
+
+        this.uri = uri;
+        this.index = ix;
         this.uri += "key=AIzaSyAY98SJhng3EjroCSGZ7yfhOWhbiqUB-tw";
     }
     @Override
