@@ -70,6 +70,17 @@
                 app:layout_constraintEnd_toStartOf="@+id/guideline9"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintTop_toBottomOf="@+id/seekBar"/>
+        <TextView
+                android:text="Location"
+                android:focusableInTouchMode="true"
+                android:layout_width="0dp"
+                android:layout_height="50dp" android:id="@+id/textView13"
+                android:gravity="bottom|center"
+                android:textSize="24sp" android:textColor="@color/colorPrimaryDark"
+                app:layout_constraintStart_toStartOf="@+id/guideline8"
+                app:layout_constraintEnd_toStartOf="@+id/guideline9"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintTop_toBottomOf="@+id/photo"/>
         <EditText
                 android:id="@+id/orderMessage"
                 android:gravity="top|left"
@@ -160,6 +171,28 @@
                     app:layout_constraintStart_toEndOf="@+id/meat" android:layout_marginStart="16dp"
             />
         </android.support.constraint.ConstraintLayout>
+        <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/address"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="32dp" app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="32dp" android:hint="Address" app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintTop_toBottomOf="@+id/textView13"/>
+
+        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                     xmlns:app="http://schemas.android.com/apk/res-auto"
+                     xmlns:tools="http://schemas.android.com/tools"
+                     android:id="@+id/container"
+                     android:name="com.gdevelopers.movies.movies.FragmentMoreMovies"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                     app:layout_constraintTop_toBottomOf="@+id/address"
+                     app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="32dp"
+                     app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"/>
         <Button
                 android:text="Submit"
                 android:layout_width="0dp"
@@ -171,7 +204,7 @@
                 style="@style/Widget.AppCompat.Button.Borderless" android:textColor="@android:color/white"
                 android:textSize="18sp" android:fontFamily="sans-serif" android:textStyle="bold"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintTop_toBottomOf="@+id/photo" android:layout_marginTop="8dp"/>
+                app:layout_constraintTop_toBottomOf="@+id/container"/>
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

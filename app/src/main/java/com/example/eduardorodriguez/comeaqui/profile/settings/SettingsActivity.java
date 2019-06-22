@@ -28,6 +28,12 @@ import java.util.concurrent.ExecutionException;
 public class SettingsActivity extends AppCompatActivity {
 
     private static EditText addressView;
+    private static Button saveButtonView;
+    private static SeekBar deliverRadiousSeekbarView;
+    private static TextView signOutView;
+    private static Button editAccountView;
+    private static TextView metersTextView;
+
     private static String place_id;
     public static void setAddress(String text, String id){
         addressView.setText(text);
@@ -43,7 +49,7 @@ public class SettingsActivity extends AppCompatActivity {
     static String location;
     static String profilePhoto;
 
-    private static SeekBar deliverRadiousSeekbarView;
+
     private static int delivery_radious;
     static long last_text_edit = 0;
 
@@ -78,25 +84,25 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        Button editAccountView = findViewById(R.id.editAccount);
-        Button saveButtonView = findViewById(R.id.saveButton);
+        saveButtonView = findViewById(R.id.saveButton);
         deliverRadiousSeekbarView = findViewById(R.id.deliverRadiousSeekbar);
-        final TextView metersTextView = findViewById(R.id.metersText);
+        signOutView = findViewById(R.id.signOut);
+        editAccountView = findViewById(R.id.editAccount);
+        metersTextView = findViewById(R.id.metersText);
 
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, new PlacesAutocompleteFragment())
+                .commit();
 
-        editAccountView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent editAccount = new Intent(SettingsActivity.this, EditAccountActivity.class);
-                editAccount.putExtra("firstName", firstName);
-                editAccount.putExtra("lastName", lastName);
-                editAccount.putExtra("phoneCode", phoneCode);
-                editAccount.putExtra("phoneNumber", phoneNumber);
-                editAccount.putExtra("profilePhoto", profilePhoto);
-                startActivity(editAccount);
-            }
-        });
+        setSeekBar();
+        editAccountView();
+        signOut();
+        detectTypingAndSetLocationPrediction();
+        getData();
+        saveSettings();
+    }
 
+    void setSeekBar(){
         deliverRadiousSeekbarView.setProgress(delivery_radious);
         deliverRadiousSeekbarView.setMax(1000);
         deliverRadiousSeekbarView.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -117,16 +123,27 @@ public class SettingsActivity extends AppCompatActivity {
                 metersTextView.setText(delivery_radious + "m");
             }
         });
+    }
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, new PlacesAutocompleteFragment())
-                .commit();
+    void editAccountView(){
+        editAccountView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent editAccount = new Intent(SettingsActivity.this, EditAccountActivity.class);
+                editAccount.putExtra("firstName", firstName);
+                editAccount.putExtra("lastName", lastName);
+                editAccount.putExtra("phoneCode", phoneCode);
+                editAccount.putExtra("phoneNumber", phoneNumber);
+                editAccount.putExtra("profilePhoto", profilePhoto);
+                startActivity(editAccount);
+            }
+        });
+    }
 
+    void saveSettings(){
         saveButtonView.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 PatchAsyncTask putTast = new PatchAsyncTask();
                 putTast.execute("location", addressView.getText().toString());
                 PatchAsyncTask putTast2 = new PatchAsyncTask();
@@ -145,27 +162,30 @@ public class SettingsActivity extends AppCompatActivity {
                             "&", 2);
                     gAPI2.execute();
                 }
-
                 Intent k = new Intent(SettingsActivity.this, MainActivity.class);
                 k.putExtra("profile", true);
                 startActivity(k);
             }
         });
+    }
 
-        TextView signOutView = findViewById(R.id.signOut);
+
+    public void signOut(){
         signOutView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SharedPreferences pref = getSharedPreferences("ActivityPREF", Context.MODE_PRIVATE);
                 SharedPreferences.Editor edt = pref.edit();
                 edt.putBoolean("activity_executed", false);
-                edt.commit();
+                edt.apply();
 
                 Intent bactToLogin = new Intent(SettingsActivity.this, LoginActivity.class);
                 startActivity(bactToLogin);
             }
         });
+    }
 
+    public void detectTypingAndSetLocationPrediction(){
         addressView = findViewById(R.id.address);
         final long delay = 1000; // 1 seconds after user stops typing
         final Handler handler = new Handler();
@@ -182,30 +202,27 @@ public class SettingsActivity extends AppCompatActivity {
         };
 
         addressView.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged (CharSequence s,int start, int count,
-                                               int after){
-                }
-                @Override
-                public void onTextChanged ( final CharSequence s, int start, int before,
-                                            int count){
-                    //You need to remove this to run only once
-                    handler.removeCallbacks(input_finish_checker);
+               @Override
+               public void beforeTextChanged (CharSequence s,int start, int count,
+                                              int after){
+               }
+               @Override
+               public void onTextChanged ( final CharSequence s, int start, int before,
+                                           int count){
+                   //You need to remove this to run only once
+                   handler.removeCallbacks(input_finish_checker);
 
-                }
-                @Override
-                public void afterTextChanged ( final Editable s){
-                    //avoid triggering event when text is empty
-                    if (s.length() > 0) {
-                        last_text_edit = System.currentTimeMillis();
-                        handler.postDelayed(input_finish_checker, delay);
-                    } else {
+               }
+               @Override
+               public void afterTextChanged ( final Editable s){
+                   //avoid triggering event when text is empty
+                   if (s.length() > 0) {
+                       last_text_edit = System.currentTimeMillis();
+                       handler.postDelayed(input_finish_checker, delay);
+                   } else {
 
-                    }
-                }
-            }
-
-        );
-        getData();
+                   }
+               }
+           });
     }
 }
