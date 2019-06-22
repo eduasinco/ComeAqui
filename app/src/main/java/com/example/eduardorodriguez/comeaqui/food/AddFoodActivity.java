@@ -30,6 +30,8 @@ public class AddFoodActivity extends AppCompatActivity {
     ConstraintLayout descriptionLayout;
     EditText description;
     Button submit;
+    ImageView doPhoto;
+
 
     String plateName;
     Float price_data = 0f;
@@ -54,7 +56,7 @@ public class AddFoodActivity extends AppCompatActivity {
         }
     }
 
-    public String setTypes(){
+    private String setTypes(){
         StringBuilder types = new StringBuilder();
         for (boolean p: pressed){
             if (p) {
@@ -83,7 +85,17 @@ public class AddFoodActivity extends AppCompatActivity {
         descriptionLayout = findViewById(R.id.descriptionLayout);
         description = findViewById(R.id.orderMessage);
         submit = findViewById(R.id.submitButton);
+        doPhoto = (ImageView) findViewById(R.id.photo);
 
+        setSubmit();
+        setFoodName();
+        initialAnimations();
+        setPriceSeekBar();
+        setDoPhoto();
+        setFoodTypes();
+    }
+
+    void setSubmit(){
         submit.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,8 +119,10 @@ public class AddFoodActivity extends AppCompatActivity {
 
             }
         });
+    }
 
-        initialAnimations();
+    @SuppressLint("ClickableViewAccessibility")
+    void setFoodName(){
         foodName.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -125,7 +139,9 @@ public class AddFoodActivity extends AppCompatActivity {
                 }
             }
         });
+    }
 
+    void setPriceSeekBar(){
         seekbar.setMax(1000);
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
@@ -146,8 +162,10 @@ public class AddFoodActivity extends AppCompatActivity {
                 price.setText(priceText);
             }
         });
+    }
 
-        ImageView doPhoto = (ImageView) findViewById(R.id.photo);
+    @SuppressLint("ClickableViewAccessibility")
+    void setDoPhoto(){
         doPhoto.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -158,6 +176,9 @@ public class AddFoodActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    void setFoodTypes(){
         final ImageView vegetarian = (ImageView) findViewById(R.id.vegetarian);
         vegetarian.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -239,7 +260,6 @@ public class AddFoodActivity extends AppCompatActivity {
                     dairy.setImageResource(R.drawable.dairy);
             }
         });
-
     }
 
     private void initialAnimations(){

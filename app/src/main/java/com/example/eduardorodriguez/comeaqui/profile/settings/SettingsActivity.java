@@ -94,6 +94,13 @@ public class SettingsActivity extends AppCompatActivity {
                 .replace(R.id.container, new PlacesAutocompleteFragment())
                 .commit();
 
+        signOutView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signOut();
+            }
+        });
+
         setSeekBar();
         editAccountView();
         signOut();
@@ -170,22 +177,17 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
 
-    public void signOut(){
-        signOutView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences pref = getSharedPreferences("ActivityPREF", Context.MODE_PRIVATE);
-                SharedPreferences.Editor edt = pref.edit();
-                edt.putBoolean("activity_executed", false);
-                edt.apply();
+    private void signOut(){
+        SharedPreferences pref = getSharedPreferences("ActivityPREF", Context.MODE_PRIVATE);
+        SharedPreferences.Editor edt = pref.edit();
+        edt.putBoolean("activity_executed", false);
+        edt.apply();
 
-                Intent bactToLogin = new Intent(SettingsActivity.this, LoginActivity.class);
-                startActivity(bactToLogin);
-            }
-        });
+        Intent bactToLogin = new Intent(SettingsActivity.this, LoginActivity.class);
+        startActivity(bactToLogin);
     }
 
-    public void detectTypingAndSetLocationPrediction(){
+    private void detectTypingAndSetLocationPrediction(){
         addressView = findViewById(R.id.address);
         final long delay = 1000; // 1 seconds after user stops typing
         final Handler handler = new Handler();
