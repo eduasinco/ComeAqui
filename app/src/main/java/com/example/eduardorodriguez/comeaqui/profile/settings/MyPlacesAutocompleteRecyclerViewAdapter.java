@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.eduardorodriguez.comeaqui.AutocompleteLocationFragment;
 import com.example.eduardorodriguez.comeaqui.profile.settings.PlacesAutocompleteFragment.OnListFragmentInteractionListener;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
@@ -46,7 +47,7 @@ public class MyPlacesAutocompleteRecyclerViewAdapter extends RecyclerView.Adapte
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SettingsActivity.setAddress(holder.contentView.getText().toString(), mValues.get(pos)[1]);
+                AutocompleteLocationFragment.setAddress(holder.contentView.getText().toString(), mValues.get(pos)[1]);
             }
         });
     }

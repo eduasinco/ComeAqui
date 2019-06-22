@@ -14,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.example.eduardorodriguez.comeaqui.AutocompleteLocationFragment;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
@@ -87,12 +88,16 @@ public class AddFoodActivity extends AppCompatActivity {
         submit = findViewById(R.id.submitButton);
         doPhoto = (ImageView) findViewById(R.id.photo);
 
-        setSubmit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.locationAutocomplete, new AutocompleteLocationFragment())
+                .commit();
+
         setFoodName();
-        initialAnimations();
         setPriceSeekBar();
-        setDoPhoto();
+        initialAnimations();
         setFoodTypes();
+        setDoPhoto();
+        setSubmit();
     }
 
     void setSubmit(){

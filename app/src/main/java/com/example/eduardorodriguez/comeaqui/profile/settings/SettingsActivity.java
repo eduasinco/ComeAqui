@@ -10,10 +10,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.SeekBar;
-import android.widget.TextView;
+import android.widget.*;
 import com.example.eduardorodriguez.comeaqui.*;
 import com.example.eduardorodriguez.comeaqui.profile.EditAccountActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
@@ -27,19 +24,12 @@ import java.util.concurrent.ExecutionException;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private static EditText addressView;
     private static Button saveButtonView;
     private static SeekBar deliverRadiousSeekbarView;
     private static TextView signOutView;
     private static Button editAccountView;
     private static TextView metersTextView;
 
-    private static String place_id;
-    public static void setAddress(String text, String id){
-        addressView.setText(text);
-        addressView.setFocusable(false);
-        place_id = id;
-    }
 
     static String email;
     static String firstName;
@@ -51,8 +41,6 @@ public class SettingsActivity extends AppCompatActivity {
 
 
     private static int delivery_radious;
-    static long last_text_edit = 0;
-
 
     public static void setProfile(JsonObject jo){
         firstName = jo.get("first_name").getAsString();
@@ -64,7 +52,6 @@ public class SettingsActivity extends AppCompatActivity {
         delivery_radious = jo.get("deliver_radius").getAsInt();
 
         deliverRadiousSeekbarView.setProgress(delivery_radious);
-        addressView.setText(location);
     }
 
     public static void getData(){
@@ -90,10 +77,6 @@ public class SettingsActivity extends AppCompatActivity {
         editAccountView = findViewById(R.id.editAccount);
         metersTextView = findViewById(R.id.metersText);
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, new PlacesAutocompleteFragment())
-                .commit();
-
         signOutView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,10 +84,8 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        setSeekBar();
         editAccountView();
-        signOut();
-        detectTypingAndSetLocationPrediction();
+        setSeekBar();
         getData();
         saveSettings();
     }
@@ -152,10 +133,11 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 PatchAsyncTask putTast = new PatchAsyncTask();
-                putTast.execute("location", addressView.getText().toString());
+                putTast.execute("location", AutocompleteLocationFragment.addressView.getText().toString());
                 PatchAsyncTask putTast2 = new PatchAsyncTask();
                 putTast2.execute("deliver_radius", Integer.toString(delivery_radious));
 
+                String place_id = AutocompleteLocationFragment.place_id;
                 if (place_id != null) {
                     GoogleAPIAsyncTask gAPI2 = new GoogleAPIAsyncTask(
                             "https://maps.googleapis.com/maps/api/place/details/json?placeid=",
@@ -165,7 +147,7 @@ public class SettingsActivity extends AppCompatActivity {
                 } else {
                     GoogleAPIAsyncTask gAPI2 = new GoogleAPIAsyncTask(
                             "https://maps.googleapis.com/maps/api/place/textsearch/json?query=",
-                            addressView.getText().toString(),
+                            AutocompleteLocationFragment.addressView.getText().toString(),
                             "&", 2);
                     gAPI2.execute();
                 }
@@ -185,46 +167,5 @@ public class SettingsActivity extends AppCompatActivity {
 
         Intent bactToLogin = new Intent(SettingsActivity.this, LoginActivity.class);
         startActivity(bactToLogin);
-    }
-
-    private void detectTypingAndSetLocationPrediction(){
-        addressView = findViewById(R.id.address);
-        final long delay = 1000; // 1 seconds after user stops typing
-        final Handler handler = new Handler();
-        final Runnable input_finish_checker = new Runnable() {
-            public void run() {
-                if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
-                    GoogleAPIAsyncTask gAPI = new GoogleAPIAsyncTask(
-                            "https://maps.googleapis.com/maps/api/place/autocomplete/json?input="
-                            ,addressView.getText().toString(),
-                            "&types=geocode&language=en&", 0);
-                    gAPI.execute();
-                }
-            }
-        };
-
-        addressView.addTextChangedListener(new TextWatcher() {
-               @Override
-               public void beforeTextChanged (CharSequence s,int start, int count,
-                                              int after){
-               }
-               @Override
-               public void onTextChanged ( final CharSequence s, int start, int before,
-                                           int count){
-                   //You need to remove this to run only once
-                   handler.removeCallbacks(input_finish_checker);
-
-               }
-               @Override
-               public void afterTextChanged ( final Editable s){
-                   //avoid triggering event when text is empty
-                   if (s.length() > 0) {
-                       last_text_edit = System.currentTimeMillis();
-                       handler.postDelayed(input_finish_checker, delay);
-                   } else {
-
-                   }
-               }
-           });
     }
 }

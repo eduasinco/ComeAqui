@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.*;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.food.AddFoodActivity;
 import com.example.eduardorodriguez.comeaqui.profile.orders.OrderObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
@@ -329,7 +330,7 @@ public class MapFragment extends Fragment {
         });
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent addFood = new Intent(getActivity(), AddGoFoodActivity.class);
+                Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
                 getActivity().startActivity(addFood);
             }
         });
