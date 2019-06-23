@@ -41,6 +41,7 @@ public class AddFoodActivity extends AppCompatActivity {
     boolean[] pressed = {false, false, false, false, false, false, false};
     String description_data;
     Bitmap imageBitmap;
+    int diners;
     InputStream is;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -110,10 +111,13 @@ public class AddFoodActivity extends AppCompatActivity {
         Button diner4 = findViewById(R.id.diner4);
 
         Button[] dinersViews = new Button[]{diner1, diner2, diner3, diner4};
-        for (Button button: dinersViews){
+        for (int i = 0; i <= dinersViews.length; i++){
+            int finalI = i;
+            Button button = dinersViews[i];
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    diners = finalI + 1;
                     button.setBackgroundColor(Color.TRANSPARENT);
                     for (Button button2: dinersViews){
                         if (button2 != button){
