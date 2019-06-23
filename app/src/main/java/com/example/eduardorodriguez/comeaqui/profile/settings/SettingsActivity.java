@@ -16,6 +16,7 @@ import com.example.eduardorodriguez.comeaqui.profile.EditAccountActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.GoogleAPIAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -139,15 +140,14 @@ public class SettingsActivity extends AppCompatActivity {
 
                 String place_id = AutocompleteLocationFragment.place_id;
                 if (place_id != null) {
-                    GoogleAPIAsyncTask gAPI2 = new GoogleAPIAsyncTask(
-                            "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + place_id +
-                            "&fields=geometry&", 1);
+                    Server gAPI2 = new Server("GET", "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + place_id +
+                            "&fields=geometry&");
+
                     gAPI2.execute();
                 } else {
-                    GoogleAPIAsyncTask gAPI2 = new GoogleAPIAsyncTask(
-                            "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" +
-                                    AutocompleteLocationFragment.addressView.getText().toString() +
-                            "&", 2);
+                    Server gAPI2 = new Server("GET", "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" +
+                            AutocompleteLocationFragment.addressView.getText().toString() +
+                            "&");
                     gAPI2.execute();
                 }
                 Intent k = new Intent(SettingsActivity.this, MainActivity.class);

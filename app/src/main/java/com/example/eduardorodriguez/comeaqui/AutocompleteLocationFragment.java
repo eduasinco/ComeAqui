@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.eduardorodriguez.comeaqui.profile.settings.PlacesAutocompleteFragment;
 import com.example.eduardorodriguez.comeaqui.server.GoogleAPIAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.JsonArray;
@@ -28,6 +29,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class AutocompleteLocationFragment extends Fragment {
 
@@ -83,8 +86,16 @@ public class AutocompleteLocationFragment extends Fragment {
                 if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
                     String uri = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + addressView.getText().toString() +
                     "&types=geocode&language=en&";
-                    GoogleAPIAsyncTask gAPI = new GoogleAPIAsyncTask(uri, 0);
-                    gAPI.execute();
+                    Server gAPI = new Server("GET", uri);
+                    try {
+                        String jsonString = gAPI.execute().get(15, TimeUnit.SECONDS);
+                        if (jsonString != null)
+                            PlacesAutocompleteFragment.makeList(jsonString);
+                    } catch (ExecutionException | InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (TimeoutException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         };
@@ -122,14 +133,15 @@ public class AutocompleteLocationFragment extends Fragment {
                     if (location != null) {
                         String locationLatAndLng = location.getLatitude() + "," + location.getLongitude();
                         String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + locationLatAndLng + "&";
-                        GoogleAPIAsyncTask gAPI = new GoogleAPIAsyncTask(uri, 0);
+                        Server gAPI = new Server("GET", uri);
                         try {
-                            String jsonString = gAPI.execute().get();
-                            JsonParser parser = new JsonParser();
-                            JsonObject joo = parser.parse(jsonString).getAsJsonObject();
+                            String jsonString = gAPI.execute().get(5, TimeUnit.SECONDS);
+                            JsonObject joo = new JsonParser().parse(jsonString).getAsJsonObject();
                             JsonArray jsonArray = joo.get("results").getAsJsonArray();
                             addressView.setText(jsonArray.get(0).getAsJsonObject().get("formatted_address").getAsString());
                         } catch (ExecutionException | InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (TimeoutException e) {
                             e.printStackTrace();
                         }
                     }

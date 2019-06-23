@@ -24,7 +24,7 @@ public class GoogleAPIAsyncTask extends AsyncTask<String, Void, String>
 
         this.uri = uri;
         this.index = ix;
-        this.uri += "key=AIzaSyAY98SJhng3EjroCSGZ7yfhOWhbiqUB-tw";
+        this.uri += "key=AIzaSyDqkl1DgwHu03SmMoqVey3sgR62GnJ-VY4";
     }
     @Override
     protected String doInBackground(String... params)
@@ -62,7 +62,7 @@ public class GoogleAPIAsyncTask extends AsyncTask<String, Void, String>
     @Override
     protected void onPostExecute(String response)
     {
-        if(response != null)
+        if(false)
         {
             switch (index){
                 case 0:
