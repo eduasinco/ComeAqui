@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -97,7 +99,30 @@ public class AddFoodActivity extends AppCompatActivity {
         initialAnimations();
         setFoodTypes();
         setDoPhoto();
+        setDinerButtons();
         setSubmit();
+    }
+
+    void setDinerButtons(){
+        Button diner1 = findViewById(R.id.diner1);
+        Button diner2 = findViewById(R.id.diner2);
+        Button diner3 = findViewById(R.id.diner3);
+        Button diner4 = findViewById(R.id.diner4);
+
+        Button[] dinersViews = new Button[]{diner1, diner2, diner3, diner4};
+        for (Button button: dinersViews){
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    button.setBackgroundColor(Color.TRANSPARENT);
+                    for (Button button2: dinersViews){
+                        if (button2 != button){
+                            button2.setBackgroundColor(Color.WHITE);
+                        }
+                    }
+                }
+            });
+        }
     }
 
     void setSubmit(){
