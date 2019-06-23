@@ -95,9 +95,9 @@ public class AddFoodActivity extends AppCompatActivity {
                 .replace(R.id.locationAutocomplete, new AutocompleteLocationFragment())
                 .commit();
 
+        // initialAnimations();
         setFoodName();
         setPriceSeekBar();
-        initialAnimations();
         setFoodTypes();
         setDoPhoto();
         setDinerButtons();
@@ -111,7 +111,7 @@ public class AddFoodActivity extends AppCompatActivity {
         Button diner4 = findViewById(R.id.diner4);
 
         Button[] dinersViews = new Button[]{diner1, diner2, diner3, diner4};
-        for (int i = 0; i <= dinersViews.length; i++){
+        for (int i = 0; i < dinersViews.length; i++){
             int finalI = i;
             Button button = dinersViews[i];
             button.setOnClickListener(new View.OnClickListener() {

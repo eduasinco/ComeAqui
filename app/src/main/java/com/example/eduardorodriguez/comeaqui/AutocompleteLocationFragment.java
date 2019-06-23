@@ -135,7 +135,7 @@ public class AutocompleteLocationFragment extends Fragment {
                         String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + locationLatAndLng + "&";
                         Server gAPI = new Server("GET", uri);
                         try {
-                            String jsonString = gAPI.execute().get(5, TimeUnit.SECONDS);
+                            String jsonString = gAPI.execute().get(15, TimeUnit.SECONDS);
                             JsonObject joo = new JsonParser().parse(jsonString).getAsJsonObject();
                             JsonArray jsonArray = joo.get("results").getAsJsonArray();
                             addressView.setText(jsonArray.get(0).getAsJsonObject().get("formatted_address").getAsString());
