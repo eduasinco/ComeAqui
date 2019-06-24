@@ -20,7 +20,6 @@ import com.example.eduardorodriguez.comeaqui.eat.MapFragment;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileFragment;
 import com.example.eduardorodriguez.comeaqui.profile.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 
 import java.util.concurrent.ExecutionException;
@@ -64,39 +63,32 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         // load the store fragment by default
 
         Menu menu = mMainNav.getMenu();
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if(b == null){
-            setFragment(getFoodFragment);
-            toolbar.setTitle("Get Food");
-            menu.findItem(R.id.nav_getfood).setIcon(R.drawable.getfoodfill);
-        }else if(b.getBoolean("map")){
             setFragment(mapFragment);
-            toolbar.setTitle("Go");
-            menu.findItem(R.id.nav_go).setIcon(R.drawable.preparefill);
-        }else if(b.getBoolean("profile")){
-            setFragment(profileFragment);
-            toolbar.setTitle("Profile");
-            menu.findItem(R.id.nav_profile).setIcon(R.drawable.profilefill);
+            toolbar.setTitle(null);
+            menu.findItem(R.id.nav_eat).setIcon(R.drawable.eatfill);
         }
         mMainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 Menu menu = mMainNav.getMenu();
-                menu.findItem(R.id.nav_getfood).setIcon(R.drawable.getfood);
-                menu.findItem(R.id.nav_go).setIcon(R.drawable.prepare);
+                menu.findItem(R.id.nav_food).setIcon(R.drawable.food);
+                menu.findItem(R.id.nav_eat).setIcon(R.drawable.eat);
                 menu.findItem(R.id.nav_profile).setIcon(R.drawable.profile);
                 switch (menuItem.getItemId()){
-                    case R.id.nav_getfood:
-                        setFragment(getFoodFragment);
-                        menuItem.setIcon(R.drawable.getfoodfill);
-                        return true;
-                    case R.id.nav_go:
+                    case R.id.nav_eat:
                         setFragment(mapFragment);
-                        menuItem.setIcon(R.drawable.preparefill);
+                        menuItem.setIcon(R.drawable.eatfill);
+                        return true;
+                    case R.id.nav_food:
+                        setFragment(getFoodFragment);
+                        menuItem.setIcon(R.drawable.foodfill);
                         return true;
                     case R.id.nav_profile:
                         setFragment(profileFragment);
