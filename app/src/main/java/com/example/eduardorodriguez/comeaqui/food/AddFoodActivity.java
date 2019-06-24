@@ -7,8 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -144,7 +142,7 @@ public class AddFoodActivity extends AppCompatActivity {
                             new String[]{"food_photo", ""}
                     ).get();
                     if (response != null)
-                        GetFoodFragment.appendToList(response);
+                        FoodFragment.appendToList(response);
                 } catch (ExecutionException | InterruptedException e) {
                     e.printStackTrace();
                 }

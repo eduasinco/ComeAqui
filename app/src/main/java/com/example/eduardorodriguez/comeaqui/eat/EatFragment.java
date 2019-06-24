@@ -35,20 +35,20 @@ import java.util.concurrent.ExecutionException;
  * to handle interaction events.
  * create an instance of this fragment.
  */
-public class MapFragment extends Fragment {
+public class EatFragment extends Fragment {
 
     MapView mMapView;
     static View rootView;
     private static GoogleMap googleMap;
-    public static ArrayList<MapPost> data;
+    public static ArrayList<FoodPost> data;
     static boolean entered = false;
 
     public static OrderObject goOrder;
 
     public static void setMarkers(){
         for (int i = 0; i < data.size(); i++){
-            float lat = Float.parseFloat(data.get(i).poster_lat);
-            float lng = Float.parseFloat(data.get(i).poster_lng);
+            float lat = data.get(i).lat;
+            float lng = data.get(i).lng;
 
             Marker marker =  googleMap.addMarker(new MarkerOptions()
                     .position(new LatLng(lat, lng)));
@@ -78,7 +78,7 @@ public class MapFragment extends Fragment {
             data = new ArrayList<>();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
-                data.add(new MapPost(jo));
+                data.add(new FoodPost(jo));
             }
             setMarkers();
         } catch (Exception e){
@@ -145,14 +145,14 @@ public class MapFragment extends Fragment {
                     public boolean onMarkerClick(Marker marker) {
                         bigPosterImageView.setVisibility(View.GONE);
                         final int index = (int) (marker.getTag());
-                        posterEmailView.setText(data.get(index).poster_email);
+                        posterEmailView.setText(data.get(index).owner_id);
 
                         String profile_photo = "http://127.0.0.1:8000";
                         profile_photo += data.get(index).food_photo;
                         if(!profile_photo.contains("no-image")) Glide.with(rootView.getContext()).load(profile_photo).into(foodImageView);
 
                         profile_photo = "http://127.0.0.1:8000/media/";
-                        profile_photo += data.get(index).poster_image;
+                        profile_photo += data.get(index).owner_photo;
                         if(!profile_photo.contains("no-image")) Glide.with(rootView.getContext()).load(profile_photo).into(posterImageView);
                         if(!profile_photo.contains("no-image")) Glide.with(rootView.getContext()).load(profile_photo).into(bigPosterImageView);
 
@@ -209,46 +209,5 @@ public class MapFragment extends Fragment {
     public void onLowMemory() {
         super.onLowMemory();
         mMapView.onLowMemory();
-    }
-}
-
-class MapPost{
-    String plate_name;
-    String id;
-    String owner;
-    String price;
-    String food_type;
-    String description;
-    String time;
-    String food_photo;
-    String poster_first_name;
-    String poster_last_name;
-    String poster_email;
-    String poster_image;
-    String poster_location;
-    String poster_phone_number;
-    String poster_phone_code;
-    String poster_lat;
-    String poster_lng;
-
-    public MapPost(JsonObject jo) {
-        plate_name = jo.get("plate_name").getAsString();
-        owner = jo.get("owner").getAsNumber().toString();
-        id = jo.get("id").getAsNumber().toString();
-        price = jo.get("price").getAsString();
-        food_type = jo.get("food_type").getAsString();
-        description = jo.get("description").getAsString();
-        food_photo = jo.get("food_photo").getAsString();
-        time = jo.get("time").getAsString();
-
-        poster_first_name = jo.get("poster_first_name").getAsString();
-        poster_last_name = jo.get("poster_last_name").getAsString();
-        poster_email = jo.get("poster_email").getAsString();
-        poster_image = jo.get("poster_image").getAsString();
-        poster_location = jo.get("poster_location").getAsString();
-        poster_phone_number = jo.get("poster_phone_number").getAsString();
-        poster_phone_code = jo.get("poster_phone_code").getAsString();
-        poster_lat = jo.get("poster_lat").isJsonNull() ? "0": jo.get("poster_lat").getAsString();
-        poster_lng = jo.get("poster_lng").isJsonNull() ? "0": jo.get("poster_lng").getAsString();
     }
 }

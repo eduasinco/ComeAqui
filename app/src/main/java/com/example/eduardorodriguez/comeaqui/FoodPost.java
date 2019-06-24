@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.food;
+package com.example.eduardorodriguez.comeaqui;
 
 import com.google.gson.JsonObject;
 import java.io.Serializable;
@@ -11,6 +11,9 @@ public class FoodPost implements Serializable {
     public String type;
     public String description;
     public String food_photo;
+    public String owner_photo;
+    public float lat;
+    public float lng;
     public FoodPost(JsonObject jo){
         id = jo.get("id").getAsInt();
         owner_id = jo.get("owner_id").getAsInt();
@@ -19,5 +22,8 @@ public class FoodPost implements Serializable {
         type = jo.get("food_type").getAsString();
         description = jo.get("description").getAsString();
         food_photo = jo.get("food_photo").getAsString();
+        owner_photo = jo.get("poster_image").getAsString();
+        lat = jo.get("poster_lat").getAsFloat();
+        lng = jo.get("poster_lng").getAsFloat();
     }
 }

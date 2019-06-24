@@ -15,8 +15,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
-import com.example.eduardorodriguez.comeaqui.food.GetFoodFragment;
-import com.example.eduardorodriguez.comeaqui.eat.MapFragment;
+import com.example.eduardorodriguez.comeaqui.food.FoodFragment;
+import com.example.eduardorodriguez.comeaqui.eat.EatFragment;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileFragment;
 import com.example.eduardorodriguez.comeaqui.profile.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
@@ -31,8 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private FrameLayout mMainFrame;
     private Toolbar toolbar;
 
-    private GetFoodFragment getFoodFragment;
-    private MapFragment mapFragment;
+    private FoodFragment getFoodFragment;
+    private EatFragment mapFragment;
     private ProfileFragment profileFragment;
 
     public static User user;
@@ -56,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
         mMainFrame = findViewById(R.id.main_frame);
         mMainNav = findViewById(R.id.main_nav);
 
-        getFoodFragment = new GetFoodFragment();
-        mapFragment = new MapFragment();
+        getFoodFragment = new FoodFragment();
+        mapFragment = new EatFragment();
         profileFragment = new ProfileFragment();
 
         toolbar = findViewById(R.id.toolbar);

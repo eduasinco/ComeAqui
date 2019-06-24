@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import com.example.eduardorodriguez.comeaqui.FoodPost;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.google.gson.*;
@@ -21,7 +22,7 @@ import static com.example.eduardorodriguez.comeaqui.R.layout.fragment_get_food;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GetFoodFragment extends Fragment {
+public class FoodFragment extends Fragment {
 
     SwipeRefreshLayout pullToRefresh;
 
@@ -29,7 +30,7 @@ public class GetFoodFragment extends Fragment {
     static GetFoodAdapter fa;
     static View view;
 
-    public GetFoodFragment() {
+    public FoodFragment() {
         // Required empty public constructor
     }
 

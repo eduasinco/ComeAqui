@@ -2,7 +2,6 @@ package com.example.eduardorodriguez.comeaqui.food;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
-import com.example.eduardorodriguez.comeaqui.FoodLookActivity;
-import com.example.eduardorodriguez.comeaqui.MainActivity;
-import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.SplashActivity;
-import com.example.eduardorodriguez.comeaqui.profile.ProfileFragment;
-import com.example.eduardorodriguez.comeaqui.profile.User;
+import com.example.eduardorodriguez.comeaqui.*;
 
 import java.util.ArrayList;
 
