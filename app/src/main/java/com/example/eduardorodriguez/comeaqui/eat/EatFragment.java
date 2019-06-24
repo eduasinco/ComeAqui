@@ -1,6 +1,5 @@
 package com.example.eduardorodriguez.comeaqui.eat;
 
-import android.content.Intent;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.*;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.food.AddFoodActivity;
 import com.example.eduardorodriguez.comeaqui.profile.orders.OrderObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.android.gms.maps.*;
@@ -173,8 +171,12 @@ public class EatFragment extends Fragment {
         });
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
-                getActivity().startActivity(addFood);
+                // Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
+                // getActivity().startActivity(addFood);
+
+                LatLng latLng = googleMap.getCameraPosition().target;
+                googleMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             }
         });
         return rootView;
