@@ -34,13 +34,13 @@ public class AddFoodActivity extends AppCompatActivity {
     ImageView doPhoto;
 
 
-    String plateName;
     Float price_data = 0f;
     boolean[] pressed = {false, false, false, false, false, false, false};
-    String description_data;
     Bitmap imageBitmap;
     int diners;
-    InputStream is;
+    double lat;
+    double lng;
+    String address;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     @Override
@@ -89,11 +89,13 @@ public class AddFoodActivity extends AppCompatActivity {
         submit = findViewById(R.id.submitButton);
         doPhoto = findViewById(R.id.photo);
 
-
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if(b != null){
-            String address = b.getString("address");
+            address = b.getString("address");
+            lat = b.getDouble("lat");
+            lng = b.getDouble("lng");
+
             Bundle bundle = new Bundle();
             bundle.putString("address", address);
             AutocompleteLocationFragment autocompleteLocationFragment = new AutocompleteLocationFragment();
@@ -136,28 +138,31 @@ public class AddFoodActivity extends AppCompatActivity {
     }
 
     void setSubmit(){
-        submit.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PostAsyncTask post = new PostAsyncTask("http://127.0.0.1:8000/foods/");
-                post.bitmap = imageBitmap;
-                try {
-                    JsonObject response = post.execute(
-                            new String[]{"plate_name", foodName.getText().toString()},
-                            new String[]{"price", price_data.toString()},
-                            new String[]{"food_type", setTypes()},
-                            new String[]{"description", description.getText().toString()},
-                            new String[]{"food_photo", ""}
-                    ).get();
-                    if (response != null)
-                        FoodFragment.appendToList(response);
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
+        submit.setOnClickListener(v -> {
+            PostAsyncTask post = new PostAsyncTask("http://127.0.0.1:8000/foods/");
+            post.bitmap = imageBitmap;
+            try {
+                JsonObject response = post.execute(
+                        new String[]{"plate_name", foodName.getText().toString()},
+                        new String[]{"address", address},
+                        new String[]{"lat", Double.toString(lat)},
+                        new String[]{"lng", Double.toString(lng)},
+                        new String[]{"diners", Integer.toString(diners)},
+                        new String[]{"time", description.getText().toString()},
+                        new String[]{"price", price_data.toString()},
+                        new String[]{"food_type", setTypes()},
+                        new String[]{"description", description.getText().toString()},
+                        new String[]{"food_photo", ""}
+                ).get();
+                if (response != null) {
+                    // FoodFragment.appendToList(response);
                 }
-                Intent k = new Intent(AddFoodActivity.this, MainActivity.class);
-                startActivity(k);
-
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
             }
+            Intent k = new Intent(AddFoodActivity.this, MainActivity.class);
+            startActivity(k);
+
         });
     }
 

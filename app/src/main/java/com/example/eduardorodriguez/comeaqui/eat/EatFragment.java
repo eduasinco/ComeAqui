@@ -55,6 +55,7 @@ public class EatFragment extends Fragment{
     TextView pickedAdress;
     FloatingActionButton myFab;
 
+    LatLng latLng;
     public static OrderObject goOrder;
 
     public static void setMarkers(){
@@ -198,7 +199,7 @@ public class EatFragment extends Fragment{
                     @Override
                     public void onCameraIdle() {
                         moveMapPicker(-40, 200);
-                        LatLng latLng = googleMap.getCameraPosition().target;
+                        latLng = googleMap.getCameraPosition().target;
                         String latLngString = latLng.latitude + "," + latLng.longitude;
                         String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLngString + "&";
                         Server gAPI = new Server("GET", uri);
@@ -227,6 +228,8 @@ public class EatFragment extends Fragment{
             } else if (fabCount == 1) {
                 Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
                 addFood.putExtra("address" , pickedAdress.getText().toString());
+                addFood.putExtra("lat" , latLng.latitude);
+                addFood.putExtra("lng" , latLng.longitude);
                 getActivity().startActivity(addFood);
             } else {
                 fabCount = 2;

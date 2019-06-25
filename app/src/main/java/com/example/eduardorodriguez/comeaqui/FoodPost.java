@@ -23,7 +23,7 @@ public class FoodPost implements Serializable {
         description = jo.get("description").getAsString();
         food_photo = jo.get("food_photo").getAsString();
         owner_photo = jo.get("poster_image").getAsString();
-        lat = jo.get("poster_lat").getAsFloat();
-        lng = jo.get("poster_lng").getAsFloat();
+        lat = jo.get("lat").getAsFloat();
+        lng = jo.get("lng").getAsFloat();
     }
 }
