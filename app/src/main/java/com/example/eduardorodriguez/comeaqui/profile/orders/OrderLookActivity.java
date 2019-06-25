@@ -20,23 +20,24 @@ public class OrderLookActivity extends AppCompatActivity {
 
     static String[] data;
 
-    static TextView postNameView;
-    static TextView posterMessageView;
-    static TextView posterLocationView;
-    static TextView postStatusView;
-    static TextView postPriceView;
-    static TextView subtotalView;
-    static TextView totalPriceView;
+    TextView postNameView;
+    TextView posterMessageView;
+    TextView posterLocationView;
+    TextView postStatusView;
+    TextView postPriceView;
+    TextView subtotalView;
+    TextView totalPriceView;
 
-    static ImageView posterImageView;
-    static ImageView postImageView;
+    ImageView posterImageView;
+    ImageView postImageView;
+    ImageView staticMapView;
 
-    static OrderObject order;
+    OrderObject order;
 
-    static Context context;
+    Context context;
 
 
-    public static void createStringArray(JsonObject jo){
+    public void createStringArray(JsonObject jo){
         order = new OrderObject(jo);
 
         switch (order.orderStatus){
@@ -56,10 +57,12 @@ public class OrderLookActivity extends AppCompatActivity {
 
         postNameView.setText(order.postPlateName);
         posterMessageView.setText(order.posterFirstName + " is preparing your order");
-        posterLocationView.setText(order.posterLocation);
+        posterLocationView.setText(order.postAddress);
         postPriceView.setText("€" + order.postPrice);
         subtotalView.setText("€" + order.postPrice);
         totalPriceView.setText("€" + order.postPrice);
+        String url = "http://maps.google.com/maps/api/staticmap?center=" + order.postLat + "," + order.postLng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=AIzaSyDqkl1DgwHu03SmMoqVey3sgR62GnJ-VY4";
+        Glide.with(this).load(url).into(staticMapView);
 
         String initialUri = "http://127.0.0.1:8000/media/";
         if(!order.posterImage.contains("no-image")) Glide.with(context).load(initialUri + order.posterImage).into(posterImageView);
@@ -81,6 +84,7 @@ public class OrderLookActivity extends AppCompatActivity {
 
         posterImageView = findViewById(R.id.posterImage);
         postImageView = findViewById(R.id.postImage);
+        staticMapView = findViewById(R.id.static_map);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();

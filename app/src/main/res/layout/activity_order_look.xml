@@ -10,8 +10,8 @@
 
     <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="0dp" android:id="@+id/scrollView2" tools:layout_editor_absoluteY="0dp"
-            tools:layout_editor_absoluteX="0dp">
+            android:layout_height="0dp" android:id="@+id/scrollView2"
+            tools:layout_editor_absoluteX="0dp" app:layout_constraintTop_toTopOf="parent">
         <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -29,7 +29,7 @@
                         android:layout_height="1dp"
                         android:background="@color/colorPrimary"
                         android:layout_width="0dp"
-                        android:id="@+id/view3"
+                        android:id="@+id/view"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/guideline7"
                         app:layout_constraintStart_toStartOf="@+id/guideline6"
@@ -38,20 +38,21 @@
                         android:layout_height="1dp"
                         android:background="@color/colorPrimary"
                         android:layout_width="0dp"
-                        android:id="@+id/view4"
+                        android:id="@+id/view2"
                         app:layout_constraintEnd_toStartOf="@+id/guideline7"
                         app:layout_constraintStart_toStartOf="@+id/guideline6"
                         app:layout_constraintTop_toTopOf="parent" android:alpha="0.5"/>
                 <TextView
                         android:text="Calle Julian Romea, 5, 6D"
                         android:lines="2"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/posterLocation"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/locationImage" android:layout_marginStart="16dp"
-                        android:gravity="center_vertical"/>
+                        android:gravity="center_vertical" app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginEnd="16dp"/>
                 <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" app:srcCompat="@drawable/loc_icon"
@@ -65,9 +66,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0" android:layout_marginTop="16dp"
-                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout4"
-                    app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="32dp">
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/static_map" android:layout_marginTop="80dp"
+                    app:layout_constraintTop_toTopOf="@+id/constraintLayout4">
 
                 <View
                         android:layout_height="1dp"
@@ -106,22 +108,13 @@
                         app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
                         android:layout_marginStart="24dp" android:layout_marginEnd="24dp"
                         app:layout_constraintTop_toBottomOf="@+id/textView26" android:layout_marginTop="16dp"/>
-                <ImageView
-                        android:background="#f2f2f2"
-                        android:layout_width="0dp"
-                        android:layout_height="200dp" app:srcCompat="@drawable/no_food"
-                        android:id="@+id/postImage" app:layout_constraintStart_toStartOf="parent"
-                        android:layout_marginStart="24dp"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginEnd="24dp" app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginTop="24dp"/>
                 <TextView
                         android:text="Plate Name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="24dp"
-                        app:layout_constraintTop_toBottomOf="@+id/postImage" android:layout_marginTop="16dp"
-                        android:id="@+id/postName"/>
+                        android:id="@+id/postName"
+                        android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/constraintLayout7"/>
                 <TextView
                         android:text="€9.50"
                         android:layout_width="wrap_content"
@@ -165,6 +158,27 @@
                         android:id="@+id/textView26" android:layout_marginTop="8dp"
                         app:layout_constraintTop_toBottomOf="@+id/subtotal"
                         app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="24dp"/>
+                <android.support.constraint.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/constraintLayout7"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+                >
+
+                    <ImageView
+                            android:layout_width="300dp"
+                            android:layout_height="200dp" app:srcCompat="@drawable/world_map"
+                            android:id="@+id/static_map"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                    />
+                    <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" app:srcCompat="@drawable/map_food_icon"
+                            android:id="@+id/map_icon" app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+                </android.support.constraint.ConstraintLayout>
                 <TextView
                         android:text="Total"
                         android:layout_width="wrap_content"
@@ -183,14 +197,22 @@
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="24dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="24dp">
 
+        <ImageView
+                android:background="@drawable/flag_transparent"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                android:id="@+id/postImage"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"/>
         <TextView
-                android:text="Estimated arrival"
+                android:text="Meal time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/textView17"
                 app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="16dp"
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"/>
         <TextView
-                android:text="14:10-14:15"
+                android:text="14:10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/arrivalTime"
                 android:layout_marginTop="8dp"
