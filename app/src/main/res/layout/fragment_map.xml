@@ -59,35 +59,28 @@
             android:alpha="0.5"
             app:layout_constraintBottom_toBottomOf="@+id/shadow_point"
             app:layout_constraintStart_toStartOf="@+id/shadow_point" android:layout_marginStart="8dp"
-            android:layout_marginBottom="14dp"/>
+            android:layout_marginBottom="14dp" android:visibility="gone"/>
     <ImageView
             android:layout_width="wrap_content"
             android:layout_height="10dp" app:srcCompat="@drawable/handle"
             android:id="@+id/handle"
             app:layout_constraintStart_toStartOf="@+id/shadow_point"
             app:layout_constraintEnd_toEndOf="@+id/shadow_point"
-            app:layout_constraintBottom_toBottomOf="@+id/shadow_point" android:layout_marginBottom="16dp"/>
+            app:layout_constraintBottom_toBottomOf="@+id/shadow_point" android:layout_marginBottom="16dp"
+            android:visibility="gone"/>
     <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" app:srcCompat="@drawable/point_shadow"
             android:id="@+id/shadow_point" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
             android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-    <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" android:id="@+id/touch_detector"
-            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="1.0">
-
-    </android.support.constraint.ConstraintLayout>
+            app:layout_constraintBottom_toBottomOf="parent" android:visibility="gone"/>
     <android.support.constraint.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/map_picker_pan"
             app:layout_constraintBottom_toTopOf="@+id/handle" app:layout_constraintEnd_toEndOf="@+id/handle"
-            app:layout_constraintStart_toStartOf="@+id/handle">
+            app:layout_constraintStart_toStartOf="@+id/handle" android:visibility="gone">
 
         <ImageView
                 android:layout_width="0dp"
@@ -117,7 +110,7 @@
                     android:gravity="center|center_horizontal"
                     app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintVertical_bias="1.0" android:visibility="visible"
+                    app:layout_constraintVertical_bias="1.0" android:visibility="gone"
                     android:layout_width="150dip"/>
         </android.support.constraint.ConstraintLayout>
         <ImageView

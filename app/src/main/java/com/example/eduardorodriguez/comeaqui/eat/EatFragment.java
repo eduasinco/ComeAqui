@@ -107,7 +107,6 @@ public class EatFragment extends Fragment{
         final TextView posterEmailView = rootView.findViewById(R.id.priceText);
         final ImageView foodImageView = rootView.findViewById(R.id.plateName);
         final ImageView posterImageView = rootView.findViewById(R.id.posterImage);
-        ConstraintLayout touchDetector = rootView.findViewById(R.id.touch_detector);
         mapPickerPanView = rootView.findViewById(R.id.map_picker_pan);
         shadow = rootView.findViewById(R.id.shadow);
         hande = rootView.findViewById(R.id.handle);
@@ -214,13 +213,13 @@ public class EatFragment extends Fragment{
                         }
                     }
                 });
-
             }
         });
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
                 // getActivity().startActivity(addFood);
+                apearMapPicker(true, 40);
             }
         });
 
@@ -235,6 +234,21 @@ public class EatFragment extends Fragment{
         });
 
         return rootView;
+    }
+
+    void apearMapPicker(boolean apear, int move){
+
+        mapPickerPanView.setTranslationY(move);
+        hande.setTranslationY(-move);
+        shadow.setTranslationY(-move * 2 / 3);
+        shadow.setTranslationX(move * 1 / 3);
+
+        shadowPoint.setVisibility(apear ? View.VISIBLE: View.GONE);
+        mapPickerPanView.setVisibility(apear ? View.VISIBLE: View.GONE);
+        hande.setVisibility(apear ? View.VISIBLE: View.GONE);
+        shadow.setVisibility(apear ? View.VISIBLE: View.GONE);
+        shadow.setVisibility(apear ? View.VISIBLE: View.GONE);
+        moveMapPicker(0, 200);
     }
 
     void moveMapPicker(int move, int secs){
