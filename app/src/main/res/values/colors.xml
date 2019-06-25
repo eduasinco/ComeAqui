@@ -5,6 +5,6 @@
     <color name="colorAccent">#49009c</color>
     <color name="colorComeAqui">#7701ff</color>
     <color name="grey">#797979</color>
-    <color name="mapPickerFill">#80FFFFFF</color>
+    <color name="mapPickerFill">#E6FFFFFF</color>
     <color name="mapPicker">#9539ff</color>
 </resources>

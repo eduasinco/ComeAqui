@@ -111,14 +111,14 @@
                 app:layout_constraintVertical_bias="1.0">
 
             <TextView
-                    android:text="HOLA SOY EDU FELUZ NAVIDAD"
-                    android:layout_width="wrap_content"
+                    android:text="?"
                     android:layout_height="wrap_content" android:id="@+id/pickedAdress"
                     app:layout_constraintTop_toTopOf="parent" android:textAlignment="center"
                     android:gravity="center|center_horizontal"
                     app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintVertical_bias="1.0" android:visibility="gone"/>
+                    app:layout_constraintVertical_bias="1.0" android:visibility="visible"
+                    android:layout_width="150dip"/>
         </android.support.constraint.ConstraintLayout>
         <ImageView
                 android:layout_width="15dp"

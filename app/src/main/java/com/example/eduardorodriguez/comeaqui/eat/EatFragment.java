@@ -19,6 +19,7 @@ import com.example.eduardorodriguez.comeaqui.*;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.profile.orders.OrderObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
 import com.google.gson.JsonArray;
@@ -28,6 +29,8 @@ import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,6 +50,7 @@ public class EatFragment extends Fragment{
     ImageView shadow;
     ImageView hande;
     ImageView shadowPoint;
+    TextView pickedAdress;
 
     public static OrderObject goOrder;
 
@@ -108,6 +112,7 @@ public class EatFragment extends Fragment{
         shadow = rootView.findViewById(R.id.shadow);
         hande = rootView.findViewById(R.id.handle);
         shadowPoint = rootView.findViewById(R.id.shadow_point);
+        pickedAdress = rootView.findViewById(R.id.pickedAdress);
 
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume(); // needed to get the map to display immediately
@@ -182,13 +187,31 @@ public class EatFragment extends Fragment{
                 googleMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
                     @Override
                     public void onCameraMoveStarted(int i) {
-                        moveMapPicker(40);
+                        pickedAdress.setVisibility(View.GONE);
+                        moveMapPicker(40, 200);
                     }
                 });
                 googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
                     @Override
                     public void onCameraIdle() {
-                        moveMapPicker(-40);
+                        moveMapPicker(-40, 200);
+                        LatLng latLng = googleMap.getCameraPosition().target;
+                        String latLngString = latLng.latitude + "," + latLng.longitude;
+                        String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLngString + "&";
+                        Server gAPI = new Server("GET", uri);
+                        try {
+                            String jsonString = gAPI.execute().get(15, TimeUnit.SECONDS);
+                            JsonObject joo = new JsonParser().parse(jsonString).getAsJsonObject();
+                            JsonArray jsonArray = joo.get("results").getAsJsonArray();
+                            if (jsonArray.size() > 0) {
+                                pickedAdress.setVisibility(View.VISIBLE);
+                                pickedAdress.setText(jsonArray.get(0).getAsJsonObject().get("formatted_address").getAsString());
+                            }
+                        } catch (ExecutionException | InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (TimeoutException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
 
@@ -205,7 +228,7 @@ public class EatFragment extends Fragment{
             public boolean onTouch(View v, MotionEvent event) {
 
                 if(event.getAction() == MotionEvent.ACTION_MOVE){
-                    moveMapPicker(40);
+                    moveMapPicker(40, 200);
                 }
                 return true;
             }
@@ -214,15 +237,15 @@ public class EatFragment extends Fragment{
         return rootView;
     }
 
-    void moveMapPicker(int move){
+    void moveMapPicker(int move, int secs){
         float a = 0f;
         if (move > 0)
             a = 0.5f;
-        shadowPoint.animate().alpha(a).setDuration(1000);
-        mapPickerPanView.animate().translationY(-move).setDuration(1000);
-        hande.animate().translationY(-move).setDuration(1000);
-        shadow.animate().translationY(-move * 2 / 3).setDuration(1000);
-        shadow.animate().translationX(move * 1 / 3).setDuration(1000);
+        shadowPoint.animate().alpha(a).setDuration(secs);
+        mapPickerPanView.animate().translationY(-move).setDuration(secs);
+        hande.animate().translationY(-move).setDuration(secs);
+        shadow.animate().translationY(-move * 2 / 3).setDuration(secs);
+        shadow.animate().translationX(move * 1 / 3).setDuration(secs);
     }
 
     @Override
