@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:tint="#FFFFFF"
-            android:clickable="true" app:srcCompat="@drawable/prepare"
+            android:clickable="true" app:srcCompat="@drawable/eat"
             android:id="@+id/fab" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="16dp"
             app:backgroundTint="@color/colorPrimary"

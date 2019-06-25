@@ -89,11 +89,19 @@ public class AddFoodActivity extends AppCompatActivity {
         submit = findViewById(R.id.submitButton);
         doPhoto = findViewById(R.id.photo);
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.locationAutocomplete, new AutocompleteLocationFragment())
-                .commit();
 
-        // initialAnimations();
+        Intent intent = getIntent();
+        Bundle b = intent.getExtras();
+        if(b != null){
+            String address = b.getString("address");
+            Bundle bundle = new Bundle();
+            bundle.putString("address", address);
+            AutocompleteLocationFragment autocompleteLocationFragment = new AutocompleteLocationFragment();
+            autocompleteLocationFragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.locationAutocomplete, autocompleteLocationFragment)
+                    .commit();
+        }
         setFoodName();
         setPriceSeekBar();
         setFoodTypes();

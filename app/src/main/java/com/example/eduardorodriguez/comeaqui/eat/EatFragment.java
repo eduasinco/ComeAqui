@@ -1,5 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.eat;
 
+import android.content.Intent;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.*;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.food.AddFoodActivity;
 import com.example.eduardorodriguez.comeaqui.profile.orders.OrderObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.Server;
@@ -44,13 +46,14 @@ public class EatFragment extends Fragment{
     static View rootView;
     private static GoogleMap googleMap;
     public static ArrayList<FoodPost> data;
-    static boolean entered = false;
+    int fabCount;
 
     ConstraintLayout mapPickerPanView;
     ImageView shadow;
     ImageView hande;
     ImageView shadowPoint;
     TextView pickedAdress;
+    FloatingActionButton myFab;
 
     public static OrderObject goOrder;
 
@@ -100,9 +103,10 @@ public class EatFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_map, container, false);
 
-        mMapView = rootView.findViewById(R.id.mapView);
+        fabCount = 0;
 
-        final FloatingActionButton myFab =  rootView.findViewById(R.id.fab);
+        mMapView = rootView.findViewById(R.id.mapView);
+        myFab =  rootView.findViewById(R.id.fab);
         final ImageView bigPosterImageView = rootView.findViewById(R.id.bigPosterImage);
         final TextView posterEmailView = rootView.findViewById(R.id.priceText);
         final ImageView foodImageView = rootView.findViewById(R.id.plateName);
@@ -215,25 +219,36 @@ public class EatFragment extends Fragment{
                 });
             }
         });
-        myFab.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
-                // getActivity().startActivity(addFood);
-                apearMapPicker(true, 40);
+        myFab.setOnClickListener(v -> {
+            apearMapPicker(true, 40);
+            if (fabCount == 0){
+                fabCount = 1;
+                switchFabImage(true);
+            } else if (fabCount == 1) {
+                Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
+                addFood.putExtra("address" , pickedAdress.getText().toString());
+                getActivity().startActivity(addFood);
+            } else {
+                fabCount = 2;
+                switchFabImage(false);
             }
         });
 
-        rootView.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-
-                if(event.getAction() == MotionEvent.ACTION_MOVE){
-                    moveMapPicker(40, 200);
-                }
-                return true;
+        rootView.setOnTouchListener((v, event) -> {
+            if(event.getAction() == MotionEvent.ACTION_MOVE){
+                moveMapPicker(40, 200);
             }
+            return true;
         });
 
         return rootView;
+    }
+
+    void switchFabImage(boolean toPlus){
+        myFab.animate().scaleY(0).setDuration(200).withEndAction(() -> {
+            myFab.setImageDrawable(ContextCompat.getDrawable(getActivity(), toPlus ? R.drawable.plus_sign : R.drawable.eat));
+            myFab.animate().scaleY(1).setDuration(200);
+        }).start();
     }
 
     void apearMapPicker(boolean apear, int move){

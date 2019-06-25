@@ -62,7 +62,8 @@ public class AutocompleteLocationFragment extends Fragment {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
 
         detectTypingAndSetLocationPrediction();
-        setLastLocation();
+
+        addressView.setText(getArguments().getString("address"));
 
         assert getFragmentManager() != null;
         getFragmentManager().beginTransaction()
