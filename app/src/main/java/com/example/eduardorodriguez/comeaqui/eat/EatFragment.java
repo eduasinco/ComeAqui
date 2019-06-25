@@ -4,10 +4,12 @@ import android.graphics.*;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -33,13 +35,18 @@ import java.util.concurrent.ExecutionException;
  * to handle interaction events.
  * create an instance of this fragment.
  */
-public class EatFragment extends Fragment {
+public class EatFragment extends Fragment{
 
     MapView mMapView;
     static View rootView;
     private static GoogleMap googleMap;
     public static ArrayList<FoodPost> data;
     static boolean entered = false;
+
+    ConstraintLayout mapPickerPanView;
+    ImageView shadow;
+    ImageView hande;
+    ImageView shadowPoint;
 
     public static OrderObject goOrder;
 
@@ -96,6 +103,11 @@ public class EatFragment extends Fragment {
         final TextView posterEmailView = rootView.findViewById(R.id.priceText);
         final ImageView foodImageView = rootView.findViewById(R.id.plateName);
         final ImageView posterImageView = rootView.findViewById(R.id.posterImage);
+        ConstraintLayout touchDetector = rootView.findViewById(R.id.touch_detector);
+        mapPickerPanView = rootView.findViewById(R.id.map_picker_pan);
+        shadow = rootView.findViewById(R.id.shadow);
+        hande = rootView.findViewById(R.id.handle);
+        shadowPoint = rootView.findViewById(R.id.shadow_point);
 
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume(); // needed to get the map to display immediately
@@ -167,19 +179,50 @@ public class EatFragment extends Fragment {
                     }
                 });
 
+                googleMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
+                    @Override
+                    public void onCameraMoveStarted(int i) {
+                        moveMapPicker(40);
+                    }
+                });
+                googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+                    @Override
+                    public void onCameraIdle() {
+                        moveMapPicker(-40);
+                    }
+                });
+
             }
         });
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
                 // getActivity().startActivity(addFood);
-
-                LatLng latLng = googleMap.getCameraPosition().target;
-                googleMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             }
         });
+
+        rootView.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+
+                if(event.getAction() == MotionEvent.ACTION_MOVE){
+                    moveMapPicker(40);
+                }
+                return true;
+            }
+        });
+
         return rootView;
+    }
+
+    void moveMapPicker(int move){
+        float a = 0f;
+        if (move > 0)
+            a = 0.5f;
+        shadowPoint.animate().alpha(a).setDuration(1000);
+        mapPickerPanView.animate().translationY(-move).setDuration(1000);
+        hande.animate().translationY(-move).setDuration(1000);
+        shadow.animate().translationY(-move * 2 / 3).setDuration(1000);
+        shadow.animate().translationX(move * 1 / 3).setDuration(1000);
     }
 
     @Override
