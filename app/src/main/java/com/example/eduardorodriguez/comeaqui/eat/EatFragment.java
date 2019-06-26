@@ -54,6 +54,7 @@ public class EatFragment extends Fragment{
     ImageView shadowPoint;
     TextView pickedAdress;
     FloatingActionButton myFab;
+    ImageView cancelPostView;
 
     LatLng latLng;
     public static OrderObject goOrder;
@@ -108,15 +109,12 @@ public class EatFragment extends Fragment{
 
         mMapView = rootView.findViewById(R.id.mapView);
         myFab =  rootView.findViewById(R.id.fab);
-        final ImageView bigPosterImageView = rootView.findViewById(R.id.bigPosterImage);
-        final TextView posterEmailView = rootView.findViewById(R.id.priceText);
-        final ImageView foodImageView = rootView.findViewById(R.id.plateName);
-        final ImageView posterImageView = rootView.findViewById(R.id.posterImage);
         mapPickerPanView = rootView.findViewById(R.id.map_picker_pan);
         shadow = rootView.findViewById(R.id.shadow);
         hande = rootView.findViewById(R.id.handle);
         shadowPoint = rootView.findViewById(R.id.shadow_point);
         pickedAdress = rootView.findViewById(R.id.pickedAdress);
+        cancelPostView = rootView.findViewById(R.id.cancel_post);
 
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume(); // needed to get the map to display immediately
@@ -126,104 +124,35 @@ public class EatFragment extends Fragment{
         } catch (Exception e) {
             e.printStackTrace();
         }
+        setMap();
+        setFabFunctionality();
+        setCancelPost();
 
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap mMap) {
-                googleMap = mMap;
-                GetAsyncTask getPostLocations = new GetAsyncTask("foods/");
-                try {
-                    String response = getPostLocations.execute().get();
-                    if (response != null)
-                        makeList(new JsonParser().parse(response).getAsJsonArray());
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                googleMap.setMyLocationEnabled(true);
-
-                // For dropping a marker at a point on the Map
-                MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
-                    @Override
-                    public void gotLocation(Location location){
-                        //Got the location!
-                        double lng = location.getLongitude();
-                        double lat = location.getLatitude();
-
-                        LatLng place = new LatLng(lat, lng);
-                        // For zooming automatically to the location of the marker
-                        CameraPosition cameraPosition = new CameraPosition.Builder().target(place).zoom(15).build();
-                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-                    }
-                };
-                MyLocation myLocation = new MyLocation();
-                myLocation.getLocation(getContext(), locationResult);
-
-                googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                    public boolean onMarkerClick(Marker marker) {
-                        bigPosterImageView.setVisibility(View.GONE);
-                        final int index = (int) (marker.getTag());
-                        posterEmailView.setText(data.get(index).owner_id);
-
-                        String profile_photo = "http://127.0.0.1:8000";
-                        profile_photo += data.get(index).food_photo;
-                        if(!profile_photo.contains("no-image")) Glide.with(rootView.getContext()).load(profile_photo).into(foodImageView);
-
-                        profile_photo = "http://127.0.0.1:8000/media/";
-                        profile_photo += data.get(index).owner_photo;
-                        if(!profile_photo.contains("no-image")) Glide.with(rootView.getContext()).load(profile_photo).into(posterImageView);
-                        if(!profile_photo.contains("no-image")) Glide.with(rootView.getContext()).load(profile_photo).into(bigPosterImageView);
-
-                        // eatTimeView.setText(data.get(index).go_food_time.substring(0,5));
-
-                        return false;
-                    }
-                });
-
-                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                    @Override
-                    public void onMapClick(LatLng latLng) {
-                        bigPosterImageView.setVisibility(View.GONE);
-                    }
-                });
-
-                googleMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
-                    @Override
-                    public void onCameraMoveStarted(int i) {
-                        pickedAdress.setVisibility(View.GONE);
-                        moveMapPicker(40, 200);
-                    }
-                });
-                googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-                    @Override
-                    public void onCameraIdle() {
-                        moveMapPicker(-40, 200);
-                        latLng = googleMap.getCameraPosition().target;
-                        String latLngString = latLng.latitude + "," + latLng.longitude;
-                        String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLngString + "&";
-                        Server gAPI = new Server("GET", uri);
-                        try {
-                            String jsonString = gAPI.execute().get(15, TimeUnit.SECONDS);
-                            JsonObject joo = new JsonParser().parse(jsonString).getAsJsonObject();
-                            JsonArray jsonArray = joo.get("results").getAsJsonArray();
-                            if (jsonArray.size() > 0) {
-                                pickedAdress.setVisibility(View.VISIBLE);
-                                pickedAdress.setText(jsonArray.get(0).getAsJsonObject().get("formatted_address").getAsString());
-                            }
-                        } catch (ExecutionException | InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (TimeoutException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+        rootView.setOnTouchListener((v, event) -> {
+            if(event.getAction() == MotionEvent.ACTION_MOVE){
+                moveMapPicker(40, 200);
             }
+            return true;
         });
+
+        return rootView;
+    }
+
+    void setCancelPost(){
+        cancelPostView.setOnClickListener(v -> {
+            switchFabImage(false);
+            fabCount = 0;
+            cancelPostView.setVisibility(View.GONE);
+            apearMapPicker(false, -40);
+        });
+    }
+
+    void setFabFunctionality(){
         myFab.setOnClickListener(v -> {
             apearMapPicker(true, 40);
             if (fabCount == 0){
                 fabCount = 1;
+                cancelPostView.setVisibility(View.VISIBLE);
                 switchFabImage(true);
             } else if (fabCount == 1) {
                 Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
@@ -236,15 +165,6 @@ public class EatFragment extends Fragment{
                 switchFabImage(false);
             }
         });
-
-        rootView.setOnTouchListener((v, event) -> {
-            if(event.getAction() == MotionEvent.ACTION_MOVE){
-                moveMapPicker(40, 200);
-            }
-            return true;
-        });
-
-        return rootView;
     }
 
     void switchFabImage(boolean toPlus){
@@ -278,6 +198,73 @@ public class EatFragment extends Fragment{
         hande.animate().translationY(-move).setDuration(secs);
         shadow.animate().translationY(-move * 2 / 3).setDuration(secs);
         shadow.animate().translationX(move * 1 / 3).setDuration(secs);
+    }
+
+    void setMap(){
+        mMapView.getMapAsync(mMap -> {
+            googleMap = mMap;
+            GetAsyncTask getPostLocations = new GetAsyncTask("foods/");
+            try {
+                String response = getPostLocations.execute().get();
+                if (response != null)
+                    makeList(new JsonParser().parse(response).getAsJsonArray());
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            googleMap.setMyLocationEnabled(true);
+
+            // For dropping a marker at a point on the Map
+            MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
+                @Override
+                public void gotLocation(Location location){
+                    //Got the location!
+                    double lng = location.getLongitude();
+                    double lat = location.getLatitude();
+
+                    LatLng place = new LatLng(lat, lng);
+                    // For zooming automatically to the location of the marker
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(place).zoom(15).build();
+                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                }
+            };
+            MyLocation myLocation = new MyLocation();
+            myLocation.getLocation(getContext(), locationResult);
+
+            googleMap.setOnMarkerClickListener(marker -> {
+                final int index = (int) (marker.getTag());
+                return false;
+            });
+
+            googleMap.setOnMapClickListener(latLng -> {
+            });
+
+            googleMap.setOnCameraMoveStartedListener(i -> {
+                pickedAdress.setVisibility(View.GONE);
+                moveMapPicker(40, 200);
+            });
+            googleMap.setOnCameraIdleListener(() -> {
+                moveMapPicker(-40, 200);
+                latLng = googleMap.getCameraPosition().target;
+                String latLngString = latLng.latitude + "," + latLng.longitude;
+                String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLngString + "&";
+                Server gAPI = new Server("GET", uri);
+                try {
+                    String jsonString = gAPI.execute().get(15, TimeUnit.SECONDS);
+                    JsonObject joo = new JsonParser().parse(jsonString).getAsJsonObject();
+                    JsonArray jsonArray = joo.get("results").getAsJsonArray();
+                    if (jsonArray.size() > 0) {
+                        pickedAdress.setVisibility(View.VISIBLE);
+                        pickedAdress.setText(jsonArray.get(0).getAsJsonObject().get("formatted_address").getAsString());
+                    }
+                } catch (ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
+                } catch (TimeoutException e) {
+                    e.printStackTrace();
+                }
+            });
+        });
     }
 
     @Override
