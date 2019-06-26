@@ -20,7 +20,7 @@ public class OrderObject implements Serializable {
     public String postAddress;
     public String posterPhoneNumber;
     public String posterPhoneCode;
-    public String postGoFoodTime;
+    public String time;
     public String postLat;
     public String postLng;
     public OrderObject(JsonObject jo){
@@ -31,6 +31,7 @@ public class OrderObject implements Serializable {
 
         postPlateName = jo.get("post_plate_name").getAsString();
         postFoodPhoto = jo.get("post_food_photo").getAsString();
+        time = jo.get("post_time").getAsString();
         postPrice = jo.get("post_price").getAsString();
         postDescription = jo.get("poster_first_name").getAsString();
         postLat = jo.get("post_lat").getAsString();

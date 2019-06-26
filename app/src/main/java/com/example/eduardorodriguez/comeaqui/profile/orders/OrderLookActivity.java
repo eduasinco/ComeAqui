@@ -26,6 +26,7 @@ public class OrderLookActivity extends AppCompatActivity {
     TextView postPriceView;
     TextView subtotalView;
     TextView totalPriceView;
+    TextView mealTimeView;
 
     ImageView posterImageView;
     ImageView postImageView;
@@ -45,6 +46,7 @@ public class OrderLookActivity extends AppCompatActivity {
         postPriceView.setText("€" + order.postPrice);
         subtotalView.setText("€" + order.postPrice);
         totalPriceView.setText("€" + order.postPrice);
+        totalPriceView.setText(order.time);
         String url = "http://maps.google.com/maps/api/staticmap?center=" + order.postLat + "," + order.postLng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=AIzaSyDqkl1DgwHu03SmMoqVey3sgR62GnJ-VY4";
         Glide.with(this).load(url).into(staticMapView);
 
@@ -64,6 +66,7 @@ public class OrderLookActivity extends AppCompatActivity {
         postPriceView = findViewById(R.id.postPrice);
         subtotalView = findViewById(R.id.postSubtotalPrice);
         totalPriceView = findViewById(R.id.totalPrice);
+        mealTimeView = findViewById(R.id.mealTime);
 
         posterImageView = findViewById(R.id.posterImage);
         postImageView = findViewById(R.id.postImage);

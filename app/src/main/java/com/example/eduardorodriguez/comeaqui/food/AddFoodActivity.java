@@ -32,6 +32,7 @@ public class AddFoodActivity extends AppCompatActivity {
     EditText description;
     Button submit;
     ImageView doPhoto;
+    TimePicker timePicker;
 
 
     Float price_data = 0f;
@@ -87,6 +88,7 @@ public class AddFoodActivity extends AppCompatActivity {
         descriptionLayout = findViewById(R.id.descriptionLayout);
         description = findViewById(R.id.orderMessage);
         submit = findViewById(R.id.submitButton);
+        timePicker = findViewById(R.id.timePicker);
         doPhoto = findViewById(R.id.photo);
 
         Intent intent = getIntent();
@@ -148,7 +150,7 @@ public class AddFoodActivity extends AppCompatActivity {
                         new String[]{"lat", Double.toString(lat)},
                         new String[]{"lng", Double.toString(lng)},
                         new String[]{"diners", Integer.toString(diners)},
-                        new String[]{"time", description.getText().toString()},
+                        new String[]{"time", timePicker.getHour() + ":" + timePicker.getMinute()},
                         new String[]{"price", price_data.toString()},
                         new String[]{"food_type", setTypes()},
                         new String[]{"description", description.getText().toString()},

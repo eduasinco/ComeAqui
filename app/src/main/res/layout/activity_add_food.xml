@@ -51,7 +51,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/guideline9"
                 app:layout_constraintHorizontal_bias="0.0"
                 android:textAlignment="center"
-                app:layout_constraintTop_toBottomOf="@+id/simpleTimePicker2"/>
+                app:layout_constraintTop_toBottomOf="@+id/timePicker"/>
         <SeekBar
                 android:layout_width="0dp"
                 android:layout_height="50dp" android:id="@+id/seekBar"
@@ -217,7 +217,7 @@
                 android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/photo"/>
         <TimePicker
                 android:background="#FFFFFF"
-                android:id="@+id/simpleTimePicker2"
+                android:id="@+id/timePicker"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:timePickerMode="spinner"
