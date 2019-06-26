@@ -20,6 +20,7 @@ import com.example.eduardorodriguez.comeaqui.*;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.food.AddFoodActivity;
 import com.example.eduardorodriguez.comeaqui.profile.orders.OrderObject;
+import com.example.eduardorodriguez.comeaqui.profile.settings.PlacesAutocompleteFragment;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.google.android.gms.maps.*;
@@ -160,6 +161,15 @@ public class EatFragment extends Fragment{
 
             googleMap.setOnMarkerClickListener(marker -> {
                 final int index = (int) (marker.getTag());
+                FoodPost foodPost = data.get(index);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("object", foodPost);
+                MapCardFragment fragment = new MapCardFragment();
+                fragment.setArguments(bundle);
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.container, fragment)
+                        .commit();
                 return false;
             });
         });
