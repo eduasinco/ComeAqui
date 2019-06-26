@@ -23,7 +23,6 @@ public class OrderLookActivity extends AppCompatActivity {
     TextView postNameView;
     TextView posterMessageView;
     TextView posterLocationView;
-    TextView postStatusView;
     TextView postPriceView;
     TextView subtotalView;
     TextView totalPriceView;
@@ -39,21 +38,6 @@ public class OrderLookActivity extends AppCompatActivity {
 
     public void createStringArray(JsonObject jo){
         order = new OrderObject(jo);
-
-        switch (order.orderStatus){
-            case "PENDING":
-                postStatusView.setText(order.orderStatus);
-                postStatusView.setTextColor(Color.parseColor("#FFC60000"));
-                break;
-            case "CONFIRMED":
-                postStatusView.setText(order.orderStatus);
-                postStatusView.setTextColor(Color.parseColor("#FF1EB600"));
-                break;
-            case "DELIVERED":
-                postStatusView.setText(order.orderStatus);
-                postStatusView.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
-                break;
-        }
 
         postNameView.setText(order.postPlateName);
         posterMessageView.setText(order.posterFirstName + " is preparing your order");
@@ -77,7 +61,6 @@ public class OrderLookActivity extends AppCompatActivity {
         postNameView = findViewById(R.id.postName);
         posterMessageView = findViewById(R.id.posterMessage);
         posterLocationView = findViewById(R.id.posterLocation);
-        postStatusView = findViewById(R.id.postStatus);
         postPriceView = findViewById(R.id.postPrice);
         subtotalView = findViewById(R.id.postSubtotalPrice);
         totalPriceView = findViewById(R.id.totalPrice);

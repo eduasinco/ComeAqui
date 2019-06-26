@@ -68,8 +68,7 @@
                     app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/static_map" android:layout_marginTop="80dp"
-                    app:layout_constraintTop_toTopOf="@+id/constraintLayout4">
+                    android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/constraintLayout4">
 
                 <View
                         android:layout_height="1dp"
@@ -114,7 +113,7 @@
                         android:layout_height="wrap_content"
                         app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="24dp"
                         android:id="@+id/postName"
-                        android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/constraintLayout7"/>
+                        android:layout_marginTop="24dp" app:layout_constraintTop_toBottomOf="@+id/constraintLayout7"/>
                 <TextView
                         android:text="€9.50"
                         android:layout_width="wrap_content"
@@ -162,16 +161,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" android:id="@+id/constraintLayout7"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
-                >
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="24dp">
 
                     <ImageView
                             android:layout_width="300dp"
                             android:layout_height="200dp" app:srcCompat="@drawable/world_map"
                             android:id="@+id/static_map"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                    />
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"/>
                     <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" app:srcCompat="@drawable/map_food_icon"
@@ -199,12 +198,13 @@
 
         <ImageView
                 android:background="@drawable/flag_transparent"
-                android:layout_width="0dp"
-                android:layout_height="200dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:id="@+id/postImage"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"/>
+                android:layout_marginEnd="16dp"
+                app:layout_constraintTop_toTopOf="@+id/textView17" app:layout_constraintStart_toEndOf="@+id/textView17"
+                android:layout_marginStart="8dp"/>
         <TextView
                 android:text="Meal time"
                 android:layout_width="wrap_content"
@@ -239,17 +239,10 @@
                 android:text="Eduardo is preparing your order"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" android:id="@+id/posterMessage"
-                app:layout_constraintStart_toEndOf="@+id/posterImage" android:layout_marginStart="8dp"
-                app:layout_constraintTop_toTopOf="@+id/posterImage" android:layout_marginTop="8dp"
-                android:textColor="@android:color/black" app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="16dp" android:gravity="center_vertical"/>
-        <TextView
-                android:text="CONFIRMED"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/postStatus"
-                android:layout_marginEnd="16dp" app:layout_constraintEnd_toEndOf="parent"
-                android:textColor="@android:color/holo_green_dark" android:textStyle="bold"
-                app:layout_constraintTop_toTopOf="@+id/arrivalTime"/>
+                android:textColor="@android:color/black"
+                android:gravity="center_vertical" android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/postImage"
+                app:layout_constraintBottom_toBottomOf="@+id/posterImage"/>
     </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>
