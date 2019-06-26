@@ -56,7 +56,7 @@ public class EatFragment extends Fragment{
     FloatingActionButton myFab;
     ImageView cancelPostView;
 
-    Marker markers;
+    ArrayList<Marker> markers = new ArrayList<>();
     LatLng latLng;
 
     void setMarkers(){
@@ -64,18 +64,18 @@ public class EatFragment extends Fragment{
             float lat = data.get(i).lat;
             float lng = data.get(i).lng;
 
-            markers =  googleMap.addMarker(new MarkerOptions()
+            Marker marker =  googleMap.addMarker(new MarkerOptions()
                     .position(new LatLng(lat, lng)));
-            markers.setTag(i);
+            marker.setTag(i);
 
             Drawable myIcon = rootView.getResources().getDrawable( R.drawable.map_food_icon);
             ColorFilter filter = new LightingColorFilter(
                     ContextCompat.getColor(rootView.getContext(), R.color.colorPrimary),
                     ContextCompat.getColor(rootView.getContext(), R.color.colorPrimary)
             );
-
             myIcon.setColorFilter(filter);
-            markers.setIcon(getMarkerIconFromDrawable(myIcon));
+            marker.setIcon(getMarkerIconFromDrawable(myIcon));
+            markers.add(marker);
         }
     }
 
@@ -127,7 +127,6 @@ public class EatFragment extends Fragment{
         }
 
         setMap();
-        setMapMarkers();
         setFabFunctionality();
         setCancelPost();
 
@@ -140,6 +139,7 @@ public class EatFragment extends Fragment{
             googleMap.setMyLocationEnabled(true);
 
             setLocationPicker();
+            setMapMarkers();
             // For dropping a marker at a point on the Map
             MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
                 @Override
@@ -209,7 +209,7 @@ public class EatFragment extends Fragment{
         myFab.setOnClickListener(v -> {
             apearMapPicker(true, 40);
             if (fabCount == 0){
-                markers.setVisible(false);
+                makersVisibility(false);
                 fabCount = 1;
                 cancelPostView.setVisibility(View.VISIBLE);
                 switchFabImage(true);
@@ -228,7 +228,7 @@ public class EatFragment extends Fragment{
 
     void setCancelPost(){
         cancelPostView.setOnClickListener(v -> {
-            markers.setVisible(true);
+            makersVisibility(true);
             switchFabImage(false);
             fabCount = 0;
             cancelPostView.setVisibility(View.GONE);
@@ -267,6 +267,12 @@ public class EatFragment extends Fragment{
         hande.animate().translationY(-move).setDuration(secs);
         shadow.animate().translationY(-move * 2 / 3).setDuration(secs);
         shadow.animate().translationX(move * 1 / 3).setDuration(secs);
+    }
+
+    void makersVisibility(boolean visible){
+        for (Marker marker: markers){
+            marker.setVisible(visible);
+        }
     }
 
     @Override
