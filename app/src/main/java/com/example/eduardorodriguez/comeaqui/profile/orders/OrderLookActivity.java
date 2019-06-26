@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
@@ -51,8 +52,13 @@ public class OrderLookActivity extends AppCompatActivity {
         Glide.with(this).load(url).into(staticMapView);
 
         String initialUri = "http://127.0.0.1:8000/media/";
-        if(!order.posterImage.contains("no-image")) Glide.with(context).load(initialUri + order.posterImage).into(posterImageView);
-        if(!order.postFoodPhoto.contains("no-image")) Glide.with(context).load(initialUri + order.postFoodPhoto).into(postImageView);
+        if(!order.posterImage.contains("no-image")) {
+            Glide.with(context).load(initialUri + order.posterImage).into(posterImageView);
+        }
+        if(!order.postFoodPhoto.contains("no-image")){
+            postImageView.setVisibility(View.VISIBLE);
+            Glide.with(context).load(initialUri + order.postFoodPhoto).into(postImageView);
+        }
     }
 
     @Override
