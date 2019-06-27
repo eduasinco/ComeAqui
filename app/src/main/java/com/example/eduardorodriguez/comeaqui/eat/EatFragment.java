@@ -1,5 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.eat;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
@@ -50,6 +51,7 @@ public class EatFragment extends Fragment{
     int fabCount;
 
     ConstraintLayout mapPickerPanView;
+    ConstraintLayout cardView;
     ImageView shadow;
     ImageView hande;
     ImageView shadowPoint;
@@ -117,6 +119,7 @@ public class EatFragment extends Fragment{
         shadowPoint = rootView.findViewById(R.id.shadow_point);
         pickedAdress = rootView.findViewById(R.id.pickedAdress);
         cancelPostView = rootView.findViewById(R.id.cancel_post);
+        cardView = rootView.findViewById(R.id.card);
 
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume(); // needed to get the map to display immediately
@@ -131,9 +134,35 @@ public class EatFragment extends Fragment{
         setFabFunctionality();
         setCancelPost();
 
+        cardView.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+
+                    dX = v.getX() - event.getRawX();
+                    dY = v.getY() - event.getRawY();
+                    break;
+
+                case MotionEvent.ACTION_MOVE:
+
+                    v.animate()
+                            .x(event.getRawX() + dX)
+                            .y(event.getRawY() + dY)
+                            .setDuration(0)
+                            .start();
+                    break;
+                default:
+                    return false;
+            }
+            return true;
+        });
+
+
         return rootView;
     }
 
+    float dX, dY;
+
+    @SuppressLint("RestrictedApi")
     void setMap(){
         mMapView.getMapAsync(mMap -> {
             googleMap = mMap;
@@ -159,9 +188,12 @@ public class EatFragment extends Fragment{
             MyLocation myLocation = new MyLocation();
             myLocation.getLocation(getContext(), locationResult);
 
+
             googleMap.setOnMarkerClickListener(marker -> {
                 final int index = (int) (marker.getTag());
                 FoodPost foodPost = data.get(index);
+                cardView.setVisibility(View.GONE);
+                myFab.setVisibility(View.GONE);
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("object", foodPost);
@@ -170,9 +202,17 @@ public class EatFragment extends Fragment{
                 getFragmentManager().beginTransaction()
                         .replace(R.id.container, fragment)
                         .commit();
+                moveCard(true);
                 return false;
             });
         });
+    }
+
+    void moveCard(boolean up){
+        int move = 400;
+        cardView.setY(up ? cardView.getY() + move: cardView.getY());
+        cardView.setVisibility(View.VISIBLE);
+        cardView.animate().translationYBy(up ? -move: move).setDuration(move);
     }
 
     void setMapMarkers(){

@@ -87,13 +87,13 @@ public class GetFoodAdapter extends BaseAdapter {
 
     public static void setTypes(View view, String types){
         ArrayList<ImageView> imageViewArrayList = new ArrayList<>();
-        imageViewArrayList.add((ImageView) view.findViewById(R.id.vegetarian));
-        imageViewArrayList.add((ImageView) view.findViewById(R.id.vegan));
-        imageViewArrayList.add((ImageView) view.findViewById(R.id.celiac));
-        imageViewArrayList.add((ImageView) view.findViewById(R.id.spicy));
-        imageViewArrayList.add((ImageView) view.findViewById(R.id.fish));
-        imageViewArrayList.add((ImageView) view.findViewById(R.id.meat));
-        imageViewArrayList.add((ImageView) view.findViewById(R.id.dairy));
+        imageViewArrayList.add(view.findViewById(R.id.vegetarian));
+        imageViewArrayList.add(view.findViewById(R.id.vegan));
+        imageViewArrayList.add(view.findViewById(R.id.celiac));
+        imageViewArrayList.add(view.findViewById(R.id.spicy));
+        imageViewArrayList.add(view.findViewById(R.id.fish));
+        imageViewArrayList.add(view.findViewById(R.id.meat));
+        imageViewArrayList.add(view.findViewById(R.id.dairy));
         int[] resources = new int[]{
                 R.drawable.vegetarianfill,
                 R.drawable.veganfill,

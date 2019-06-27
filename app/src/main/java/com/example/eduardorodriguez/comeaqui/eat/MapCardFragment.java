@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.FoodPost;
+import com.example.eduardorodriguez.comeaqui.FoodTypeFragment;
 import com.example.eduardorodriguez.comeaqui.R;
 
 public class MapCardFragment extends Fragment {
@@ -51,6 +53,19 @@ public class MapCardFragment extends Fragment {
         postPrice.setText(foodPost.price + "€");
         postTime.setText(foodPost.time);
         posterDescriptionView.setText(foodPost.description);
+
+        if(!foodPost.food_photo.contains("no-image")) Glide.with(view.getContext()).load("http://127.0.0.1:8000" + foodPost.food_photo).into(postImageView);
+        if(!foodPost.owner_photo.contains("no-image")) Glide.with(view.getContext()).load("http://127.0.0.1:8000/media/" + foodPost.owner_photo).into(posterImageView);
+
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("type", foodPost.type);
+        FoodTypeFragment fragment = new FoodTypeFragment();
+        fragment.setArguments(bundle);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container2, fragment)
+                .commit();
+
         return view;
     }
 }
