@@ -1,14 +1,17 @@
 package com.example.eduardorodriguez.comeaqui.eat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.example.eduardorodriguez.comeaqui.FoodLookActivity;
 import com.example.eduardorodriguez.comeaqui.FoodPost;
 import com.example.eduardorodriguez.comeaqui.FoodTypeFragment;
 import com.example.eduardorodriguez.comeaqui.R;
@@ -24,6 +27,7 @@ public class MapCardFragment extends Fragment {
 
     ImageView postImageView;
     ImageView posterImageView;
+    ImageView cardButtonView;
 
     public MapCardFragment() {
         // Required empty public constructor
@@ -44,6 +48,7 @@ public class MapCardFragment extends Fragment {
 
         postImageView = view.findViewById(R.id.post_iamge);
         posterImageView = view.findViewById(R.id.poster_image);
+        cardButtonView = view.findViewById(R.id.card_button);
 
         FoodPost foodPost = (FoodPost) getArguments().getSerializable("object");
 
@@ -65,6 +70,26 @@ public class MapCardFragment extends Fragment {
         getFragmentManager().beginTransaction()
                 .replace(R.id.container2, fragment)
                 .commit();
+
+        cardButtonView.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    cardButtonView.setVisibility(View.INVISIBLE);
+                    break;
+
+                case MotionEvent.ACTION_MOVE:
+                    break;
+                case MotionEvent.ACTION_UP:
+                    cardButtonView.setVisibility(View.VISIBLE);
+                    Intent foodLook = new Intent(getContext(), FoodLookActivity.class);
+                    foodLook.putExtra("object", foodPost);
+                    getContext().startActivity(foodLook);
+                    break;
+                default:
+                    return false;
+            }
+            return true;
+        });
 
         return view;
     }

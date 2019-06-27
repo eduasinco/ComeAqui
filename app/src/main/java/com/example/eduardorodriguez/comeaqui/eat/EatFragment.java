@@ -134,33 +134,8 @@ public class EatFragment extends Fragment{
         setFabFunctionality();
         setCancelPost();
 
-        cardView.setOnTouchListener((v, event) -> {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-
-                    dX = v.getX() - event.getRawX();
-                    dY = v.getY() - event.getRawY();
-                    break;
-
-                case MotionEvent.ACTION_MOVE:
-
-                    v.animate()
-                            .x(event.getRawX() + dX)
-                            .y(event.getRawY() + dY)
-                            .setDuration(0)
-                            .start();
-                    break;
-                default:
-                    return false;
-            }
-            return true;
-        });
-
-
         return rootView;
     }
-
-    float dX, dY;
 
     @SuppressLint("RestrictedApi")
     void setMap(){
@@ -190,11 +165,13 @@ public class EatFragment extends Fragment{
 
 
             googleMap.setOnMarkerClickListener(marker -> {
-                final int index = (int) (marker.getTag());
-                FoodPost foodPost = data.get(index);
+
                 cardView.setVisibility(View.GONE);
                 myFab.setVisibility(View.GONE);
+                cancelPostView.setVisibility(View.VISIBLE);
 
+                final int index = (int) (marker.getTag());
+                FoodPost foodPost = data.get(index);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("object", foodPost);
                 MapCardFragment fragment = new MapCardFragment();
@@ -202,17 +179,26 @@ public class EatFragment extends Fragment{
                 getFragmentManager().beginTransaction()
                         .replace(R.id.container, fragment)
                         .commit();
-                moveCard(true);
+                moveCardUp();
                 return false;
             });
         });
     }
 
-    void moveCard(boolean up){
-        int move = 400;
-        cardView.setY(up ? cardView.getY() + move: cardView.getY());
+    void moveCardUp(){
+        int move = 200;
+        cardView.setScaleX(0);
+        cardView.setScaleY(0);
         cardView.setVisibility(View.VISIBLE);
-        cardView.animate().translationYBy(up ? -move: move).setDuration(move);
+        cardView.animate().scaleY(1).scaleX(1).setDuration(move);
+    }
+
+    void moveCardDown(){
+        int move = 200;
+        cardView.setVisibility(View.VISIBLE);
+        cardView.animate().scaleY(0).scaleX(0).setDuration(move).withEndAction(() -> {
+            cardView.setVisibility(View.GONE);
+        });
     }
 
     void setMapMarkers(){
@@ -283,6 +269,7 @@ public class EatFragment extends Fragment{
             fabCount = 0;
             cancelPostView.setVisibility(View.GONE);
             apearMapPicker(false, -40);
+            moveCardDown();
         });
     }
 
