@@ -262,12 +262,14 @@ public class EatFragment extends Fragment{
         });
     }
 
+    @SuppressLint("RestrictedApi")
     void setCancelPost(){
         cancelPostView.setOnClickListener(v -> {
             makersVisibility(true);
             switchFabImage(false);
             fabCount = 0;
             cancelPostView.setVisibility(View.GONE);
+            myFab.setVisibility(View.VISIBLE);
             apearMapPicker(false, -40);
             moveCardDown();
         });
