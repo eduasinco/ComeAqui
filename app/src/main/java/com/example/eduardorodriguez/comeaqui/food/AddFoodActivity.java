@@ -19,6 +19,7 @@ import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.*;
 import java.util.concurrent.ExecutionException;
@@ -144,7 +145,7 @@ public class AddFoodActivity extends AppCompatActivity {
             PostAsyncTask post = new PostAsyncTask("http://127.0.0.1:8000/foods/");
             post.bitmap = imageBitmap;
             try {
-                JsonObject response = post.execute(
+                String response = post.execute(
                         new String[]{"plate_name", foodName.getText().toString()},
                         new String[]{"address", address},
                         new String[]{"lat", Double.toString(lat)},
@@ -156,6 +157,7 @@ public class AddFoodActivity extends AppCompatActivity {
                         new String[]{"description", description.getText().toString()},
                         new String[]{"food_photo", ""}
                 ).get();
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
                 if (response != null) {
                     // FoodFragment.appendToList(response);
                 }

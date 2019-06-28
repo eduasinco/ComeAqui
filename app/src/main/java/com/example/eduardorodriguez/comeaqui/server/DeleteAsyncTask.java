@@ -23,10 +23,10 @@ import java.io.InputStreamReader;
 
 public class DeleteAsyncTask extends AsyncTask<String, Void, JSONObject>
 {
-    String uri = "http://127.0.0.1:8000/foods/";
-    public DeleteAsyncTask(int index) {
+    String uri;
+    public DeleteAsyncTask(String uri) {
 
-        this.uri += index + "/";
+        this.uri += uri;
     }
     @Override
     protected JSONObject doInBackground(String... params)

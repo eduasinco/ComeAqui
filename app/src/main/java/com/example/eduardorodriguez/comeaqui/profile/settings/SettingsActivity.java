@@ -141,13 +141,13 @@ public class SettingsActivity extends AppCompatActivity {
                 String place_id = AutocompleteLocationFragment.place_id;
                 if (place_id != null) {
                     Server gAPI2 = new Server("GET", "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + place_id +
-                            "&fields=geometry&");
+                            "&fields=geometry&key=" + R.string.google_key);
 
                     gAPI2.execute();
                 } else {
                     Server gAPI2 = new Server("GET", "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" +
                             AutocompleteLocationFragment.addressView.getText().toString() +
-                            "&");
+                            "&" + R.string.google_key);
                     gAPI2.execute();
                 }
                 Intent k = new Intent(SettingsActivity.this, MainActivity.class);

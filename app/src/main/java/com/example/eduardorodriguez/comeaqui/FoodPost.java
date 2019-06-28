@@ -16,6 +16,7 @@ public class FoodPost implements Serializable {
     public float lat;
     public float lng;
     public boolean favourite = false;
+    public int favouriteId;
 
     public FoodPost(JsonObject jo){
         id = jo.get("id").getAsInt();

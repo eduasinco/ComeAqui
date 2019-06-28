@@ -12,7 +12,11 @@ import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.FoodElementFragment;
 import com.example.eduardorodriguez.comeaqui.FoodPost;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.server.DeleteAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.Server;
+
+import java.util.concurrent.ExecutionException;
 
 public class MapCardFragment extends Fragment {
 
@@ -23,6 +27,7 @@ public class MapCardFragment extends Fragment {
     ImageView starView;
 
     FoodPost foodPost;
+    int favouriteId;
     boolean favourite;
 
     public MapCardFragment() {
@@ -51,6 +56,8 @@ public class MapCardFragment extends Fragment {
                 .replace(R.id.container3, fragment)
                 .commit();
 
+        favouriteId = foodPost.favouriteId;
+
         posterNameView.setText(foodPost.owner.first_name + " " + foodPost.owner.last_name);
         posterUserName.setText(foodPost.owner.email);
         starView.setImageResource(foodPost.favourite ? R.drawable.star_fill: R.drawable.star);
@@ -69,10 +76,15 @@ public class MapCardFragment extends Fragment {
             if (foodPost.favourite) {
                 EatFragment.markerPutColor(EatFragment.markers.get(foodPost.id), R.color.favourite);
                 PostAsyncTask createOrder = new PostAsyncTask("http://127.0.0.1:8000/favourites/");
-                createOrder.execute(
-                        new String[]{"food_post_id", "" + foodPost.id}
-                );
+                try {
+                    favouriteId = Integer.parseInt(createOrder.execute(new String[]{"food_post_id", "" + foodPost.id}).get());
+                } catch (ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
+                }
             } else {
+                String uri = "http://127.0.0.1:8000/favourite_detail/" + favouriteId + "/";
+                Server deleteFoodPost = new Server("DELETE", uri);
+                deleteFoodPost.execute();
                 EatFragment.markerPutColor(EatFragment.markers.get(foodPost.id), !foodPost.favourite ? R.color.grey : R.color.favourite);
             }
         });

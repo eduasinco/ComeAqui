@@ -1,6 +1,8 @@
 package com.example.eduardorodriguez.comeaqui.server;
 
 import android.os.AsyncTask;
+import com.example.eduardorodriguez.comeaqui.SplashActivity;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -13,7 +15,6 @@ public class Server extends AsyncTask<String[], Void, String>
 
     public Server(String method, String uri){
         this.uri = uri;
-        this.uri += "key=AIzaSyDqkl1DgwHu03SmMoqVey3sgR62GnJ-VY4";
         this.method = method;
     }
 
@@ -24,6 +25,7 @@ public class Server extends AsyncTask<String[], Void, String>
         conn.setConnectTimeout(15000);
         conn.setRequestMethod(this.method);
         conn.setRequestProperty("Content-Type","multipart/form-data");
+        conn.setRequestProperty ("Authorization", "Basic " + SplashActivity.getCredemtials());
         conn.setDoInput(true);
         conn.setDoOutput(true);
 

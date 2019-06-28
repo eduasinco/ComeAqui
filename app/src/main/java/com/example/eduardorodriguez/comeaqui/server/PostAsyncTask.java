@@ -18,7 +18,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.*;
 
-public class PostAsyncTask extends AsyncTask<String[], Void, JsonObject>
+public class PostAsyncTask extends AsyncTask<String[], Void, String>
 {
     public PostAsyncTask(String uri){
         this.uri = uri;
@@ -26,7 +26,7 @@ public class PostAsyncTask extends AsyncTask<String[], Void, JsonObject>
     String uri;
     public Bitmap bitmap;
     @Override
-    protected JsonObject doInBackground(String[]... params)
+    protected String doInBackground(String[]... params)
     {
 
         HttpPost httpPost = new HttpPost(uri);
@@ -65,9 +65,7 @@ public class PostAsyncTask extends AsyncTask<String[], Void, JsonObject>
             {
                 stringBuffer.append(line);
             }
-            JsonParser parser = new JsonParser();
-            JsonObject jo = parser.parse(stringBuffer.toString()).getAsJsonObject();
-            return jo;
+            return stringBuffer.toString();
 
         }  catch (Exception e){
             e.printStackTrace();
@@ -76,5 +74,5 @@ public class PostAsyncTask extends AsyncTask<String[], Void, JsonObject>
     }
 
     @Override
-    protected void onPostExecute(JsonObject response) { if(response != null) {}}
+    protected void onPostExecute(String response) { if(response != null) {}}
 }

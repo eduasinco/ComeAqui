@@ -10,9 +10,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import com.example.eduardorodriguez.comeaqui.profile.payment.AddPaymentMethodActivity;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
+import com.google.gson.JsonParser;
 import com.hbb20.CountryCodePicker;
 import io.card.payment.CardIOActivity;
 import io.card.payment.CreditCard;
+
+import java.util.concurrent.ExecutionException;
 
 public class CardInformationActivity extends AppCompatActivity {
 
@@ -38,14 +41,19 @@ public class CardInformationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 PostAsyncTask post = new PostAsyncTask("http://127.0.0.1:8000/card/");
-                post.execute(
-                        new String[]{"card_number", creditCardView.getText().toString(), ""},
-                        new String[]{"expiration_date", expiryDateView.getText().toString(), ""},
-                        new String[]{"card_type", cardType, ""},
-                        new String[]{"cvv", cvvView.getText().toString(), ""},
-                        new String[]{"zip_code", zipCodeView.getText().toString(), ""},
-                        new String[]{"country", countryView.getDefaultCountryName(), ""}
-                );
+                try {
+                    String response = post.execute(
+                            new String[]{"card_number", creditCardView.getText().toString(), ""},
+                            new String[]{"expiration_date", expiryDateView.getText().toString(), ""},
+                            new String[]{"card_type", cardType, ""},
+                            new String[]{"cvv", cvvView.getText().toString(), ""},
+                            new String[]{"zip_code", zipCodeView.getText().toString(), ""},
+                            new String[]{"country", countryView.getDefaultCountryName(), ""}
+                    ).get();
+                    new JsonParser().parse(response).getAsJsonObject();
+                } catch (ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
+                }
                 Intent back = new Intent(CardInformationActivity.this, AddPaymentMethodActivity.class);
                 startActivity(back);
             }

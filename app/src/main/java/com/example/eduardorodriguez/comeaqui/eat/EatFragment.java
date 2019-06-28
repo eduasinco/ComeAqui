@@ -67,7 +67,7 @@ public class EatFragment extends Fragment{
             Marker marker =  googleMap.addMarker(new MarkerOptions()
                     .position(new LatLng(lat, lng)));
             marker.setTag(key);
-            markerPutColor(marker, fp.favourite? R.color.favourite : R.color.colorPrimary);
+            markerPutColor(marker, fp.favourite ? R.color.favourite : R.color.colorPrimary);
             markers.put(fp.id, marker);
         }
     }
@@ -87,6 +87,7 @@ public class EatFragment extends Fragment{
                 JsonObject jo = favourite ? pa.getAsJsonObject().get("post").getAsJsonObject() : pa.getAsJsonObject();
                 FoodPost fp = new FoodPost(jo);
                 fp.favourite = favourite;
+                fp.favouriteId = pa.getAsJsonObject().get("id").getAsInt();
                 data.put(fp.id, fp);
             }
             setMarkers();
@@ -221,7 +222,7 @@ public class EatFragment extends Fragment{
             moveMapPicker(-40, 200);
             latLng = googleMap.getCameraPosition().target;
             String latLngString = latLng.latitude + "," + latLng.longitude;
-            String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLngString + "&";
+            String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLngString + "&" + R.string.google_key;
             Server gAPI = new Server("GET", uri);
             try {
                 String jsonString = gAPI.execute().get(15, TimeUnit.SECONDS);
