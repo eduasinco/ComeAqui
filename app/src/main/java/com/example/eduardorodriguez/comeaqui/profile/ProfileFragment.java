@@ -15,6 +15,7 @@ import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.profile.messages.MessagesFragment;
+import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -85,7 +86,8 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        GetAsyncTask process = new GetAsyncTask("my_profile/");
+        Server process = new Server("GET", getResources().getString(R.string.server) + "my_profile/");
+
         try {
             String response = process.execute().get();
             if (response != null)

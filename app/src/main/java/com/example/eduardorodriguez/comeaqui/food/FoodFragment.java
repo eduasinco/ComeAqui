@@ -12,6 +12,7 @@ import android.widget.ListView;
 import com.example.eduardorodriguez.comeaqui.FoodPost;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.google.gson.*;
 
 import java.util.ArrayList;
@@ -77,24 +78,23 @@ public class FoodFragment extends Fragment {
         });
 
         FloatingActionButton myFab =  view.findViewById(R.id.fab);
-        myFab.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
-                getActivity().startActivity(addFood);
-            }
+        myFab.setOnClickListener(v -> {
+            Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
+            getActivity().startActivity(addFood);
         });
 
         return view;
     }
 
     void getDataAndSet(){
-        GetAsyncTask process = new GetAsyncTask("foods/");
+        Server process = new Server("GET", getResources().getString(R.string.server) + "foods/");
+
         try {
             String response = process.execute().get();
             if (response != null)
                 makeList(new JsonParser().parse(response).getAsJsonArray());
         } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+        e.printStackTrace();
         }
-    }
-}
+        }
+        }

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
+import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -98,7 +99,8 @@ public class MessagesFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            GetAsyncTask getMessages = new GetAsyncTask("my_messages/");
+            Server getMessages = new Server("GET", getResources().getString(R.string.server) + "my_messages/");
+
             try {
                 String response = getMessages.execute().get();
                 if (response != null)

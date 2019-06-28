@@ -194,7 +194,7 @@ public class EatFragment extends Fragment{
     }
 
     void setMapMarkers(){
-        GetAsyncTask getPostLocations = new GetAsyncTask("foods/");
+        Server getPostLocations = new Server("GET", getResources().getString(R.string.server) + "foods/");
         try {
             String response = getPostLocations.execute().get();
             if (response != null)
@@ -203,7 +203,8 @@ public class EatFragment extends Fragment{
             e.printStackTrace();
         }
 
-        GetAsyncTask getFavouritePosts = new GetAsyncTask("my_favourites/");
+        Server getFavouritePosts = new Server("GET", getResources().getString(R.string.server) + "my_profile/");
+
         try {
             String response = getFavouritePosts.execute().get();
             if (response != null)
@@ -222,7 +223,7 @@ public class EatFragment extends Fragment{
             moveMapPicker(-40, 200);
             latLng = googleMap.getCameraPosition().target;
             String latLngString = latLng.latitude + "," + latLng.longitude;
-            String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLngString + "&" + R.string.google_key;
+            String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLngString + "&" + getResources().getString(R.string.google_key);
             Server gAPI = new Server("GET", uri);
             try {
                 String jsonString = gAPI.execute().get(15, TimeUnit.SECONDS);

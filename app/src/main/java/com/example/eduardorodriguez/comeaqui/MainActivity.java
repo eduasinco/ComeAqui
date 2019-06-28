@@ -20,6 +20,7 @@ import com.example.eduardorodriguez.comeaqui.eat.EatFragment;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileFragment;
 import com.example.eduardorodriguez.comeaqui.profile.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.google.gson.JsonParser;
 
 import java.util.concurrent.ExecutionException;
@@ -110,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeUser(){
-        GetAsyncTask process = new GetAsyncTask("my_profile/");
+        Server process = new Server("GET", getResources().getString(R.string.server) + "my_profile/");
         try {
             String response = process.execute().get();
             if (response != null)

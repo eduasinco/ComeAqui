@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -82,7 +83,7 @@ public class OrderLookActivity extends AppCompatActivity {
         Bundle b = intent.getExtras();
         if (b != null){
             OrderObject orderObject = (OrderObject) b.get("object");
-            GetAsyncTask getOrders = new GetAsyncTask("order_detail/" + orderObject.id + "/");
+            Server getOrders = new Server("GET", getResources().getString(R.string.server) + "order_detail/" + orderObject.id + "/");
             try {
                 String response = getOrders.execute().get();
                 if (response != null)
