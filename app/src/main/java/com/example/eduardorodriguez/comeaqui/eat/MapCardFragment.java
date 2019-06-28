@@ -57,7 +57,7 @@ public class MapCardFragment extends Fragment {
         posterUserName.setText(foodPost.owner.email);
 
 
-        if(!foodPost.owner_photo.contains("no-image")) Glide.with(view.getContext()).load("http://127.0.0.1:8000/media/" + foodPost.owner_photo).into(posterImageView);
+        if(!foodPost.owner.profile_photo.contains("no-image")) Glide.with(view.getContext()).load("http://127.0.0.1:8000/media/" + foodPost.owner.profile_photo).into(posterImageView);
 
         setFavourite();
         return view;

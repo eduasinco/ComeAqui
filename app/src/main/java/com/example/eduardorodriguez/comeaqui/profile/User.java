@@ -13,8 +13,6 @@ public class User implements Serializable {
     public String bio;
     public String phone_number;
     public String phone_code;
-    public String location;
-    public String deliver_radius;
     public String profile_photo;
     public String is_active;
     public String is_admin;
@@ -27,8 +25,6 @@ public class User implements Serializable {
         bio = jo.get("bio").getAsString();
         phone_number = jo.get("phone_number").getAsString();
         phone_code = jo.get("phone_code").getAsString();
-        location = jo.get("location").getAsString();
-        deliver_radius = jo.get("deliver_radius").getAsString();
         profile_photo = jo.get("profile_photo").getAsString();
         is_active = jo.get("is_active").getAsString();
         is_admin = jo.get("is_admin").getAsString();

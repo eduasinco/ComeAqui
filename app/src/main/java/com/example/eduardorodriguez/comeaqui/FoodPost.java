@@ -12,7 +12,6 @@ public class FoodPost implements Serializable {
     public String type;
     public String description;
     public String food_photo;
-    public String owner_photo;
     public String time;
     public float lat;
     public float lng;
@@ -25,7 +24,6 @@ public class FoodPost implements Serializable {
         type = jo.get("food_type").getAsString();
         description = jo.get("description").getAsString();
         food_photo = jo.get("food_photo").getAsString();
-        owner_photo = jo.get("poster_image").getAsString();
         time = jo.get("time").getAsString();
         lat = jo.get("lat").getAsFloat();
         lng = jo.get("lng").getAsFloat();

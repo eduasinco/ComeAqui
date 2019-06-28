@@ -44,7 +44,7 @@ public class EatFragment extends Fragment{
     MapView mMapView;
     static View rootView;
     private static GoogleMap googleMap;
-    public static HashMap<Integer, FoodPost> data;
+    public static HashMap<Integer, FoodPost> data = new HashMap<>();;
     int fabCount;
 
     ConstraintLayout mapPickerPanView;
@@ -91,9 +91,8 @@ public class EatFragment extends Fragment{
 
     void makeList(JsonArray jsonArray, boolean favourite){
         try {
-            data = new HashMap<>();
             for (JsonElement pa : jsonArray) {
-                JsonObject jo = pa.getAsJsonObject();
+                JsonObject jo = favourite ? pa.getAsJsonObject().get("post").getAsJsonObject() : pa.getAsJsonObject();
                 FoodPost fp = new FoodPost(jo);
                 fp.favourite = favourite;
                 data.put(fp.id, fp);
