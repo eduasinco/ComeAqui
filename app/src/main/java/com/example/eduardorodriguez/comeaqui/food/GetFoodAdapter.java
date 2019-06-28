@@ -72,7 +72,7 @@ public class GetFoodAdapter extends BaseAdapter {
                 Intent foodLook = new Intent(context, FoodLookActivity.class);
                 foodLook.putExtra("object", foodPost);
                 boolean delete = false;
-                if (foodPost.owner_id == MainActivity.user.id){
+                if (foodPost.owner.id == MainActivity.user.id){
                     delete = true;
                 }
                 foodLook.putExtra("delete", delete);

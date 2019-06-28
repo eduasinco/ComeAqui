@@ -1,10 +1,8 @@
 package com.example.eduardorodriguez.comeaqui.eat;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -12,9 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.FoodElementFragment;
-import com.example.eduardorodriguez.comeaqui.FoodLookActivity;
 import com.example.eduardorodriguez.comeaqui.FoodPost;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 
 public class MapCardFragment extends Fragment {
 
@@ -22,6 +20,10 @@ public class MapCardFragment extends Fragment {
     TextView posterUserName;
 
     ImageView posterImageView;
+    ImageView starView;
+
+    FoodPost foodPost;
+    boolean favourite;
 
     public MapCardFragment() {
         // Required empty public constructor
@@ -35,11 +37,13 @@ public class MapCardFragment extends Fragment {
 
         posterNameView = view.findViewById(R.id.poster_name);
         posterUserName = view.findViewById(R.id.poster_username);
+        starView = view.findViewById(R.id.star);
 
 
         posterImageView = view.findViewById(R.id.poster_image);
 
-        FoodPost foodPost = (FoodPost) getArguments().getSerializable("object");
+        foodPost = (FoodPost) getArguments().getSerializable("object");
+        favourite = getArguments().getBoolean("stared");
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("object", foodPost);
@@ -49,12 +53,29 @@ public class MapCardFragment extends Fragment {
                 .replace(R.id.container3, fragment)
                 .commit();
 
-        posterNameView.setText(foodPost.owner_first_name + " " + foodPost.owner_last_name);
-        posterUserName.setText(foodPost.owner_username);
+        posterNameView.setText(foodPost.owner.first_name + " " + foodPost.owner.last_name);
+        posterUserName.setText(foodPost.owner.email);
 
 
         if(!foodPost.owner_photo.contains("no-image")) Glide.with(view.getContext()).load("http://127.0.0.1:8000/media/" + foodPost.owner_photo).into(posterImageView);
 
+        setFavourite();
         return view;
     }
+
+    void setFavourite(){
+        starView.setOnClickListener(v -> {
+            favourite = !favourite;
+            starView.setImageResource(favourite ? R.drawable.star_fill: R.drawable.star);
+            if (favourite) {
+                PostAsyncTask createOrder = new PostAsyncTask("http://127.0.0.1:8000/favourites/");
+                createOrder.execute(
+                        new String[]{"food_post_id", "" + foodPost.id}
+                );
+            } else {
+                // delete
+            }
+        });
+    }
+
 }

@@ -11,17 +11,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.*;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.food.AddFoodActivity;
-import com.example.eduardorodriguez.comeaqui.profile.orders.OrderObject;
-import com.example.eduardorodriguez.comeaqui.profile.settings.PlacesAutocompleteFragment;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.google.android.gms.maps.*;
@@ -32,6 +28,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -47,7 +44,7 @@ public class EatFragment extends Fragment{
     MapView mMapView;
     static View rootView;
     private static GoogleMap googleMap;
-    public static ArrayList<FoodPost> data;
+    public static HashMap<Integer, FoodPost> data;
     int fabCount;
 
     ConstraintLayout mapPickerPanView;
@@ -63,18 +60,19 @@ public class EatFragment extends Fragment{
     LatLng latLng;
 
     void setMarkers(){
-        for (int i = 0; i < data.size(); i++){
-            float lat = data.get(i).lat;
-            float lng = data.get(i).lng;
+        for (int key : data.keySet()) {
+            FoodPost fp = data.get(key);
+            float lat = fp.lat;
+            float lng = fp.lng;
 
             Marker marker =  googleMap.addMarker(new MarkerOptions()
                     .position(new LatLng(lat, lng)));
-            marker.setTag(i);
+            marker.setTag(key);
 
             Drawable myIcon = rootView.getResources().getDrawable( R.drawable.map_food_icon);
             ColorFilter filter = new LightingColorFilter(
-                    ContextCompat.getColor(rootView.getContext(), R.color.colorPrimary),
-                    ContextCompat.getColor(rootView.getContext(), R.color.colorPrimary)
+                    ContextCompat.getColor(rootView.getContext(), fp.favourite ? R.color.favourite : R.color.colorPrimary),
+                    ContextCompat.getColor(rootView.getContext(), fp.favourite ? R.color.favourite : R.color.colorPrimary)
             );
             myIcon.setColorFilter(filter);
             marker.setIcon(getMarkerIconFromDrawable(myIcon));
@@ -91,12 +89,14 @@ public class EatFragment extends Fragment{
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-    void makeList(JsonArray jsonArray){
+    void makeList(JsonArray jsonArray, boolean favourite){
         try {
-            data = new ArrayList<>();
+            data = new HashMap<>();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
-                data.add(new FoodPost(jo));
+                FoodPost fp = new FoodPost(jo);
+                fp.favourite = favourite;
+                data.put(fp.id, fp);
             }
             setMarkers();
         } catch (Exception e){
@@ -170,8 +170,8 @@ public class EatFragment extends Fragment{
                 myFab.setVisibility(View.GONE);
                 cancelPostView.setVisibility(View.VISIBLE);
 
-                final int index = (int) (marker.getTag());
-                FoodPost foodPost = data.get(index);
+                final int key = (int) (marker.getTag());
+                FoodPost foodPost = data.get(key);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("object", foodPost);
                 MapCardFragment fragment = new MapCardFragment();
@@ -206,7 +206,16 @@ public class EatFragment extends Fragment{
         try {
             String response = getPostLocations.execute().get();
             if (response != null)
-                makeList(new JsonParser().parse(response).getAsJsonArray());
+                makeList(new JsonParser().parse(response).getAsJsonArray(), false);
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        GetAsyncTask getFavouritePosts = new GetAsyncTask("my_favourites/");
+        try {
+            String response = getFavouritePosts.execute().get();
+            if (response != null)
+                makeList(new JsonParser().parse(response).getAsJsonArray(), true);
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }

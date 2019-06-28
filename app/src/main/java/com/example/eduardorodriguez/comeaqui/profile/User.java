@@ -9,12 +9,11 @@ public class User implements Serializable {
     public String email;
     public String first_name;
     public String last_name;
+    public String username;
     public String bio;
     public String phone_number;
     public String phone_code;
     public String location;
-    public String lat;
-    public String lng;
     public String deliver_radius;
     public String profile_photo;
     public String is_active;
@@ -29,8 +28,6 @@ public class User implements Serializable {
         phone_number = jo.get("phone_number").getAsString();
         phone_code = jo.get("phone_code").getAsString();
         location = jo.get("location").getAsString();
-        lat = jo.get("lat").getAsString();
-        lng = jo.get("lng").getAsString();
         deliver_radius = jo.get("deliver_radius").getAsString();
         profile_photo = jo.get("profile_photo").getAsString();
         is_active = jo.get("is_active").getAsString();

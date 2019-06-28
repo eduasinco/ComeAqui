@@ -1,15 +1,12 @@
 package com.example.eduardorodriguez.comeaqui;
 
+import com.example.eduardorodriguez.comeaqui.profile.User;
 import com.google.gson.JsonObject;
 import java.io.Serializable;
 
 public class FoodPost implements Serializable {
     public int id;
-    public int owner_id;
-    public String owner_name;
-    public String owner_username;
-    public String owner_first_name;
-    public String owner_last_name;
+    public User owner;
     public String plate_name;
     public String price;
     public String type;
@@ -19,12 +16,10 @@ public class FoodPost implements Serializable {
     public String time;
     public float lat;
     public float lng;
+    public boolean favourite = false;
+
     public FoodPost(JsonObject jo){
         id = jo.get("id").getAsInt();
-        owner_id = jo.get("owner_id").getAsInt();
-        owner_first_name = jo.get("owner_first_name").getAsString();
-        owner_last_name = jo.get("owner_last_name").getAsString();
-        owner_username = jo.get("owner_username").getAsString();
         plate_name = jo.get("plate_name").getAsString();
         price = jo.get("price").getAsString();
         type = jo.get("food_type").getAsString();
@@ -34,5 +29,6 @@ public class FoodPost implements Serializable {
         time = jo.get("time").getAsString();
         lat = jo.get("lat").getAsFloat();
         lng = jo.get("lng").getAsFloat();
+        owner = new User(jo.get("owner").getAsJsonObject());
     }
 }

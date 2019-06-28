@@ -8,4 +8,5 @@
     <color name="mapPickerFill">#E6FFFFFF</color>
     <color name="mapPicker">#9539ff</color>
     <color name="colorPrimaryLight">#DAC3FF</color>
+    <color name="favourite">#FFBF00</color>
 </resources>
