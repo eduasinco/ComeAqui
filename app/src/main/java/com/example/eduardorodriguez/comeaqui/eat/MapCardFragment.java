@@ -43,8 +43,6 @@ public class MapCardFragment extends Fragment {
         posterImageView = view.findViewById(R.id.poster_image);
 
         foodPost = (FoodPost) getArguments().getSerializable("object");
-        favourite = getArguments().getBoolean("stared");
-
         Bundle bundle = new Bundle();
         bundle.putSerializable("object", foodPost);
         FoodElementFragment fragment = new FoodElementFragment();
@@ -55,7 +53,8 @@ public class MapCardFragment extends Fragment {
 
         posterNameView.setText(foodPost.owner.first_name + " " + foodPost.owner.last_name);
         posterUserName.setText(foodPost.owner.email);
-
+        starView.setImageResource(foodPost.favourite ? R.drawable.star_fill: R.drawable.star);
+        EatFragment.markerPutColor(EatFragment.markers.get(foodPost.id), !foodPost.favourite ? R.color.grey : R.color.favourite);
 
         if(!foodPost.owner.profile_photo.contains("no-image")) Glide.with(view.getContext()).load("http://127.0.0.1:8000/media/" + foodPost.owner.profile_photo).into(posterImageView);
 
@@ -65,15 +64,16 @@ public class MapCardFragment extends Fragment {
 
     void setFavourite(){
         starView.setOnClickListener(v -> {
-            favourite = !favourite;
-            starView.setImageResource(favourite ? R.drawable.star_fill: R.drawable.star);
-            if (favourite) {
+            foodPost.favourite = !foodPost.favourite;
+            starView.setImageResource(foodPost.favourite ? R.drawable.star_fill: R.drawable.star);
+            if (foodPost.favourite) {
+                EatFragment.markerPutColor(EatFragment.markers.get(foodPost.id), R.color.favourite);
                 PostAsyncTask createOrder = new PostAsyncTask("http://127.0.0.1:8000/favourites/");
                 createOrder.execute(
                         new String[]{"food_post_id", "" + foodPost.id}
                 );
             } else {
-                // delete
+                EatFragment.markerPutColor(EatFragment.markers.get(foodPost.id), !foodPost.favourite ? R.color.grey : R.color.favourite);
             }
         });
     }

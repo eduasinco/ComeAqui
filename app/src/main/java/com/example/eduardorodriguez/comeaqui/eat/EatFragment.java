@@ -27,7 +27,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -56,7 +55,7 @@ public class EatFragment extends Fragment{
     FloatingActionButton myFab;
     ImageView cancelPostView;
 
-    ArrayList<Marker> markers = new ArrayList<>();
+    public static HashMap<Integer, Marker> markers = new HashMap<>();
     LatLng latLng;
 
     void setMarkers(){
@@ -68,15 +67,8 @@ public class EatFragment extends Fragment{
             Marker marker =  googleMap.addMarker(new MarkerOptions()
                     .position(new LatLng(lat, lng)));
             marker.setTag(key);
-
-            Drawable myIcon = rootView.getResources().getDrawable( R.drawable.map_food_icon);
-            ColorFilter filter = new LightingColorFilter(
-                    ContextCompat.getColor(rootView.getContext(), fp.favourite ? R.color.favourite : R.color.colorPrimary),
-                    ContextCompat.getColor(rootView.getContext(), fp.favourite ? R.color.favourite : R.color.colorPrimary)
-            );
-            myIcon.setColorFilter(filter);
-            marker.setIcon(getMarkerIconFromDrawable(myIcon));
-            markers.add(marker);
+            markerPutColor(marker, fp.favourite? R.color.favourite : R.color.colorPrimary);
+            markers.put(fp.id, marker);
         }
     }
 
@@ -253,7 +245,7 @@ public class EatFragment extends Fragment{
         myFab.setOnClickListener(v -> {
             apearMapPicker(true, 40);
             if (fabCount == 0){
-                makersVisibility(false);
+                markersVisibility(false);
                 fabCount = 1;
                 cancelPostView.setVisibility(View.VISIBLE);
                 switchFabImage(true);
@@ -273,7 +265,7 @@ public class EatFragment extends Fragment{
     @SuppressLint("RestrictedApi")
     void setCancelPost(){
         cancelPostView.setOnClickListener(v -> {
-            makersVisibility(true);
+            markersVisibility(true);
             switchFabImage(false);
             fabCount = 0;
             cancelPostView.setVisibility(View.GONE);
@@ -316,10 +308,20 @@ public class EatFragment extends Fragment{
         shadow.animate().translationX(move * 1 / 3).setDuration(secs);
     }
 
-    void makersVisibility(boolean visible){
-        for (Marker marker: markers){
+    void markersVisibility(boolean visible){
+        for (Marker marker: markers.values()){
             marker.setVisible(visible);
         }
+    }
+
+    static void markerPutColor(Marker marker, int color){
+        Drawable myIcon = rootView.getResources().getDrawable( R.drawable.map_food_icon);
+        ColorFilter filter = new LightingColorFilter(
+                ContextCompat.getColor(rootView.getContext(), color),
+                ContextCompat.getColor(rootView.getContext(), color)
+        );
+        myIcon.setColorFilter(filter);
+        marker.setIcon(getMarkerIconFromDrawable(myIcon));
     }
 
     @Override
