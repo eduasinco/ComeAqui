@@ -12,11 +12,9 @@ import android.view.*;
 import android.widget.*;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
-import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.profile.messages.MessagesFragment;
-import com.example.eduardorodriguez.comeaqui.server.Server;
-import com.google.gson.JsonArray;
+import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -86,7 +84,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        Server process = new Server("GET", getResources().getString(R.string.server) + "my_profile/");
+        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "my_profile/");
 
         try {
             String response = process.execute().get();

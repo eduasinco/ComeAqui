@@ -19,12 +19,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.eduardorodriguez.comeaqui.profile.settings.PlacesAutocompleteFragment;
-import com.example.eduardorodriguez.comeaqui.server.GoogleAPIAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -86,7 +84,7 @@ public class AutocompleteLocationFragment extends Fragment {
             public void run() {
                 if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
                     String uri = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + addressView.getText().toString() +
-                    "&types=geocode&language=en&" + getResources().getString(R.string.google_key);
+                    "&types=geocode&language=en&key=" + getResources().getString(R.string.google_key);
                     Server gAPI = new Server("GET", uri);
                     try {
                         String jsonString = gAPI.execute().get(15, TimeUnit.SECONDS);
@@ -133,7 +131,7 @@ public class AutocompleteLocationFragment extends Fragment {
                     // Got last known location. In some rare situations this can be null.
                     if (location != null) {
                         String locationLatAndLng = location.getLatitude() + "," + location.getLongitude();
-                        String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + locationLatAndLng + "&" + getResources().getString(R.string.google_key);
+                        String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + locationLatAndLng + "&key=" + getResources().getString(R.string.google_key);
                         Server gAPI = new Server("GET", uri);
                         try {
                             String jsonString = gAPI.execute().get(15, TimeUnit.SECONDS);

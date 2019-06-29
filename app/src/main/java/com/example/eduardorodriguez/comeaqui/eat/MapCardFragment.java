@@ -12,9 +12,8 @@ import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.FoodElementFragment;
 import com.example.eduardorodriguez.comeaqui.FoodPost;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.server.DeleteAsyncTask;
-import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.Server;
+import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 
 import java.util.concurrent.ExecutionException;
 

@@ -2,17 +2,14 @@ package com.example.eduardorodriguez.comeaqui.profile.orders;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
-import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.server.Server;
+import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -83,7 +80,7 @@ public class OrderLookActivity extends AppCompatActivity {
         Bundle b = intent.getExtras();
         if (b != null){
             OrderObject orderObject = (OrderObject) b.get("object");
-            Server getOrders = new Server("GET", getResources().getString(R.string.server) + "order_detail/" + orderObject.id + "/");
+            GetAsyncTask getOrders = new GetAsyncTask("GET", getResources().getString(R.string.server) + "order_detail/" + orderObject.id + "/");
             try {
                 String response = getOrders.execute().get();
                 if (response != null)

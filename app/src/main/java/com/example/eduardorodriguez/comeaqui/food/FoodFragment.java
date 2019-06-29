@@ -10,9 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import com.example.eduardorodriguez.comeaqui.FoodPost;
-import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.server.Server;
+import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.gson.*;
 
 import java.util.ArrayList;
@@ -87,7 +86,7 @@ public class FoodFragment extends Fragment {
     }
 
     void getDataAndSet(){
-        Server process = new Server("GET", getResources().getString(R.string.server) + "foods/");
+        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "foods/");
 
         try {
             String response = process.execute().get();

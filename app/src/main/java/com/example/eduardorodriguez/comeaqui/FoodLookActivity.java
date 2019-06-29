@@ -5,14 +5,13 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.profile.orders.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.profile.orders.OrderObject;
-import com.example.eduardorodriguez.comeaqui.server.DeleteAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -88,7 +87,7 @@ public class FoodLookActivity extends AppCompatActivity {
                 placeOrderButton.setText("Delete Post");
                 placeOrderButton.setBackgroundColor(Color.parseColor("#FFFF0E01"));
                 placeOrderButton.setOnClickListener(v -> {
-                    DeleteAsyncTask deleteFoodPost = new DeleteAsyncTask("http://127.0.0.1:8000/foods/" + getFoodObject.id + "/");
+                    Server deleteFoodPost = new Server("DELETE", "http://127.0.0.1:8000/foods/" + getFoodObject.id + "/");
                     deleteFoodPost.execute();
                     Intent k = new Intent(FoodLookActivity.this, MainActivity.class);
                     k.putExtra("profile", true);

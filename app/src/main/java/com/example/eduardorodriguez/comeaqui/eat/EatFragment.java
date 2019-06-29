@@ -18,8 +18,8 @@ import android.widget.TextView;
 import com.example.eduardorodriguez.comeaqui.*;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.food.AddFoodActivity;
-import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.Server;
+import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
 import com.google.gson.JsonArray;
@@ -194,7 +194,7 @@ public class EatFragment extends Fragment{
     }
 
     void setMapMarkers(){
-        Server getPostLocations = new Server("GET", getResources().getString(R.string.server) + "foods/");
+        GetAsyncTask getPostLocations = new GetAsyncTask("GET", getResources().getString(R.string.server) + "foods/");
         try {
             String response = getPostLocations.execute().get();
             if (response != null)
@@ -203,7 +203,7 @@ public class EatFragment extends Fragment{
             e.printStackTrace();
         }
 
-        Server getFavouritePosts = new Server("GET", getResources().getString(R.string.server) + "my_profile/");
+        GetAsyncTask getFavouritePosts = new GetAsyncTask("GET", getResources().getString(R.string.server) + "my_favourites/");
 
         try {
             String response = getFavouritePosts.execute().get();
@@ -223,7 +223,7 @@ public class EatFragment extends Fragment{
             moveMapPicker(-40, 200);
             latLng = googleMap.getCameraPosition().target;
             String latLngString = latLng.latitude + "," + latLng.longitude;
-            String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLngString + "&" + getResources().getString(R.string.google_key);
+            String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLngString + "&key=" + getResources().getString(R.string.google_key);
             Server gAPI = new Server("GET", uri);
             try {
                 String jsonString = gAPI.execute().get(15, TimeUnit.SECONDS);

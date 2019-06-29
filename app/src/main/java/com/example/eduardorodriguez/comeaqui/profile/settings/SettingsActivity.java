@@ -4,20 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 
 import android.widget.*;
 import com.example.eduardorodriguez.comeaqui.*;
 import com.example.eduardorodriguez.comeaqui.profile.EditAccountActivity;
-import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
-import com.example.eduardorodriguez.comeaqui.server.GoogleAPIAsyncTask;
-import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.Server;
-import com.google.gson.JsonArray;
+import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -26,7 +21,6 @@ import java.util.concurrent.ExecutionException;
 public class SettingsActivity extends AppCompatActivity {
 
     private static Button saveButtonView;
-    private static SeekBar deliverRadiousSeekbarView;
     private static TextView signOutView;
     private static Button editAccountView;
     private static TextView metersTextView;
@@ -48,15 +42,12 @@ public class SettingsActivity extends AppCompatActivity {
         lastName = jo.get("last_name").getAsString();
         phoneCode = jo.get("phone_code").getAsString();
         phoneNumber = jo.get("phone_number").getAsString();
-        location = jo.get("location").getAsString();
         profilePhoto = jo.get("profile_photo").getAsString();
-        delivery_radious = jo.get("deliver_radius").getAsInt();
 
-        deliverRadiousSeekbarView.setProgress(delivery_radious);
     }
 
-    public static void getData(){
-        Server profileInfo = new Server("GET",  "my_profile/");
+    void getData(){
+        GetAsyncTask profileInfo = new GetAsyncTask("GET",  getResources().getString(R.string.server) + "my_profile/");
 
         try {
             String response = profileInfo.execute().get();
@@ -74,7 +65,6 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         saveButtonView = findViewById(R.id.saveButton);
-        deliverRadiousSeekbarView = findViewById(R.id.deliverRadiousSeekbar);
         signOutView = findViewById(R.id.signOut);
         editAccountView = findViewById(R.id.editAccount);
         metersTextView = findViewById(R.id.metersText);
@@ -87,32 +77,8 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         editAccountView();
-        setSeekBar();
         getData();
         saveSettings();
-    }
-
-    void setSeekBar(){
-        deliverRadiousSeekbarView.setProgress(delivery_radious);
-        deliverRadiousSeekbarView.setMax(1000);
-        deliverRadiousSeekbarView.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
-                delivery_radious = progress;
-                metersTextView.setText(delivery_radious + "m");
-            }
-        });
     }
 
     void editAccountView(){
@@ -148,7 +114,7 @@ public class SettingsActivity extends AppCompatActivity {
                 } else {
                     Server gAPI2 = new Server("GET", "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" +
                             AutocompleteLocationFragment.addressView.getText().toString() +
-                            "&" + getResources().getString(R.string.google_key));
+                            "&key=" + getResources().getString(R.string.google_key));
                     gAPI2.execute();
                 }
                 Intent k = new Intent(SettingsActivity.this, MainActivity.class);

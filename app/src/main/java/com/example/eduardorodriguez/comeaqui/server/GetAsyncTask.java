@@ -1,45 +1,45 @@
 package com.example.eduardorodriguez.comeaqui.server;
 
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import com.example.eduardorodriguez.comeaqui.mock.GetMock;
 import com.example.eduardorodriguez.comeaqui.SplashActivity;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.*;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
-public class GetAsyncTask extends AsyncTask<String, Void, String>
+public class GetAsyncTask extends AsyncTask<String[], Void, String>
 {
-    String uri;
 
-    public GetAsyncTask(String uri){
-        this.uri = "http://127.0.0.1:8000/";
-        this.uri += uri;
+
+    private String uri;
+    public String method;
+
+    public GetAsyncTask(String method, String uri){
+        this.uri = uri;
+        this.method = method;
     }
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
-    protected String doInBackground(String... params)
-    {
-        if (SplashActivity.mock){
-            return GetMock.get(uri);
-}
 
+    @Override
+    protected String doInBackground(String[]... params)
+    {
         StringBuilder builder = new StringBuilder();
         HttpClient client = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet(uri);
 
-// Add authorization header
+
+        HttpGet httpGet = new HttpGet(this.uri);
         httpGet.addHeader("Authorization", "Basic " + SplashActivity.getCredemtials());
-
-// Set up the header types needed to properly transfer JSON
         httpGet.setHeader("Content-Type", "application/json");
         try {
             HttpResponse response = client.execute(httpGet);
@@ -53,7 +53,8 @@ public class GetAsyncTask extends AsyncTask<String, Void, String>
                 while ((line = reader.readLine()) != null) {
                     builder.append(line);
                 }
-                return builder.toString();
+                String resp = builder.toString();
+                return resp;
             } else {
                 return null;
             }
@@ -64,8 +65,7 @@ public class GetAsyncTask extends AsyncTask<String, Void, String>
     }
 
     @Override
-    protected void onPostExecute(String response)
-    {
-        if(response != null) {}
+    protected void onPostExecute(String response) {
+        if(response != null){ }
     }
 }
