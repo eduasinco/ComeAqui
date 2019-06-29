@@ -3,7 +3,6 @@ package com.example.eduardorodriguez.comeaqui;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -13,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.FrameLayout;
 import com.example.eduardorodriguez.comeaqui.food.FoodFragment;
 import com.example.eduardorodriguez.comeaqui.eat.EatFragment;
@@ -72,33 +70,30 @@ public class MainActivity extends AppCompatActivity {
         if(b == null){
             setFragment(mapFragment);
             toolbar.setTitle(null);
-            menu.findItem(R.id.nav_eat).setIcon(R.drawable.eatfill);
+            menu.findItem(R.id.nav_eat).setIcon(R.drawable.food);
         }
-        mMainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                Menu menu = mMainNav.getMenu();
-                menu.findItem(R.id.nav_food).setIcon(R.drawable.food);
-                menu.findItem(R.id.nav_eat).setIcon(R.drawable.eat);
-                menu.findItem(R.id.nav_profile).setIcon(R.drawable.profile);
-                switch (menuItem.getItemId()){
-                    case R.id.nav_eat:
-                        setFragment(mapFragment);
-                        menuItem.setIcon(R.drawable.eatfill);
-                        return true;
-                    case R.id.nav_food:
-                        setFragment(getFoodFragment);
-                        menuItem.setIcon(R.drawable.foodfill);
-                        return true;
-                    case R.id.nav_profile:
-                        setFragment(profileFragment);
-                        menuItem.setIcon(R.drawable.profilefill);
-                        return true;
-                        default:
-                            return false;
-                }
-
+        mMainNav.setOnNavigationItemSelectedListener(menuItem -> {
+            Menu menu1 = mMainNav.getMenu();
+            menu1.findItem(R.id.nav_orders).setIcon(R.drawable.eat);
+            menu1.findItem(R.id.nav_eat).setIcon(R.drawable.food);
+            menu1.findItem(R.id.nav_profile).setIcon(R.drawable.profile);
+            switch (menuItem.getItemId()){
+                case R.id.nav_eat:
+                    setFragment(mapFragment);
+                    menuItem.setIcon(R.drawable.foodfill);
+                    return true;
+                case R.id.nav_orders:
+                    setFragment(getFoodFragment);
+                    menuItem.setIcon(R.drawable.eatfill);
+                    return true;
+                case R.id.nav_profile:
+                    setFragment(profileFragment);
+                    menuItem.setIcon(R.drawable.profilefill);
+                    return true;
+                    default:
+                        return false;
             }
+
         });
         initializeUser();
     }

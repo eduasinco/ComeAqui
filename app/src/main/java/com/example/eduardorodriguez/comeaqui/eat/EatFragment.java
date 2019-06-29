@@ -90,7 +90,6 @@ public class EatFragment extends Fragment{
                 fp.favouriteId = pa.getAsJsonObject().get("id").getAsInt();
                 data.put(fp.id, fp);
             }
-            setMarkers();
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -212,6 +211,7 @@ public class EatFragment extends Fragment{
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
+        setMarkers();
     }
 
     void setLocationPicker(){
