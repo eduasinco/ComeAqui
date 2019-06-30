@@ -142,7 +142,7 @@ public class AddFoodActivity extends AppCompatActivity {
 
     void setSubmit(){
         submit.setOnClickListener(v -> {
-            PostAsyncTask post = new PostAsyncTask("http://127.0.0.1:8000/foods/");
+            PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/foods/");
             post.bitmap = imageBitmap;
             try {
                 String response = post.execute(

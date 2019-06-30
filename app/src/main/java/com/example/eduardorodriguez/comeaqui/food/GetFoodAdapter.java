@@ -54,7 +54,7 @@ public class GetFoodAdapter extends BaseAdapter {
         descriptionView.setText(foodPost.description);
 
         final StringBuilder path = new StringBuilder();
-        path.append("http://127.0.0.1:8000");
+        path.append(context.getResources().getString(R.string.server) );
         path.append(foodPost.food_photo);
 
         if(SplashActivity.mock){

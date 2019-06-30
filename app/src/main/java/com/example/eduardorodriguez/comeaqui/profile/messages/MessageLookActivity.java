@@ -47,7 +47,7 @@ public class MessageLookActivity extends AppCompatActivity {
             final String poster = message.poster;
 
 
-            String url = "http://127.0.0.1:8000/media/";
+            String url = getResources().getString(R.string.server) + "/media/";
             Glide.with(this).load(url + postFoodPhoto).into(postFoodPhotoView);
             Glide.with(this).load(url + senderImage).into(senderImageView);
             senderNameView.setText(firstName + " " + lastName);
@@ -61,7 +61,7 @@ public class MessageLookActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     confrimButton.setVisibility(View.GONE);
-                    PutAsyncTask createOrder = new PutAsyncTask("http://127.0.0.1:8000/order_detail/" + id + "/");
+                    PutAsyncTask createOrder = new PutAsyncTask(getResources().getString(R.string.server) + "/order_detail/" + id + "/");
                     createOrder.execute(
                             new String[]{"order_status", "CONFIRMED"},
                             new String[]{"post", post},
@@ -72,7 +72,7 @@ public class MessageLookActivity extends AppCompatActivity {
             cancelButtonView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PutAsyncTask createOrder = new PutAsyncTask("http://127.0.0.1:8000/order_detail/" + id + "/");
+                    PutAsyncTask createOrder = new PutAsyncTask(getResources().getString(R.string.server) + "/order_detail/" + id + "/");
                     createOrder.execute(
                             new String[]{"order_status", "CANCELED"},
                             new String[]{"post", post},

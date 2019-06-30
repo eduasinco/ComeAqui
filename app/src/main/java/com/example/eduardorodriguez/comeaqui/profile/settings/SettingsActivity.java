@@ -47,7 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     void getData(){
-        GetAsyncTask profileInfo = new GetAsyncTask("GET",  getResources().getString(R.string.server) + "my_profile/");
+        GetAsyncTask profileInfo = new GetAsyncTask("GET",  getResources().getString(R.string.server) + "/my_profile/");
 
         try {
             String response = profileInfo.execute().get();

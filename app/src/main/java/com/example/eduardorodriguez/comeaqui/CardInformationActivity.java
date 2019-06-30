@@ -40,7 +40,7 @@ public class CardInformationActivity extends AppCompatActivity {
         saveCardButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PostAsyncTask post = new PostAsyncTask("http://127.0.0.1:8000/card/");
+                PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/card/");
                 try {
                     String response = post.execute(
                             new String[]{"card_number", creditCardView.getText().toString(), ""},

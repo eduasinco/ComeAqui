@@ -98,7 +98,7 @@ public class MessagesFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            GetAsyncTask getMessages = new GetAsyncTask("GET", getResources().getString(R.string.server) + "my_messages/");
+            GetAsyncTask getMessages = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_messages/");
 
             try {
                 String response = getMessages.execute().get();

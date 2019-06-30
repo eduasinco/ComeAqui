@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ImageView;
+import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.SplashActivity;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -31,7 +32,7 @@ public class PatchAsyncTask extends AsyncTask<String, Void, JSONObject> {
     protected JSONObject doInBackground(String... params)
     {
 
-        HttpPatch httpPatch = new HttpPatch("http://127.0.0.1:8000/edit_profile/");
+        HttpPatch httpPatch = new HttpPatch( "http://192.168.1.147:8000/edit_profile/");
         httpPatch.addHeader("Authorization", "Basic " + SplashActivity.getCredemtials());
 
         HttpClient httpclient = new DefaultHttpClient();

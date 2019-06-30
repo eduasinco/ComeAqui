@@ -100,7 +100,7 @@ public class UserPostFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "my_foods/");
+            GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_foods/");
 
             try {
                 String response = process.execute().get();

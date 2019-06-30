@@ -193,7 +193,7 @@ public class EatFragment extends Fragment{
     }
 
     void setMapMarkers(){
-        GetAsyncTask getPostLocations = new GetAsyncTask("GET", getResources().getString(R.string.server) + "foods/");
+        GetAsyncTask getPostLocations = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/foods/");
         try {
             String response = getPostLocations.execute().get();
             if (response != null)
@@ -202,7 +202,7 @@ public class EatFragment extends Fragment{
             e.printStackTrace();
         }
 
-        GetAsyncTask getFavouritePosts = new GetAsyncTask("GET", getResources().getString(R.string.server) + "my_favourites/");
+        GetAsyncTask getFavouritePosts = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_favourites/");
 
         try {
             String response = getFavouritePosts.execute().get();

@@ -49,7 +49,7 @@ public class OrderLookActivity extends AppCompatActivity {
         String url = "http://maps.google.com/maps/api/staticmap?center=" + order.postLat + "," + order.postLng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=AIzaSyDqkl1DgwHu03SmMoqVey3sgR62GnJ-VY4";
         Glide.with(this).load(url).into(staticMapView);
 
-        String initialUri = "http://127.0.0.1:8000/media/";
+        String initialUri = getResources().getString(R.string.server) + "/media/";
         if(!order.posterImage.contains("no-image")) {
             Glide.with(context).load(initialUri + order.posterImage).into(posterImageView);
         }
@@ -80,7 +80,7 @@ public class OrderLookActivity extends AppCompatActivity {
         Bundle b = intent.getExtras();
         if (b != null){
             OrderObject orderObject = (OrderObject) b.get("object");
-            GetAsyncTask getOrders = new GetAsyncTask("GET", getResources().getString(R.string.server) + "order_detail/" + orderObject.id + "/");
+            GetAsyncTask getOrders = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/order_detail/" + orderObject.id + "/");
             try {
                 String response = getOrders.execute().get();
                 if (response != null)

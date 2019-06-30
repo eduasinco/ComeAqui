@@ -316,7 +316,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (SplashActivity.mock) return true;
 
             HttpClient client = new DefaultHttpClient();
-            HttpGet httpGet = new HttpGet("http://127.0.0.1:8000/login/");
+            HttpGet httpGet = new HttpGet(getResources().getString(R.string.server) + "/login/");
 
             String cred = mEmail + ":" + mPassword;
             httpGet.addHeader("Authorization", "Basic " + Base64.encodeToString(cred.getBytes(), Base64.NO_WRAP));

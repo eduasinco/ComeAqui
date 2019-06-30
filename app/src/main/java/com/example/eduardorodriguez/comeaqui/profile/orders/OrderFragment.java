@@ -98,7 +98,7 @@ public class OrderFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            GetAsyncTask getOrders = new GetAsyncTask("GET", getResources().getString(R.string.server) + "my_orders/");
+            GetAsyncTask getOrders = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_orders/");
 
             try {
                 String response = getOrders.execute().get();

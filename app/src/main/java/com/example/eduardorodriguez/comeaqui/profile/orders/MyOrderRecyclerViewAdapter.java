@@ -67,7 +67,7 @@ public class MyOrderRecyclerViewAdapter extends RecyclerView.Adapter<MyOrderRecy
 
         }
         holder.foodNameView.setText(mValues.get(position).postPlateName);
-        Glide.with(holder.mView.getContext()).load("http://127.0.0.1:8000/media/" + mValues.get(position).posterImage).into(holder.orderImageView);
+        Glide.with(holder.mView.getContext()).load(holder.mIdView.getContext().getResources().getString(R.string.server) + "/media/" + mValues.get(position).posterImage).into(holder.orderImageView);
 
         holder.listItemView.setOnClickListener(new View.OnClickListener() {
             @Override

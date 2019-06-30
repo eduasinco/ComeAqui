@@ -52,7 +52,7 @@ public class MyMessagesRecyclerViewAdapter extends RecyclerView.Adapter<MyMessag
         holder.senderEmailView.setText(mValues.get(position).senderEmail);
         holder.creationDateView.setText(mValues.get(position).creationDate.substring(0, 10) + " " + mValues.get(position).creationDate.substring(11, 16));
 
-        Glide.with(holder.mView.getContext()).load("http://127.0.0.1:8000/media/" + mValues.get(position).senderImage).into(holder.senderImageView);
+        Glide.with(holder.mView.getContext()).load(holder.mView.getContext().getResources().getString(R.string.server) + "/media/" + mValues.get(position).senderImage).into(holder.senderImageView);
         holder.messageWholeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

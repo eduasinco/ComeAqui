@@ -84,7 +84,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "my_profile/");
+        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_profile/");
 
         try {
             String response = process.execute().get();

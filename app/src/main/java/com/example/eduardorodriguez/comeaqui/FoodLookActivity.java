@@ -55,7 +55,7 @@ public class FoodLookActivity extends AppCompatActivity {
             plateNameView.setText(getFoodObject.plate_name);
             descriptionView.setText(getFoodObject.description);
             final StringBuilder path = new StringBuilder();
-            path.append("http://127.0.0.1:8000");
+            path.append(getResources().getString(R.string.server));
             path.append(getFoodObject.food_photo);
 
             Glide.with(this).load(path.toString()).into(image);
@@ -87,7 +87,7 @@ public class FoodLookActivity extends AppCompatActivity {
                 placeOrderButton.setText("Delete Post");
                 placeOrderButton.setBackgroundColor(Color.parseColor("#FFFF0E01"));
                 placeOrderButton.setOnClickListener(v -> {
-                    Server deleteFoodPost = new Server("DELETE", "http://127.0.0.1:8000/foods/" + getFoodObject.id + "/");
+                    Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/foods/" + getFoodObject.id + "/");
                     deleteFoodPost.execute();
                     Intent k = new Intent(FoodLookActivity.this, MainActivity.class);
                     k.putExtra("profile", true);
@@ -95,11 +95,11 @@ public class FoodLookActivity extends AppCompatActivity {
                 });
             }else{
                 placeOrderButton.setOnClickListener(v -> {
-                    PostAsyncTask emitMessage = new PostAsyncTask("http://127.0.0.1:8000/send_message/");
+                    PostAsyncTask emitMessage = new PostAsyncTask(getResources().getString(R.string.server) + "/send_message/");
                     emitMessage.execute(
                             new String[]{"food_post_id", "" + getFoodObject.id}
                     );
-                    PostAsyncTask createOrder = new PostAsyncTask("http://127.0.0.1:8000/create_order/");
+                    PostAsyncTask createOrder = new PostAsyncTask(getResources().getString(R.string.server) + "/create_order/");
                     try {
                         String response = createOrder.execute(
                                 new String[]{"food_post_id", "" + getFoodObject.id}

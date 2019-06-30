@@ -54,7 +54,7 @@ public class FoodElementFragment extends Fragment {
         postTime.setText(foodPost.time);
         posterDescriptionView.setText(foodPost.description);
 
-        if(!foodPost.food_photo.contains("no-image")) Glide.with(view.getContext()).load(foodPost.favourite ? foodPost.food_photo: "http://127.0.0.1:8000" + foodPost.food_photo).into(postImageView);
+        if(!foodPost.food_photo.contains("no-image")) Glide.with(view.getContext()).load(foodPost.favourite ? foodPost.food_photo: getResources().getString(R.string.server) +  foodPost.food_photo).into(postImageView);
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("type", foodPost.type);

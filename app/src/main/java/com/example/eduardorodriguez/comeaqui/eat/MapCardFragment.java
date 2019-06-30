@@ -62,7 +62,7 @@ public class MapCardFragment extends Fragment {
         starView.setImageResource(foodPost.favourite ? R.drawable.star_fill: R.drawable.star);
         EatFragment.markerPutColor(EatFragment.markers.get(foodPost.id), !foodPost.favourite ? R.color.grey : R.color.favourite);
 
-        if(!foodPost.owner.profile_photo.contains("no-image")) Glide.with(view.getContext()).load(foodPost.favourite ? foodPost.owner.profile_photo : "http://127.0.0.1:8000" + foodPost.owner.profile_photo).into(posterImageView);
+        if(!foodPost.owner.profile_photo.contains("no-image")) Glide.with(view.getContext()).load(foodPost.favourite ? foodPost.owner.profile_photo : getResources().getString(R.string.server) + foodPost.owner.profile_photo).into(posterImageView);
 
         setFavourite();
         return view;
@@ -74,7 +74,7 @@ public class MapCardFragment extends Fragment {
             starView.setImageResource(foodPost.favourite ? R.drawable.star_fill: R.drawable.star);
             if (foodPost.favourite) {
                 EatFragment.markerPutColor(EatFragment.markers.get(foodPost.id), R.color.favourite);
-                PostAsyncTask createOrder = new PostAsyncTask("http://127.0.0.1:8000/favourites/");
+                PostAsyncTask createOrder = new PostAsyncTask(getResources().getString(R.string.server) + "/favourites/");
                 try {
                     favouriteId = Integer.parseInt(createOrder.execute(new String[]{"food_post_id", "" + foodPost.id}).get());
                 } catch (ExecutionException | InterruptedException e) {

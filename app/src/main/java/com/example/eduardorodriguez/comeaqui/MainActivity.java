@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeUser(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "my_profile/");
+        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_profile/");
         try {
             String response = process.execute().get();
             if (response != null)

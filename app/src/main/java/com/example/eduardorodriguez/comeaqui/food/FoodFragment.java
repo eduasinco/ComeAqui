@@ -86,7 +86,7 @@ public class FoodFragment extends Fragment {
     }
 
     void getDataAndSet(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "foods/");
+        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/foods/");
 
         try {
             String response = process.execute().get();
