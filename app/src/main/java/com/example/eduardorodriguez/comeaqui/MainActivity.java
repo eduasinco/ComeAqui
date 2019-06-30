@@ -70,21 +70,26 @@ public class MainActivity extends AppCompatActivity {
         if(b == null){
             setFragment(mapFragment);
             toolbar.setTitle(null);
-            menu.findItem(R.id.nav_eat).setIcon(R.drawable.food);
+            menu.findItem(R.id.nav_map).setIcon(R.drawable.food);
         }
         mMainNav.setOnNavigationItemSelectedListener(menuItem -> {
             Menu menu1 = mMainNav.getMenu();
-            menu1.findItem(R.id.nav_orders).setIcon(R.drawable.eat);
-            menu1.findItem(R.id.nav_eat).setIcon(R.drawable.food);
+            menu1.findItem(R.id.nav_map).setIcon(R.drawable.food);
+            menu1.findItem(R.id.nav_notifications).setIcon(R.drawable.notification);
+            menu1.findItem(R.id.nav_orders).setIcon(R.drawable.order);
             menu1.findItem(R.id.nav_profile).setIcon(R.drawable.profile);
             switch (menuItem.getItemId()){
-                case R.id.nav_eat:
+                case R.id.nav_map:
                     setFragment(mapFragment);
                     menuItem.setIcon(R.drawable.foodfill);
                     return true;
+                case R.id.nav_notifications:
+                    setFragment(getFoodFragment);
+                    menuItem.setIcon(R.drawable.notificationfill);
+                    return true;
                 case R.id.nav_orders:
                     setFragment(getFoodFragment);
-                    menuItem.setIcon(R.drawable.eatfill);
+                    menuItem.setIcon(R.drawable.orderfill);
                     return true;
                 case R.id.nav_profile:
                     setFragment(profileFragment);

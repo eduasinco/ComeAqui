@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Eat" android:icon="@drawable/food" android:id="@+id/nav_eat"/>
-    <item android:title="Food" android:icon="@drawable/eat" android:id="@+id/nav_orders"/>
-    <item android:title="Food" android:icon="@drawable/eat" android:id="@+id/nav_notifications"/>
-    <item android:title="@string/nav_profile" android:icon="@drawable/profile" android:id="@+id/nav_profile"/>
+    <item android:title="" android:icon="@drawable/food" android:id="@+id/nav_map"/>
+    <item android:title="" android:icon="@drawable/order" android:id="@+id/nav_orders"/>
+    <item android:title="" android:icon="@drawable/notification" android:id="@+id/nav_notifications"/>
+    <item android:title="" android:icon="@drawable/profile" android:id="@+id/nav_profile"/>
 </menu>
