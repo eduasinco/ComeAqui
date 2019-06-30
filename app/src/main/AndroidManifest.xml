@@ -40,7 +40,7 @@
                 android:value="@string/google_maps_key"/>
 
         <activity
-                android:name=".eat.PlacePickerActivity"
+                android:name=".map.PlacePickerActivity"
                 android:label="@string/title_activity_place_picker">
         </activity>
         <activity android:name=".SplashActivity">
@@ -75,7 +75,7 @@
         <activity android:name=".CardInformationActivity">
         </activity>
         <activity
-                android:name=".eat.MapsActivity"
+                android:name=".map.MapsActivity"
                 android:label="@string/title_activity_maps">
         </activity>
         <activity
@@ -99,7 +99,7 @@
         </activity>
         <activity android:name=".profile.messages.MessageLookActivity">
         </activity>
-        <activity android:name=".eat.AddGoFoodActivity">
+        <activity android:name=".map.AddGoFoodActivity">
         </activity>
     </application>
 

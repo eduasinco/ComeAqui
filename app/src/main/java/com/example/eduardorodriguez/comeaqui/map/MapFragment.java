@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.eat;
+package com.example.eduardorodriguez.comeaqui.map;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -38,7 +38,7 @@ import java.util.concurrent.TimeoutException;
  * to handle interaction events.
  * create an instance of this fragment.
  */
-public class EatFragment extends Fragment{
+public class MapFragment extends Fragment{
 
     MapView mMapView;
     static View rootView;
@@ -279,7 +279,7 @@ public class EatFragment extends Fragment{
 
     void switchFabImage(boolean toPlus){
         myFab.animate().scaleY(0).setDuration(200).withEndAction(() -> {
-            myFab.setImageDrawable(ContextCompat.getDrawable(getActivity(), toPlus ? R.drawable.plus_sign : R.drawable.eat));
+            myFab.setImageDrawable(ContextCompat.getDrawable(getActivity(), toPlus ? R.drawable.plus_sign : R.drawable.add_food));
             myFab.animate().scaleY(1).setDuration(200);
         }).start();
     }

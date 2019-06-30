@@ -14,7 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.widget.FrameLayout;
 import com.example.eduardorodriguez.comeaqui.food.FoodFragment;
-import com.example.eduardorodriguez.comeaqui.eat.EatFragment;
+import com.example.eduardorodriguez.comeaqui.map.MapFragment;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileFragment;
 import com.example.eduardorodriguez.comeaqui.profile.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
 
     private FoodFragment getFoodFragment;
-    private EatFragment mapFragment;
+    private MapFragment mapFragment;
     private ProfileFragment profileFragment;
 
     public static User user;
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         mMainNav = findViewById(R.id.main_nav);
 
         getFoodFragment = new FoodFragment();
-        mapFragment = new EatFragment();
+        mapFragment = new MapFragment();
         profileFragment = new ProfileFragment();
 
         toolbar = findViewById(R.id.toolbar);
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         if(b == null){
             setFragment(mapFragment);
             toolbar.setTitle(null);
-            menu.findItem(R.id.nav_map).setIcon(R.drawable.food);
+            menu.findItem(R.id.nav_map).setIcon(R.drawable.foodfill);
         }
         mMainNav.setOnNavigationItemSelectedListener(menuItem -> {
             Menu menu1 = mMainNav.getMenu();

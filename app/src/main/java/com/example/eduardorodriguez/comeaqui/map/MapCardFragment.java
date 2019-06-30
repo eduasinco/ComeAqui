@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.eat;
+package com.example.eduardorodriguez.comeaqui.map;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -60,7 +60,7 @@ public class MapCardFragment extends Fragment {
         posterNameView.setText(foodPost.owner.first_name + " " + foodPost.owner.last_name);
         posterUserName.setText(foodPost.owner.email);
         starView.setImageResource(foodPost.favourite ? R.drawable.star_fill: R.drawable.star);
-        EatFragment.markerPutColor(EatFragment.markers.get(foodPost.id), !foodPost.favourite ? R.color.grey : R.color.favourite);
+        MapFragment.markerPutColor(MapFragment.markers.get(foodPost.id), !foodPost.favourite ? R.color.grey : R.color.favourite);
 
         if(!foodPost.owner.profile_photo.contains("no-image")) Glide.with(view.getContext()).load(foodPost.favourite ? foodPost.owner.profile_photo : getResources().getString(R.string.server) + foodPost.owner.profile_photo).into(posterImageView);
 
@@ -73,7 +73,7 @@ public class MapCardFragment extends Fragment {
             foodPost.favourite = !foodPost.favourite;
             starView.setImageResource(foodPost.favourite ? R.drawable.star_fill: R.drawable.star);
             if (foodPost.favourite) {
-                EatFragment.markerPutColor(EatFragment.markers.get(foodPost.id), R.color.favourite);
+                MapFragment.markerPutColor(MapFragment.markers.get(foodPost.id), R.color.favourite);
                 PostAsyncTask createOrder = new PostAsyncTask(getResources().getString(R.string.server) + "/favourites/");
                 try {
                     favouriteId = Integer.parseInt(createOrder.execute(new String[]{"food_post_id", "" + foodPost.id}).get());
@@ -81,10 +81,14 @@ public class MapCardFragment extends Fragment {
                     e.printStackTrace();
                 }
             } else {
-                String uri = "http://127.0.0.1:8000/favourite_detail/" + favouriteId + "/";
+                String uri = getResources().getString(R.string.server) + "/favourite_detail/" + favouriteId + "/";
                 Server deleteFoodPost = new Server("DELETE", uri);
-                deleteFoodPost.execute();
-                EatFragment.markerPutColor(EatFragment.markers.get(foodPost.id), !foodPost.favourite ? R.color.grey : R.color.favourite);
+                try {
+                    deleteFoodPost.execute().get();
+                } catch (ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+                MapFragment.markerPutColor(MapFragment.markers.get(foodPost.id), !foodPost.favourite ? R.color.grey : R.color.favourite);
             }
         });
     }
