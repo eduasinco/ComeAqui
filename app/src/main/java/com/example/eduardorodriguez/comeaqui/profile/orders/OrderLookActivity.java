@@ -72,7 +72,7 @@ public class OrderLookActivity extends AppCompatActivity {
         totalPriceView = findViewById(R.id.totalPrice);
         mealTimeView = findViewById(R.id.mealTime);
 
-        posterImageView = findViewById(R.id.posterImage);
+        posterImageView = findViewById(R.id.poster_image);
         postImageView = findViewById(R.id.postImage);
         staticMapView = findViewById(R.id.static_map);
 

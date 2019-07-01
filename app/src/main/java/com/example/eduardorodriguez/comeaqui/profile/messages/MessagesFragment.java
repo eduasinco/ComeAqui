@@ -45,16 +45,12 @@ public class MessagesFragment extends Fragment {
     }
 
     public static void makeList(JsonArray jsonArray){
-        try {
-            data = new ArrayList<>();
-            for (JsonElement pa : jsonArray) {
-                JsonObject jo = pa.getAsJsonObject();
-                data.add(new MessageObject(jo));
-            }
-            adapter.updateData(data);
-        } catch (Exception e){
-            e.printStackTrace();
+        data = new ArrayList<>();
+        for (JsonElement pa : jsonArray) {
+            JsonObject jo = pa.getAsJsonObject();
+            data.add(new MessageObject(jo));
         }
+        adapter.updateData(data);
     }
 
     public static void appendToList(String jsonString){
@@ -88,6 +84,7 @@ public class MessagesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_messages_list, container, false);
+        adapter = new MyMessagesRecyclerViewAdapter(data, mListener);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -107,7 +104,6 @@ public class MessagesFragment extends Fragment {
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
-            adapter = new MyMessagesRecyclerViewAdapter(data, mListener);
             recyclerView.setAdapter(adapter);
         }
         return view;

@@ -168,7 +168,7 @@ public class MapFragment extends Fragment{
                 MapCardFragment fragment = new MapCardFragment();
                 fragment.setArguments(bundle);
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.container, fragment)
+                        .replace(R.id.container1, fragment)
                         .commit();
                 moveCardUp();
                 return false;

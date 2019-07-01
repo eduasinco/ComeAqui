@@ -3,7 +3,6 @@ package com.example.eduardorodriguez.comeaqui.profile.orders;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.profile.orders.OrderFragment;
 
 public class OrdersActivity extends AppCompatActivity {
 
@@ -13,7 +12,7 @@ public class OrdersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_orders);
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, new OrderFragment())
+                .replace(R.id.container1, new OrderFragment())
                 .commit();
     }
 }

@@ -65,7 +65,7 @@ public class AutocompleteLocationFragment extends Fragment {
 
         assert getFragmentManager() != null;
         getFragmentManager().beginTransaction()
-                .replace(R.id.container, new PlacesAutocompleteFragment())
+                .replace(R.id.container1, new PlacesAutocompleteFragment())
                 .commit();
         return view;
     }

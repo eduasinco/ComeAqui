@@ -13,6 +13,7 @@ public class FoodPost implements Serializable {
     public String description;
     public String food_photo;
     public String time;
+    public String address;
     public float lat;
     public float lng;
     public boolean favourite = false;
@@ -24,10 +25,11 @@ public class FoodPost implements Serializable {
         price = jo.get("price").getAsString();
         type = jo.get("food_type").getAsString();
         description = jo.get("description").getAsString();
-        food_photo = jo.get("food_photo").getAsString();
+        food_photo = jo.get("food_photo").isJsonNull() ? null: jo.get("food_photo").getAsString();
         time = jo.get("time").getAsString();
         lat = jo.get("lat").getAsFloat();
         lng = jo.get("lng").getAsFloat();
+        address = jo.get("address").getAsString();
         owner = new User(jo.get("owner").getAsJsonObject());
     }
 }

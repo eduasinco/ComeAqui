@@ -89,7 +89,7 @@ public class GetFoodAdapter extends BaseAdapter {
         ArrayList<ImageView> imageViewArrayList = new ArrayList<>();
         imageViewArrayList.add(view.findViewById(R.id.vegetarian));
         imageViewArrayList.add(view.findViewById(R.id.vegan));
-        imageViewArrayList.add(view.findViewById(R.id.celiac));
+        imageViewArrayList.add(view.findViewById(R.id.cereal));
         imageViewArrayList.add(view.findViewById(R.id.spicy));
         imageViewArrayList.add(view.findViewById(R.id.fish));
         imageViewArrayList.add(view.findViewById(R.id.meat));

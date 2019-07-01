@@ -57,7 +57,7 @@ public class MapCardFragment extends Fragment {
         FoodElementFragment fragment = new FoodElementFragment();
         fragment.setArguments(bundle);
         getFragmentManager().beginTransaction()
-                .replace(R.id.container3, fragment)
+                .replace(R.id.container2, fragment)
                 .commit();
 
         favouriteId = foodPost.favouriteId;

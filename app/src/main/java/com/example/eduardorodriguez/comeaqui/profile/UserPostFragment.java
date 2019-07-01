@@ -47,16 +47,12 @@ public class UserPostFragment extends Fragment {
     }
 
     public static void makeList(JsonArray jsonArray){
-        try {
-            data = new ArrayList<>();
-            for (JsonElement pa : jsonArray) {
-                JsonObject jo = pa.getAsJsonObject();
-                data.add(new FoodPost(jo));
-            }
-            adapter.addNewRow(data);
-        } catch (Exception e){
-            e.printStackTrace();
+        data = new ArrayList<>();
+        for (JsonElement pa : jsonArray) {
+            JsonObject jo = pa.getAsJsonObject();
+            data.add(new FoodPost(jo));
         }
+        adapter.addNewRow(data);
     }
 
     public static void appendToList(String jsonString){
@@ -90,6 +86,7 @@ public class UserPostFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_userpost_list, container, false);
+        this.adapter = new MyUserPostRecyclerViewAdapter(data, mListener);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -101,7 +98,6 @@ public class UserPostFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_foods/");
-
             try {
                 String response = process.execute().get();
                 if (response != null)
@@ -109,7 +105,6 @@ public class UserPostFragment extends Fragment {
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
-            this.adapter = new MyUserPostRecyclerViewAdapter(data, mListener);
             recyclerView.setAdapter(this.adapter);
         }
         return view;
