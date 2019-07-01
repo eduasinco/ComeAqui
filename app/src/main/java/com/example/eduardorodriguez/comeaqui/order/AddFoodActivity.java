@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.food;
+package com.example.eduardorodriguez.comeaqui.order;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -21,7 +21,6 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.io.*;
 import java.util.concurrent.ExecutionException;
 
 public class AddFoodActivity extends AppCompatActivity {

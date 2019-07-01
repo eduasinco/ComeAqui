@@ -18,7 +18,7 @@ import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
 
 import java.util.ArrayList;
 
-import static com.example.eduardorodriguez.comeaqui.food.GetFoodAdapter.setTypes;
+import static com.example.eduardorodriguez.comeaqui.order.GetFoodAdapter.setTypes;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the

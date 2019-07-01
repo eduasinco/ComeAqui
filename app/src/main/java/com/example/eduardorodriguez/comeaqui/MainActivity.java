@@ -13,7 +13,8 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.widget.FrameLayout;
-import com.example.eduardorodriguez.comeaqui.food.FoodFragment;
+import com.example.eduardorodriguez.comeaqui.notification.NotificationsFragment;
+import com.example.eduardorodriguez.comeaqui.order.FoodFragment;
 import com.example.eduardorodriguez.comeaqui.map.MapFragment;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileFragment;
 import com.example.eduardorodriguez.comeaqui.profile.User;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private FoodFragment getFoodFragment;
     private MapFragment mapFragment;
     private ProfileFragment profileFragment;
+    private NotificationsFragment notificationFragment;
 
     public static User user;
 
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         getFoodFragment = new FoodFragment();
         mapFragment = new MapFragment();
         profileFragment = new ProfileFragment();
+        notificationFragment = new NotificationsFragment();
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -84,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                     menuItem.setIcon(R.drawable.foodfill);
                     return true;
                 case R.id.nav_notifications:
-                    setFragment(getFoodFragment);
+                    setFragment(notificationFragment);
                     menuItem.setIcon(R.drawable.notificationfill);
                     return true;
                 case R.id.nav_orders:

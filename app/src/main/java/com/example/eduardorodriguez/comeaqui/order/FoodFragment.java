@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.food;
+package com.example.eduardorodriguez.comeaqui.order;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -68,12 +68,9 @@ public class FoodFragment extends Fragment {
         listView.setAdapter(fa);
 
         getDataAndSet();
-        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getDataAndSet();
-                pullToRefresh.setRefreshing(false);
-            }
+        pullToRefresh.setOnRefreshListener(() -> {
+            getDataAndSet();
+            pullToRefresh.setRefreshing(false);
         });
 
         FloatingActionButton myFab =  view.findViewById(R.id.fab);
@@ -87,13 +84,12 @@ public class FoodFragment extends Fragment {
 
     void getDataAndSet(){
         GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/foods/");
-
         try {
             String response = process.execute().get();
             if (response != null)
                 makeList(new JsonParser().parse(response).getAsJsonArray());
         } catch (ExecutionException | InterruptedException e) {
-        e.printStackTrace();
+            e.printStackTrace();
         }
-        }
-        }
+    }
+}

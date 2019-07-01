@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.food;
+package com.example.eduardorodriguez.comeaqui.order;
 
 import android.content.Context;
 import android.content.Intent;

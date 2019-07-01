@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.profile.orders;
+package com.example.eduardorodriguez.comeaqui;
 
 import com.google.gson.JsonObject;
 
