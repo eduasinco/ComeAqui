@@ -67,10 +67,10 @@ public class MapCardFragment extends Fragment {
         starView.setImageResource(foodPost.favourite ? R.drawable.star_fill: R.drawable.star);
         MapFragment.markerPutColor(MapFragment.markers.get(foodPost.id), !foodPost.favourite ? R.color.grey : R.color.favourite);
 
-        if(!foodPost.owner.profile_photo.contains("no-image")) Glide.with(view.getContext()).load(foodPost.favourite ? foodPost.owner.profile_photo : getResources().getString(R.string.server) + foodPost.owner.profile_photo).into(posterImageView);
+        if(!foodPost.owner.profile_photo.contains("no-image")) Glide.with(view.getContext()).load(foodPost.favourite_from_server ? foodPost.owner.profile_photo : getResources().getString(R.string.server) + foodPost.owner.profile_photo).into(posterImageView);
         if(!foodPost.food_photo.contains("no-image")){
             imageLayout.setVisibility(View.VISIBLE);
-            Glide.with(view.getContext()).load(foodPost.favourite ? foodPost.food_photo: getResources().getString(R.string.server) +  foodPost.food_photo).into(postImageView);
+            Glide.with(view.getContext()).load(foodPost.favourite_from_server ? foodPost.food_photo: getResources().getString(R.string.server) +  foodPost.food_photo).into(postImageView);
         }
 
         setFavourite();

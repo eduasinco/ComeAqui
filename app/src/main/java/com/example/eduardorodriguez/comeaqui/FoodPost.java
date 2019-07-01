@@ -17,6 +17,7 @@ public class FoodPost implements Serializable {
     public float lat;
     public float lng;
     public boolean favourite = false;
+    public boolean favourite_from_server = false;
     public int favouriteId;
 
     public FoodPost(JsonObject jo){

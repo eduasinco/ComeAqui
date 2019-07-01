@@ -86,6 +86,7 @@ public class MapFragment extends Fragment{
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = favourite ? pa.getAsJsonObject().get("post").getAsJsonObject() : pa.getAsJsonObject();
                 FoodPost fp = new FoodPost(jo);
+                fp.favourite_from_server = favourite;
                 fp.favourite = favourite;
                 fp.favouriteId = pa.getAsJsonObject().get("id").getAsInt();
                 data.put(fp.id, fp);
