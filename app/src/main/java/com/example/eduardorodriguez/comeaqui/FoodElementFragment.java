@@ -22,9 +22,6 @@ public class FoodElementFragment extends Fragment {
     ImageView cardButtonView;
 
 
-    ImageView postImageView;
-
-
     public FoodElementFragment() {
         // Required empty public constructor
     }
@@ -44,7 +41,6 @@ public class FoodElementFragment extends Fragment {
         postTime = view.findViewById(R.id.time);
         postPrice = view.findViewById(R.id.price);
         posterDescriptionView = view.findViewById(R.id.description);
-        postImageView = view.findViewById(R.id.post_iamge);
         cardButtonView = view.findViewById(R.id.card_button);
 
         FoodPost foodPost = (FoodPost) getArguments().getSerializable("object");
@@ -54,7 +50,6 @@ public class FoodElementFragment extends Fragment {
         postTime.setText(foodPost.time);
         posterDescriptionView.setText(foodPost.description);
 
-        if(!foodPost.food_photo.contains("no-image")) Glide.with(view.getContext()).load(foodPost.favourite ? foodPost.food_photo: getResources().getString(R.string.server) +  foodPost.food_photo).into(postImageView);
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("type", foodPost.type);

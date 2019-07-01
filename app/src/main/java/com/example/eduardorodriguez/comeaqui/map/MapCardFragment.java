@@ -1,6 +1,7 @@
 package com.example.eduardorodriguez.comeaqui.map;
 
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,9 @@ public class MapCardFragment extends Fragment {
 
     ImageView posterImageView;
     ImageView starView;
+    ImageView postImageView;
+
+    ConstraintLayout imageLayout;
 
     FoodPost foodPost;
     int favouriteId;
@@ -43,8 +47,9 @@ public class MapCardFragment extends Fragment {
         posterUserName = view.findViewById(R.id.poster_username);
         starView = view.findViewById(R.id.star);
 
-
         posterImageView = view.findViewById(R.id.poster_image);
+        postImageView = view.findViewById(R.id.post_iamge);
+        imageLayout = view.findViewById(R.id.image_layout);
 
         foodPost = (FoodPost) getArguments().getSerializable("object");
         Bundle bundle = new Bundle();
@@ -63,6 +68,10 @@ public class MapCardFragment extends Fragment {
         MapFragment.markerPutColor(MapFragment.markers.get(foodPost.id), !foodPost.favourite ? R.color.grey : R.color.favourite);
 
         if(!foodPost.owner.profile_photo.contains("no-image")) Glide.with(view.getContext()).load(foodPost.favourite ? foodPost.owner.profile_photo : getResources().getString(R.string.server) + foodPost.owner.profile_photo).into(posterImageView);
+        if(!foodPost.food_photo.contains("no-image")){
+            imageLayout.setVisibility(View.VISIBLE);
+            Glide.with(view.getContext()).load(foodPost.favourite ? foodPost.food_photo: getResources().getString(R.string.server) +  foodPost.food_photo).into(postImageView);
+        }
 
         setFavourite();
         return view;
