@@ -18,7 +18,7 @@ public class MessageLookActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_look);
 
-        ImageView postFoodPhotoView = findViewById(R.id.postFoodPhoto);
+        ImageView postFoodPhotoView = findViewById(R.id.post_image);
         ImageView senderImageView = findViewById(R.id.senderImage);
         TextView senderNameView = findViewById(R.id.senderName);
         TextView postPlateNameView = findViewById(R.id.postPlateName);

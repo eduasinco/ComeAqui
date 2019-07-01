@@ -66,10 +66,10 @@ public class FoodLookActivity extends AppCompatActivity {
         posterNameView = findViewById(R.id.poster_name);
         posterLocationView = findViewById(R.id.posterLocation);
 
-        postImage = findViewById(R.id.postFoodPhoto);
+        postImage = findViewById(R.id.post_image);
         posterImage = findViewById(R.id.poster_image);
         staticMapView = findViewById(R.id.static_map);
-        postImageLayout = findViewById(R.id.image_layout);
+        postImageLayout = findViewById(R.id.post_image_layout);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -94,17 +94,15 @@ public class FoodLookActivity extends AppCompatActivity {
                     .replace(R.id.types, fragment)
                     .commit();
 
-            if(!getFoodObject.owner.profile_photo.contains("no-image")){
+
+            if(!getFoodObject.owner.profile_photo.contains("no-image")) Glide.with(this).load(getFoodObject.favourite ? getFoodObject.owner.profile_photo : getResources().getString(R.string.server) + getFoodObject.owner.profile_photo).into(posterImage);
+            if(!getFoodObject.food_photo.contains("no-image")){
                 postImageLayout.setVisibility(View.VISIBLE);
-                Glide.with(this).load(getFoodObject.owner.profile_photo).into(posterImage);
+                Glide.with(this).load(getFoodObject.favourite ? getFoodObject.food_photo: getResources().getString(R.string.server) +  getFoodObject.food_photo).into(postImage);
             }
-            if(!getFoodObject.food_photo.contains("no-image")) Glide.with(this).load(getFoodObject.food_photo).into(postImage);
+            String url = "http://maps.google.com/maps/api/staticmap?center=" + getFoodObject.lat + "," + getFoodObject.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
+            Glide.with(this).load(url).into(staticMapView);
 
-            final StringBuilder path = new StringBuilder();
-            path.append(getResources().getString(R.string.server));
-            path.append(getFoodObject.food_photo);
-
-            Glide.with(this).load(path.toString()).into(postImage);
 
             setPlaceButton(delete);
         }
