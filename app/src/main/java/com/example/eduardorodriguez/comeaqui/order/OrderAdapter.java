@@ -46,7 +46,7 @@ public class OrderAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        view = inflater.inflate(R.layout.getfood_list_element, null);
+        view = inflater.inflate(R.layout.order_list_element, null);
         poster_name = view.findViewById(R.id.poster_name);
         priceDate = view.findViewById(R.id.price_date);
         posterUsername = view.findViewById(R.id.poster_username);

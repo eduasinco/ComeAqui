@@ -18,7 +18,7 @@ import com.google.gson.*;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import static com.example.eduardorodriguez.comeaqui.R.layout.fragment_get_food;
+import static com.example.eduardorodriguez.comeaqui.R.layout.fragment_order;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,7 +61,7 @@ public class OderFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        view = inflater.inflate(fragment_get_food, container, false);
+        view = inflater.inflate(fragment_order, container, false);
         pullToRefresh = view.findViewById(R.id.pullToRefresh);
         fa = new OrderAdapter(getActivity(), data);
 

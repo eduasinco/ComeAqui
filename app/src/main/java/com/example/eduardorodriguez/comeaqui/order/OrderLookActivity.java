@@ -47,14 +47,12 @@ public class OrderLookActivity extends AppCompatActivity {
         totalPriceView.setText(order.post.time);
         String url = "http://maps.google.com/maps/api/staticmap?center=" + order.post.lat + "," + order.post.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=AIzaSyDqkl1DgwHu03SmMoqVey3sgR62GnJ-VY4";
         Glide.with(this).load(url).into(staticMapView);
-
-        String initialUri = getResources().getString(R.string.server) + "/media/";
         if(!order.poster.profile_photo.contains("no-image")) {
-            Glide.with(context).load(initialUri + order.poster.profile_photo).into(posterImageView);
+            Glide.with(context).load(order.poster.profile_photo).into(posterImageView);
         }
         if(!order.post.food_photo.contains("no-image")){
             postImageView.setVisibility(View.VISIBLE);
-            Glide.with(context).load(initialUri + order.post.food_photo).into(postImageView);
+            Glide.with(context).load(order.post.food_photo).into(postImageView);
         }
     }
 

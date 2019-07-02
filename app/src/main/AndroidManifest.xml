@@ -75,10 +75,6 @@
         <activity android:name=".CardInformationActivity">
         </activity>
         <activity
-                android:name=".map.MapsActivity"
-                android:label="@string/title_activity_maps">
-        </activity>
-        <activity
                 android:name=".profile.EditAccountActivity"
                 android:label="@string/title_activity_settings"
                 android:theme="@style/AppTheme">

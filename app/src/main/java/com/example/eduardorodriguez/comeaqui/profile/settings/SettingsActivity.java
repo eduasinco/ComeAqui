@@ -9,7 +9,6 @@ import android.view.View;
 
 import android.widget.*;
 import com.example.eduardorodriguez.comeaqui.*;
-import com.example.eduardorodriguez.comeaqui.profile.EditAccountActivity;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
@@ -85,13 +84,6 @@ public class SettingsActivity extends AppCompatActivity {
         editAccountView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent editAccount = new Intent(SettingsActivity.this, EditAccountActivity.class);
-                editAccount.putExtra("firstName", firstName);
-                editAccount.putExtra("lastName", lastName);
-                editAccount.putExtra("phoneCode", phoneCode);
-                editAccount.putExtra("phoneNumber", phoneNumber);
-                editAccount.putExtra("profilePhoto", profilePhoto);
-                startActivity(editAccount);
             }
         });
     }

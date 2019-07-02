@@ -13,7 +13,6 @@ import android.widget.*;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.profile.messages.MessagesFragment;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -123,7 +122,7 @@ public class ProfileFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            Fragment[] tabFragment = {new UserPostFragment(), new MessagesFragment(), new OptionsFragment()};
+            Fragment[] tabFragment = {new UserPostFragment(), new OptionsFragment(), new OptionsFragment()};
             return tabFragment[position];
         }
 
