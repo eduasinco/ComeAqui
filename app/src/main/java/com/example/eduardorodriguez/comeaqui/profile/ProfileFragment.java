@@ -61,13 +61,10 @@ public class ProfileFragment extends Fragment {
 
         final ImageView mImage =  view.findViewById(R.id.profile_image);
         AppBarLayout mAppBar = view.findViewById(R.id.app_bar);
-        mAppBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                mImage.setY(-verticalOffset / 2 + 100);
-                circularImageView.setShadowRadius(0 - verticalOffset / 5);
-                backGroundImageView.setY(-verticalOffset / 4);
-            }
+        mAppBar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+            mImage.setY(-verticalOffset / 2 + 100);
+            circularImageView.setShadowRadius(0 - verticalOffset / 5);
+            backGroundImageView.setY(-verticalOffset / 4);
         });
 
         ViewPager viewPager = view.findViewById(R.id.viewpager);

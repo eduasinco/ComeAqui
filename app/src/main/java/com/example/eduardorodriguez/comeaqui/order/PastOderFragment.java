@@ -18,12 +18,12 @@ import com.google.gson.*;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import static com.example.eduardorodriguez.comeaqui.R.layout.fragment_order;
+import static com.example.eduardorodriguez.comeaqui.R.layout.fragment_pending_past_order;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OderFragment extends Fragment {
+public class PastOderFragment extends Fragment {
 
     SwipeRefreshLayout pullToRefresh;
 
@@ -31,7 +31,9 @@ public class OderFragment extends Fragment {
     static OrderAdapter fa;
     static View view;
 
-    public OderFragment() {
+    boolean pending;
+
+    public PastOderFragment() {
         // Required empty public constructor
     }
 
@@ -61,9 +63,10 @@ public class OderFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        view = inflater.inflate(fragment_order, container, false);
+        view = inflater.inflate(fragment_pending_past_order, container, false);
         pullToRefresh = view.findViewById(R.id.pullToRefresh);
         fa = new OrderAdapter(getActivity(), data);
+        pending = getArguments().getBoolean("pending");
 
         ListView listView = view.findViewById(R.id.getfoodlist);
         listView.setAdapter(fa);
@@ -84,7 +87,7 @@ public class OderFragment extends Fragment {
     }
 
     void getDataAndSet(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_orders/");
+        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + (pending ? "/my_pending_orders/" : "/my_past_orders/"));
         try {
             String response = process.execute().get();
             if (response != null)

@@ -158,7 +158,7 @@ public class AddFoodActivity extends AppCompatActivity {
                 ).get();
                 JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
                 if (response != null) {
-                    // OderFragment.appendToList(response);
+                    // PastOderFragment.appendToList(response);
                 }
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();

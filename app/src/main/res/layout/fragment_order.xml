@@ -3,36 +3,26 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context=".order.OderFragment"
->
-
-    <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/pullToRefresh"
+             tools:context=".order.OrderFragment">
+    <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        <ListView
+            android:layout_height="match_parent">
+        <android.support.design.widget.TabLayout
                 android:layout_width="match_parent"
-                android:divider="@null"
-                android:dividerHeight="0dp"
-                android:layout_height="match_parent"
-                android:id="@+id/getfoodlist"/>
+                android:layout_height="wrap_content" android:id="@+id/tab">
 
-    </android.support.v4.widget.SwipeRefreshLayout>
-
-    <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-    <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:backgroundTint="@color/colorPrimary"
-            android:clickable="true"
-            android:src="@drawable/prepare"
-            android:tint="#ffffff"
-            android:layout_gravity="bottom|right|end"/>
+            <android.support.design.widget.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PENDING ORDERS"/>
+            <android.support.design.widget.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PAST ORDERS"/>
+        </android.support.design.widget.TabLayout>
+        <android.support.v4.view.ViewPager
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:id="@+id/view_pager"/>
+    </LinearLayout>
 </FrameLayout>
