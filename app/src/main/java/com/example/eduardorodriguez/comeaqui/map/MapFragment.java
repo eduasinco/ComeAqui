@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.eduardorodriguez.comeaqui.*;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.order.AddFoodActivity;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.android.gms.maps.*;

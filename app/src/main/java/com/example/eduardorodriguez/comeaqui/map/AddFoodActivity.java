@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.order;
+package com.example.eduardorodriguez.comeaqui.map;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -158,7 +158,7 @@ public class AddFoodActivity extends AppCompatActivity {
                 ).get();
                 JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
                 if (response != null) {
-                    // FoodFragment.appendToList(response);
+                    // OderFragment.appendToList(response);
                 }
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();

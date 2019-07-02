@@ -9,9 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import com.example.eduardorodriguez.comeaqui.FoodPost;
 import com.example.eduardorodriguez.comeaqui.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.map.AddFoodActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.gson.*;
 
@@ -23,15 +23,15 @@ import static com.example.eduardorodriguez.comeaqui.R.layout.fragment_get_food;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FoodFragment extends Fragment {
+public class OderFragment extends Fragment {
 
     SwipeRefreshLayout pullToRefresh;
 
     public static ArrayList<OrderObject> data;
-    static GetFoodAdapter fa;
+    static OrderAdapter fa;
     static View view;
 
-    public FoodFragment() {
+    public OderFragment() {
         // Required empty public constructor
     }
 
@@ -63,7 +63,7 @@ public class FoodFragment extends Fragment {
         super.onCreate(savedInstanceState);
         view = inflater.inflate(fragment_get_food, container, false);
         pullToRefresh = view.findViewById(R.id.pullToRefresh);
-        fa = new GetFoodAdapter(getActivity(), data);
+        fa = new OrderAdapter(getActivity(), data);
 
         ListView listView = view.findViewById(R.id.getfoodlist);
         listView.setAdapter(fa);

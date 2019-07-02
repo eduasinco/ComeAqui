@@ -15,7 +15,7 @@ import com.example.eduardorodriguez.comeaqui.*;
 import java.util.ArrayList;
 
 
-public class GetFoodAdapter extends BaseAdapter {
+public class OrderAdapter extends BaseAdapter {
 
     private static LayoutInflater inflater = null;
 
@@ -30,7 +30,7 @@ public class GetFoodAdapter extends BaseAdapter {
     OrderObject orderObject;
     ArrayList<OrderObject> data;
 
-    public GetFoodAdapter(Context context, ArrayList<OrderObject> data){
+    public OrderAdapter(Context context, ArrayList<OrderObject> data){
 
         this.context = context;
         this.data = data;

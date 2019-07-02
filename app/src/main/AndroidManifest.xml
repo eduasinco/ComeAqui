@@ -63,7 +63,7 @@
 
         <activity android:name=".FoodLookActivity">
         </activity>
-        <activity android:name=".order.AddFoodActivity">
+        <activity android:name=".map.AddFoodActivity">
         </activity>
         <activity
                 android:name=".profile.EditProfileActivity"
