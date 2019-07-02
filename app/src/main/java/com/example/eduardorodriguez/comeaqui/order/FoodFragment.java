@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import com.example.eduardorodriguez.comeaqui.FoodPost;
+import com.example.eduardorodriguez.comeaqui.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.gson.*;
@@ -26,7 +27,7 @@ public class FoodFragment extends Fragment {
 
     SwipeRefreshLayout pullToRefresh;
 
-    public static ArrayList<FoodPost> data;
+    public static ArrayList<OrderObject> data;
     static GetFoodAdapter fa;
     static View view;
 
@@ -39,7 +40,7 @@ public class FoodFragment extends Fragment {
             data = new ArrayList<>();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
-                data.add(new FoodPost(jo));
+                data.add(new OrderObject(jo));
             }
             fa.addNewRow(data);
         } catch (Exception e){
@@ -51,7 +52,7 @@ public class FoodFragment extends Fragment {
         if (data == null){
             data = new ArrayList<>();
         }
-        data.add(0, new FoodPost(jo));
+        data.add(0, new OrderObject(jo));
         fa.addNewRow(data);
     }
 
@@ -83,7 +84,7 @@ public class FoodFragment extends Fragment {
     }
 
     void getDataAndSet(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/foods/");
+        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_orders/");
         try {
             String response = process.execute().get();
             if (response != null)

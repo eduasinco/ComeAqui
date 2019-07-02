@@ -27,10 +27,10 @@ public class GetFoodAdapter extends BaseAdapter {
     ImageView imageView;
 
     Context context;
-    FoodPost foodPost;
-    ArrayList<FoodPost> data;
+    OrderObject orderObject;
+    ArrayList<OrderObject> data;
 
-    public GetFoodAdapter(Context context, ArrayList<FoodPost> data){
+    public GetFoodAdapter(Context context, ArrayList<OrderObject> data){
 
         this.context = context;
         this.data = data;
@@ -38,7 +38,7 @@ public class GetFoodAdapter extends BaseAdapter {
         inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void addNewRow(ArrayList<FoodPost> data){
+    public void addNewRow(ArrayList<OrderObject> data){
         this.data = data;
         this.notifyDataSetChanged();
     }
@@ -53,28 +53,24 @@ public class GetFoodAdapter extends BaseAdapter {
         postAddress = view.findViewById(R.id.address);
         imageView = view.findViewById(R.id.poster_image);
 
-        foodPost = data.get(position);
+        orderObject = data.get(position);
 
-        poster_name.setText(foodPost.owner.first_name + " " + foodPost.owner.last_name);
-        posterUsername.setText(foodPost.owner.email);
-        postAddress.setText(foodPost.address);
-        String priceTextE = "€" + foodPost.price + "-";
+        poster_name.setText(orderObject.owner.first_name + " " + orderObject.owner.last_name);
+        posterUsername.setText(orderObject.owner.email);
+        postAddress.setText(orderObject.post.address);
+        String priceTextE = "€" + orderObject.post.price + "-";
         priceDate.setText(priceTextE);
 
-        final StringBuilder path = new StringBuilder();
-        path.append(context.getResources().getString(R.string.server) );
-        path.append(foodPost.food_photo);
-
-        if (!foodPost.owner.profile_photo.contains("no-image")){
-            Glide.with(context).load(foodPost.owner.profile_photo).into(imageView);
+        if (!orderObject.owner.profile_photo.contains("no-image")){
+            Glide.with(context).load(orderObject.owner.profile_photo).into(imageView);
         }
         ConstraintLayout item = view.findViewById(R.id.listItem);
 
         item.setOnClickListener(v -> {
-            Intent foodLook = new Intent(context, FoodLookActivity.class);
-            foodLook.putExtra("object", foodPost);
+            Intent foodLook = new Intent(context, OrderLookActivity.class);
+            foodLook.putExtra("object", orderObject);
             boolean delete = false;
-            if (foodPost.owner.id == MainActivity.user.id){
+            if (orderObject.owner.id == MainActivity.user.id){
                 delete = true;
             }
             foodLook.putExtra("delete", delete);
