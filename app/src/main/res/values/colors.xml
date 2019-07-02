@@ -9,4 +9,10 @@
     <color name="mapPicker">#9539ff</color>
     <color name="colorPrimaryLight">#DAC3FF</color>
     <color name="favourite">#FFBF00</color>
+
+    <color name="bottom_bottom">#809E9E9E</color>
+    <color name="bottom_top">#FFFFFF</color>
+
+    <color name="corner_color">#FFFFFF</color>
+
 </resources>

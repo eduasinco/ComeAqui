@@ -16,7 +16,7 @@ public class FoodElementFragment extends Fragment {
     TextView postPrice;
     TextView posterDescriptionView;
     TextView postNameView;
-    ImageView cardButtonView;
+    View cardButtonView;
 
 
     public FoodElementFragment() {
@@ -32,7 +32,7 @@ public class FoodElementFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_food_element, container, false);
+        View view = inflater.inflate(R.layout.fragment_card_button, container, false);
 
         postNameView = view.findViewById(R.id.plate_name);
         postTime = view.findViewById(R.id.time);
