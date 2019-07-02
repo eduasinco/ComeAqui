@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.profile.orders.OrdersActivity;
 import com.example.eduardorodriguez.comeaqui.profile.payment.AddPaymentMethodActivity;
 import com.example.eduardorodriguez.comeaqui.profile.settings.SettingsActivity;
 
@@ -75,26 +74,15 @@ public class OptionsFragment extends Fragment {
         ConstraintLayout settingsView = view.findViewById(R.id.settings);
         ConstraintLayout ordersView = view.findViewById(R.id.orders);
 
-        paymentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent k = new Intent(getContext(), AddPaymentMethodActivity.class);
-                startActivity(k);
-            }
+        paymentView.setOnClickListener(v -> {
+            Intent k = new Intent(getContext(), AddPaymentMethodActivity.class);
+            startActivity(k);
         });
-        settingsView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent k = new Intent(getContext(), SettingsActivity.class);
-                startActivity(k);
-            }
+        settingsView.setOnClickListener(v -> {
+            Intent k = new Intent(getContext(), SettingsActivity.class);
+            startActivity(k);
         });
-        ordersView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent k = new Intent(getContext(), OrdersActivity.class);
-                startActivity(k);
-            }
+        ordersView.setOnClickListener(v -> {
         });
         return view;
     }

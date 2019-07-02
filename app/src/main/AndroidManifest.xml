@@ -95,7 +95,7 @@
                 android:label="@string/title_activity_orders"
                 android:theme="@style/AppTheme">
         </activity>
-        <activity android:name=".profile.orders.OrderLookActivity">
+        <activity android:name=".order.OrderLookActivity">
         </activity>
         <activity android:name=".profile.messages.MessageLookActivity">
         </activity>

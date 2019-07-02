@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,8 +18,6 @@ import com.example.eduardorodriguez.comeaqui.profile.UserPostFragment.OnListFrag
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
 
 import java.util.ArrayList;
-
-import static com.example.eduardorodriguez.comeaqui.order.GetFoodAdapter.setTypes;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
@@ -44,51 +43,49 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.getfood_list_element, parent, false);
+                .inflate(R.layout.my_post_element, parent, false);
 
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.foodNameView.setText(mValues.get(position).plate_name);
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
-                }
-            }
-        });
+        TextView posterUserName = holder.mView.findViewById(R.id.poster_username);
+        TextView posterName = holder.mView.findViewById(R.id.poster_name);
+        TextView food_name = holder.mView.findViewById(R.id.plate_name);
+        TextView descriptionView = holder.mView.findViewById(R.id.description);
+        TextView time = holder.mView.findViewById(R.id.time);
+        TextView priceView = holder.mView.findViewById(R.id.price);
+        ImageView imageView = holder.mView.findViewById(R.id.post_iamge);
+        ConstraintLayout imageLayout = holder.mView.findViewById(R.id.image_layout);
+        ConstraintLayout postButton = holder.mView.findViewById(R.id.post_button);
+        View cardButton = holder.mView.findViewById(R.id.card_button);
 
-        final TextView food_name = holder.mView.findViewById(R.id.plateName);
-        TextView priceView = holder.mView.findViewById(R.id.priceText);
-        TextView descriptionView = holder.mView.findViewById(R.id.orderMessage);
-        ImageView imageView = holder.mView.findViewById(R.id.orderImage);
+        final FoodPost foodPost = mValues.get(position);
 
-        final FoodPost userPostObject = mValues.get(position);
-
-        food_name.setText(userPostObject.plate_name);
-        String priceTextE = userPostObject.price + "€";
+        posterName.setText(foodPost.owner.first_name + " " + foodPost.owner.last_name);
+        posterUserName.setText(foodPost.owner.username);
+        food_name.setText(foodPost.plate_name);
+        String priceTextE = foodPost.price + "€";
         priceView.setText(priceTextE);
-        setTypes(holder.mView, userPostObject.type);
-        descriptionView.setText(userPostObject.description);
+        descriptionView.setText(foodPost.description);
+        time.setText(foodPost.time);
+        priceView.setText(foodPost.price);
 
-        if (!userPostObject.food_photo.contains("no-image"))
-            Glide.with(holder.mView.getContext()).load(userPostObject.food_photo).into(imageView);
+        if (!foodPost.food_photo.contains("no-image")) {
+            imageLayout.setVisibility(View.VISIBLE);
+            Glide.with(holder.mView.getContext()).load(foodPost.food_photo).into(imageView);
+        }
 
-        ConstraintLayout item = holder.mView.findViewById(R.id.listItem);
-        item.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent foodLook = new Intent(holder.mView.getContext(), FoodLookActivity.class);
-                foodLook.putExtra("object", userPostObject);
-                foodLook.putExtra("delete", true);
-                holder.mView.getContext().startActivity(foodLook);
-            }
-
+        postButton.setOnClickListener(v -> {
+            cardButton.animate().alpha(0).setDuration(200).withEndAction(() -> {
+                cardButton.animate().alpha(1).setDuration(200).withEndAction(() -> {
+                    Intent foodLook = new Intent(holder.mView.getContext(), FoodLookActivity.class);
+                    foodLook.putExtra("object", foodPost);
+                    foodLook.putExtra("delete", true);
+                    holder.mView.getContext().startActivity(foodLook);
+                });
+            });
         });
     }
 

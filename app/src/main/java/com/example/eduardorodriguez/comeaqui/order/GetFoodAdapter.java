@@ -19,7 +19,15 @@ public class GetFoodAdapter extends BaseAdapter {
 
     private static LayoutInflater inflater = null;
 
+    View view;
+    TextView poster_name;
+    TextView priceDate;
+    TextView posterUsername;
+    TextView postAddress;
+    ImageView imageView;
+
     Context context;
+    FoodPost foodPost;
     ArrayList<FoodPost> data;
 
     public GetFoodAdapter(Context context, ArrayList<FoodPost> data){
@@ -38,77 +46,42 @@ public class GetFoodAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        final View view = inflater.inflate(R.layout.getfood_list_element, null);
-        final TextView food_name = view.findViewById(R.id.plateName);
-        TextView priceView = view.findViewById(R.id.priceText);
-        TextView descriptionView = view.findViewById(R.id.orderMessage);
-        ImageView imageView = view.findViewById(R.id.orderImage);
+        view = inflater.inflate(R.layout.getfood_list_element, null);
+        poster_name = view.findViewById(R.id.poster_name);
+        priceDate = view.findViewById(R.id.price_date);
+        posterUsername = view.findViewById(R.id.poster_username);
+        postAddress = view.findViewById(R.id.address);
+        imageView = view.findViewById(R.id.poster_image);
 
+        foodPost = data.get(position);
 
-        final FoodPost foodPost = data.get(position);
-
-        food_name.setText(foodPost.plate_name);
-        String priceTextE = foodPost.price + "€";
-        priceView.setText(priceTextE);
-        setTypes(view, foodPost.type);
-        descriptionView.setText(foodPost.description);
+        poster_name.setText(foodPost.owner.first_name + " " + foodPost.owner.last_name);
+        posterUsername.setText(foodPost.owner.email);
+        postAddress.setText(foodPost.address);
+        String priceTextE = "€" + foodPost.price + "-";
+        priceDate.setText(priceTextE);
 
         final StringBuilder path = new StringBuilder();
         path.append(context.getResources().getString(R.string.server) );
         path.append(foodPost.food_photo);
 
-        if(SplashActivity.mock){
-            imageView.setImageResource(R.drawable.food_post);
-        } else {
-            if (!path.toString().contains("no-image")){
-                Glide.with(context).load(path.toString()).into(imageView);
-            }
+        if (!foodPost.owner.profile_photo.contains("no-image")){
+            Glide.with(context).load(foodPost.owner.profile_photo).into(imageView);
         }
         ConstraintLayout item = view.findViewById(R.id.listItem);
 
-        item.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent foodLook = new Intent(context, FoodLookActivity.class);
-                foodLook.putExtra("object", foodPost);
-                boolean delete = false;
-                if (foodPost.owner.id == MainActivity.user.id){
-                    delete = true;
-                }
-                foodLook.putExtra("delete", delete);
-                context.startActivity(foodLook);
+        item.setOnClickListener(v -> {
+            Intent foodLook = new Intent(context, FoodLookActivity.class);
+            foodLook.putExtra("object", foodPost);
+            boolean delete = false;
+            if (foodPost.owner.id == MainActivity.user.id){
+                delete = true;
             }
-
+            foodLook.putExtra("delete", delete);
+            context.startActivity(foodLook);
         });
 
         return view;
-    }
-
-
-    public static void setTypes(View view, String types){
-        ArrayList<ImageView> imageViewArrayList = new ArrayList<>();
-        imageViewArrayList.add(view.findViewById(R.id.vegetarian));
-        imageViewArrayList.add(view.findViewById(R.id.vegan));
-        imageViewArrayList.add(view.findViewById(R.id.cereal));
-        imageViewArrayList.add(view.findViewById(R.id.spicy));
-        imageViewArrayList.add(view.findViewById(R.id.fish));
-        imageViewArrayList.add(view.findViewById(R.id.meat));
-        imageViewArrayList.add(view.findViewById(R.id.dairy));
-        int[] resources = new int[]{
-                R.drawable.vegetarianfill,
-                R.drawable.veganfill,
-                R.drawable.cerealfill,
-                R.drawable.spicyfill,
-                R.drawable.fishfill,
-                R.drawable.meatfill,
-                R.drawable.dairyfill,
-        };
-
-        for (int i = 0; i < types.length(); i++){
-            if (types.charAt(i) == '1'){
-                imageViewArrayList.get(i).setImageResource(resources[i]);
-            }
-        }
     }
 
     @Override

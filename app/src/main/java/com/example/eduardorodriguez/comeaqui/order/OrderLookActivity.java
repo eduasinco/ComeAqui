@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.profile.orders;
+package com.example.eduardorodriguez.comeaqui.order;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,8 +17,6 @@ import com.google.gson.JsonParser;
 import java.util.concurrent.ExecutionException;
 
 public class OrderLookActivity extends AppCompatActivity {
-
-    static String[] data;
 
     TextView postNameView;
     TextView posterMessageView;
@@ -40,23 +38,23 @@ public class OrderLookActivity extends AppCompatActivity {
     public void createStringArray(JsonObject jo){
         order = new OrderObject(jo);
 
-        postNameView.setText(order.postPlateName);
-        posterMessageView.setText(order.posterFirstName + " is preparing your order");
-        posterLocationView.setText(order.postAddress);
-        postPriceView.setText("€" + order.postPrice);
-        subtotalView.setText("€" + order.postPrice);
-        totalPriceView.setText("€" + order.postPrice);
-        totalPriceView.setText(order.time);
-        String url = "http://maps.google.com/maps/api/staticmap?center=" + order.postLat + "," + order.postLng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=AIzaSyDqkl1DgwHu03SmMoqVey3sgR62GnJ-VY4";
+        postNameView.setText(order.post.plate_name);
+        posterMessageView.setText(order.poster.first_name + " " + order.poster.last_name);
+        posterLocationView.setText(order.post.address);
+        postPriceView.setText("€" + order.post.price);
+        subtotalView.setText("€" + order.post.price);
+        totalPriceView.setText("€" + order.post.price);
+        totalPriceView.setText(order.post.time);
+        String url = "http://maps.google.com/maps/api/staticmap?center=" + order.post.lat + "," + order.post.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=AIzaSyDqkl1DgwHu03SmMoqVey3sgR62GnJ-VY4";
         Glide.with(this).load(url).into(staticMapView);
 
         String initialUri = getResources().getString(R.string.server) + "/media/";
-        if(!order.posterImage.contains("no-image")) {
-            Glide.with(context).load(initialUri + order.posterImage).into(posterImageView);
+        if(!order.poster.profile_photo.contains("no-image")) {
+            Glide.with(context).load(initialUri + order.poster.profile_photo).into(posterImageView);
         }
-        if(!order.postFoodPhoto.contains("no-image")){
+        if(!order.post.food_photo.contains("no-image")){
             postImageView.setVisibility(View.VISIBLE);
-            Glide.with(context).load(initialUri + order.postFoodPhoto).into(postImageView);
+            Glide.with(context).load(initialUri + order.post.food_photo).into(postImageView);
         }
     }
 
