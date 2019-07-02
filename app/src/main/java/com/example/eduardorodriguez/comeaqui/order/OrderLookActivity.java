@@ -19,12 +19,13 @@ import java.util.concurrent.ExecutionException;
 public class OrderLookActivity extends AppCompatActivity {
 
     TextView postNameView;
-    TextView posterMessageView;
+    TextView posterDescription;
     TextView posterLocationView;
     TextView postPriceView;
     TextView subtotalView;
     TextView totalPriceView;
     TextView mealTimeView;
+    TextView posterNameView;
 
     ImageView posterImageView;
     ImageView postImageView;
@@ -35,42 +36,22 @@ public class OrderLookActivity extends AppCompatActivity {
     Context context;
 
 
-    public void createStringArray(JsonObject jo){
-        order = new OrderObject(jo);
-
-        postNameView.setText(order.post.plate_name);
-        posterMessageView.setText(order.poster.first_name + " " + order.poster.last_name);
-        posterLocationView.setText(order.post.address);
-        postPriceView.setText("€" + order.post.price);
-        subtotalView.setText("€" + order.post.price);
-        totalPriceView.setText("€" + order.post.price);
-        totalPriceView.setText(order.post.time);
-        String url = "http://maps.google.com/maps/api/staticmap?center=" + order.post.lat + "," + order.post.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=AIzaSyDqkl1DgwHu03SmMoqVey3sgR62GnJ-VY4";
-        Glide.with(this).load(url).into(staticMapView);
-        if(!order.poster.profile_photo.contains("no-image")) {
-            Glide.with(context).load(order.poster.profile_photo).into(posterImageView);
-        }
-        if(!order.post.food_photo.contains("no-image")){
-            postImageView.setVisibility(View.VISIBLE);
-            Glide.with(context).load(order.post.food_photo).into(postImageView);
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_look);
         context = getApplicationContext();
         postNameView = findViewById(R.id.postName);
-        posterMessageView = findViewById(R.id.posterMessage);
+        posterNameView = findViewById(R.id.poster_name);
+        posterDescription = findViewById(R.id.description);
         posterLocationView = findViewById(R.id.posterLocation);
         postPriceView = findViewById(R.id.postPrice);
         subtotalView = findViewById(R.id.postSubtotalPrice);
         totalPriceView = findViewById(R.id.totalPrice);
-        mealTimeView = findViewById(R.id.mealTime);
+        mealTimeView = findViewById(R.id.time);
 
         posterImageView = findViewById(R.id.poster_image);
-        postImageView = findViewById(R.id.postImage);
+        postImageView = findViewById(R.id.post_image);
         staticMapView = findViewById(R.id.static_map);
 
         Intent intent = getIntent();
@@ -87,5 +68,27 @@ public class OrderLookActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+
+    void createStringArray(JsonObject jo){
+        order = new OrderObject(jo);
+        postNameView.setText(order.post.plate_name);
+        posterNameView.setText(order.poster.first_name + " " + order.poster.last_name);
+        posterDescription.setText(order.post.description);
+        posterLocationView.setText(order.post.address);
+        postPriceView.setText("€" + order.post.price);
+        subtotalView.setText("€" + order.post.price);
+        totalPriceView.setText("€" + order.post.price);
+        totalPriceView.setText(order.post.time);
+        String url = "http://maps.google.com/maps/api/staticmap?center=" + order.post.lat + "," + order.post.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=AIzaSyDqkl1DgwHu03SmMoqVey3sgR62GnJ-VY4";
+        Glide.with(this).load(url).into(staticMapView);
+        if(!order.poster.profile_photo.contains("no-image")) {
+            Glide.with(context).load(order.poster.profile_photo).into(posterImageView);
+        }
+        if(!order.post.food_photo.contains("no-image")){
+            postImageView.setVisibility(View.VISIBLE);
+            Glide.with(context).load(order.post.food_photo).into(postImageView);
+        }
     }
 }

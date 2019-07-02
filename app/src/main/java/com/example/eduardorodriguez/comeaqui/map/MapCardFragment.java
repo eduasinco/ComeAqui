@@ -48,7 +48,7 @@ public class MapCardFragment extends Fragment {
         starView = view.findViewById(R.id.star);
 
         posterImageView = view.findViewById(R.id.poster_image);
-        postImageView = view.findViewById(R.id.post_iamge);
+        postImageView = view.findViewById(R.id.post_image);
         imageLayout = view.findViewById(R.id.image_layout);
 
         foodPost = (FoodPost) getArguments().getSerializable("object");

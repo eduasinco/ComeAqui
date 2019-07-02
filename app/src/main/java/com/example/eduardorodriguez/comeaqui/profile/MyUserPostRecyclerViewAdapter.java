@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -56,7 +55,7 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         TextView descriptionView = holder.mView.findViewById(R.id.description);
         TextView time = holder.mView.findViewById(R.id.time);
         TextView priceView = holder.mView.findViewById(R.id.price);
-        ImageView imageView = holder.mView.findViewById(R.id.post_iamge);
+        ImageView imageView = holder.mView.findViewById(R.id.post_image);
         ConstraintLayout imageLayout = holder.mView.findViewById(R.id.image_layout);
         ConstraintLayout postButton = holder.mView.findViewById(R.id.post_button);
         View cardButton = holder.mView.findViewById(R.id.card_button);
