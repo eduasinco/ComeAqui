@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="wrap_content"
+              xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:orientation="horizontal">
-
-    <TextView
-            android:id="@+id/item_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
-            android:textAppearance="?attr/textAppearanceListItem"/>
-
-    <TextView
-            android:id="@+id/content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
-            android:textAppearance="?attr/textAppearanceListItem"/>
+    <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp" app:srcCompat="@drawable/no_profile_photo" android:id="@+id/notificator_image"
+            android:layout_weight="1"/>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:layout_weight="1">
+        <TextView
+                android:text="@eduasinco"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/username" android:layout_weight="1"/>
+        <TextView
+                android:text="TextView"
+                android:layout_height="wrap_content" android:id="@+id/notification" android:layout_weight="1"
+                android:layout_width="wrap_content"/>
+    </LinearLayout>
 </LinearLayout>

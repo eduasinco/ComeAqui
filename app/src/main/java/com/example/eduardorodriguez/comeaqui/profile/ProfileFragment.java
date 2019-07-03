@@ -130,7 +130,7 @@ public class ProfileFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            String[] titles = {"posts", "messages", "options"};
+            String[] titles = {"posts", "posts & reviews", "whatever"};
             return titles[position];
         }
     }

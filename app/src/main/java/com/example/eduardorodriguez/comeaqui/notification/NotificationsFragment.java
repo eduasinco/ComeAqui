@@ -61,7 +61,7 @@ public class NotificationsFragment extends Fragment {
     }
 
     void getData(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/foods/");
+        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_notifications/");
         try {
             String response = process.execute().get();
             if (response != null)

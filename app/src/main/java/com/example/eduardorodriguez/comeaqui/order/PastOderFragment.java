@@ -1,8 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.order;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -11,14 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import com.example.eduardorodriguez.comeaqui.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.map.AddFoodActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.gson.*;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import static com.example.eduardorodriguez.comeaqui.R.layout.fragment_pending_past_order;
+import static com.example.eduardorodriguez.comeaqui.R.layout.fragment_order_pending_past;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,7 +60,7 @@ public class PastOderFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        view = inflater.inflate(fragment_pending_past_order, container, false);
+        view = inflater.inflate(fragment_order_pending_past, container, false);
         pullToRefresh = view.findViewById(R.id.pullToRefresh);
         fa = new OrderAdapter(getActivity(), data);
         pending = getArguments().getBoolean("pending");
@@ -75,12 +72,6 @@ public class PastOderFragment extends Fragment {
         pullToRefresh.setOnRefreshListener(() -> {
             getDataAndSet();
             pullToRefresh.setRefreshing(false);
-        });
-
-        FloatingActionButton myFab =  view.findViewById(R.id.fab);
-        myFab.setOnClickListener(v -> {
-            Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
-            getActivity().startActivity(addFood);
         });
 
         return view;
