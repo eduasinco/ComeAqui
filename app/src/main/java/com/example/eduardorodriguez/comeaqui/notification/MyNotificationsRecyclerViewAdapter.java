@@ -5,8 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
 
 import java.util.ArrayList;
@@ -42,6 +44,7 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
         holder.mItem = mValues.get(position);
         holder.usernameView.setText(holder.mItem.sender.username);
         holder.notificationView.setText(holder.mItem.sender.first_name + " " + holder.mItem.sender.last_name + " quiere probar tu plato!");
+        Glide.with(holder.mView.getContext()).load(holder.mItem.sender.profile_photo).into(holder.senderImageView);
 
         holder.mView.setOnClickListener(v -> {
 
@@ -57,6 +60,7 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
         public final View mView;
         public final TextView usernameView;
         public final TextView notificationView;
+        public final ImageView senderImageView;
         public NotificationObject mItem;
 
         public ViewHolder(View view) {
@@ -64,6 +68,7 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
             mView = view;
             usernameView = view.findViewById(R.id.username);
             notificationView = view.findViewById(R.id.notification);
+            senderImageView = view.findViewById(R.id.notificator_image);
         }
 
         @Override
