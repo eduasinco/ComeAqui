@@ -7,26 +7,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.eduardorodriguez.comeaqui.FoodPost;
-import com.example.eduardorodriguez.comeaqui.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.notification.dummy.DummyContent.DummyItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyNotificationsRecyclerViewAdapter.ViewHolder> {
 
-    private  List<OrderObject> mValues;
+    private  List<NotificationObject> mValues;
     Context context;
 
-    public MyNotificationsRecyclerViewAdapter(Context context, ArrayList<OrderObject> data){
+    public MyNotificationsRecyclerViewAdapter(Context context, ArrayList<NotificationObject> data){
 
         this.context = context;
         this.mValues = data;
     }
 
-    public void addNewRow(ArrayList<OrderObject> data){
+    public void addNewRow(ArrayList<NotificationObject> data){
         this.mValues = data;
         this.notifyDataSetChanged();
     }
@@ -43,7 +40,8 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
+        holder.usernameView.setText(holder.mItem.sender.username);
+        holder.notificationView.setText(holder.mItem.sender.first_name + " " + holder.mItem.sender.last_name + " quiere probar tu plato!");
 
         holder.mView.setOnClickListener(v -> {
 
@@ -57,20 +55,20 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public OrderObject mItem;
+        public final TextView usernameView;
+        public final TextView notificationView;
+        public NotificationObject mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            usernameView = view.findViewById(R.id.username);
+            notificationView = view.findViewById(R.id.notification);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + usernameView.getText() + "'";
         }
     }
 }

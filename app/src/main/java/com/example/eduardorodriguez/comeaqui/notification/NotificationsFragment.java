@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutionException;
 
 public class NotificationsFragment extends Fragment {
 
-    ArrayList<OrderObject> data;
+    ArrayList<NotificationObject> data;
     MyNotificationsRecyclerViewAdapter notificationAdapter;
 
     public NotificationsFragment() {
@@ -31,7 +31,7 @@ public class NotificationsFragment extends Fragment {
             data = new ArrayList<>();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
-                data.add(new OrderObject(jo));
+                data.add(new NotificationObject(jo));
             }
             notificationAdapter.addNewRow(data);
         } catch (Exception e){
@@ -48,13 +48,12 @@ public class NotificationsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifications_list, container, false);
+        notificationAdapter = new MyNotificationsRecyclerViewAdapter(getContext(), data);
 
         Context context = view.getContext();
         RecyclerView recyclerView = (RecyclerView) view;
 
         getData();
-
-        notificationAdapter = new MyNotificationsRecyclerViewAdapter(getContext(), data);
         recyclerView.setAdapter(notificationAdapter);
 
         return view;
