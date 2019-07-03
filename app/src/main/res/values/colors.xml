@@ -2,12 +2,14 @@
 <resources>
     <color name="colorPrimary">#9539ff</color>
     <color name="colorPrimaryDark">#49009c</color>
+    <color name="colorPrimaryLight">#DAC3FF</color>
     <color name="colorAccent">#49009c</color>
     <color name="colorComeAqui">#7701ff</color>
+
     <color name="grey">#797979</color>
+
     <color name="mapPickerFill">#E6FFFFFF</color>
     <color name="mapPicker">#9539ff</color>
-    <color name="colorPrimaryLight">#DAC3FF</color>
     <color name="favourite">#FFBF00</color>
 
     <color name="bottom_bottom">#809E9E9E</color>
