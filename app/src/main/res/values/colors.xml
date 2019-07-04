@@ -5,6 +5,8 @@
     <color name="colorPrimaryLight">#DAC3FF</color>
     <color name="colorAccent">#49009c</color>
     <color name="colorComeAqui">#7701ff</color>
+    <color name="colorBackground">#FFFFFF</color>
+
 
     <color name="grey">#797979</color>
 
@@ -14,7 +16,4 @@
 
     <color name="bottom_bottom">#809E9E9E</color>
     <color name="bottom_top">#FFFFFF</color>
-
-    <color name="corner_color">#FFFFFF</color>
-
 </resources>

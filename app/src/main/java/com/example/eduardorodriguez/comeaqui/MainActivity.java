@@ -13,9 +13,10 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import com.example.eduardorodriguez.comeaqui.chat.ChatActivity;
 import com.example.eduardorodriguez.comeaqui.notification.NotificationsFragment;
 import com.example.eduardorodriguez.comeaqui.order.OrderFragment;
-import com.example.eduardorodriguez.comeaqui.order.PastOderFragment;
 import com.example.eduardorodriguez.comeaqui.map.MapFragment;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileFragment;
 import com.example.eduardorodriguez.comeaqui.profile.User;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView mMainNav;
     private FrameLayout mMainFrame;
     private Toolbar toolbar;
+    private ImageView chatView;
 
     private OrderFragment getPastOderFragment;
     private MapFragment mapFragment;
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         mMainFrame = findViewById(R.id.main_frame);
         mMainNav = findViewById(R.id.main_nav);
+        chatView = findViewById(R.id.chat);
 
         getPastOderFragment = new OrderFragment();
         mapFragment = new MapFragment();
@@ -65,6 +68,11 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        chatView.setOnClickListener(v -> {
+            Intent chatIntent = new Intent(this, ChatActivity.class);
+            startActivity(chatIntent);
+        });
 
         // load the store fragment by default
 
