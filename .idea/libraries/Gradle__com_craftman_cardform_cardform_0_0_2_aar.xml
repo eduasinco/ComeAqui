@@ -1,11 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: com.craftman.cardform:cardform:0.0.2@aar">
     <ANNOTATIONS>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/cardform-0.0.2.aar/073e74fb7f4297d8a3ebfb77e72c1f0c/annotations.zip!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/jetified-cardform-0.0.2.aar/1e5a23910f59dfd6f1b9f5917a465141/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/cardform-0.0.2.aar/073e74fb7f4297d8a3ebfb77e72c1f0c/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/cardform-0.0.2.aar/073e74fb7f4297d8a3ebfb77e72c1f0c/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/jetified-cardform-0.0.2.aar/1e5a23910f59dfd6f1b9f5917a465141/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/jetified-cardform-0.0.2.aar/1e5a23910f59dfd6f1b9f5917a465141/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

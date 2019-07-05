@@ -25,6 +25,8 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
+        <activity android:name=".chat.ConversationActivity">
+        </activity>
         <activity android:name=".chat.ChatActivity">
         </activity>
         <!--
@@ -39,10 +41,6 @@
                 android:name="com.google.android.geo.API_KEY"
                 android:value="@string/google_maps_key"/>
 
-        <activity
-                android:name=".map.PlacePickerActivity"
-                android:label="@string/title_activity_place_picker">
-        </activity>
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -75,27 +73,13 @@
         <activity android:name=".CardInformationActivity">
         </activity>
         <activity
-                android:name=".profile.EditAccountActivity"
-                android:label="@string/title_activity_settings"
-                android:theme="@style/AppTheme">
-        </activity>
-        <activity
                 android:name=".profile.settings.SettingsActivity"
                 android:label="@string/title_activity_settings"
                 android:theme="@style/AppTheme">
         </activity>
         <activity android:name=".profile.settings.ChangePasswordActivity">
         </activity>
-        <activity
-                android:name=".profile.orders.OrdersActivity"
-                android:label="@string/title_activity_orders"
-                android:theme="@style/AppTheme">
-        </activity>
         <activity android:name=".order.OrderLookActivity">
-        </activity>
-        <activity android:name=".profile.messages.MessageLookActivity">
-        </activity>
-        <activity android:name=".map.AddGoFoodActivity">
         </activity>
     </application>
 

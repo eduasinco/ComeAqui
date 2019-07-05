@@ -22,21 +22,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/buttons">
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 tools:showIn="@layout/activity_settings"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:context=".profile.settings.SettingsActivity">
 
-            <android.support.v4.widget.NestedScrollView
+            <androidx.core.widget.NestedScrollView
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
                     tools:showIn="@layout/activity_settings"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     tools:context=".profile.settings.SettingsActivity">
 
-                <android.support.constraint.ConstraintLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         tools:context=".profile.settings.SettingsActivity">
@@ -107,11 +107,11 @@
                             android:layout_marginEnd="32dp" app:layout_constraintStart_toStartOf="parent"
                             android:layout_marginStart="32dp"
                             app:layout_constraintTop_toBottomOf="@+id/textView15"/>
-                </android.support.constraint.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </android.support.v4.widget.NestedScrollView>
+            </androidx.core.widget.NestedScrollView>
 
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
     </ScrollView>
 
 </RelativeLayout>

@@ -1,14 +1,15 @@
 package com.example.eduardorodriguez.comeaqui.chat;
 
-import android.support.v7.widget.RecyclerView;
+import android.content.Intent;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.SplashActivity;
 import com.example.eduardorodriguez.comeaqui.chat.ChatFragment.OnListFragmentInteractionListener;
 import com.example.eduardorodriguez.comeaqui.profile.User;
 
@@ -19,6 +20,7 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
 
     private List<ChatObject> mValues;
     private final OnListFragmentInteractionListener mListener;
+    private User userToTalkTo;
 
     public MyChatRecyclerViewAdapter(List<ChatObject> items, OnListFragmentInteractionListener listener) {
         mValues = items;
@@ -42,14 +44,18 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
         holder.mItem = mValues.get(position);
         for (User user: holder.mItem.users){
             if (user.id != MainActivity.user.id){
-                holder.username.setText(user.email);
+                userToTalkTo = user;
+                        holder.username.setText(user.email);
+                Glide.with(holder.mView.getContext()).load(user.profile_photo).into(holder.chattererImage);
             }
         }
         holder.lastMessage.setText(holder.mItem.lastMessage.message);
         holder.dateView.setText(holder.mItem.lastMessage.createdAt);
         holder.mView.setOnClickListener(v -> {
             if (null != mListener) {
-
+                Intent conversation = new Intent(holder.mView.getContext(), ConversationActivity.class);
+                conversation.putExtra("sender", userToTalkTo);
+                holder.mView.getContext().startActivity(conversation);
             }
         });
     }

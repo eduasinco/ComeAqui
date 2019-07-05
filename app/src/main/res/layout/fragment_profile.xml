@@ -9,18 +9,18 @@
         tools:context=".profile.ProfileFragment"
         android:orientation="vertical" android:id="@+id/profile">
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <android.support.design.widget.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/app_bar"
                 android:fitsSystemWindows="true"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:theme="@style/AppTheme.AppBarOverlay">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -53,7 +53,7 @@
                         app:layout_constraintHorizontal_bias="0.498"
                         app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"/>
 
-                <android.support.constraint.ConstraintLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         app:layout_constraintStart_toStartOf="parent"
@@ -86,7 +86,7 @@
                             app:layout_constraintHorizontal_bias="0.0"
                             android:alpha="0.8"
                             app:layout_constraintBottom_toTopOf="@+id/bioView"/>
-                    <android.support.constraint.ConstraintLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                             android:background="#FFFFFF"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" app:layout_constraintTop_toBottomOf="@+id/senderEmail"
@@ -104,7 +104,7 @@
                                 android:textColor="@color/colorPrimaryDark"
                                 android:alpha="0.9"
                                 android:layout_marginEnd="32dp" android:layout_marginStart="32dp"/>
-                    </android.support.constraint.ConstraintLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                     <View
                             android:layout_height="3dp"
                             android:background="@color/colorPrimaryDark"
@@ -113,24 +113,24 @@
                             app:layout_constraintEnd_toStartOf="@+id/guideline7"
                             app:layout_constraintStart_toStartOf="@+id/guideline6"
                             app:layout_constraintTop_toTopOf="parent"/>
-                </android.support.constraint.ConstraintLayout>
-            </android.support.constraint.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <android.support.design.widget.TabLayout
+            <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tab_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:layout_scrollFlags="scroll|enterAlways"/>
 
-        </android.support.design.widget.AppBarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
-        <android.support.v4.view.ViewPager
+        <androidx.viewpager.widget.ViewPager
                 android:id="@+id/viewpager"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        </android.support.v4.view.ViewPager>
+        </androidx.viewpager.widget.ViewPager>
 
 
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </LinearLayout>
