@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.ChatFragment.OnListFragmentInteractionListener;
+import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
 import com.example.eduardorodriguez.comeaqui.profile.User;
 
 import java.util.ArrayList;
@@ -54,7 +55,8 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
         holder.mView.setOnClickListener(v -> {
             if (null != mListener) {
                 Intent conversation = new Intent(holder.mView.getContext(), ConversationActivity.class);
-                conversation.putExtra("sender", userToTalkTo);
+                conversation.putExtra("chat", holder.mItem);
+                conversation.putExtra("chatting_with", userToTalkTo);
                 holder.mView.getContext().startActivity(conversation);
             }
         });
