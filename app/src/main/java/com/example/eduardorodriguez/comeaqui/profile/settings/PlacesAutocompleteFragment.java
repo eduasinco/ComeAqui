@@ -75,10 +75,6 @@ public class PlacesAutocompleteFragment extends Fragment {
             Float lat = loc.get("lat").getAsFloat();
             Float lng = loc.get("lng").getAsFloat();
 
-            PatchAsyncTask putTast = new PatchAsyncTask();
-            putTast.execute("lat", lat.toString());
-            PatchAsyncTask putTast2 = new PatchAsyncTask();
-            putTast2.execute("lng", lng.toString());
         } catch (Exception e){
             e.printStackTrace();
         }

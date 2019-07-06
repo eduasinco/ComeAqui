@@ -27,12 +27,16 @@ import java.io.*;
 public class PatchAsyncTask extends AsyncTask<String, Void, JSONObject> {
 
     public Bitmap imageBitmap;
+    String uri;
+    public PatchAsyncTask(String uri){
+        this.uri = uri;
+    }
 
     @Override
     protected JSONObject doInBackground(String... params)
     {
 
-        HttpPatch httpPatch = new HttpPatch( "http://192.168.1.147:8000/edit_profile/");
+        HttpPatch httpPatch = new HttpPatch( this.uri);
         httpPatch.addHeader("Authorization", "Basic " + SplashActivity.getCredemtials());
 
         HttpClient httpclient = new DefaultHttpClient();
@@ -42,7 +46,7 @@ public class PatchAsyncTask extends AsyncTask<String, Void, JSONObject> {
         StringBody value = new StringBody(params[1], ContentType.TEXT_PLAIN);
         HttpEntity entity;
 
-        if (params.length == 3) {
+        if (imageBitmap != null) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
             byte[] imageBytes = baos.toByteArray();

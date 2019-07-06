@@ -17,6 +17,8 @@ import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -58,38 +60,33 @@ public class EditProfileActivity extends AppCompatActivity {
         }
 
         FloatingActionButton myFab =  findViewById(R.id.fabCamera);
-        myFab.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                }
+        myFab.setOnClickListener(v -> {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         });
 
-        saveButtonView.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PatchAsyncTask putTast = new PatchAsyncTask();
-                try {
-                    putTast.execute("first_name", editFirstNameView.getText().toString()).get();
-                    PatchAsyncTask putTast2 = new PatchAsyncTask();
-                    putTast2.execute("last_name", editLastNameView.getText().toString()).get();
-                    PatchAsyncTask putTast3 = new PatchAsyncTask();
-                    putTast3.execute("bio", bioView.getText().toString()).get();
-                    if (imageBitmap != null){
-                        PatchAsyncTask putTast4 = new PatchAsyncTask();
-                        putTast4.imageBitmap = imageBitmap;
-                        putTast4.execute("profile_photo", "", "true").get();
-                    }
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
+        saveButtonView.setOnClickListener(v -> {
+            PatchAsyncTask putTast = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
+            try {
+                putTast.execute("first_name", editFirstNameView.getText().toString()).get(5, TimeUnit.SECONDS);
+                PatchAsyncTask putTast2 = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
+                putTast2.execute("last_name", editLastNameView.getText().toString()).get(5, TimeUnit.SECONDS);
+                PatchAsyncTask putTast3 = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
+                putTast3.execute("bio", bioView.getText().toString()).get(5, TimeUnit.SECONDS);
+                if (imageBitmap != null){
+                    PatchAsyncTask putTast4 = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
+                    putTast4.imageBitmap = imageBitmap;
+                    putTast4.execute("profile_photo", "", "true").get(15, TimeUnit.SECONDS);
                 }
-
-                Intent k = new Intent(EditProfileActivity.this, MainActivity.class);
-                k.putExtra("profile", true);
-                startActivity(k);
+            } catch (ExecutionException | InterruptedException | TimeoutException e) {
+                e.printStackTrace();
             }
+
+            Intent k = new Intent(EditProfileActivity.this, MainActivity.class);
+            k.putExtra("profile", true);
+            startActivity(k);
         });
     }
 }

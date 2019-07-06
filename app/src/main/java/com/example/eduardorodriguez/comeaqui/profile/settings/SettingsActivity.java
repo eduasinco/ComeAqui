@@ -68,12 +68,7 @@ public class SettingsActivity extends AppCompatActivity {
         editAccountView = findViewById(R.id.editAccount);
         metersTextView = findViewById(R.id.metersText);
 
-        signOutView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signOut();
-            }
-        });
+        signOutView.setOnClickListener(v -> signOut());
 
         editAccountView();
         getData();
@@ -81,38 +76,32 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     void editAccountView(){
-        editAccountView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
+        editAccountView.setOnClickListener(v -> {
         });
     }
 
     void saveSettings(){
-        saveButtonView.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PatchAsyncTask putTast = new PatchAsyncTask();
-                putTast.execute("location", AutocompleteLocationFragment.addressView.getText().toString());
-                PatchAsyncTask putTast2 = new PatchAsyncTask();
-                putTast2.execute("deliver_radius", Integer.toString(delivery_radious));
+        saveButtonView.setOnClickListener(v -> {
+            PatchAsyncTask putTast = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
+            putTast.execute("location", AutocompleteLocationFragment.addressView.getText().toString());
+            PatchAsyncTask putTast2 = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
+            putTast2.execute("deliver_radius", Integer.toString(delivery_radious));
 
-                String place_id = AutocompleteLocationFragment.place_id;
-                if (place_id != null) {
-                    Server gAPI2 = new Server("GET", "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + place_id +
-                            "&fields=geometry&key=" + getResources().getString(R.string.google_key));
+            String place_id = AutocompleteLocationFragment.place_id;
+            if (place_id != null) {
+                Server gAPI2 = new Server("GET", "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + place_id +
+                        "&fields=geometry&key=" + getResources().getString(R.string.google_key));
 
-                    gAPI2.execute();
-                } else {
-                    Server gAPI2 = new Server("GET", "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" +
-                            AutocompleteLocationFragment.addressView.getText().toString() +
-                            "&key=" + getResources().getString(R.string.google_key));
-                    gAPI2.execute();
-                }
-                Intent k = new Intent(SettingsActivity.this, MainActivity.class);
-                k.putExtra("profile", true);
-                startActivity(k);
+                gAPI2.execute();
+            } else {
+                Server gAPI2 = new Server("GET", "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" +
+                        AutocompleteLocationFragment.addressView.getText().toString() +
+                        "&key=" + getResources().getString(R.string.google_key));
+                gAPI2.execute();
             }
+            Intent k = new Intent(SettingsActivity.this, MainActivity.class);
+            k.putExtra("profile", true);
+            startActivity(k);
         });
     }
 

@@ -17,13 +17,13 @@
                 android:id="@+id/fotoPerfil"
                 android:layout_width="48sp"
                 android:layout_height="48sp"
-                android:src="@mipmap/ic_launcher" />
+                android:src="@mipmap/ic_launcher"/>
         <TextView
                 android:id="@+id/nombre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Kevin"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center" android:paddingLeft="8dp"/>
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvMensajes"
@@ -53,6 +53,7 @@
                 android:id="@+id/btnEnviar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Enviar"/>
+                android:hint="Enviar"
+                android:background="@color/colorPrimaryDark" android:textColor="@android:color/white"/>
     </LinearLayout>
 </LinearLayout>
