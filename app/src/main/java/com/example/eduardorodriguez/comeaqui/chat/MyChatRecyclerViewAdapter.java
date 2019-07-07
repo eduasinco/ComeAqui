@@ -12,6 +12,8 @@ import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.ChatFragment.OnListFragmentInteractionListener;
 import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
+import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.ChatFirebaseObject;
+import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.FirebaseUser;
 import com.example.eduardorodriguez.comeaqui.profile.User;
 
 import java.util.ArrayList;
@@ -19,17 +21,24 @@ import java.util.List;
 
 public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecyclerViewAdapter.ViewHolder> {
 
-    private List<ChatObject> mValues;
+    private List<ChatFirebaseObject> mValues;
     private final OnListFragmentInteractionListener mListener;
-    private User userToTalkTo;
+    private FirebaseUser userToTalkTo;
 
-    public MyChatRecyclerViewAdapter(List<ChatObject> items, OnListFragmentInteractionListener listener) {
+    public MyChatRecyclerViewAdapter(List<ChatFirebaseObject> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
 
-    public void addData(ArrayList<ChatObject> data){
+    public void addData(ArrayList<ChatFirebaseObject> data){
         this.mValues = data;
+        this.notifyDataSetChanged();
+    }
+
+    public void addChatObject(ChatFirebaseObject chat) {
+        if (mValues == null)
+            this.mValues = new ArrayList<>();
+        this.mValues.add(chat);
         this.notifyDataSetChanged();
     }
 
@@ -43,15 +52,15 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        for (User user: holder.mItem.users){
-            if (user.id != MainActivity.user.id){
+        for (FirebaseUser user: holder.mItem.users.values()){
+            if (!user.email.equals(MainActivity.user.email)){
                 userToTalkTo = user;
                         holder.username.setText(user.email);
                 Glide.with(holder.mView.getContext()).load(user.profile_photo).into(holder.chattererImage);
             }
         }
-        holder.lastMessage.setText(holder.mItem.lastMessage.message);
-        holder.dateView.setText(holder.mItem.lastMessage.createdAt);
+        holder.lastMessage.setText(holder.mItem.last_message);
+        holder.dateView.setText("00/00/0000");
         holder.mView.setOnClickListener(v -> {
             if (null != mListener) {
                 Intent conversation = new Intent(holder.mView.getContext(), ConversationActivity.class);
@@ -73,7 +82,7 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
         public final TextView lastMessage;
         public final TextView dateView;
         public final ImageView chattererImage;
-        public ChatObject mItem;
+        public ChatFirebaseObject mItem;
 
         public ViewHolder(View view) {
             super(view);

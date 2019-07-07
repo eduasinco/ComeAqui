@@ -29,7 +29,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class ChatFragment extends Fragment {
 
-    ArrayList<ChatObject> data;
+    ArrayList<ChatFirebaseObject> data;
     MyChatRecyclerViewAdapter adapter;
 
     // TODO: Customize parameter argument names
@@ -71,7 +71,6 @@ public class ChatFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.list);
         adapter = new MyChatRecyclerViewAdapter(data, mListener);
         recyclerView.setAdapter(adapter);
-        getDataAndSet();
         getMyChatsFromFirebase();
         return view;
     }
@@ -84,7 +83,7 @@ public class ChatFragment extends Fragment {
                 JsonObject jo = pa.getAsJsonObject();
                 ChatObject chat = new ChatObject(jo);
                 chat.lastMessage = getLastMessage(chat.id);
-                data.add(chat);
+                // data.add(chat);
             }
             adapter.addData(data);
         } catch (Exception e){
@@ -94,61 +93,42 @@ public class ChatFragment extends Fragment {
 
     void getMyChatsFromFirebase(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
-        reference.orderByChild("email")
-                .equalTo("eduasinco@gmail.com")
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        DatabaseReference userChats = FirebaseDatabase.getInstance().getReference("userChats");
-                        userChats
-                                .child(dataSnapshot.getKey())
-                                .addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                                            DatabaseReference chats = FirebaseDatabase.getInstance().getReference("chats");
-                                            chats.child(postSnapshot.getKey()).addValueEventListener(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                    ChatFirebaseObject chat = dataSnapshot.getValue(ChatFirebaseObject.class);
-                                                    System.out.println("");
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                }
-                                            });
+        reference
+            .orderByChild("email")
+            .equalTo("eduasinco@gmail.com")
+            .addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    DatabaseReference userChats = FirebaseDatabase.getInstance().getReference("userChats");
+                    userChats
+                        .child(dataSnapshot.getChildren().iterator().next().getKey())
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                                    DatabaseReference chats = FirebaseDatabase.getInstance().getReference("chats");
+                                    chats.child(postSnapshot.getKey()).addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            ChatFirebaseObject chat = dataSnapshot.getValue(ChatFirebaseObject.class);
+                                            if (chat != null)
+                                                adapter.addChatObject(chat);
                                         }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                    }
-                                });
-                    }
-
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        }
+                                    });
+                                }
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                            }
+                        });
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
 
     }
 
