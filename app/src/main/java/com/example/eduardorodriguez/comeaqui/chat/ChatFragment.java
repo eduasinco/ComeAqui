@@ -2,13 +2,17 @@ package com.example.eduardorodriguez.comeaqui.chat;
 
 import android.content.Context;
 import android.os.Bundle;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.ChatFirebaseObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.google.firebase.database.*;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -68,6 +72,7 @@ public class ChatFragment extends Fragment {
         adapter = new MyChatRecyclerViewAdapter(data, mListener);
         recyclerView.setAdapter(adapter);
         getDataAndSet();
+        getMyChatsFromFirebase();
         return view;
     }
 
@@ -86,6 +91,67 @@ public class ChatFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
+    void getMyChatsFromFirebase(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
+        reference.orderByChild("email")
+                .equalTo("eduasinco@gmail.com")
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        DatabaseReference userChats = FirebaseDatabase.getInstance().getReference("userChats");
+                        userChats
+                                .child(dataSnapshot.getKey())
+                                .addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                                            DatabaseReference chats = FirebaseDatabase.getInstance().getReference("chats");
+                                            chats.child(postSnapshot.getKey()).addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    ChatFirebaseObject chat = dataSnapshot.getValue(ChatFirebaseObject.class);
+                                                    System.out.println("");
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                }
+                                            });
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+    }
+
     void getDataAndSet(){
         GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_chats/");
         try {
