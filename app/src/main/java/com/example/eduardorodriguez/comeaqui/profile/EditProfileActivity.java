@@ -7,7 +7,6 @@ import android.provider.MediaStore;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,14 +14,24 @@ import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class EditProfileActivity extends AppCompatActivity {
 
-    Bitmap imageBitmap;
+    private Bitmap imageBitmap;
+    private ImageView profileImageView;
+    private TextView editFirstNameView;
+    private TextView editLastNameView;
+    private TextView bioView;
+    private Button saveButtonView;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     @Override
@@ -33,6 +42,7 @@ public class EditProfileActivity extends AppCompatActivity {
             imageBitmap = (Bitmap) extras.get("data");
             profileImageView.setImageBitmap(imageBitmap);
         }
+
     }
 
     @Override
@@ -42,11 +52,11 @@ public class EditProfileActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final ImageView profileImageView = findViewById(R.id.profile_image);
-        final TextView editFirstNameView = findViewById(R.id.editFirstName);
-        final TextView editLastNameView = findViewById(R.id.editLastName);
-        final TextView bioView = findViewById(R.id.orderMessage);
-        final Button saveButtonView = findViewById(R.id.saveButton);
+        profileImageView = findViewById(R.id.profile_image);
+        editFirstNameView = findViewById(R.id.editFirstName);
+        editLastNameView = findViewById(R.id.editLastName);
+        bioView = findViewById(R.id.orderMessage);
+        saveButtonView = findViewById(R.id.saveButton);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -68,25 +78,50 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         saveButtonView.setOnClickListener(v -> {
-            PatchAsyncTask putTast = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
-            try {
-                putTast.execute("first_name", editFirstNameView.getText().toString()).get(5, TimeUnit.SECONDS);
-                PatchAsyncTask putTast2 = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
-                putTast2.execute("last_name", editLastNameView.getText().toString()).get(5, TimeUnit.SECONDS);
-                PatchAsyncTask putTast3 = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
-                putTast3.execute("bio", bioView.getText().toString()).get(5, TimeUnit.SECONDS);
-                if (imageBitmap != null){
-                    PatchAsyncTask putTast4 = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
-                    putTast4.imageBitmap = imageBitmap;
-                    putTast4.execute("profile_photo", "", "true").get(15, TimeUnit.SECONDS);
-                }
-            } catch (ExecutionException | InterruptedException | TimeoutException e) {
-                e.printStackTrace();
-            }
+            patchProfileData();
+            saveFirebaseProfile();
 
             Intent k = new Intent(EditProfileActivity.this, MainActivity.class);
             k.putExtra("profile", true);
             startActivity(k);
         });
+    }
+
+    private void patchProfileData(){
+        PatchAsyncTask putTast = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
+        try {
+            putTast.execute("first_name", editFirstNameView.getText().toString()).get(5, TimeUnit.SECONDS);
+            PatchAsyncTask putTast2 = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
+            putTast2.execute("last_name", editLastNameView.getText().toString()).get(5, TimeUnit.SECONDS);
+            PatchAsyncTask putTast3 = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
+            putTast3.execute("bio", bioView.getText().toString()).get(5, TimeUnit.SECONDS);
+            if (imageBitmap != null){
+                PatchAsyncTask putTast4 = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
+                putTast4.imageBitmap = imageBitmap;
+                putTast4.execute("profile_photo", "", "true").get(15, TimeUnit.SECONDS);
+            }
+        } catch (ExecutionException | InterruptedException | TimeoutException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveFirebaseProfile(){
+        uploadFirebaseUserImage();
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(MainActivity.firebaseUser.id);
+        reference.child("first_name").setValue(editFirstNameView.getText().toString());
+        reference.child("last_name").setValue(editLastNameView.getText().toString());
+    }
+
+    private void uploadFirebaseUserImage(){
+        StorageReference firebaseStorage = FirebaseStorage.getInstance().getReference().child("user_image/" + MainActivity.firebaseUser.id);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] imageBytes = baos.toByteArray();
+        firebaseStorage.putBytes(imageBytes);
+        firebaseStorage.getDownloadUrl().addOnSuccessListener(uri -> {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(MainActivity.firebaseUser.id);
+            reference.child("profile_photo").setValue(uri.toString());
+        }).addOnFailureListener(exception -> {});
     }
 }

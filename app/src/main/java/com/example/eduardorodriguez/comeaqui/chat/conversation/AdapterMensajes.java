@@ -1,16 +1,26 @@
 package com.example.eduardorodriguez.comeaqui.chat.conversation;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
+import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.MessageObject;
 import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.MessageFirebaseObject;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,9 +48,14 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(final AdapterMensajes.ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = listMensaje.get(position);
         holder.messageView.setText(holder.mItem.message);
+
+        StorageReference firebaseStorage = FirebaseStorage.getInstance().getReference().child("user_image/" + holder.mItem.sender);
+        firebaseStorage.getDownloadUrl().addOnSuccessListener(uri -> {
+            Glide.with(holder.mView.getContext()).load(uri.toString()).into(holder.chattererImage);
+        }).addOnFailureListener(exception -> {});
     }
 
     @Override

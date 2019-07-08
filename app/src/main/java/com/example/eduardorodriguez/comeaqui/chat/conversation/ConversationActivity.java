@@ -114,6 +114,9 @@ public class ConversationActivity extends AppCompatActivity {
         message.sender = MainActivity.firebaseUser.id;
         DatabaseReference newRef = reference.push();
         newRef.setValue(message);
+
+        DatabaseReference chats = FirebaseDatabase.getInstance().getReference("chats");
+        chats.child(chat.id).child("last_message").setValue(txtMensaje.getText().toString());
     }
 
     private void getChatFirebaseMessages(String chat){
