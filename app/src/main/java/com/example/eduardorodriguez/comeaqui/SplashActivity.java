@@ -19,6 +19,10 @@ public class SplashActivity extends AppCompatActivity {
         return credentials;
     }
 
+    public static String setCredenditals(String cred){
+        credentials = cred;
+        return credentials;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,7 @@ public class SplashActivity extends AppCompatActivity {
         SharedPreferences pref = getSharedPreferences("Login", Context.MODE_PRIVATE);
         if (pref.getBoolean("signed_in", false) && firebaseSignedIn[0]) {
             SharedPreferences sp = getSharedPreferences("Login", MODE_PRIVATE);
+            credentials = sp.getString("cred", "");
 
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);

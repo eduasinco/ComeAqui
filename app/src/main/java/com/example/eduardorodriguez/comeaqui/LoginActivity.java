@@ -358,6 +358,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     editor.putBoolean("signed_in", true);
                     editor.putString("email", mEmail);
                     editor.putString("password", mPassword);
+
+                    SplashActivity.setCredenditals(authorization);
                     editor.apply();
 
                     return true;
