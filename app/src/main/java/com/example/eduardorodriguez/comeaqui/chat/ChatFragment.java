@@ -93,40 +93,28 @@ public class ChatFragment extends Fragment {
     }
 
     void getMyChatsFromFirebase(){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
-        reference
-            .orderByChild("email")
-            .equalTo(MainActivity.user.email)
+        DatabaseReference userChats = FirebaseDatabase.getInstance().getReference("userChats");
+        userChats
+            .child(MainActivity.firebaseUser.id)
             .addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    DatabaseReference userChats = FirebaseDatabase.getInstance().getReference("userChats");
-                    userChats
-                        .child(dataSnapshot.getChildren().iterator().next().getKey())
-                        .addValueEventListener(new ValueEventListener() {
+                    for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                        DatabaseReference chats = FirebaseDatabase.getInstance().getReference("chats");
+                        chats.child(postSnapshot.getKey()).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                                    DatabaseReference chats = FirebaseDatabase.getInstance().getReference("chats");
-                                    chats.child(postSnapshot.getKey()).addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            ChatFirebaseObject chat = dataSnapshot.getValue(ChatFirebaseObject.class);
-                                            if (chat != null) {
-                                                chat.id = postSnapshot.getKey();
-                                                adapter.addChatObject(chat);
-                                            }
-                                        }
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                                        }
-                                    });
+                                ChatFirebaseObject chat = dataSnapshot.getValue(ChatFirebaseObject.class);
+                                if (chat != null) {
+                                    chat.id = postSnapshot.getKey();
+                                    adapter.addChatObject(chat);
                                 }
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
                             }
                         });
+                    }
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {

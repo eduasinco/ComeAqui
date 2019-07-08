@@ -111,8 +111,8 @@ public class ConversationActivity extends AppCompatActivity {
         MessageFirebaseObject message = new MessageFirebaseObject();
         message.message = txtMensaje.getText().toString();
         message.chat = chat.id;
-        message.sender = "user1";
-        DatabaseReference newRef = reference.child("messages");
+        message.sender = MainActivity.firebaseUser.id;
+        DatabaseReference newRef = reference.push();
         newRef.setValue(message);
     }
 
@@ -122,7 +122,6 @@ public class ConversationActivity extends AppCompatActivity {
                 .orderByChild("chat")
                 .equalTo(chat)
                 .addChildEventListener(new ChildEventListener() {
-
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         MessageFirebaseObject message = dataSnapshot.getValue(MessageFirebaseObject.class);

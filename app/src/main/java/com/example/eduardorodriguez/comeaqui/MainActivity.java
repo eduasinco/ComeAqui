@@ -3,6 +3,8 @@ package com.example.eduardorodriguez.comeaqui;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import androidx.annotation.NonNull;
+import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.FirebaseUser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
@@ -21,6 +23,7 @@ import com.example.eduardorodriguez.comeaqui.map.MapFragment;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileFragment;
 import com.example.eduardorodriguez.comeaqui.profile.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.google.firebase.database.*;
 import com.google.gson.JsonParser;
 
 import java.util.concurrent.ExecutionException;
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private NotificationsFragment notificationFragment;
 
     public static User user;
+    public static FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,5 +134,23 @@ public class MainActivity extends AppCompatActivity {
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
+        initializeFirebaseUser();
+    }
+
+    private void initializeFirebaseUser(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
+        reference.orderByChild("email")
+                .equalTo(MainActivity.user.email).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                firebaseUser = dataSnapshot.getChildren().iterator().next().getValue(FirebaseUser.class);
+                firebaseUser.id = dataSnapshot.getChildren().iterator().next().getKey();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }
