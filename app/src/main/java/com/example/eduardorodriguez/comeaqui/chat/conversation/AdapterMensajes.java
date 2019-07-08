@@ -10,20 +10,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.MessageObject;
+import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.MessageFirebaseObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHolder>{
 
-    private List<MessageObject> listMensaje = new ArrayList<>();
+    private List<MessageFirebaseObject> listMensaje = new ArrayList<>();
     private Context c;
 
     public AdapterMensajes(Context c) {
         this.c = c;
     }
 
-    public void addMensaje(MessageObject m){
+    public void addMensaje(MessageFirebaseObject m){
         listMensaje.add(m);
         notifyItemInserted(listMensaje.size());
     }
@@ -39,12 +40,7 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
     @Override
     public void onBindViewHolder(final AdapterMensajes.ViewHolder holder, int position) {
         holder.mItem = listMensaje.get(position);
-
-        holder.username.setText(holder.mItem.sender.username);
         holder.messageView.setText(holder.mItem.message);
-        holder.dateView.setText(holder.mItem.createdAt);
-        Glide.with(holder.mView.getContext()).load(holder.mItem.sender.profile_photo).into(holder.chattererImage);
-
     }
 
     @Override
@@ -58,7 +54,7 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
         public final TextView messageView;
         public final TextView dateView;
         public final ImageView chattererImage;
-        public MessageObject mItem;
+        public MessageFirebaseObject mItem;
 
         public ViewHolder(View view) {
             super(view);

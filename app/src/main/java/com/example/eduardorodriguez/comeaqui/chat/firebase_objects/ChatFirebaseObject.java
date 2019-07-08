@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 public class ChatFirebaseObject implements Serializable {
+    public String id;
     public Map<String, FirebaseUser> users;
     public String last_message;
 }

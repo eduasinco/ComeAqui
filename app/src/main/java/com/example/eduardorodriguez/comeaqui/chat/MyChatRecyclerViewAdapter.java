@@ -52,10 +52,12 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        for (FirebaseUser user: holder.mItem.users.values()){
+        for (String userKye: holder.mItem.users.keySet()){
+            FirebaseUser user = holder.mItem.users.get(userKye);
             if (!user.email.equals(MainActivity.user.email)){
                 userToTalkTo = user;
-                        holder.username.setText(user.email);
+                userToTalkTo.id = userKye;
+                holder.username.setText(user.email);
                 Glide.with(holder.mView.getContext()).load(user.profile_photo).into(holder.chattererImage);
             }
         }

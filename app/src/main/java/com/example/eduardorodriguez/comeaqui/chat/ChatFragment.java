@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.ChatFirebaseObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
@@ -95,7 +96,7 @@ public class ChatFragment extends Fragment {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
         reference
             .orderByChild("email")
-            .equalTo("eduasinco@gmail.com")
+            .equalTo(MainActivity.user.email)
             .addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -111,8 +112,10 @@ public class ChatFragment extends Fragment {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                             ChatFirebaseObject chat = dataSnapshot.getValue(ChatFirebaseObject.class);
-                                            if (chat != null)
+                                            if (chat != null) {
+                                                chat.id = postSnapshot.getKey();
                                                 adapter.addChatObject(chat);
+                                            }
                                         }
                                         @Override
                                         public void onCancelled(@NonNull DatabaseError databaseError) {
