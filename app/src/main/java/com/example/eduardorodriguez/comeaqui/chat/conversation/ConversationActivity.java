@@ -79,19 +79,7 @@ public class ConversationActivity extends AppCompatActivity {
         }
 
         btnEnviar.setOnClickListener(view -> {
-            PostAsyncTask emitMessage = new PostAsyncTask(getResources().getString(R.string.server) + "/create_message/");
-            emitMessage.execute(
-                    new String[]{"message", txtMensaje.getText().toString()},
-                    new String[]{"chat_id", chat + ""}
-            );
-
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("messages");
-            MessageFirebaseObject message = new MessageFirebaseObject();
-            message.message = txtMensaje.getText().toString();
-            message.chat = chat.id;
-            message.sender = "user1";
-            DatabaseReference newRef = reference.child("messages");
-            newRef.setValue(message);
+            createFirebaseMessage();
             txtMensaje.setText("");
         });
 
@@ -108,6 +96,24 @@ public class ConversationActivity extends AppCompatActivity {
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    private void createServerMessage(){
+        PostAsyncTask emitMessage = new PostAsyncTask(getResources().getString(R.string.server) + "/create_message/");
+        emitMessage.execute(
+                new String[]{"message", txtMensaje.getText().toString()},
+                new String[]{"chat_id", chat + ""}
+        );
+    }
+
+    private void createFirebaseMessage(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("messages");
+        MessageFirebaseObject message = new MessageFirebaseObject();
+        message.message = txtMensaje.getText().toString();
+        message.chat = chat.id;
+        message.sender = "user1";
+        DatabaseReference newRef = reference.child("messages");
+        newRef.setValue(message);
     }
 
     private void getChatFirebaseMessages(String chat){

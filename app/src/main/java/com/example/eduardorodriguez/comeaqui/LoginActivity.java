@@ -24,6 +24,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
@@ -34,6 +36,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -63,38 +66,31 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     static Context context;
     static String email;
     static String password;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         // Set up the login form.
         context = getApplicationContext();
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.senderEmail);
+        mEmailView = findViewById(R.id.senderEmail);
         populateAutoComplete();
 
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
+        mPasswordView = findViewById(R.id.password);
+        mPasswordView.setOnEditorActionListener((textView, id, keyEvent) -> {
+            if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
+                attemptLogin();
+                return true;
             }
+            return false;
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
+        Button mEmailSignInButton = findViewById(R.id.email_sign_in_button);
+        mEmailSignInButton.setOnClickListener(view -> attemptLogin());
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        attemptAutoLogin();
     }
 
     private void populateAutoComplete() {
@@ -114,13 +110,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
             Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
+                    .setAction(android.R.string.ok, v -> requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS));
         } else {
             requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
         }
@@ -146,6 +136,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
+
+    private void attemptAutoLogin(){
+        SharedPreferences pref = getSharedPreferences("Login", Context.MODE_PRIVATE);
+        String email = pref.getString("email", null);
+        String password = pref.getString("password", null);
+        if (email != null && password != null){
+            signInServerAndFirebase(email, password);
+        }
+    }
 
     private void attemptLogin() {
         if (mAuthTask != null) {
@@ -188,9 +187,38 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            signInServerAndFirebase(email, password);
+        }
+    }
+
+    private void signInServerAndFirebase(String email, String password){
+        showProgress(true);
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+            if (!task.isSuccessful()){
+                Toast.makeText(LoginActivity.this, "Firebase sign in problem", Toast.LENGTH_LONG).show();
+            } else {
+                mAuthTask = new UserLoginTask(email, password);
+                try {
+                    goToMain(mAuthTask.execute((Void) null).get());
+                } catch (ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void goToMain(boolean success){
+        mAuthTask = null;
+        showProgress(false);
+        if (success) {
+
+            Intent k = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(k);
+        } else {
+            mPasswordView.setError(getString(R.string.error_incorrect_password));
+            mPasswordView.requestFocus();
         }
     }
 
@@ -310,9 +338,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-            if (SplashActivity.mock) return true;
-
             HttpClient client = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(getResources().getString(R.string.server) + "/login/");
 
@@ -326,18 +351,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 if (statusCode == 200) {
                     String credentials = mEmail + ":" + mPassword;
 
-                    SharedPreferences sp=getSharedPreferences("Credentials", MODE_PRIVATE);
+                    SharedPreferences sp = getSharedPreferences("Login", MODE_PRIVATE);
                     String authorization = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-                    SharedPreferences.Editor Ed=sp.edit();
-                    Ed.putString("cred", authorization);
-                    Ed.commit();
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString("cred", authorization);
+                    editor.putBoolean("signed_in", true);
+                    editor.putString("email", mEmail);
+                    editor.putString("password", mPassword);
+                    editor.apply();
 
-                    SplashActivity.setCredenditals(authorization);
-
-                    SharedPreferences pref = getSharedPreferences("ActivityPREF", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor edt = pref.edit();
-                    edt.putBoolean("activity_executed", true);
-                    edt.commit();
                     return true;
                 } else {
                     return false;
@@ -353,16 +375,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                Intent k = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(k);
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
         }
 
         @Override

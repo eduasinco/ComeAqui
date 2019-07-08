@@ -4,7 +4,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 
 public class ChatActivity extends AppCompatActivity implements ChatFragment.OnListFragmentInteractionListener{
@@ -25,6 +24,6 @@ public class ChatActivity extends AppCompatActivity implements ChatFragment.OnLi
 
     @Override
     public void onListFragmentInteraction(ChatObject item) {
+
     }
-    
 }

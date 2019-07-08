@@ -107,9 +107,11 @@ public class SettingsActivity extends AppCompatActivity {
 
 
     private void signOut(){
-        SharedPreferences pref = getSharedPreferences("ActivityPREF", Context.MODE_PRIVATE);
+        SharedPreferences pref = getSharedPreferences("Login", Context.MODE_PRIVATE);
         SharedPreferences.Editor edt = pref.edit();
-        edt.putBoolean("activity_executed", false);
+        edt.putBoolean("signed_in", false);
+        edt.remove("email");
+        edt.remove("password");
         edt.apply();
 
         Intent bactToLogin = new Intent(SettingsActivity.this, LoginActivity.class);
