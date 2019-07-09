@@ -119,6 +119,7 @@ public class EditProfileActivity extends AppCompatActivity {
         imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] imageBytes = baos.toByteArray();
         firebaseStorage.putBytes(imageBytes);
+
         firebaseStorage.getDownloadUrl().addOnSuccessListener(uri -> {
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(MainActivity.firebaseUser.id);
             reference.child("profile_photo").setValue(uri.toString());

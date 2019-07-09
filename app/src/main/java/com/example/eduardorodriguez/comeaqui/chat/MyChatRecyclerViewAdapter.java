@@ -14,31 +14,26 @@ import com.example.eduardorodriguez.comeaqui.chat.ChatFragment.OnListFragmentInt
 import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
 import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.ChatFirebaseObject;
 import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.FirebaseUser;
-import com.example.eduardorodriguez.comeaqui.profile.User;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
 
 public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecyclerViewAdapter.ViewHolder> {
 
-    private List<ChatFirebaseObject> mValues;
+    private LinkedHashMap<String, ChatFirebaseObject> mValues;
+    private Object[] mValuesValues;
     private final OnListFragmentInteractionListener mListener;
     private FirebaseUser userToTalkTo;
 
-    public MyChatRecyclerViewAdapter(List<ChatFirebaseObject> items, OnListFragmentInteractionListener listener) {
+    public MyChatRecyclerViewAdapter(LinkedHashMap<String, ChatFirebaseObject> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
 
-    public void addData(ArrayList<ChatFirebaseObject> data){
-        this.mValues = data;
-        this.notifyDataSetChanged();
-    }
-
     public void addChatObject(ChatFirebaseObject chat) {
         if (mValues == null)
-            this.mValues = new ArrayList<>();
-        this.mValues.add(chat);
+            this.mValues = new LinkedHashMap<>();
+        this.mValues.put(chat.id, chat);
+        mValuesValues = mValues.values().toArray();
         this.notifyDataSetChanged();
     }
 
@@ -51,25 +46,24 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        for (String userKye: holder.mItem.users.keySet()){
-            FirebaseUser user = holder.mItem.users.get(userKye);
+        holder.mItem = (ChatFirebaseObject) mValuesValues[position];
+        for (String k: holder.mItem.users.keySet()){
+            FirebaseUser user = holder.mItem.users.get(k);
             if (!user.email.equals(MainActivity.user.email)){
                 userToTalkTo = user;
-                userToTalkTo.id = userKye;
+                userToTalkTo.id = k;
                 holder.username.setText(user.email);
                 Glide.with(holder.mView.getContext()).load(user.profile_photo).into(holder.chattererImage);
+                break;
             }
         }
         holder.lastMessage.setText(holder.mItem.last_message);
         holder.dateView.setText("00/00/0000");
         holder.mView.setOnClickListener(v -> {
-            if (null != mListener) {
-                Intent conversation = new Intent(holder.mView.getContext(), ConversationActivity.class);
-                conversation.putExtra("chat", holder.mItem);
-                conversation.putExtra("chatting_with", userToTalkTo);
-                holder.mView.getContext().startActivity(conversation);
-            }
+            Intent conversation = new Intent(holder.mView.getContext(), ConversationActivity.class);
+            conversation.putExtra("chat", holder.mItem);
+            conversation.putExtra("chatting_with", this.userToTalkTo);
+            holder.mView.getContext().startActivity(conversation);
         });
     }
 

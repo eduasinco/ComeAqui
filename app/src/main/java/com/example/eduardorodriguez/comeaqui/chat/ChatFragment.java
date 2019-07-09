@@ -3,7 +3,6 @@ package com.example.eduardorodriguez.comeaqui.chat;
 import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,6 +19,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -30,7 +30,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class ChatFragment extends Fragment {
 
-    ArrayList<ChatFirebaseObject> data;
+    LinkedHashMap<String, ChatFirebaseObject> data;
     MyChatRecyclerViewAdapter adapter;
 
     // TODO: Customize parameter argument names
@@ -79,14 +79,14 @@ public class ChatFragment extends Fragment {
 
     public void makeList(JsonArray jsonArray){
         try {
-            data = new ArrayList<>();
+            data = new LinkedHashMap<>();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
                 ChatObject chat = new ChatObject(jo);
                 chat.lastMessage = getLastMessage(chat.id);
                 // data.add(chat);
             }
-            adapter.addData(data);
+            //adapter.addData(data);
         } catch (Exception e){
             e.printStackTrace();
         }
