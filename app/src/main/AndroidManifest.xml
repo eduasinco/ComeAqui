@@ -25,6 +25,8 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
+        <activity android:name=".profile.ProfileViewActivity">
+        </activity>
         <activity android:name=".chat.conversation.ConversationActivity">
         </activity>
         <activity android:name=".chat.ChatActivity">

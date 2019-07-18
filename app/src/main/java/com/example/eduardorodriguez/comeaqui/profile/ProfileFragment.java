@@ -27,6 +27,7 @@ public class ProfileFragment extends Fragment {
     static public View view;
 
     static ImageView profileImageView;
+    static ImageView messageImage;
     static TextView emailView;
     static TextView bioView;
     static TextView nameView;
@@ -51,6 +52,7 @@ public class ProfileFragment extends Fragment {
         final ImageView backGroundImageView = view.findViewById(R.id.backGroundImage);
 
         profileImageView = view.findViewById(R.id.profile_image);
+        messageImage = view.findViewById(R.id.message);
         emailView = view.findViewById(R.id.senderEmail);
         bioView = view.findViewById(R.id.bioView);
         nameView = view.findViewById(R.id.nameView);
@@ -71,23 +73,35 @@ public class ProfileFragment extends Fragment {
         viewPager.setAdapter(new TestPagerAdapter(getChildFragmentManager()));
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
-        mImage.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v) {
+
+        String userId = getArguments().getString("user_id");
+        if (userId != null) {
+            messageImage.setVisibility(View.VISIBLE);
+
+            GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/profile_detail/" + userId + "/");
+            try {
+                String response = process.execute().get();
+                if (response != null)
+                    setProfile(new JsonParser().parse(response).getAsJsonArray().get(0).getAsJsonObject());
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            mImage.setOnClickListener(v -> {
                 Intent editProfile = new Intent(getContext(), EditProfileActivity.class);
                 editProfile.putExtra("object", user);
                 getContext().startActivity(editProfile);
+            });
+
+            GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_profile/");
+            try {
+                String response = process.execute().get();
+                if (response != null)
+                    setProfile(new JsonParser().parse(response).getAsJsonArray().get(0).getAsJsonObject());
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
             }
-        });
-
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_profile/");
-
-        try {
-            String response = process.execute().get();
-            if (response != null)
-                setProfile(new JsonParser().parse(response).getAsJsonArray().get(0).getAsJsonObject());
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
         }
         return view;
     }

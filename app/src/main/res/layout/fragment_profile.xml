@@ -51,21 +51,19 @@
                         app:layout_constraintStart_toStartOf="parent"
                         android:id="@+id/profile_image"
                         app:layout_constraintHorizontal_bias="0.498"
-                        app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"/>
+                        app:layout_constraintBottom_toTopOf="@+id/linearLayout4" android:layout_marginBottom="8dp"/>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="0dp"
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="@+id/backGroundImage"
-                        android:id="@+id/constraintLayout3">
-
+                        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="@+id/backGroundImage" android:id="@+id/linearLayout4">
                     <TextView
                             android:text="Eduardo Rodriguez"
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:background="#ffffff"
-                            android:layout_height="30dp"
+                            android:layout_height="wrap_content"
                             android:id="@+id/nameView"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -75,7 +73,7 @@
                             app:layout_constraintTop_toTopOf="parent" android:gravity="center_vertical"/>
                     <TextView
                             android:text="eduasinco"
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/senderEmail"
                             android:background="#ffffff"
@@ -105,15 +103,14 @@
                                 android:alpha="0.9"
                                 android:layout_marginEnd="32dp" android:layout_marginStart="32dp"/>
                     </androidx.constraintlayout.widget.ConstraintLayout>
-                    <View
-                            android:layout_height="3dp"
-                            android:background="@color/colorPrimaryDark"
-                            android:layout_width="0dp"
-                            android:id="@+id/view7"
-                            app:layout_constraintEnd_toStartOf="@+id/guideline7"
-                            app:layout_constraintStart_toStartOf="@+id/guideline6"
-                            app:layout_constraintTop_toTopOf="parent"/>
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
+                <ImageView
+                        android:src="@drawable/message"
+                        android:layout_width="30dp"
+                        android:layout_height="20dp"
+                        android:id="@+id/message" app:layout_constraintEnd_toEndOf="@+id/profile_image"
+                        android:scaleType="fitXY"
+                        android:layout_marginEnd="8dp" app:layout_constraintBottom_toBottomOf="@+id/profile_image"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.google.android.material.tabs.TabLayout

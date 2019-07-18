@@ -1,5 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.map;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -13,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.FoodElementFragment;
 import com.example.eduardorodriguez.comeaqui.FoodPost;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 
@@ -73,9 +75,17 @@ public class MapCardFragment extends Fragment {
             Glide.with(view.getContext()).load(foodPost.favourite_from_server ? foodPost.food_photo: getResources().getString(R.string.server) +  foodPost.food_photo).into(postImageView);
         }
 
+        posterImageView.setOnClickListener(v -> goToProfileView());
         setFavourite();
         return view;
     }
+
+    void goToProfileView(){
+        Intent k = new Intent(getContext(), ProfileViewActivity.class);
+        k.putExtra("user_id", foodPost.owner.id);
+        startActivity(k);
+    }
+
 
     void setFavourite(){
         starView.setOnClickListener(v -> {
