@@ -12,10 +12,9 @@ public class ProfileViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_view);
 
-
         Bundle bundle = new Bundle();
         bundle.putSerializable("user_id",getIntent().getExtras().getString("user_id"));
-        FoodTypeFragment fragment = new FoodTypeFragment();
+        ProfileFragment fragment = new ProfileFragment();
         fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.profile_container, fragment)
