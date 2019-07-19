@@ -69,7 +69,7 @@ public class ConversationActivity extends AppCompatActivity {
         Bundle b = intent.getExtras();
         if(b != null) {
             chat = (ChatFirebaseObject) b.get("chat");
-            chattingWith = (FirebaseUser) b.get("chatting_with");
+            chattingWith = MainActivity.firebaseUser.id.equals(chat.user1.id) ? chat.user2 : chat.user1;
 
             Glide.with(this).load(chattingWith.profile_photo).into(fotoPerfil);
             nombre.setText(chattingWith.first_name + " " + chattingWith.last_name);

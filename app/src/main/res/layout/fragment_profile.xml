@@ -110,7 +110,8 @@
                         android:layout_height="20dp"
                         android:id="@+id/message" app:layout_constraintEnd_toEndOf="@+id/profile_image"
                         android:scaleType="fitXY"
-                        android:layout_marginEnd="8dp" app:layout_constraintBottom_toBottomOf="@+id/profile_image"/>
+                        android:layout_marginEnd="8dp" app:layout_constraintBottom_toBottomOf="@+id/profile_image"
+                        android:visibility="gone"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.google.android.material.tabs.TabLayout

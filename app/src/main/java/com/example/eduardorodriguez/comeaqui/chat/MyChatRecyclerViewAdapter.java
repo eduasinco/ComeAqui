@@ -22,7 +22,6 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
     private LinkedHashMap<String, ChatFirebaseObject> mValues;
     private Object[] mValuesValues;
     private final OnListFragmentInteractionListener mListener;
-    private FirebaseUser userToTalkTo;
 
     public MyChatRecyclerViewAdapter(LinkedHashMap<String, ChatFirebaseObject> items, OnListFragmentInteractionListener listener) {
         mValues = items;
@@ -47,22 +46,15 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = (ChatFirebaseObject) mValuesValues[position];
-        for (String k: holder.mItem.users.keySet()){
-            FirebaseUser user = holder.mItem.users.get(k);
-            if (!user.email.equals(MainActivity.user.email)){
-                userToTalkTo = user;
-                userToTalkTo.id = k;
-                holder.username.setText(user.email);
-                Glide.with(holder.mView.getContext()).load(user.profile_photo).into(holder.chattererImage);
-                break;
-            }
-        }
+
+        FirebaseUser chattingWith = MainActivity.firebaseUser.id.equals(holder.mItem.user1.id) ? holder.mItem.user2 : holder.mItem.user1;
+        Glide.with(holder.mView.getContext()).load(chattingWith.profile_photo).into(holder.chattererImage);
+
         holder.lastMessage.setText(holder.mItem.last_message);
         holder.dateView.setText("00/00/0000");
         holder.mView.setOnClickListener(v -> {
             Intent conversation = new Intent(holder.mView.getContext(), ConversationActivity.class);
             conversation.putExtra("chat", holder.mItem);
-            conversation.putExtra("chatting_with", this.userToTalkTo);
             holder.mView.getContext().startActivity(conversation);
         });
     }

@@ -82,7 +82,7 @@ public class MapCardFragment extends Fragment {
 
     void goToProfileView(){
         Intent k = new Intent(getContext(), ProfileViewActivity.class);
-        k.putExtra("user_id", foodPost.owner.id);
+        k.putExtra("user_email", foodPost.owner.email);
         startActivity(k);
     }
 

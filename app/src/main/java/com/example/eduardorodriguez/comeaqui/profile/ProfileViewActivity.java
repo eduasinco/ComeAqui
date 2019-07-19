@@ -13,7 +13,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile_view);
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable("user_id",getIntent().getExtras().getString("user_id"));
+        bundle.putSerializable("user_email",getIntent().getExtras().getString("user_email"));
         ProfileFragment fragment = new ProfileFragment();
         fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()

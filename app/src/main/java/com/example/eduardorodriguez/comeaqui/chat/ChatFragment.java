@@ -101,19 +101,7 @@ public class ChatFragment extends Fragment {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                         DatabaseReference chats = FirebaseDatabase.getInstance().getReference("chats");
-                        chats.child(postSnapshot.getKey()).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                ChatFirebaseObject chat = dataSnapshot.getValue(ChatFirebaseObject.class);
-                                if (chat != null) {
-                                    chat.id = postSnapshot.getKey();
-                                    adapter.addChatObject(chat);
-                                }
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                            }
-                        });
+                        adapter.addChatObject(postSnapshot.getValue(ChatFirebaseObject.class));
                     }
                 }
                 @Override

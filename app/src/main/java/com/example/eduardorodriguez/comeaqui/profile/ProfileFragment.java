@@ -2,6 +2,12 @@ package com.example.eduardorodriguez.comeaqui.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
+import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.ChatFirebaseObject;
+import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.FirebaseUser;
+import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.MessageFirebaseObject;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
@@ -14,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.google.firebase.database.*;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -74,11 +81,11 @@ public class ProfileFragment extends Fragment {
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
 
-        String userId = getArguments().getString("user_id");
-        if (userId != null) {
+        String userEmail = getArguments() != null ? getArguments().getString("user_email") : null;
+        if (userEmail != null) {
             messageImage.setVisibility(View.VISIBLE);
 
-            GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/profile_detail/" + userId + "/");
+            GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/profile_detail/" + userEmail + "/");
             try {
                 String response = process.execute().get();
                 if (response != null)
@@ -86,7 +93,7 @@ public class ProfileFragment extends Fragment {
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
-
+            messageImage.setOnClickListener(v -> goToConversationActivity(userEmail));
         } else {
             mImage.setOnClickListener(v -> {
                 Intent editProfile = new Intent(getContext(), EditProfileActivity.class);
@@ -104,6 +111,91 @@ public class ProfileFragment extends Fragment {
             }
         }
         return view;
+    }
+
+    void goToConversationActivity(String email){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("chats");
+        reference
+                .orderByChild("id")
+                .equalTo("(" + MainActivity.user.email + ", " + email + ")")
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        ChatFirebaseObject chat = dataSnapshot.getValue(ChatFirebaseObject.class);
+                        if (chat == null){
+                            reference
+                                    .orderByChild("id")
+                                    .equalTo("(" + email + ", " + MainActivity.user.email  + ")")
+                                    .addChildEventListener(new ChildEventListener() {
+                                        @Override
+                                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                            ChatFirebaseObject chat = dataSnapshot.getValue(ChatFirebaseObject.class);
+                                            if (chat !=  null) {
+                                                goToConversationActivity(chat);
+                                            } else {
+                                                createNewChatAndGoToIt(email);
+                                            }
+                                        }
+                                        @Override
+                                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+                                        @Override
+                                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+                                        @Override
+                                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {}
+                                    });
+                        }
+                    }
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {}
+                });
+    }
+    void goToConversationActivity(ChatFirebaseObject chat){
+        Intent k = new Intent(getContext(), ConversationActivity.class);
+        k.putExtra("chat", chat);
+        startActivity(k);
+    }
+    void createNewChatAndGoToIt(String email){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
+        reference
+                .orderByChild("email")
+                .equalTo(email)
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        ChatFirebaseObject chat = new ChatFirebaseObject();
+                        chat.user1 = MainActivity.firebaseUser;
+                        chat.user2 = dataSnapshot.getValue(FirebaseUser.class);
+                        chat.id = "(" + chat.user1.email + ", " + chat.user2.email + ")";
+
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("chats");
+                        DatabaseReference newRef = reference.push();
+                        newRef.setValue(chat);
+
+                        DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("userChats");
+                        DatabaseReference newRefUser1 = reference2.child(chat.user1.email).push();
+                        newRefUser1.setValue(chat);
+                        DatabaseReference newRefUser2 = reference.child(chat.user2.email).push();
+                        newRefUser2.setValue(chat);
+
+                        goToConversationActivity(chat);
+                    }
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {}
+                });
     }
 
     @Override
