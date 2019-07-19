@@ -121,7 +121,10 @@ public class ProfileFragment extends Fragment {
             .addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    ChatFirebaseObject chat = dataSnapshot.getChildren().iterator().next().getValue(ChatFirebaseObject.class);
+                    ChatFirebaseObject chat = null;
+                    if (dataSnapshot.getChildren().iterator().hasNext()){
+                         chat = dataSnapshot.getChildren().iterator().next().getValue(ChatFirebaseObject.class);
+                    }
                     if (chat == null){
                         reference
                             .orderByChild("signature")
@@ -129,7 +132,10 @@ public class ProfileFragment extends Fragment {
                                 .addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
-                                        ChatFirebaseObject chat = dataSnapshot.getChildren().iterator().next().getValue(ChatFirebaseObject.class);
+                                        ChatFirebaseObject chat = null;
+                                        if (dataSnapshot.getChildren().iterator().hasNext()){
+                                            chat = dataSnapshot.getChildren().iterator().next().getValue(ChatFirebaseObject.class);
+                                        }
                                         if (chat !=  null) {
                                             goToConversationActivity(chat);
                                         } else {
