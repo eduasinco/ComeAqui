@@ -121,7 +121,7 @@ public class ProfileFragment extends Fragment {
             .addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    ChatFirebaseObject chat = dataSnapshot.getValue(ChatFirebaseObject.class);
+                    ChatFirebaseObject chat = dataSnapshot.getChildren().iterator().next().getValue(ChatFirebaseObject.class);
                     if (chat == null){
                         reference
                             .orderByChild("signature")
@@ -129,7 +129,7 @@ public class ProfileFragment extends Fragment {
                                 .addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
-                                        ChatFirebaseObject chat = dataSnapshot.getValue(ChatFirebaseObject.class);
+                                        ChatFirebaseObject chat = dataSnapshot.getChildren().iterator().next().getValue(ChatFirebaseObject.class);
                                         if (chat !=  null) {
                                             goToConversationActivity(chat);
                                         } else {
@@ -141,6 +141,8 @@ public class ProfileFragment extends Fragment {
 
                                     }
                                 });
+                    } else {
+                        goToConversationActivity(chat);
                     }
                 }
                 @Override
@@ -167,11 +169,11 @@ public class ProfileFragment extends Fragment {
 
                     DatabaseReference reference = FirebaseDatabase.getInstance().getReference("chats");
                     chat.id = reference.push().getKey();
-                    reference.setValue(chat);
+                    reference.child(chat.id).setValue(chat);
 
                     DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("userChats");
-                    reference2.child(chat.user1.id).push().setValue(chat);
-                    reference2.child(chat.user2.id).push().setValue(chat);
+                    reference2.child(chat.user1.id).push().setValue(chat.id);
+                    reference2.child(chat.user2.id).push().setValue(chat.id);
 
                     goToConversationActivity(chat);
                 }

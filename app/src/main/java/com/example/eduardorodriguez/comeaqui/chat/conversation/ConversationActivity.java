@@ -117,36 +117,25 @@ public class ConversationActivity extends AppCompatActivity {
         chats.child(chat.id).child("last_message").setValue(txtMensaje.getText().toString());
     }
 
-    private void getChatFirebaseMessages(String chat){
+    private void getChatFirebaseMessages(String chatSignature){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("messages");
         reference
                 .orderByChild("chat")
-                .equalTo(chat)
+                .equalTo(chatSignature)
                 .addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         MessageFirebaseObject message = dataSnapshot.getValue(MessageFirebaseObject.class);
                         adapter.addMensaje(message);
                     }
-
                     @Override
-                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    }
-
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
                     @Override
-                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                    }
-
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) { }
                     @Override
-                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    }
-
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
                     @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                    }
+                    public void onCancelled(@NonNull DatabaseError databaseError) {}
                 });
     }
 
