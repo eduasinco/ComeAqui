@@ -73,7 +73,7 @@ public class ConversationActivity extends AppCompatActivity {
 
             Glide.with(this).load(chattingWith.profile_photo).into(fotoPerfil);
             nombre.setText(chattingWith.first_name + " " + chattingWith.last_name);
-            getChatFirebaseMessages(chat.id);
+            getChatFirebaseMessages(chat.signature);
         }
 
         btnEnviar.setOnClickListener(view -> {
@@ -108,7 +108,7 @@ public class ConversationActivity extends AppCompatActivity {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("messages");
         MessageFirebaseObject message = new MessageFirebaseObject();
         message.message = txtMensaje.getText().toString();
-        message.chat = chat.id;
+        message.chat = chat.signature;
         message.sender = MainActivity.firebaseUser.id;
         DatabaseReference newRef = reference.push();
         newRef.setValue(message);

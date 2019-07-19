@@ -3,11 +3,9 @@ package com.example.eduardorodriguez.comeaqui.profile;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
 import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.ChatFirebaseObject;
 import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.FirebaseUser;
-import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.MessageFirebaseObject;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
@@ -26,6 +24,8 @@ import com.google.gson.JsonParser;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.concurrent.ExecutionException;
+
+import static com.example.eduardorodriguez.comeaqui.MainActivity.firebaseUser;
 
 public class ProfileFragment extends Fragment {
 
@@ -116,46 +116,36 @@ public class ProfileFragment extends Fragment {
     void goToConversationActivity(String email){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("chats");
         reference
-                .orderByChild("id")
-                .equalTo("(" + MainActivity.user.email + ", " + email + ")")
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        ChatFirebaseObject chat = dataSnapshot.getValue(ChatFirebaseObject.class);
-                        if (chat == null){
-                            reference
-                                    .orderByChild("id")
-                                    .equalTo("(" + email + ", " + MainActivity.user.email  + ")")
-                                    .addChildEventListener(new ChildEventListener() {
-                                        @Override
-                                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                                            ChatFirebaseObject chat = dataSnapshot.getValue(ChatFirebaseObject.class);
-                                            if (chat !=  null) {
-                                                goToConversationActivity(chat);
-                                            } else {
-                                                createNewChatAndGoToIt(email);
-                                            }
+            .orderByChild("signature")
+            .equalTo("(" + MainActivity.user.email + ", " + email + ")")
+            .addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    ChatFirebaseObject chat = dataSnapshot.getValue(ChatFirebaseObject.class);
+                    if (chat == null){
+                        reference
+                            .orderByChild("signature")
+                            .equalTo("(" + email + ", " + MainActivity.user.email  + ")")
+                                .addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        ChatFirebaseObject chat = dataSnapshot.getValue(ChatFirebaseObject.class);
+                                        if (chat !=  null) {
+                                            goToConversationActivity(chat);
+                                        } else {
+                                            createNewChatAndGoToIt(email);
                                         }
-                                        @Override
-                                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
-                                        @Override
-                                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
-                                        @Override
-                                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {}
-                                    });
-                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
                     }
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {}
-                });
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) { }
+            });
     }
     void goToConversationActivity(ChatFirebaseObject chat){
         Intent k = new Intent(getContext(), ConversationActivity.class);
@@ -164,38 +154,30 @@ public class ProfileFragment extends Fragment {
     }
     void createNewChatAndGoToIt(String email){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
-        reference
-                .orderByChild("email")
+        reference.orderByChild("email")
                 .equalTo(email)
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        ChatFirebaseObject chat = new ChatFirebaseObject();
-                        chat.user1 = MainActivity.firebaseUser;
-                        chat.user2 = dataSnapshot.getValue(FirebaseUser.class);
-                        chat.id = "(" + chat.user1.email + ", " + chat.user2.email + ")";
+                .addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    ChatFirebaseObject chat = new ChatFirebaseObject();
+                    chat.user1 = firebaseUser;
+                    chat.user2 = dataSnapshot.getChildren().iterator().next().getValue(FirebaseUser.class);
+                    chat.user2.id = dataSnapshot.getChildren().iterator().next().getKey();
+                    chat.signature = "(" + chat.user1.email + ", " + chat.user2.email + ")";
 
-                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("chats");
-                        DatabaseReference newRef = reference.push();
-                        newRef.setValue(chat);
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("chats");
+                    chat.id = reference.push().getKey();
+                    reference.setValue(chat);
 
-                        DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("userChats");
-                        DatabaseReference newRefUser1 = reference2.child(chat.user1.email).push();
-                        newRefUser1.setValue(chat);
-                        DatabaseReference newRefUser2 = reference.child(chat.user2.email).push();
-                        newRefUser2.setValue(chat);
+                    DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("userChats");
+                    reference2.child(chat.user1.id).push().setValue(chat);
+                    reference2.child(chat.user2.id).push().setValue(chat);
 
-                        goToConversationActivity(chat);
-                    }
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {}
-                });
+                    goToConversationActivity(chat);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {}
+            });
     }
 
     @Override
