@@ -1,7 +1,9 @@
 package com.example.eduardorodriguez.comeaqui;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -37,7 +39,7 @@ public class FoodElementFragment extends Fragment {
         postTime = view.findViewById(R.id.time);
         postPrice = view.findViewById(R.id.price);
         posterDescriptionView = view.findViewById(R.id.description);
-        cardButtonView = view.findViewById(R.id.card_button);
+        cardButtonView = view.findViewById(R.id.cardButton);
 
         FoodPost foodPost = (FoodPost) getArguments().getSerializable("object");
 
@@ -58,13 +60,13 @@ public class FoodElementFragment extends Fragment {
         cardButtonView.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    cardButtonView.setVisibility(View.INVISIBLE);
+                    cardButtonView.setBackgroundColor(Color.TRANSPARENT);
                     break;
 
                 case MotionEvent.ACTION_MOVE:
                     break;
                 case MotionEvent.ACTION_UP:
-                    cardButtonView.setVisibility(View.VISIBLE);
+                    cardButtonView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.box_stroke));
                     Intent foodLook = new Intent(getContext(), FoodLookActivity.class);
                     foodLook.putExtra("object", foodPost);
                     getContext().startActivity(foodLook);

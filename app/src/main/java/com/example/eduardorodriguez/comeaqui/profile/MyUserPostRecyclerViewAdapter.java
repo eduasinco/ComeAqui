@@ -58,7 +58,6 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         ImageView imageView = holder.mView.findViewById(R.id.post_image);
         ConstraintLayout imageLayout = holder.mView.findViewById(R.id.image_layout);
         ConstraintLayout postButton = holder.mView.findViewById(R.id.post_button);
-        View cardButton = holder.mView.findViewById(R.id.card_button);
 
         final FoodPost foodPost = mValues.get(position);
 
@@ -77,14 +76,10 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         }
 
         postButton.setOnClickListener(v -> {
-            cardButton.animate().alpha(0).setDuration(200).withEndAction(() -> {
-                cardButton.animate().alpha(1).setDuration(200).withEndAction(() -> {
-                    Intent foodLook = new Intent(holder.mView.getContext(), FoodLookActivity.class);
-                    foodLook.putExtra("object", foodPost);
-                    foodLook.putExtra("delete", true);
-                    holder.mView.getContext().startActivity(foodLook);
-                });
-            });
+            Intent foodLook = new Intent(holder.mView.getContext(), FoodLookActivity.class);
+            foodLook.putExtra("object", foodPost);
+            foodLook.putExtra("delete", true);
+            holder.mView.getContext().startActivity(foodLook);
         });
     }
 

@@ -10,13 +10,14 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:background="#FFFFFF"
-                android:layout_height="wrap_content" android:id="@+id/constraintLayout6"
+                android:background="@drawable/text_input_shape"
+                android:layout_height="wrap_content"
+                android:id="@+id/constraintLayout6"
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
             <EditText
-                    android:background="#FFFFFF"
+                    android:background="@drawable/text_input_shape"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:inputType="textPersonName"
