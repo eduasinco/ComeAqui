@@ -1,59 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".chat.conversation.ConversationActivity"
-        android:padding="5sp"
         android:orientation="vertical">
+    <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" app:srcCompat="@drawable/background_chat"
+            android:id="@+id/imageView4" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" android:scaleType="centerCrop" android:alpha="0.3"/>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".chat.conversation.ConversationActivity"
+            android:orientation="vertical">
 
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-        <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/fotoPerfil"
-                android:layout_width="48sp"
-                android:layout_height="48sp"
-                android:src="@mipmap/ic_launcher"/>
-        <TextView
-                android:id="@+id/nombre"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Kevin"
-                android:layout_gravity="center" android:paddingLeft="8dp"/>
-    </LinearLayout>
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvMensajes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-    </androidx.recyclerview.widget.RecyclerView>
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-        <ImageButton
-                android:id="@+id/btnEnviarFoto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:drawable/ic_menu_gallery"
-                android:layout_gravity="center"
-        />
-        <EditText
-                android:id="@+id/txtMensaje"
+        <LinearLayout
+                android:background="#EBEBEB"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Escribe un mensaje"
-                android:layout_weight="1"/>
-
-        <Button
-                android:id="@+id/btnEnviar"
-                android:layout_width="wrap_content"
+                android:orientation="horizontal" android:padding="10dp">
+            <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/fotoPerfil"
+                    android:layout_width="48sp"
+                    android:layout_height="48sp"
+                    android:src="@mipmap/ic_launcher"/>
+            <TextView
+                    android:id="@+id/nombre"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Kevin"
+                    android:layout_gravity="center" android:paddingLeft="8dp"/>
+        </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvMensajes"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enviar"
-                android:background="@color/colorPrimaryDark" android:textColor="@android:color/white"/>
+                android:layout_weight="1"/>
+        <LinearLayout
+                android:background="#EBEBEB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" android:padding="16dp">
+            <ImageButton
+                    android:id="@+id/btnEnviarFoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/ic_menu_gallery"
+                    android:layout_gravity="center"
+            />
+            <EditText
+                    android:background="@drawable/send_input_text"
+                    android:id="@+id/txtMensaje"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:hint="Escribe un mensaje"
+                    android:layout_weight="1" android:layout_marginEnd="16dp" android:layout_marginStart="16dp"
+                    android:paddingStart="16dp"/>
+
+            <Button
+                    android:id="@+id/btnEnviar"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:hint=""
+                    android:background="@drawable/button_send"
+                    android:textColor="@android:color/white"
+            />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
