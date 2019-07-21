@@ -2,6 +2,7 @@ package com.example.eduardorodriguez.comeaqui.map;
 
 import android.content.Intent;
 import android.os.Bundle;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
@@ -29,7 +30,7 @@ public class MapCardFragment extends Fragment {
     ImageView starView;
     ImageView postImageView;
 
-    ConstraintLayout imageLayout;
+    CardView imageLayout;
 
     FoodPost foodPost;
     int favouriteId;

@@ -53,6 +53,7 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
 
         FirebaseUser chattingWith = MainActivity.firebaseUser.id.equals(holder.mItem.user1.id) ? holder.mItem.user2 : holder.mItem.user1;
 
+        holder.username.setText(chattingWith.username);
         holder.lastMessage.setText(holder.mItem.last_message);
         holder.dateView.setText("00/00/0000");
         holder.mView.setOnClickListener(v -> {

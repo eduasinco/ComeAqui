@@ -1,6 +1,7 @@
 package com.example.eduardorodriguez.comeaqui.profile;
 
 import android.content.Intent;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -56,7 +57,7 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         TextView time = holder.mView.findViewById(R.id.time);
         TextView priceView = holder.mView.findViewById(R.id.price);
         ImageView imageView = holder.mView.findViewById(R.id.post_image);
-        ConstraintLayout imageLayout = holder.mView.findViewById(R.id.image_layout);
+        CardView imageLayout = holder.mView.findViewById(R.id.image_layout);
         ConstraintLayout postButton = holder.mView.findViewById(R.id.post_button);
 
         final FoodPost foodPost = mValues.get(position);
