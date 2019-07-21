@@ -5,5 +5,5 @@ import java.io.Serializable;
 public class MessageFirebaseObject implements Serializable {
     public String message;
     public String chat;
-    public String sender;
+    public FirebaseUser sender;
 }

@@ -104,7 +104,7 @@ public class ConversationActivity extends AppCompatActivity {
         MessageFirebaseObject message = new MessageFirebaseObject();
         message.message = txtMensaje.getText().toString();
         message.chat = chat.signature;
-        message.sender = MainActivity.firebaseUser.id;
+        message.sender = MainActivity.firebaseUser;
         DatabaseReference newRef = reference.push();
         newRef.setValue(message);
 

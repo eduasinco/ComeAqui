@@ -28,7 +28,7 @@
                     android:id="@+id/fotoPerfil"
                     android:layout_width="48sp"
                     android:layout_height="48sp"
-                    android:src="@mipmap/ic_launcher"/>
+                    android:src="@drawable/no_profile_photo"/>
             <TextView
                     android:id="@+id/nombre"
                     android:layout_width="wrap_content"
