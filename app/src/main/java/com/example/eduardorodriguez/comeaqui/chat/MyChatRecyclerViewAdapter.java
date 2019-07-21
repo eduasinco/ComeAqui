@@ -14,6 +14,8 @@ import com.example.eduardorodriguez.comeaqui.chat.ChatFragment.OnListFragmentInt
 import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
 import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.ChatFirebaseObject;
 import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.LinkedHashMap;
 
@@ -22,6 +24,7 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
     private LinkedHashMap<String, ChatFirebaseObject> mValues;
     private Object[] mValuesValues;
     private final OnListFragmentInteractionListener mListener;
+    StorageReference firebaseStorage;
 
     public MyChatRecyclerViewAdapter(LinkedHashMap<String, ChatFirebaseObject> items, OnListFragmentInteractionListener listener) {
         mValues = items;
@@ -40,6 +43,7 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_chat, parent, false);
+        firebaseStorage = FirebaseStorage.getInstance().getReference();
         return new ViewHolder(view);
     }
 
@@ -48,7 +52,6 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
         holder.mItem = (ChatFirebaseObject) mValuesValues[position];
 
         FirebaseUser chattingWith = MainActivity.firebaseUser.id.equals(holder.mItem.user1.id) ? holder.mItem.user2 : holder.mItem.user1;
-        Glide.with(holder.mView.getContext()).load(chattingWith.profile_photo).into(holder.chattererImage);
 
         holder.lastMessage.setText(holder.mItem.last_message);
         holder.dateView.setText("00/00/0000");
@@ -57,6 +60,10 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
             conversation.putExtra("chat", holder.mItem);
             holder.mView.getContext().startActivity(conversation);
         });
+
+        firebaseStorage.child("user_image/" + chattingWith.id).getDownloadUrl().addOnSuccessListener(uri -> {
+            Glide.with(holder.mView.getContext()).load(uri.toString()).into(holder.chattererImage);
+        }).addOnFailureListener(exception -> {});
     }
 
     @Override

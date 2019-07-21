@@ -23,6 +23,7 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
 
     private List<MessageFirebaseObject> listMensaje = new ArrayList<>();
     private Context c;
+    StorageReference firebaseStorage;
 
     public AdapterMensajes(Context c) {
         this.c = c;
@@ -38,6 +39,7 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
     public AdapterMensajes.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_view_mensajes, parent, false);
+        firebaseStorage = FirebaseStorage.getInstance().getReference();
         return new AdapterMensajes.ViewHolder(view);
     }
 
@@ -72,8 +74,9 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
                 holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_final_left));
             }
         }
-        StorageReference firebaseStorage = FirebaseStorage.getInstance().getReference().child("user_image/" + holder.mItem.sender.id);
-        firebaseStorage.getDownloadUrl().addOnSuccessListener(uri -> {
+        firebaseStorage
+                .child("user_image/" + holder.mItem.sender.id)
+                .getDownloadUrl().addOnSuccessListener(uri -> {
             Glide.with(holder.mView.getContext()).load(uri.toString()).into(holder.chattererImage);
         }).addOnFailureListener(exception -> {});
     }

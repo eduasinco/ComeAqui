@@ -17,6 +17,8 @@ import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.MessageFireba
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.google.firebase.database.*;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -66,7 +68,10 @@ public class ConversationActivity extends AppCompatActivity {
             chat = (ChatFirebaseObject) b.get("chat");
             chattingWith = MainActivity.firebaseUser.id.equals(chat.user1.id) ? chat.user2 : chat.user1;
 
-            Glide.with(this).load(chattingWith.profile_photo).into(fotoPerfil);
+            StorageReference firebaseStorage = FirebaseStorage.getInstance().getReference().child("user_image/" + chattingWith.id);
+            firebaseStorage.getDownloadUrl().addOnSuccessListener(uri -> {
+                Glide.with(this).load(uri.toString()).into(fotoPerfil);
+            }).addOnFailureListener(exception -> {});
             nombre.setText(chattingWith.first_name + " " + chattingWith.last_name);
             getChatFirebaseMessages(chat.signature);
         }
