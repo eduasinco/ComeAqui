@@ -7,7 +7,7 @@
             <corners android:topLeftRadius="12dp"
                      android:topRightRadius="3dp"
                      android:bottomLeftRadius="12dp"
-                     android:bottomRightRadius="3dp"
+                     android:bottomRightRadius="12dp"
             />
         </shape>
     </item>

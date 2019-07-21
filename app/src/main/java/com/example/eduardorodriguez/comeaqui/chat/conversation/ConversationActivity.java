@@ -2,10 +2,7 @@ package com.example.eduardorodriguez.comeaqui.chat.conversation;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,9 +32,8 @@ public class ConversationActivity extends AppCompatActivity {
     private TextView nombre;
     private RecyclerView rvMensajes;
     private EditText txtMensaje;
-    private Button btnEnviar;
+    private ImageView btnEnviar;
     private AdapterMensajes adapter;
-    private ImageButton btnEnviarFoto;
 
 
     @Override
@@ -50,7 +46,6 @@ public class ConversationActivity extends AppCompatActivity {
         rvMensajes = findViewById(R.id.rvMensajes);
         txtMensaje = findViewById(R.id.txtMensaje);
         btnEnviar = findViewById(R.id.btnEnviar);
-        btnEnviarFoto = findViewById(R.id.btnEnviarFoto);
 
         adapter = new AdapterMensajes(this);
         LinearLayoutManager l = new LinearLayoutManager(this);
