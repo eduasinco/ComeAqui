@@ -55,35 +55,32 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
         holder.mItem = listMensaje.get(position);
         holder.messageView.setText(holder.mItem.message);
 
-        if (position >= 1){
-            MessageFirebaseObject messageBefore = listMensaje.get(position - 1);
-            if (!holder.mItem.sender.equals(messageBefore.sender)){
-                holder.wholeMessage.setPadding(0, 50, 0, 0);
-            }
-        }
-
-        if (MainActivity.firebaseUser.id.equals(holder.mItem.sender)){
-            holder.wholeMessage.setGravity(Gravity.RIGHT);
-            holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_send));
-        } else {
-            holder.wholeMessage.setGravity(Gravity.LEFT);
-        }
-
-        if (position < listMensaje.size() - 1){
+        if (position < listMensaje.size() - 1) {
             MessageFirebaseObject messageAfter = listMensaje.get(position + 1);
-            if (!holder.mItem.sender.equals(messageAfter.sender)){
-                if (MainActivity.firebaseUser.id.equals(holder.mItem.sender)){
+            if (MainActivity.firebaseUser.id.equals(holder.mItem.sender)){
+                holder.wholeMessage.setGravity(Gravity.RIGHT);
+                holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_send));
+                if (!holder.mItem.sender.equals(messageAfter.sender)){
                     holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_final_right));
-                } else {
+                }
+
+            } else {
+                holder.wholeMessage.setGravity(Gravity.LEFT);
+                holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message));
+                if (!holder.mItem.sender.equals(messageAfter.sender)){
                     holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_final_left));
                 }
-            }
-        }
 
-        if (position == listMensaje.size() - 1) {
+            }
+            if (!holder.mItem.sender.equals(messageAfter.sender)){
+                holder.wholeMessage.setPadding(0, 0, 0, 50);
+            }
+        } else {
             if (MainActivity.firebaseUser.id.equals(holder.mItem.sender)){
+                holder.wholeMessage.setGravity(Gravity.RIGHT);
                 holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_final_right));
             } else {
+                holder.wholeMessage.setGravity(Gravity.LEFT);
                 holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_final_left));
             }
         }
