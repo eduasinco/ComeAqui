@@ -196,7 +196,7 @@ public class ConversationActivity extends AppCompatActivity {
     }
 
     private void start() {
-        Request request = new Request.Builder().url("http://127.0.0.1:8000/ws/chat/example/")
+        Request request = new Request.Builder().url("http://127.0.0.1:8000/ws/chat/" + chat.id + "/")
                 .build();
         EchoWebSocketListener listener = new EchoWebSocketListener(this);
         ws = client.newWebSocket(request, listener);
