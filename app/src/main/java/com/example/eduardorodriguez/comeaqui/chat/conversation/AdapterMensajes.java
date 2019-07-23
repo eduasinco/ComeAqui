@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.chat.MessageObject;
 import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.MessageFirebaseObject;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -21,7 +22,7 @@ import java.util.List;
 
 public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHolder>{
 
-    private List<MessageFirebaseObject> listMensaje = new ArrayList<>();
+    private List<MessageObject> listMensaje = new ArrayList<>();
     private Context c;
     StorageReference firebaseStorage;
 
@@ -29,7 +30,7 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
         this.c = c;
     }
 
-    public void addMensaje(MessageFirebaseObject m){
+    public void addMensaje(MessageObject m){
         listMensaje.add(m);
         notifyItemInserted(listMensaje.size());
     }
@@ -49,24 +50,24 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
         holder.messageView.setText(holder.mItem.message);
         holder.username.setText(holder.mItem.sender.username);
         if (position < listMensaje.size() - 1) {
-            MessageFirebaseObject messageAfter = listMensaje.get(position + 1);
-            if (MainActivity.firebaseUser.id.equals(holder.mItem.sender.id)){
+            MessageObject messageAfter = listMensaje.get(position + 1);
+            if (MainActivity.user.id == (holder.mItem.sender.id)){
                 holder.wholeMessage.setGravity(Gravity.RIGHT);
                 holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_send));
-                if (!holder.mItem.sender.id.equals(messageAfter.sender.id)){
+                if (!(holder.mItem.sender.id == messageAfter.sender.id)){
                     holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_final_right));
                     holder.wholeMessage.setPadding(0, 0, 0, 50);
                 }
             } else {
                 holder.wholeMessage.setGravity(Gravity.LEFT);
                 holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message));
-                if (!holder.mItem.sender.id.equals(messageAfter.sender.id)){
+                if (!(holder.mItem.sender.id == messageAfter.sender.id)){
                     holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_final_left));
                     holder.wholeMessage.setPadding(0, 0, 0, 50);
                 }
             }
         } else {
-            if (MainActivity.firebaseUser.id.equals(holder.mItem.sender.id)){
+            if (MainActivity.user.id == (holder.mItem.sender.id)){
                 holder.wholeMessage.setGravity(Gravity.RIGHT);
                 holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_final_right));
             } else {
@@ -74,11 +75,13 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
                 holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_final_left));
             }
         }
-        firebaseStorage
-                .child("user_image/" + holder.mItem.sender.id)
-                .getDownloadUrl().addOnSuccessListener(uri -> {
-            Glide.with(holder.mView.getContext()).load(uri.toString()).into(holder.chattererImage);
-        }).addOnFailureListener(exception -> {});
+        Glide.with(holder.mView.getContext()).load(holder.mItem.sender.profile_photo).into(holder.chattererImage);
+
+//        firebaseStorage
+//                .child("user_image/" + holder.mItem.sender.id)
+//                .getDownloadUrl().addOnSuccessListener(uri -> {
+//            Glide.with(holder.mView.getContext()).load(uri.toString()).into(holder.chattererImage);
+//        }).addOnFailureListener(exception -> {});
     }
 
     @Override
@@ -92,7 +95,7 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
         public final TextView messageView;
         public final TextView dateView;
         public final ImageView chattererImage;
-        public MessageFirebaseObject mItem;
+        public MessageObject mItem;
         public LinearLayout wholeMessage;
         public LinearLayout messageCard;
 

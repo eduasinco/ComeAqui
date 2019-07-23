@@ -155,11 +155,13 @@ public class ProfileFragment extends Fragment {
                 public void onCancelled(DatabaseError databaseError) { }
             });
     }
+    
     void goToConversationActivity(ChatFirebaseObject chat){
         Intent k = new Intent(getContext(), ConversationActivity.class);
         k.putExtra("chat", chat);
         startActivity(k);
     }
+
     void createNewChatAndGoToIt(String email){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
         reference.orderByChild("email")

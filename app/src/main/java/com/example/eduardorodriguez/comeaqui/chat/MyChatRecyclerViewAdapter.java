@@ -14,6 +14,7 @@ import com.example.eduardorodriguez.comeaqui.chat.ChatFragment.OnListFragmentInt
 import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
 import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.ChatFirebaseObject;
 import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.FirebaseUser;
+import com.example.eduardorodriguez.comeaqui.profile.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -21,17 +22,17 @@ import java.util.LinkedHashMap;
 
 public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecyclerViewAdapter.ViewHolder> {
 
-    private LinkedHashMap<String, ChatFirebaseObject> mValues;
+    private LinkedHashMap<Integer, ChatObject> mValues;
     private Object[] mValuesValues;
     private final OnListFragmentInteractionListener mListener;
     StorageReference firebaseStorage;
 
-    public MyChatRecyclerViewAdapter(LinkedHashMap<String, ChatFirebaseObject> items, OnListFragmentInteractionListener listener) {
+    public MyChatRecyclerViewAdapter(LinkedHashMap<Integer, ChatObject> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
 
-    public void addChatObject(ChatFirebaseObject chat) {
+    public void addChatObject(ChatObject chat) {
         if (mValues == null)
             this.mValues = new LinkedHashMap<>();
         this.mValues.put(chat.id, chat);
@@ -49,12 +50,12 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = (ChatFirebaseObject) mValuesValues[position];
+        holder.mItem = (ChatObject) mValuesValues[position];
 
-        FirebaseUser chattingWith = MainActivity.firebaseUser.id.equals(holder.mItem.user1.id) ? holder.mItem.user2 : holder.mItem.user1;
+        User chattingWith = MainActivity.user.id == (holder.mItem.users.get(0).id) ? holder.mItem.users.get(1) : holder.mItem.users.get(0);
 
         holder.username.setText(chattingWith.username);
-        holder.lastMessage.setText(holder.mItem.last_message);
+        holder.lastMessage.setText("Last message");
         holder.dateView.setText("00/00/0000");
         holder.mView.setOnClickListener(v -> {
             Intent conversation = new Intent(holder.mView.getContext(), ConversationActivity.class);
@@ -78,7 +79,7 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
         public final TextView lastMessage;
         public final TextView dateView;
         public final ImageView chattererImage;
-        public ChatFirebaseObject mItem;
+        public ChatObject mItem;
 
         public ViewHolder(View view) {
             super(view);

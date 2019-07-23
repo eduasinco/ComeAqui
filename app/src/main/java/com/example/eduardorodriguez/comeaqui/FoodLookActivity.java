@@ -11,9 +11,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.MessageFirebaseObject;
+import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.NotificationFirebase;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -124,6 +128,9 @@ public class FoodLookActivity extends AppCompatActivity {
                 emitMessage.execute(
                         new String[]{"food_post_id", "" + getFoodObject.id}
                 );
+
+
+
                 PostAsyncTask createOrder = new PostAsyncTask(getResources().getString(R.string.server) + "/create_order/");
                 try {
                     String response = createOrder.execute(
@@ -136,5 +143,11 @@ public class FoodLookActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+
+    private void createNotificationFirebase(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("userNotifications");
+        NotificationFirebase notification = new NotificationFirebase();
     }
 }

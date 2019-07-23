@@ -17,8 +17,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -30,7 +28,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class ChatFragment extends Fragment {
 
-    LinkedHashMap<String, ChatFirebaseObject> data;
+    LinkedHashMap<Integer, ChatObject> data;
     MyChatRecyclerViewAdapter adapter;
 
     // TODO: Customize parameter argument names
@@ -72,7 +70,7 @@ public class ChatFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.list);
         adapter = new MyChatRecyclerViewAdapter(data, mListener);
         recyclerView.setAdapter(adapter);
-        getMyChatsFromFirebase();
+        getChatsAndSet();
         return view;
     }
 
@@ -83,10 +81,9 @@ public class ChatFragment extends Fragment {
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
                 ChatObject chat = new ChatObject(jo);
-                chat.lastMessage = getLastMessage(chat.id);
-                // data.add(chat);
+                data.put(chat.id, chat);
+                adapter.addChatObject(chat);
             }
-            //adapter.addData(data);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -107,7 +104,7 @@ public class ChatFragment extends Fragment {
                                 ChatFirebaseObject chat = dataSnapshot.getValue(ChatFirebaseObject.class);
                                 if (chat != null) {
                                     chat.id = postSnapshot.getValue().toString();
-                                    adapter.addChatObject(chat);
+                                    //adapter.addChatObject(chat);
                                 }
                             }
                             @Override
@@ -123,7 +120,7 @@ public class ChatFragment extends Fragment {
 
     }
 
-    void getDataAndSet(){
+    void getChatsAndSet(){
         GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_chats/");
         try {
             String response = process.execute().get();
