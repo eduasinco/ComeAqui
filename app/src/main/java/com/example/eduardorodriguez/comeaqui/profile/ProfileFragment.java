@@ -3,6 +3,7 @@ package com.example.eduardorodriguez.comeaqui.profile;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import com.example.eduardorodriguez.comeaqui.chat.ChatObject;
 import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
 import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.ChatFirebaseObject;
 import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.FirebaseUser;
@@ -30,7 +31,6 @@ import static com.example.eduardorodriguez.comeaqui.MainActivity.firebaseUser;
 public class ProfileFragment extends Fragment {
 
     public static String[] data;
-    static public User user = MainActivity.user;
     static public View view;
 
     static ImageView profileImageView;
@@ -43,9 +43,7 @@ public class ProfileFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static void setProfile(JsonObject jsonObject){
-        user = new User(jsonObject);
-
+    public static void setProfile(User user){
         if(!user.profile_photo.contains("no-image")) Glide.with(view.getContext()).load(user.profile_photo).into(profileImageView);
         nameView.setText(user.first_name + " " + user.last_name);
         emailView.setText(user.email);
@@ -81,36 +79,39 @@ public class ProfileFragment extends Fragment {
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
 
-        String userEmail = getArguments() != null ? getArguments().getString("user_email") : null;
-        if (userEmail != null) {
+        User user = getArguments() != null ? (User) getArguments().getSerializable("user_email") : null;
+        if (user != null) {
             messageImage.setVisibility(View.VISIBLE);
-
-            GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/profile_detail/" + userEmail + "/");
-            try {
-                String response = process.execute().get();
-                if (response != null)
-                    setProfile(new JsonParser().parse(response).getAsJsonArray().get(0).getAsJsonObject());
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
-            messageImage.setOnClickListener(v -> goToConversationActivity(userEmail));
+            setProfile(user);
+            messageImage.setOnClickListener(v -> goToConversationWithUser(user));
         } else {
             mImage.setOnClickListener(v -> {
                 Intent editProfile = new Intent(getContext(), EditProfileActivity.class);
                 editProfile.putExtra("object", user);
                 getContext().startActivity(editProfile);
             });
-
-            GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_profile/");
-            try {
-                String response = process.execute().get();
-                if (response != null)
-                    setProfile(new JsonParser().parse(response).getAsJsonArray().get(0).getAsJsonObject());
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
+            setProfile(MainActivity.user);
         }
         return view;
+    }
+
+    void goToConversationWithUser(User user){
+        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/get_or_create_chat/" + user.id + "/");
+        try {
+            String response = process.execute().get();
+            if (response != null) {
+                ChatObject chat = new ChatObject(new JsonParser().parse(response).getAsJsonObject());
+                goToConversationActivity(chat);
+            }
+         } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void goToConversationActivity(ChatObject chat){
+        Intent k = new Intent(getContext(), ConversationActivity.class);
+        k.putExtra("chat", chat);
+        startActivity(k);
     }
 
     void goToConversationActivity(String email){
@@ -137,7 +138,7 @@ public class ProfileFragment extends Fragment {
                                             chat = dataSnapshot.getChildren().iterator().next().getValue(ChatFirebaseObject.class);
                                         }
                                         if (chat !=  null) {
-                                            goToConversationActivity(chat);
+                                            goToConversationActivityFirebase(chat);
                                         } else {
                                             createNewChatAndGoToIt(email);
                                         }
@@ -148,19 +149,20 @@ public class ProfileFragment extends Fragment {
                                     }
                                 });
                     } else {
-                        goToConversationActivity(chat);
+                        goToConversationActivityFirebase(chat);
                     }
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) { }
             });
     }
-    
-    void goToConversationActivity(ChatFirebaseObject chat){
+
+    void goToConversationActivityFirebase(ChatFirebaseObject chat){
         Intent k = new Intent(getContext(), ConversationActivity.class);
         k.putExtra("chat", chat);
         startActivity(k);
     }
+
 
     void createNewChatAndGoToIt(String email){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
@@ -183,12 +185,14 @@ public class ProfileFragment extends Fragment {
                     reference2.child(chat.user1.id).push().setValue(chat.id);
                     reference2.child(chat.user2.id).push().setValue(chat.id);
 
-                    goToConversationActivity(chat);
+                    goToConversationActivityFirebase(chat);
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {}
             });
     }
+
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

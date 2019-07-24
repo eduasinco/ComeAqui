@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-        initializeFirebaseUser();
+        // initializeFirebaseUser();
     }
 
     private void initializeFirebaseUser(){

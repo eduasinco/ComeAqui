@@ -111,7 +111,7 @@
                         android:id="@+id/message" app:layout_constraintEnd_toEndOf="@+id/profile_image"
                         android:scaleType="fitXY"
                         android:layout_marginEnd="8dp" app:layout_constraintBottom_toBottomOf="@+id/profile_image"
-                        android:visibility="visible" android:layout_marginBottom="8dp"/>
+                        android:visibility="gone" android:layout_marginBottom="8dp"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.google.android.material.tabs.TabLayout

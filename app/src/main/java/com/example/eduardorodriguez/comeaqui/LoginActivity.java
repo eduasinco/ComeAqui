@@ -194,32 +194,32 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private void signInServerAndFirebase(String email, String password){
         showProgress(true);
 
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-            if (!task.isSuccessful()){
-                Toast.makeText(LoginActivity.this, "Firebase sign in problem", Toast.LENGTH_LONG).show();
-            } else {
-                mAuthTask = new UserLoginTask(email, password);
-                try {
-                    goToMain(mAuthTask.execute((Void) null).get());
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        mAuthTask = new UserLoginTask(email, password);
+        try {
+            goToMain(mAuthTask.execute((Void) null).get());
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+//        FirebaseAuth auth = FirebaseAuth.getInstance();
+//        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+//            if (!task.isSuccessful()){
+//                Toast.makeText(LoginActivity.this, "Firebase sign in problem", Toast.LENGTH_LONG).show();
+//            }
+//        });
     }
 
     private void goToMain(boolean success){
         mAuthTask = null;
-        showProgress(false);
         if (success) {
-
             Intent k = new Intent(LoginActivity.this, MainActivity.class);
+            showProgress(false);
             startActivity(k);
         } else {
             mPasswordView.setError(getString(R.string.error_incorrect_password));
             mPasswordView.requestFocus();
         }
+        showProgress(false);
     }
 
     private boolean isEmailValid(String email) {
