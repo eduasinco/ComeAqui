@@ -213,7 +213,7 @@
             app:layout_constraintStart_toStartOf="parent" android:id="@+id/constraintLayout5"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginStart="32dp" android:layout_marginEnd="32dp" android:layout_marginTop="32dp">
+            android:layout_marginStart="24dp" android:layout_marginEnd="24dp" android:layout_marginTop="32dp">
 
         <LinearLayout
                 android:orientation="vertical"
@@ -270,14 +270,24 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent">
-                <TextView
-                        android:text="Plate Name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/plate_name"
-                        app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-                        android:textStyle="bold" android:textColor="@color/colorPrimary"
-                        android:paddingBottom="8dp"/>
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                    <TextView
+                            android:text="Plate Name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/plate_name"
+                            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                            android:textStyle="bold" android:textColor="@color/colorPrimary"
+                            android:paddingBottom="8dp"/>
+                    <TextView
+                            android:text="Status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:id="@+id/order_status"
+                            android:layout_weight="1" android:textAlignment="textEnd" android:textStyle="bold"/>
+                </LinearLayout>
                 <TextView
                         android:text="Description"
                         android:layout_width="match_parent"

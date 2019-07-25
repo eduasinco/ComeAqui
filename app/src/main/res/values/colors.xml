@@ -16,4 +16,7 @@
 
     <color name="bottom_bottom">#809E9E9E</color>
     <color name="bottom_top">#FFFFFF</color>
+
+    <color name="success">#4CAF50</color>
+    <color name="canceled">#BE0D00</color>
 </resources>

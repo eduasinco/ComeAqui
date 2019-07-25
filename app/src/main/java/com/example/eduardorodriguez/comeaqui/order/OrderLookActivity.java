@@ -26,6 +26,7 @@ public class OrderLookActivity extends AppCompatActivity {
     TextView totalPriceView;
     TextView mealTimeView;
     TextView posterNameView;
+    TextView orderStatus;
 
     ImageView posterImageView;
     ImageView postImageView;
@@ -49,6 +50,7 @@ public class OrderLookActivity extends AppCompatActivity {
         subtotalView = findViewById(R.id.postSubtotalPrice);
         totalPriceView = findViewById(R.id.totalPrice);
         mealTimeView = findViewById(R.id.time);
+        orderStatus = findViewById(R.id.order_status);
 
         posterImageView = findViewById(R.id.poster_image);
         postImageView = findViewById(R.id.post_image);
@@ -80,7 +82,17 @@ public class OrderLookActivity extends AppCompatActivity {
         postPriceView.setText("€" + order.post.price);
         subtotalView.setText("€" + order.post.price);
         totalPriceView.setText("€" + order.post.price);
-        totalPriceView.setText(order.post.time);
+        mealTimeView.setText(order.post.time);
+        orderStatus.setText(order.status);
+
+        if (order.status.equals("CONFIRMED")){
+            orderStatus.setTextColor(getResources().getColor(R.color.success));
+        } else if (order.status.equals("CANCELED")){
+            orderStatus.setTextColor(getResources().getColor(R.color.canceled));
+        } else {
+            orderStatus.setTextColor(getResources().getColor(R.color.colorPrimary));
+        }
+
         String url = "http://maps.google.com/maps/api/staticmap?center=" + order.post.lat + "," + order.post.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=AIzaSyDqkl1DgwHu03SmMoqVey3sgR62GnJ-VY4";
         Glide.with(this).load(url).into(staticMapView);
         if(!order.poster.profile_photo.contains("no-image")) {

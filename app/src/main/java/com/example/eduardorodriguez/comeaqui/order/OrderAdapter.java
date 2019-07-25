@@ -24,6 +24,7 @@ public class OrderAdapter extends BaseAdapter {
     TextView priceDate;
     TextView posterUsername;
     TextView postAddress;
+    TextView orderStatus;
     ImageView imageView;
 
     Context context;
@@ -52,6 +53,7 @@ public class OrderAdapter extends BaseAdapter {
         posterUsername = view.findViewById(R.id.poster_username);
         postAddress = view.findViewById(R.id.address);
         imageView = view.findViewById(R.id.poster_image);
+        orderStatus = view.findViewById(R.id.order_status);
 
         orderObject = data.get(position);
 
@@ -60,6 +62,15 @@ public class OrderAdapter extends BaseAdapter {
         postAddress.setText(orderObject.post.address);
         String priceTextE = "€" + orderObject.post.price + "-";
         priceDate.setText(priceTextE);
+        orderStatus.setText(orderObject.status);
+
+        if (orderObject.status.equals("CONFIRMED")){
+            orderStatus.setTextColor(context.getResources().getColor(R.color.success));
+        } else if (orderObject.status.equals("CANCELED")){
+            orderStatus.setTextColor(context.getResources().getColor(R.color.canceled));
+        } else {
+            orderStatus.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+        }
 
         if (!orderObject.owner.profile_photo.contains("no-image")){
             Glide.with(context).load(orderObject.owner.profile_photo).into(imageView);
