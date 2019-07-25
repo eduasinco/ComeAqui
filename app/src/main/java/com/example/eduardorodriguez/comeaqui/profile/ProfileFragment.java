@@ -7,6 +7,7 @@ import com.example.eduardorodriguez.comeaqui.chat.ChatObject;
 import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
 import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.ChatFirebaseObject;
 import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.FirebaseUser;
+import com.example.eduardorodriguez.comeaqui.order.PastOderFragment;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
@@ -32,6 +33,7 @@ public class ProfileFragment extends Fragment {
 
     public static String[] data;
     static public View view;
+    public User user;
 
     static ImageView profileImageView;
     static ImageView messageImage;
@@ -79,7 +81,7 @@ public class ProfileFragment extends Fragment {
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
 
-        User user = getArguments() != null ? (User) getArguments().getSerializable("user_email") : null;
+        user = getArguments() != null ? (User) getArguments().getSerializable("user_email") : null;
         if (user != null && user.id != MainActivity.user.id) {
             messageImage.setVisibility(View.VISIBLE);
             setProfile(user);
@@ -213,7 +215,7 @@ public class ProfileFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    static class TestPagerAdapter extends FragmentPagerAdapter {
+    class TestPagerAdapter extends FragmentPagerAdapter {
 
         public TestPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -221,7 +223,15 @@ public class ProfileFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            Fragment[] tabFragment = {new UserPostFragment(), new OptionsFragment(), new OptionsFragment()};
+            UserPostFragment userPostFragment = new UserPostFragment();
+            Bundle bundle = new Bundle();
+            if (user != null && user.id != MainActivity.user.id) {
+                bundle.putSerializable("user", user);
+            } else {
+                bundle.putSerializable("user", MainActivity.user);
+            }
+            userPostFragment.setArguments(bundle);
+            Fragment[] tabFragment = {userPostFragment, new OptionsFragment(), new OptionsFragment()};
             return tabFragment[position];
         }
 

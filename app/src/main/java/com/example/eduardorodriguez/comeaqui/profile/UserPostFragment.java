@@ -46,7 +46,8 @@ public class UserPostFragment extends Fragment {
     public UserPostFragment() {
     }
 
-    public static void makeList(JsonArray jsonArray){
+
+    void makeList(JsonArray jsonArray){
         data = new ArrayList<>();
         for (JsonElement pa : jsonArray) {
             JsonObject jo = pa.getAsJsonObject();
@@ -99,17 +100,25 @@ public class UserPostFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_foods/");
-            try {
-                String response = process.execute().get();
-                if (response != null)
-                    UserPostFragment.makeList(new JsonParser().parse(response).getAsJsonArray());
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
+
+            User user = (User) getArguments().getSerializable("user");
+            getPostFromUser(user);
+
             recyclerView.setAdapter(this.adapter);
         }
         return view;
+    }
+
+
+    void getPostFromUser(User user){
+        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_food_posts/" + user.id + "/");
+        try {
+            String response = process.execute().get();
+            if (response != null)
+                makeList(new JsonParser().parse(response).getAsJsonArray());
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 

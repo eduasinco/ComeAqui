@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.FoodLookActivity;
+import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.FoodPost;
 import com.example.eduardorodriguez.comeaqui.profile.UserPostFragment.OnListFragmentInteractionListener;
@@ -79,7 +80,13 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         postButton.setOnClickListener(v -> {
             Intent foodLook = new Intent(holder.mView.getContext(), FoodLookActivity.class);
             foodLook.putExtra("object", foodPost);
-            foodLook.putExtra("delete", true);
+
+            if (foodPost.owner.id == MainActivity.user.id){
+                foodLook.putExtra("delete", true);
+            } else {
+                foodLook.putExtra("delete", false);
+            }
+
             holder.mView.getContext().startActivity(foodLook);
         });
     }
