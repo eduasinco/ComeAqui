@@ -80,7 +80,7 @@ public class ProfileFragment extends Fragment {
         tabLayout.setupWithViewPager(viewPager);
 
         User user = getArguments() != null ? (User) getArguments().getSerializable("user_email") : null;
-        if (user != null) {
+        if (user != null && user.id != MainActivity.user.id) {
             messageImage.setVisibility(View.VISIBLE);
             setProfile(user);
             messageImage.setOnClickListener(v -> goToConversationWithUser(user));

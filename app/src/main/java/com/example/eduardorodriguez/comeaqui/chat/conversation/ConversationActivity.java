@@ -2,6 +2,8 @@ package com.example.eduardorodriguez.comeaqui.chat.conversation;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.*;
 import androidx.annotation.NonNull;
@@ -12,11 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.SplashActivity;
 import com.example.eduardorodriguez.comeaqui.chat.ChatObject;
 import com.example.eduardorodriguez.comeaqui.chat.MessageObject;
-import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.ChatFirebaseObject;
-import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.FirebaseUser;
 import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.MessageFirebaseObject;
 import com.example.eduardorodriguez.comeaqui.profile.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
@@ -29,8 +28,6 @@ import com.google.gson.JsonParser;
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.*;
 import okio.ByteString;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
 
@@ -90,7 +87,6 @@ public class ConversationActivity extends AppCompatActivity {
             nombre.setText(chattingWith.first_name + " " + chattingWith.last_name);
             getChatMessages();
         }
-
         btnEnviar.setOnClickListener(view -> {
             //createServerMessage();
             ws.send("{ \"message\": \"" + txtMensaje.getText().toString() + "\"," +
@@ -99,6 +95,31 @@ public class ConversationActivity extends AppCompatActivity {
                     "\"chatId\": \"" + chat.id + "\"}"
             );
             txtMensaje.setText("");
+        });
+
+        btnEnviar.setScaleX(0);
+        btnEnviar.setVisibility(View.GONE);
+        txtMensaje.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (txtMensaje.getText().toString().trim().length() > 0){
+                    btnEnviar.setVisibility(View.VISIBLE);
+                    btnEnviar.animate().scaleX(1).setDuration(200);
+                } else {
+                    btnEnviar.animate().scaleX(0).setDuration(200).withEndAction(() -> btnEnviar.setVisibility(View.GONE));
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
         });
         client = new OkHttpClient();
         start();

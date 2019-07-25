@@ -55,17 +55,18 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
         User chattingWith = MainActivity.user.id == (holder.mItem.users.get(0).id) ? holder.mItem.users.get(1) : holder.mItem.users.get(0);
 
         holder.username.setText(chattingWith.username);
-        holder.lastMessage.setText("Last message");
-        holder.dateView.setText("00/00/0000");
+        MessageObject lastMessage = holder.mItem.messages.get(holder.mItem.messages.size() - 1);
+        holder.lastMessage.setText(lastMessage.message);
+        holder.dateView.setText(lastMessage.createdAt);
         holder.mView.setOnClickListener(v -> {
             Intent conversation = new Intent(holder.mView.getContext(), ConversationActivity.class);
             conversation.putExtra("chat", holder.mItem);
             holder.mView.getContext().startActivity(conversation);
         });
-
-        firebaseStorage.child("user_image/" + chattingWith.id).getDownloadUrl().addOnSuccessListener(uri -> {
-            Glide.with(holder.mView.getContext()).load(uri.toString()).into(holder.chattererImage);
-        }).addOnFailureListener(exception -> {});
+        Glide.with(holder.mView.getContext()).load(chattingWith.profile_photo).into(holder.chattererImage);
+//        firebaseStorage.child("user_image/" + chattingWith.id).getDownloadUrl().addOnSuccessListener(uri -> {
+//            Glide.with(holder.mView.getContext()).load(uri.toString()).into(holder.chattererImage);
+//        }).addOnFailureListener(exception -> {});
     }
 
     @Override
