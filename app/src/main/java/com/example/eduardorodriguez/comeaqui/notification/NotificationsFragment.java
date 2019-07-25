@@ -14,8 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.example.eduardorodriguez.comeaqui.FoodLookActivity;
+import com.example.eduardorodriguez.comeaqui.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -95,14 +98,34 @@ public class NotificationsFragment extends Fragment {
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
+
             if (direction == ItemTouchHelper.RIGHT){
                 viewHolder.itemView.setAlpha(0);
                 viewHolder.itemView.setBackgroundColor(Color.parseColor("#FFD0FFD2"));
-                viewHolder.itemView.animate().alpha(1).x(0).setDuration(200).withEndAction(() -> notificationAdapter.notifyDataSetChanged());
+                viewHolder.itemView.animate().alpha(1).x(0).setDuration(200).withEndAction(() -> {
+                    confirmOrder(data.get(viewHolder.getAdapterPosition()).order, true);
+                    notificationAdapter.notifyDataSetChanged();
+                });
             } else {
                 viewHolder.itemView.setAlpha(0);
                 viewHolder.itemView.setBackgroundColor(Color.parseColor("#FFD3D2"));
-                viewHolder.itemView.animate().alpha(1).x(0).setDuration(200).withEndAction(() -> notificationAdapter.notifyDataSetChanged());
+                viewHolder.itemView.animate().alpha(1).x(0).setDuration(200).withEndAction(() -> {
+                    confirmOrder(data.get(viewHolder.getAdapterPosition()).order, false);
+                    notificationAdapter.notifyDataSetChanged();
+                });
+            }
+        }
+
+        void confirmOrder(OrderObject order, boolean confirm){
+            PostAsyncTask orderStatus = new PostAsyncTask(getResources().getString(R.string.server) + "/set_order_status/");
+            order.status = confirm ? "CONFIRMED" : "CANCELED";
+            try {
+                orderStatus.execute(
+                        new String[]{"order_id",  order.id + ""},
+                        new String[]{"order_status", order.status}
+                ).get();
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
             }
         }
 
