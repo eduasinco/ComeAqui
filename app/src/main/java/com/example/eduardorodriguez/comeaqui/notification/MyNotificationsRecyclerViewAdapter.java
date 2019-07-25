@@ -1,6 +1,8 @@
 package com.example.eduardorodriguez.comeaqui.notification;
 
 import android.content.Context;
+import android.graphics.Color;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +47,12 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
         holder.usernameView.setText(holder.mItem.sender.email);
         holder.notificationView.setText(holder.mItem.sender.first_name + " " + holder.mItem.sender.last_name + " quiere probar tu plato!");
         Glide.with(holder.mView.getContext()).load(holder.mItem.sender.profile_photo).into(holder.senderImageView);
+
+        if (holder.mItem.order.status.equals("CONFIRMED")){
+            holder.mView.setBackgroundColor(Color.parseColor("#FFD0FFD2"));
+        } else if (holder.mItem.order.status.equals("CANCELED")) {
+            holder.mView.setBackgroundColor(Color.parseColor("#FFD3D2"));
+        }
 
         holder.mView.setOnClickListener(v -> {
 

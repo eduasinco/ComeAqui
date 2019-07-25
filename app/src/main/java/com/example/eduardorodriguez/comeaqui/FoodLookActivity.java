@@ -124,12 +124,7 @@ public class FoodLookActivity extends AppCompatActivity {
             });
         }else{
             placeOrderButton.setOnClickListener(v -> {
-                PostAsyncTask emitMessage = new PostAsyncTask(getResources().getString(R.string.server) + "/send_notification/");
-                emitMessage.execute(
-                        new String[]{"food_post_id", "" + getFoodObject.id}
-                );
-
-                PostAsyncTask createOrder = new PostAsyncTask(getResources().getString(R.string.server) + "/create_order/");
+                PostAsyncTask createOrder = new PostAsyncTask(getResources().getString(R.string.server) + "/create_order_and_notification/");
                 try {
                     String response = createOrder.execute(
                             new String[]{"food_post_id", "" + getFoodObject.id}

@@ -9,11 +9,12 @@
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="0dp"
-            android:layout_height="match_parent" app:layout_constraintStart_toEndOf="@+id/constraintLayout"
-            android:layout_marginStart="8dp"
-            app:layout_constraintTop_toTopOf="@+id/constraintLayout" android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/constraintLayout" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp">
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toEndOf="@+id/notificator_image" android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent">
         <TextView
                 android:text="@eduasinco"
                 android:layout_width="match_parent"
@@ -24,25 +25,12 @@
                 android:layout_height="wrap_content" android:id="@+id/notification" android:lines="2"
                 android:textStyle="bold"/>
     </LinearLayout>
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="70dp"
-            android:layout_height="70dp" android:layout_weight="1" android:id="@+id/constraintLayout"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-        <ImageView
-                android:layout_width="0dp"
-                android:layout_height="0dp" app:srcCompat="@drawable/no_profile_photo"
-                android:id="@+id/notificator_image"
-                android:layout_weight="1"
-                app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
-                android:scaleType="centerCrop"/>
-        <ImageView
-                android:layout_width="0dp"
-                android:layout_height="0dp" app:srcCompat="@drawable/circle_corners"
-                android:id="@+id/imageView7" app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/notificator_image"
+            android:layout_width="70sp"
+            android:layout_height="70dp"
+            android:src="@drawable/no_profile_photo"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

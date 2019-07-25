@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" android:padding="10dp">
             <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/fotoPerfil"
+                    android:id="@+id/notificator_image"
                     android:layout_width="48sp"
                     android:layout_height="48sp"
                     android:src="@drawable/no_profile_photo"/>
