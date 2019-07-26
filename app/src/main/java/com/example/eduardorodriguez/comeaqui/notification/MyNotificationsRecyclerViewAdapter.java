@@ -1,8 +1,8 @@
 package com.example.eduardorodriguez.comeaqui.notification;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.eduardorodriguez.comeaqui.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,6 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
     Context context;
 
     public MyNotificationsRecyclerViewAdapter(Context context, ArrayList<NotificationObject> data){
-
         this.context = context;
         this.mValues = data;
     }
@@ -55,7 +56,9 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
         }
 
         holder.mView.setOnClickListener(v -> {
-
+            Intent notification = new Intent(context, NotificationLookActivity.class);
+            notification.putExtra("object", holder.mItem);
+            context.startActivity(notification);
         });
     }
 
@@ -76,7 +79,7 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
             mView = view;
             usernameView = view.findViewById(R.id.username);
             notificationView = view.findViewById(R.id.notification);
-            senderImageView = view.findViewById(R.id.notificator_image);
+            senderImageView = view.findViewById(R.id.dinner_image);
         }
 
         @Override

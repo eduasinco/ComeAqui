@@ -55,7 +55,7 @@ public class ConversationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
 
-        fotoPerfil = findViewById(R.id.notificator_image);
+        fotoPerfil = findViewById(R.id.dinner_image);
         nombre = findViewById(R.id.nombre);
         rvMensajes = findViewById(R.id.rvMensajes);
         txtMensaje = findViewById(R.id.txtMensaje);
