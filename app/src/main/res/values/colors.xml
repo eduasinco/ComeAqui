@@ -9,6 +9,8 @@
 
 
     <color name="grey">#797979</color>
+    <color name="grey_light">#F3F3F3</color>
+    <color name="grey_lighter">#FAFAFA</color>
 
     <color name="mapPickerFill">#E6FFFFFF</color>
     <color name="mapPicker">#9539ff</color>

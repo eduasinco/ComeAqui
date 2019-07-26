@@ -39,6 +39,7 @@ public class FoodLookActivity extends AppCompatActivity {
     ImageView postImage;
     ImageView posterImage;
     ImageView staticMapView;
+    ImageView backView;
     ConstraintLayout postImageLayout;
 
     FoodPost getFoodObject;
@@ -73,6 +74,7 @@ public class FoodLookActivity extends AppCompatActivity {
         posterImage = findViewById(R.id.poster_image);
         staticMapView = findViewById(R.id.static_map);
         postImageLayout = findViewById(R.id.post_image_layout);
+        backView = findViewById(R.id.back);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -109,6 +111,8 @@ public class FoodLookActivity extends AppCompatActivity {
 
             setPlaceButton(delete);
         }
+
+        backView.setOnClickListener(v -> finish());
     }
 
     void setPlaceButton(boolean delete){
