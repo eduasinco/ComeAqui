@@ -54,7 +54,7 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
 
         User chattingWith = MainActivity.user.id == (holder.mItem.users.get(0).id) ? holder.mItem.users.get(1) : holder.mItem.users.get(0);
 
-        holder.username.setText(chattingWith.username);
+        holder.username.setText(chattingWith.first_name + "," + chattingWith.last_name);
         MessageObject lastMessage = holder.mItem.messages.get(holder.mItem.messages.size() - 1);
         holder.lastMessage.setText(lastMessage.message);
         holder.dateView.setText(lastMessage.createdAt);

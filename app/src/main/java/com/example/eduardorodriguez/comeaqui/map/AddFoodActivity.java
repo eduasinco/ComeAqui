@@ -32,6 +32,7 @@ public class AddFoodActivity extends AppCompatActivity {
     EditText description;
     Button submit;
     ImageView doPhoto;
+    ImageView backView;
     TimePicker timePicker;
 
 
@@ -90,6 +91,7 @@ public class AddFoodActivity extends AppCompatActivity {
         submit = findViewById(R.id.submitButton);
         timePicker = findViewById(R.id.timePicker);
         doPhoto = findViewById(R.id.photo);
+        backView = findViewById(R.id.back);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -112,6 +114,8 @@ public class AddFoodActivity extends AppCompatActivity {
         setDoPhoto();
         setDinerButtons();
         setSubmit();
+
+        backView.setOnClickListener(v -> finish());
     }
 
     void setDinerButtons(){

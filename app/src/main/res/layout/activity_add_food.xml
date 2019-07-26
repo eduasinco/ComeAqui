@@ -1,246 +1,259 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-<ScrollView
+<androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#257701ff" android:id="@+id/scrollView3">
-    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_height="match_parent" android:layout_width="match_parent">
+    <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".map.AddFoodActivity" android:id="@+id/contraintLayout">
-        <LinearLayout
-                android:orientation="vertical"
+            android:layout_height="0dp"
+            android:background="#257701ff" android:id="@+id/scrollView3"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="0dp" app:layout_constraintVertical_bias="0.0">
+        <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"
-                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="32dp"
-                app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="32dp">
-            <TextView
-                    android:text="Add New Plate"
-                    android:textSize="18sp"
-                    android:background="@color/colorPrimary"
-                    android:textStyle="bold"
-                    android:textColor="#ffffff"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:id="@+id/textView9"
-                    android:gravity="center"
-                    app:layout_constraintBottom_toTopOf="@+id/plateName" app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"/>
-            <EditText
-                    android:background="@drawable/text_input_shape"
-                    android:textAlignment="center"
-                    android:textColorHint="#a9000000"
-                    android:hint="What are you making?"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:inputType="textPersonName"
-                    android:ems="10"
-                    android:id="@+id/plateName"
-                    app:layout_constraintTop_toBottomOf="@+id/textView9"
-
-            />
-            <TextView
-                    android:text="Location"
-                    android:focusableInTouchMode="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp" android:id="@+id/textView13"
-                    android:gravity="bottom|center"
-                    android:textSize="24sp" android:textColor="@color/colorPrimaryDark"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintTop_toBottomOf="@+id/plateName"/>
-            <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintTop_toBottomOf="@+id/textView13" android:id="@+id/locationAutocomplete">
-
-            </FrameLayout>
-            <TextView
-                    android:text="Diners"
-                    android:focusableInTouchMode="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="51dp" android:id="@+id/textView19"
-                    android:gravity="bottom|center"
-                    android:textSize="24sp" android:textColor="@color/colorPrimaryDark"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintTop_toBottomOf="@+id/locationAutocomplete"/>
+                android:layout_height="match_parent"
+                tools:context=".map.AddFoodActivity" android:id="@+id/contraintLayout">
             <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    app:layout_constraintTop_toBottomOf="@+id/textView19" android:id="@+id/linearLayout3">
-                <Button
-                        android:text="1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/diner1"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
-                        android:layout_weight="1" style="@style/Widget.AppCompat.Button.Borderless"
-                        android:background="@android:color/white"/>
-                <Button
-                        android:text="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/diner2"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
-                        android:layout_weight="1" style="@style/Widget.AppCompat.Button.Borderless"
-                        android:background="@android:color/white"/>
-                <Button
-                        android:text="3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/diner3"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
-                        android:layout_weight="1" style="@style/Widget.AppCompat.Button.Borderless"
-                        android:background="@android:color/white"/>
-                <Button
-                        android:text="4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/diner4"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
-                        android:layout_weight="1" style="@style/Widget.AppCompat.Button.Borderless"
-                        android:background="@android:color/white"/>
-            </LinearLayout>
-            <TextView
-                    android:text="Time"
-                    android:focusableInTouchMode="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="54dp" android:id="@+id/textView21"
-                    android:gravity="bottom|center"
-                    android:textSize="24sp" android:textColor="@color/colorPrimaryDark"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout3"/>
-            <TimePicker
-                    android:background="@drawable/text_input_shape"
-                    android:id="@+id/timePicker"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:timePickerMode="spinner"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintTop_toBottomOf="@+id/textView21"/>
-            <TextView
-                    android:text="Price"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp" android:id="@+id/priceText"
-                    android:gravity="bottom|center_vertical|center_horizontal|center"
-                    android:textSize="24sp" android:textColor="@color/colorPrimaryDark"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    android:textAlignment="center"
-                    app:layout_constraintTop_toBottomOf="@+id/timePicker"/>
-            <SeekBar
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp" android:id="@+id/seekBar"
-                    app:layout_constraintTop_toBottomOf="@+id/priceText"
-                    android:background="@drawable/text_input_shape"/>
-            <TextView
-                    android:text="Description"
-                    android:focusableInTouchMode="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp" android:id="@+id/textView7"
-                    android:gravity="bottom|center"
-                    android:textSize="24sp" android:textColor="@color/colorPrimaryDark"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintTop_toBottomOf="@+id/seekBar"/>
-            <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:background="@drawable/text_input_shape"
-                    android:layout_height="40dp"
-                    android:id="@+id/descriptionLayout" app:layout_constraintTop_toBottomOf="@+id/textView7"
-                    app:layout_constraintHorizontal_bias="0.0">
-
-                <ImageView
-                        android:layout_width="21dp"
-                        android:layout_height="0dp" app:srcCompat="@drawable/vegetarian"
-                        android:id="@+id/vegetarian"
-                        app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintVertical_bias="0.0" app:layout_constraintEnd_toStartOf="@+id/vegan"
-                        android:layout_marginEnd="16dp"/>
-                <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp" app:srcCompat="@drawable/vegan"
-                        android:id="@+id/vegan"
-                        app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/cereal" android:layout_marginEnd="16dp"/>
-                <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp" app:srcCompat="@drawable/cereal"
-                        android:id="@+id/cereal" app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/spicy" android:layout_marginEnd="16dp"/>
-                <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp" app:srcCompat="@drawable/spicy"
-                        android:id="@+id/spicy"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
-                        android:layout_marginStart="8dp"/>
-                <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp" app:srcCompat="@drawable/fish"
-                        android:id="@+id/fish" app:layout_constraintStart_toEndOf="@+id/spicy"
-                        android:layout_marginStart="16dp"
-                        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent"
-                />
-                <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp" app:srcCompat="@drawable/meat"
-                        android:id="@+id/meat"
-                        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0" app:layout_constraintStart_toEndOf="@+id/fish"
-                        android:layout_marginStart="16dp"/>
-                <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp" app:srcCompat="@drawable/dairy"
-                        android:id="@+id/dairy"
-                        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@+id/meat" android:layout_marginStart="16dp"
-                />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-            <EditText
-                    android:id="@+id/orderMessage"
-                    android:gravity="top|left"
-                    android:maxLines="5"
-                    android:background="@drawable/text_input_shape"
-                    android:inputType="textMultiLine"
-                    android:layout_height="100dp"
-                    android:layout_width="match_parent"
-                    android:lines="20"
-                    android:scrollHorizontally="false"
-                    android:hint="Description"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintTop_toBottomOf="@+id/descriptionLayout"
-                    android:focusable="auto" android:layout_marginTop="8dp"/>
-            <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp" app:srcCompat="@drawable/camera_icon"
-                    android:id="@+id/photo"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintTop_toBottomOf="@+id/orderMessage"
-                    android:background="@drawable/text_input_shape"
-                    android:layout_marginTop="8dp"/>
-            <Button
-                    android:text="Submit"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/submitButton"
-                    android:background="@color/colorPrimary"
-                    style="@style/Widget.AppCompat.Button.Borderless" android:textColor="@android:color/white"
-                    android:textSize="18sp" android:fontFamily="sans-serif" android:textStyle="bold"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/photo"/>
-        </LinearLayout>
+                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"
+                    app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="32dp"
+                    app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="56dp">
+                <TextView
+                        android:text="Add New Plate"
+                        android:textSize="18sp"
+                        android:background="@color/colorPrimary"
+                        android:textStyle="bold"
+                        android:textColor="#ffffff"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:id="@+id/title"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toTopOf="@+id/plateName" app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"/>
+                <EditText
+                        android:background="@drawable/text_input_shape"
+                        android:textAlignment="center"
+                        android:textColorHint="#a9000000"
+                        android:hint="What are you making?"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:inputType="textPersonName"
+                        android:ems="10"
+                        android:id="@+id/plateName"
+                        app:layout_constraintTop_toBottomOf="@+id/title"
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+                />
+                <TextView
+                        android:text="Location"
+                        android:focusableInTouchMode="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp" android:id="@+id/textView13"
+                        android:gravity="bottom|center"
+                        android:textSize="24sp" android:textColor="@color/colorPrimaryDark"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintTop_toBottomOf="@+id/plateName"/>
+                <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintTop_toBottomOf="@+id/textView13" android:id="@+id/locationAutocomplete">
+
+                </FrameLayout>
+                <TextView
+                        android:text="Diners"
+                        android:focusableInTouchMode="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="51dp" android:id="@+id/textView19"
+                        android:gravity="bottom|center"
+                        android:textSize="24sp" android:textColor="@color/colorPrimaryDark"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintTop_toBottomOf="@+id/locationAutocomplete"/>
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        app:layout_constraintTop_toBottomOf="@+id/textView19" android:id="@+id/linearLayout3">
+                    <Button
+                            android:text="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/diner1"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            android:layout_weight="1" style="@style/Widget.AppCompat.Button.Borderless"
+                            android:background="@android:color/white"/>
+                    <Button
+                            android:text="2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/diner2"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            android:layout_weight="1" style="@style/Widget.AppCompat.Button.Borderless"
+                            android:background="@android:color/white"/>
+                    <Button
+                            android:text="3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/diner3"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            android:layout_weight="1" style="@style/Widget.AppCompat.Button.Borderless"
+                            android:background="@android:color/white"/>
+                    <Button
+                            android:text="4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/diner4"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            android:layout_weight="1" style="@style/Widget.AppCompat.Button.Borderless"
+                            android:background="@android:color/white"/>
+                </LinearLayout>
+                <TextView
+                        android:text="Time"
+                        android:focusableInTouchMode="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="54dp" android:id="@+id/textView21"
+                        android:gravity="bottom|center"
+                        android:textSize="24sp" android:textColor="@color/colorPrimaryDark"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayout3"/>
+                <TimePicker
+                        android:background="@drawable/text_input_shape"
+                        android:id="@+id/timePicker"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:timePickerMode="spinner"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintTop_toBottomOf="@+id/textView21"/>
+                <TextView
+                        android:text="Price"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp" android:id="@+id/priceText"
+                        android:gravity="bottom|center_vertical|center_horizontal|center"
+                        android:textSize="24sp" android:textColor="@color/colorPrimaryDark"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        android:textAlignment="center"
+                        app:layout_constraintTop_toBottomOf="@+id/timePicker"/>
+                <SeekBar
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp" android:id="@+id/seekBar"
+                        app:layout_constraintTop_toBottomOf="@+id/priceText"
+                        android:background="@drawable/text_input_shape"/>
+                <TextView
+                        android:text="Description"
+                        android:focusableInTouchMode="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp" android:id="@+id/textView7"
+                        android:gravity="bottom|center"
+                        android:textSize="24sp" android:textColor="@color/colorPrimaryDark"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintTop_toBottomOf="@+id/seekBar"/>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:background="@drawable/text_input_shape"
+                        android:layout_height="40dp"
+                        android:id="@+id/descriptionLayout" app:layout_constraintTop_toBottomOf="@+id/textView7"
+                        app:layout_constraintHorizontal_bias="0.0">
+
+                    <ImageView
+                            android:layout_width="21dp"
+                            android:layout_height="0dp" app:srcCompat="@drawable/vegetarian"
+                            android:id="@+id/vegetarian"
+                            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintVertical_bias="0.0" app:layout_constraintEnd_toStartOf="@+id/vegan"
+                            android:layout_marginEnd="16dp"/>
+                    <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp" app:srcCompat="@drawable/vegan"
+                            android:id="@+id/vegan"
+                            app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/cereal" android:layout_marginEnd="16dp"/>
+                    <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp" app:srcCompat="@drawable/cereal"
+                            android:id="@+id/cereal" app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/spicy" android:layout_marginEnd="16dp"/>
+                    <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp" app:srcCompat="@drawable/spicy"
+                            android:id="@+id/spicy"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                            android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+                            android:layout_marginStart="8dp"/>
+                    <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp" app:srcCompat="@drawable/fish"
+                            android:id="@+id/fish" app:layout_constraintStart_toEndOf="@+id/spicy"
+                            android:layout_marginStart="16dp"
+                            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent"
+                    />
+                    <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp" app:srcCompat="@drawable/meat"
+                            android:id="@+id/meat"
+                            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.0" app:layout_constraintStart_toEndOf="@+id/fish"
+                            android:layout_marginStart="16dp"/>
+                    <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp" app:srcCompat="@drawable/dairy"
+                            android:id="@+id/dairy"
+                            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.0"
+                            app:layout_constraintStart_toEndOf="@+id/meat" android:layout_marginStart="16dp"
+                    />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                <EditText
+                        android:id="@+id/orderMessage"
+                        android:gravity="top|left"
+                        android:maxLines="5"
+                        android:background="@drawable/text_input_shape"
+                        android:inputType="textMultiLine"
+                        android:layout_height="100dp"
+                        android:layout_width="match_parent"
+                        android:lines="20"
+                        android:scrollHorizontally="false"
+                        android:hint="Description"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintTop_toBottomOf="@+id/descriptionLayout"
+                        android:focusable="auto" android:layout_marginTop="8dp"/>
+                <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp" app:srcCompat="@drawable/camera_icon"
+                        android:id="@+id/photo"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintTop_toBottomOf="@+id/orderMessage"
+                        android:background="@drawable/text_input_shape"
+                        android:layout_marginTop="8dp"/>
+                <Button
+                        android:text="Submit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/submitButton"
+                        android:background="@color/colorPrimary"
+                        style="@style/Widget.AppCompat.Button.Borderless" android:textColor="@android:color/white"
+                        android:textSize="18sp" android:fontFamily="sans-serif" android:textStyle="bold"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/photo"/>
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+    <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp" app:srcCompat="@drawable/back" android:id="@+id/back"
+            android:layout_weight="1" app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="32dp"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="16dp" android:alpha="1"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

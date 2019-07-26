@@ -41,6 +41,7 @@ public class ConversationActivity extends AppCompatActivity {
     private RecyclerView rvMensajes;
     private EditText txtMensaje;
     private ImageView btnEnviar;
+    private ImageView backView;
     private AdapterMensajes adapter;
 
 
@@ -60,6 +61,7 @@ public class ConversationActivity extends AppCompatActivity {
         rvMensajes = findViewById(R.id.rvMensajes);
         txtMensaje = findViewById(R.id.txtMensaje);
         btnEnviar = findViewById(R.id.btnEnviar);
+        backView = findViewById(R.id.back);
 
         adapter = new AdapterMensajes(this);
         LinearLayoutManager l = new LinearLayoutManager(this);
@@ -121,6 +123,8 @@ public class ConversationActivity extends AppCompatActivity {
 
             }
         });
+
+        backView.setOnClickListener(v -> finish());
         client = new OkHttpClient();
         start();
     }
