@@ -33,6 +33,7 @@ public class NotificationLookActivity extends AppCompatActivity {
     ImageView postImage;
     ImageView dinnerImage;
     ImageView staticMapView;
+    ImageView backView;
     ConstraintLayout postImageLayout;
 
     NotificationObject notificationObject;
@@ -67,6 +68,7 @@ public class NotificationLookActivity extends AppCompatActivity {
         dinnerImage = findViewById(R.id.dinner_image);
         staticMapView = findViewById(R.id.static_map);
         postImageLayout = findViewById(R.id.post_image_layout);
+        backView = findViewById(R.id.back);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -111,6 +113,8 @@ public class NotificationLookActivity extends AppCompatActivity {
                 finish();
             });
         }
+
+        backView.setOnClickListener(v -> finish());
     }
 
     void setConfirmCancelButton(){

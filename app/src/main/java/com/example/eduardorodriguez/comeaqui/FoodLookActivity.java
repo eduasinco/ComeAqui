@@ -3,6 +3,7 @@ package com.example.eduardorodriguez.comeaqui;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -40,7 +41,7 @@ public class FoodLookActivity extends AppCompatActivity {
     ImageView posterImage;
     ImageView staticMapView;
     ImageView backView;
-    ConstraintLayout postImageLayout;
+    CardView postImageLayout;
 
     FoodPost getFoodObject;
 
