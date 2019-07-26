@@ -226,7 +226,7 @@ public class MapFragment extends Fragment{
             String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLngString + "&key=" + getResources().getString(R.string.google_key);
             Server gAPI = new Server("GET", uri);
             try {
-                String jsonString = gAPI.execute().get(15, TimeUnit.SECONDS);
+                String jsonString = gAPI.execute().get(5, TimeUnit.SECONDS);
                 if (jsonString != null){
                     JsonObject joo = new JsonParser().parse(jsonString).getAsJsonObject();
                     JsonArray jsonArray = joo.get("results").getAsJsonArray();

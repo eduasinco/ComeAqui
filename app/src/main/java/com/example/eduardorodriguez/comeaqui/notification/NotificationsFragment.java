@@ -31,7 +31,7 @@ import java.util.concurrent.ExecutionException;
 public class NotificationsFragment extends Fragment {
 
     ArrayList<NotificationObject> data;
-    MyNotificationsRecyclerViewAdapter notificationAdapter;
+    static MyNotificationsRecyclerViewAdapter notificationAdapter;
     ColorDrawable swipeBackgroundConfirm = new ColorDrawable(Color.parseColor("#FF4CAF50"));
     ColorDrawable swipeBackgroundCancel= new ColorDrawable(Color.parseColor("#FF0000"));
     Drawable deleteIcon;
@@ -88,6 +88,19 @@ public class NotificationsFragment extends Fragment {
         }
     }
 
+    static void confirmOrder(OrderObject order, boolean confirm, Context context){
+        PostAsyncTask orderStatus = new PostAsyncTask(context.getString(R.string.server) + "/set_order_status/");
+        order.status = confirm ? "CONFIRMED" : "CANCELED";
+        try {
+            orderStatus.execute(
+                    new String[]{"order_id",  order.id + ""},
+                    new String[]{"order_status", order.status}
+            ).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        notificationAdapter.notifyDataSetChanged();
+    }
 
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0,   ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
         @Override
@@ -103,29 +116,14 @@ public class NotificationsFragment extends Fragment {
                 viewHolder.itemView.setAlpha(0);
                 viewHolder.itemView.setBackgroundColor(Color.parseColor("#FFD0FFD2"));
                 viewHolder.itemView.animate().alpha(1).x(0).setDuration(200).withEndAction(() -> {
-                    confirmOrder(data.get(viewHolder.getAdapterPosition()).order, true);
-                    notificationAdapter.notifyDataSetChanged();
+                    confirmOrder(data.get(viewHolder.getAdapterPosition()).order, true, getContext());
                 });
             } else {
                 viewHolder.itemView.setAlpha(0);
                 viewHolder.itemView.setBackgroundColor(Color.parseColor("#FFD3D2"));
                 viewHolder.itemView.animate().alpha(1).x(0).setDuration(200).withEndAction(() -> {
-                    confirmOrder(data.get(viewHolder.getAdapterPosition()).order, false);
-                    notificationAdapter.notifyDataSetChanged();
+                    confirmOrder(data.get(viewHolder.getAdapterPosition()).order, false, getContext());
                 });
-            }
-        }
-
-        void confirmOrder(OrderObject order, boolean confirm){
-            PostAsyncTask orderStatus = new PostAsyncTask(getResources().getString(R.string.server) + "/set_order_status/");
-            order.status = confirm ? "CONFIRMED" : "CANCELED";
-            try {
-                orderStatus.execute(
-                        new String[]{"order_id",  order.id + ""},
-                        new String[]{"order_status", order.status}
-                ).get();
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
             }
         }
 
@@ -158,4 +156,5 @@ public class NotificationsFragment extends Fragment {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
     };
+
 }

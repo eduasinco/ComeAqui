@@ -2,7 +2,6 @@ package com.example.eduardorodriguez.comeaqui.notification;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,9 +13,7 @@ import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.*;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
-import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import java.util.concurrent.ExecutionException;
 
@@ -31,7 +28,7 @@ public class NotificationLookActivity extends AppCompatActivity {
     TextView usernameView;
     TextView posterNameView;
     TextView posterLocationView;
-    Button placeOrderButton;
+    Button confirmCancelButton;
 
     ImageView postImage;
     ImageView dinnerImage;
@@ -61,7 +58,7 @@ public class NotificationLookActivity extends AppCompatActivity {
         descriptionView = findViewById(R.id.post_description);
         priceView = findViewById(R.id.price);
         timeView = findViewById(R.id.time);
-        placeOrderButton = findViewById(R.id.placeOrderButton);
+        confirmCancelButton = findViewById(R.id.placeOrderButton);
         usernameView = findViewById(R.id.username);
         posterNameView = findViewById(R.id.dinner_name);
         posterLocationView = findViewById(R.id.posterLocation);
@@ -103,34 +100,25 @@ public class NotificationLookActivity extends AppCompatActivity {
             String url = "http://maps.google.com/maps/api/staticmap?center=" + notificationObject.order.post.lat + "," + notificationObject.order.post.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
             Glide.with(this).load(url).into(staticMapView);
 
-            setPlaceButton(delete);
+            setConfirmCancelButton();
+
+            confirmCancelButton.setOnClickListener(v -> {
+                if (notificationObject.order.status.equals("CANCELED")){
+                    NotificationsFragment.confirmOrder(notificationObject.order, true, this);
+                } else if (notificationObject.order.status.equals("CONFIRMED")) {
+                    NotificationsFragment.confirmOrder(notificationObject.order,false, this);
+                }
+                finish();
+            });
         }
     }
 
-    void setPlaceButton(boolean delete){
-        if (delete){
-            placeOrderButton.setText("Delete Post");
-            placeOrderButton.setBackgroundColor(Color.parseColor("#FFFF0E01"));
-            placeOrderButton.setOnClickListener(v -> {
-                Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/foods/" + notificationObject.id + "/");
-                deleteFoodPost.execute();
-                Intent k = new Intent(NotificationLookActivity.this, MainActivity.class);
-                k.putExtra("profile", true);
-                startActivity(k);
-            });
-        }else{
-            placeOrderButton.setOnClickListener(v -> {
-                PostAsyncTask createOrder = new PostAsyncTask(getResources().getString(R.string.server) + "/create_order_and_notification/");
-                try {
-                    String response = createOrder.execute(
-                            new String[]{"food_post_id", "" + notificationObject.id}
-                    ).get();
-                    JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
-                    FoodLookActivity.goToOrder(jo);
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-            });
+    void setConfirmCancelButton(){
+        if (notificationObject.order.status.equals("CANCELED")){
+            confirmCancelButton.setBackgroundColor(getResources().getColor(R.color.success));
+        } else if (notificationObject.order.status.equals("CONFIRMED")) {
+            confirmCancelButton.setBackgroundColor(getResources().getColor(R.color.canceled));
+            confirmCancelButton.setText("CANCEL");
         }
     }
 }

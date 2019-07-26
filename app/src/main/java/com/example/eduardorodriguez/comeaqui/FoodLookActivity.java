@@ -118,9 +118,7 @@ public class FoodLookActivity extends AppCompatActivity {
             placeOrderButton.setOnClickListener(v -> {
                 Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/foods/" + getFoodObject.id + "/");
                 deleteFoodPost.execute();
-                Intent k = new Intent(FoodLookActivity.this, MainActivity.class);
-                k.putExtra("profile", true);
-                startActivity(k);
+                finish();
             });
         }else{
             placeOrderButton.setOnClickListener(v -> {
@@ -134,6 +132,7 @@ public class FoodLookActivity extends AppCompatActivity {
                 } catch (ExecutionException | InterruptedException e) {
                     e.printStackTrace();
                 }
+                finish();
             });
         }
     }

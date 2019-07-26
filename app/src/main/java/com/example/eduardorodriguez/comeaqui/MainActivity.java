@@ -87,6 +87,24 @@ public class MainActivity extends AppCompatActivity {
             setFragment(mapFragment);
             toolbar.setTitle(null);
             menu.findItem(R.id.nav_map).setIcon(R.drawable.foodfill);
+        } else {
+            switch (b.getString("goTo")){
+                case "notifications":
+                    setFragment(notificationFragment);
+                    toolbar.setTitle(null);
+                    menu.findItem(R.id.nav_notifications).setIcon(R.drawable.notificationfill);
+                    break;
+                case "orders":
+                    setFragment(getPastOderFragment);
+                    toolbar.setTitle(null);
+                    menu.findItem(R.id.nav_orders).setIcon(R.drawable.orderfill);
+                    break;
+                case "profile":
+                    setFragment(profileFragment);
+                    toolbar.setTitle(null);
+                    menu.findItem(R.id.nav_profile).setIcon(R.drawable.profilefill);
+                    break;
+            }
         }
         mMainNav.setOnNavigationItemSelectedListener(menuItem -> {
             Menu menu1 = mMainNav.getMenu();
