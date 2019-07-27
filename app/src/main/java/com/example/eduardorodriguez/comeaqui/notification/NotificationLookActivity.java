@@ -113,7 +113,6 @@ public class NotificationLookActivity extends AppCompatActivity {
                 finish();
             });
         }
-
         backView.setOnClickListener(v -> finish());
     }
 
