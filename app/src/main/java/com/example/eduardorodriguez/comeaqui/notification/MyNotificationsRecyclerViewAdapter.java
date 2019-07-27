@@ -11,9 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.eduardorodriguez.comeaqui.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +34,7 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_notifications, parent, false);
+                .inflate(R.layout.fragment_notifications_element, parent, false);
 
 
         return new ViewHolder(view);

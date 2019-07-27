@@ -12,8 +12,6 @@ import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.ChatFragment.OnListFragmentInteractionListener;
 import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
-import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.ChatFirebaseObject;
-import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.FirebaseUser;
 import com.example.eduardorodriguez.comeaqui.profile.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -43,7 +41,7 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_chat, parent, false);
+                .inflate(R.layout.fragment_chat_element, parent, false);
         firebaseStorage = FirebaseStorage.getInstance().getReference();
         return new ViewHolder(view);
     }
@@ -54,7 +52,7 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
 
         User chattingWith = MainActivity.user.id == (holder.mItem.users.get(0).id) ? holder.mItem.users.get(1) : holder.mItem.users.get(0);
 
-        holder.username.setText(chattingWith.first_name + "," + chattingWith.last_name);
+        holder.username.setText(chattingWith.first_name + ", " + chattingWith.last_name);
         MessageObject lastMessage = holder.mItem.messages.get(holder.mItem.messages.size() - 1);
         holder.lastMessage.setText(lastMessage.message);
         holder.dateView.setText(lastMessage.createdAt);

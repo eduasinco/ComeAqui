@@ -9,4 +9,7 @@
         android:layout_height="match_parent"
         app:layoutManager="LinearLayoutManager"
         tools:context=".notification.NotificationsFragment"
-        tools:listitem="@layout/fragment_notifications"/>
+        tools:listitem="@layout/fragment_notifications_element"
+        android:divider="@color/grey_light"
+        android:dividerHeight="15dp"
+        android:background="@color/grey_light"/>
