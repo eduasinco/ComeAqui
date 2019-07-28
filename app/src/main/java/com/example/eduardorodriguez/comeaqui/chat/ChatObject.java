@@ -11,9 +11,11 @@ public class ChatObject implements Serializable {
     public int id;
     public ArrayList<User> users;
     public ArrayList<MessageObject> messages;
+    public String createdAt;
     public ChatObject(JsonObject jo){
         users = new ArrayList<>();
         id = jo.get("id").getAsInt();
+        createdAt = jo.get("created_at").getAsString();
         for (JsonElement je: jo.get("users").getAsJsonArray()){
             users.add(new User(je.getAsJsonObject()));
         }

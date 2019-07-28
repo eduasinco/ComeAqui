@@ -11,11 +11,13 @@ public class OrderObject implements Serializable {
     public FoodPost post;
     public User poster;
     public String status;
+    public String createdAt;
     public OrderObject(JsonObject jo){
         id = jo.get("id").getAsInt();
         owner = new User(jo.get("owner").getAsJsonObject());
         post = new FoodPost(jo.get("post").getAsJsonObject());
         poster = new User(jo.get("poster").getAsJsonObject());
         status = jo.get("order_status").getAsString();
+        createdAt = jo.get("created_at").getAsString();
     }
 }

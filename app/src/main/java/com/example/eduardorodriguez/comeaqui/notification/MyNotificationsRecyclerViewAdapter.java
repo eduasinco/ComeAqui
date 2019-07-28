@@ -3,6 +3,8 @@ package com.example.eduardorodriguez.comeaqui.notification;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.eduardorodriguez.comeaqui.DateFragment;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.map.MapCardFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +62,10 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
             notification.putExtra("object", holder.mItem);
             context.startActivity(notification);
         });
+
+        ((AppCompatActivity)context).getSupportFragmentManager().beginTransaction()
+                .replace(R.id.date, DateFragment.newInstance(holder.mItem.createdAt))
+                .commit();
     }
 
     @Override

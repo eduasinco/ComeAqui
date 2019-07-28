@@ -58,10 +58,20 @@
                 <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" android:id="@+id/address" android:text="Castellana Azca"/>
-                <TextView
-                        android:text="€7.26 - 20 June 2019"
+                <LinearLayout
+                        android:orientation="horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:id="@+id/price_date"/>
+                        android:layout_height="match_parent">
+                    <TextView
+                            android:text="€7.26 - 20 June 2019"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:id="@+id/price"
+                    />
+                    <TextView
+                            android:text="TextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:id="@+id/date" android:layout_weight="1"/>
+                </LinearLayout>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>

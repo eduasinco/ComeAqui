@@ -4,5 +4,5 @@
     <item android:title="" android:icon="@drawable/food" android:id="@+id/nav_map"/>
     <item android:title="" android:icon="@drawable/order" android:id="@+id/nav_orders"/>
     <item android:title="" android:icon="@drawable/notification" android:id="@+id/nav_notifications"/>
-    <item android:title="" android:icon="@drawable/profile" android:id="@+id/nav_profile"/>
+    <item android:icon="@drawable/profile" android:id="@+id/nav_profile"/>
 </menu>

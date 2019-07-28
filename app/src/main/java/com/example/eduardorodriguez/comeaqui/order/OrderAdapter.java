@@ -12,7 +12,13 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.*;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 
 public class OrderAdapter extends BaseAdapter {
@@ -21,10 +27,11 @@ public class OrderAdapter extends BaseAdapter {
 
     View view;
     TextView poster_name;
-    TextView priceDate;
+    TextView price;
     TextView posterUsername;
     TextView postAddress;
     TextView orderStatus;
+    TextView dateView;
     ImageView imageView;
 
     Context context;
@@ -49,19 +56,20 @@ public class OrderAdapter extends BaseAdapter {
 
         view = inflater.inflate(R.layout.order_list_element, null);
         poster_name = view.findViewById(R.id.poster_name);
-        priceDate = view.findViewById(R.id.price_date);
+        price = view.findViewById(R.id.price);
         posterUsername = view.findViewById(R.id.poster_username);
         postAddress = view.findViewById(R.id.address);
         imageView = view.findViewById(R.id.poster_image);
         orderStatus = view.findViewById(R.id.order_status);
+        dateView = view.findViewById(R.id.date);
 
         orderObject = data.get(position);
 
         poster_name.setText(orderObject.owner.first_name + " " + orderObject.owner.last_name);
         posterUsername.setText(orderObject.owner.email);
         postAddress.setText(orderObject.post.address);
-        String priceTextE = "€" + orderObject.post.price + "-";
-        priceDate.setText(priceTextE);
+        String priceTextE = "€" + orderObject.post.price + " - ";
+        price.setText(priceTextE);
         orderStatus.setText(orderObject.status);
 
         if (orderObject.status.equals("CONFIRMED")){
@@ -88,6 +96,16 @@ public class OrderAdapter extends BaseAdapter {
             context.startActivity(foodLook);
         });
 
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.ENGLISH);
+        try {
+            Date date = format.parse(orderObject.createdAt);
+            String pattern = "dd MMMM yyyy";
+            DateFormat df = new SimpleDateFormat(pattern);
+            String todayAsString = df.format(date);
+            dateView.setText(todayAsString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return view;
     }
 
