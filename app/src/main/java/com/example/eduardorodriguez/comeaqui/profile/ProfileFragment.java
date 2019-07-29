@@ -1,6 +1,8 @@
 package com.example.eduardorodriguez.comeaqui.profile;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Outline;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.example.eduardorodriguez.comeaqui.chat.ChatObject;
@@ -65,16 +67,15 @@ public class ProfileFragment extends Fragment {
         nameView = view.findViewById(R.id.nameView);
 
         final CircularImageView circularImageView = view.findViewById(R.id.profile_image);
-        circularImageView.setBorderColor(getResources().getColor(R.color.colorPrimary));
-        circularImageView.setBorderWidth(10);
-
         final ImageView mImage =  view.findViewById(R.id.profile_image);
-        AppBarLayout mAppBar = view.findViewById(R.id.app_bar);
-        mAppBar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
-            mImage.setY(-verticalOffset / 2 + 100);
-            circularImageView.setShadowRadius(0 - verticalOffset / 5);
-            backGroundImageView.setY(-verticalOffset / 4);
-        });
+
+//        circularImageView.setBorderWidth(10);
+//        AppBarLayout mAppBar = view.findViewById(R.id.app_bar);
+//        mAppBar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+//            mImage.setY(-verticalOffset / 2 + 100);
+//            circularImageView.setShadowRadius(0 - verticalOffset / 5);
+//            backGroundImageView.setY(-verticalOffset / 4);
+//        });
 
         ViewPager viewPager = view.findViewById(R.id.viewpager);
         viewPager.setAdapter(new TestPagerAdapter(getChildFragmentManager()));
@@ -94,6 +95,16 @@ public class ProfileFragment extends Fragment {
             });
             setProfile(MainActivity.user);
         }
+
+        int curveRadius = 20;
+
+        view.findViewById(R.id.backGroundImage).setOutlineProvider(new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                outline.setRoundRect(0, 0, view.getWidth(), (view.getHeight() + curveRadius), curveRadius);
+            }
+        });
+        view.findViewById(R.id.backGroundImage).setClipToOutline(true);
         return view;
     }
 
