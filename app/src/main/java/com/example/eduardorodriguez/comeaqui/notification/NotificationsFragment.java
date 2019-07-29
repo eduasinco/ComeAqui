@@ -130,21 +130,25 @@ public class NotificationsFragment extends Fragment {
             }
         }
 
+        int getMargin(int margin, int rise, int down, int max_margin, int start_margin, float dX){
+            int from = 200;
+            if (from >= dX && dX > 0){
+                margin = start_margin;
+            }else if (rise >= dX && dX > from){
+                margin = start_margin - (int) ((dX - from) * (start_margin - max_margin)/(rise - from));
+            } else if (rise + down >= dX && dX > rise){
+                margin = max_margin + (int) ((dX - rise) * (margin - max_margin)/down);
+            }
+            return margin;
+        }
+
         @Override
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             View itemView = viewHolder.itemView;
             int iconMargin = (itemView.getHeight() - deleteIcon.getIntrinsicHeight()) / 2;
             System.out.println(Math.abs(dX));
-            int margin = 200;
-            int rise = 300;
-            int down = 100;
-            int max_margin = 180;
-            int start_margin = 300;
-            if (rise >= Math.abs(dX) && Math.abs(dX) > 0){
-                margin = start_margin - (int) (Math.abs(dX) * (start_margin - max_margin)/rise);
-            } else if (rise + down > Math.abs(dX) && Math.abs(dX) > rise){
-                margin = max_margin + (int) ((Math.abs(dX) - rise) * (margin - max_margin)/down);
-            }
+
+            int margin = getMargin(210, 300, 50, 180, 230, Math.abs(dX));
             if (dX > 0){
                 swipeBackgroundConfirm.setBounds(itemView.getLeft(), itemView.getTop(), (int) dX, itemView.getBottom());
                 confirmIcon.setBounds(itemView.getLeft() + iconMargin + margin, itemView.getTop() + iconMargin + margin, itemView.getLeft() + iconMargin + deleteIcon.getIntrinsicWidth() - margin,
