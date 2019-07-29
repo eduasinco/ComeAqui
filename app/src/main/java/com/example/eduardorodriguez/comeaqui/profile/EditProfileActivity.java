@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.View;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -28,9 +29,11 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private Bitmap imageBitmap;
     private ImageView profileImageView;
+    private ImageView backView;
     private TextView editFirstNameView;
     private TextView editLastNameView;
     private TextView bioView;
+    private TextView editProfilePhotoView;
     private Button saveButtonView;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -42,7 +45,6 @@ public class EditProfileActivity extends AppCompatActivity {
             imageBitmap = (Bitmap) extras.get("data");
             profileImageView.setImageBitmap(imageBitmap);
         }
-
     }
 
     @Override
@@ -57,20 +59,20 @@ public class EditProfileActivity extends AppCompatActivity {
         editLastNameView = findViewById(R.id.editLastName);
         bioView = findViewById(R.id.orderMessage);
         saveButtonView = findViewById(R.id.saveButton);
+        editProfilePhotoView = findViewById(R.id.edit_profile_picture);
+        backView = findViewById(R.id.back);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if(b != null){
             User user = (User) b.get("object");
-
             if(user.profile_photo != null && !user.profile_photo.contains("no-image")) Glide.with(this).load(user.profile_photo).into(profileImageView);
             editFirstNameView.setText(user.first_name);
             editLastNameView.setText(user.last_name);
             bioView.setText(user.bio);
         }
 
-        FloatingActionButton myFab =  findViewById(R.id.fabCamera);
-        myFab.setOnClickListener(v -> {
+        editProfilePhotoView.setOnClickListener(v -> {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -85,6 +87,8 @@ public class EditProfileActivity extends AppCompatActivity {
             k.putExtra("profile", true);
             startActivity(k);
         });
+
+        backView.setOnClickListener(v -> finish());
     }
 
     private void patchProfileData(){

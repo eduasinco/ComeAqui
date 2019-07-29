@@ -118,8 +118,8 @@
                         <ImageView
                                 android:src="@drawable/edit_profile"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent" android:id="@+id/imageView7"
-                                android:layout_weight="1"/>
+                                android:layout_height="match_parent" android:id="@+id/edit_profile"
+                                android:layout_weight="1" android:visibility="gone"/>
                     </LinearLayout>
                     <androidx.constraintlayout.widget.ConstraintLayout
                             android:background="#FFFFFF"

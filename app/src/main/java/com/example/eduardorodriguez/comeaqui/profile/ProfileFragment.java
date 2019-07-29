@@ -39,6 +39,7 @@ public class ProfileFragment extends Fragment {
 
     static ImageView profileImageView;
     static ImageView messageImage;
+    static ImageView editProfileView;
     static TextView emailView;
     static TextView bioView;
     static TextView nameView;
@@ -65,6 +66,7 @@ public class ProfileFragment extends Fragment {
         emailView = view.findViewById(R.id.senderEmail);
         bioView = view.findViewById(R.id.bioView);
         nameView = view.findViewById(R.id.nameView);
+        editProfileView = view.findViewById(R.id.edit_profile);
 
         final CircularImageView circularImageView = view.findViewById(R.id.profile_image);
         final ImageView mImage =  view.findViewById(R.id.profile_image);
@@ -88,9 +90,10 @@ public class ProfileFragment extends Fragment {
             setProfile(user);
             messageImage.setOnClickListener(v -> goToConversationWithUser(user));
         } else {
-            mImage.setOnClickListener(v -> {
+            editProfileView.setVisibility(View.VISIBLE);
+            editProfileView.setOnClickListener(v -> {
                 Intent editProfile = new Intent(getContext(), EditProfileActivity.class);
-                editProfile.putExtra("object", user);
+                editProfile.putExtra("object", MainActivity.user);
                 getContext().startActivity(editProfile);
             });
             setProfile(MainActivity.user);
