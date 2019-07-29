@@ -41,6 +41,13 @@
                         app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp"/>
 
 
+                <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp" android:id="@+id/imageView9"
+                        app:layout_constraintEnd_toEndOf="@+id/backGroundImage" android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/backGroundImage"
+                        app:srcCompat="@drawable/edit_profile_background_image"/>
                 <com.mikhaellopez.circularimageview.CircularImageView
                         android:layout_width="200dp"
                         android:layout_height="200dp"
@@ -56,6 +63,13 @@
                         app:layout_constraintHorizontal_bias="0.497"
                         app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="100dp"/>
 
+                <com.mikhaellopez.circularimageview.CircularImageView
+                        android:src="@drawable/edit_profile_photo"
+                        android:layout_width="40dp"
+                        app:civ_border_width="2dp"
+                        android:layout_height="40dp" android:id="@+id/imageView8"
+                        app:layout_constraintEnd_toEndOf="@+id/profile_image" android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="16dp" app:layout_constraintBottom_toBottomOf="@+id/profile_image"/>
                 <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="0dp"
