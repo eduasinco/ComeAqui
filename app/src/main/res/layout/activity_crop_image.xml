@@ -8,9 +8,28 @@
         tools:context=".profile.CropImageActivity">
 
     <ImageView
-            android:layout_width="477dp"
-            android:layout_height="wrap_content" app:srcCompat="@drawable/no_profile_photo"
+            android:layout_width="0dp"
+            android:layout_height="0dp" app:srcCompat="@drawable/no_profile_photo"
             android:id="@+id/image"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"/>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            app:layout_constraintBottom_toBottomOf="parent" android:id="@+id/linearLayout2">
+        <Button
+                android:text="discard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/button" android:layout_weight="1"
+                style="@style/Widget.AppCompat.Button.Borderless" android:textColor="@android:color/holo_red_dark"
+                android:background="@color/grey_light"/>
+        <Button
+                android:text="save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/button2" android:layout_weight="1"
+                style="@style/Widget.AppCompat.Button.Borderless" android:textColor="@android:color/holo_green_dark"
+                android:background="@color/grey_light"/>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

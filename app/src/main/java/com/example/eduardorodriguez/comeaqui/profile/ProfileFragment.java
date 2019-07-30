@@ -136,7 +136,9 @@ public class ProfileFragment extends Fragment {
         });
 
         selectFromGallery.setOnClickListener(v -> {
-            openGallery();
+            Intent cropImage = new Intent(getContext(), CropImageActivity.class);
+            cropImage.putExtra("is_camera", false);
+            startActivity(cropImage);
         });
 
         outOfCard.setOnClickListener(v -> {
@@ -146,33 +148,6 @@ public class ProfileFragment extends Fragment {
         });
 
         return view;
-    }
-
-    public static final int PICK_IMAGE = 1;
-    private void openGallery(){
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
-            try {
-                Uri selectedImage = data.getData();
-                InputStream imageStream = getContext().getContentResolver().openInputStream(selectedImage);
-                Bitmap bitmap = BitmapFactory.decodeStream(imageStream);
-
-                Intent cropImage = new Intent(getContext(), CropImageActivity.class);
-                ByteArrayOutputStream bs = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bs);
-                cropImage.putExtra("image", bs.toByteArray());
-                startActivity(cropImage);
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-        }
     }
 
     void goToConversationWithUser(User user){
