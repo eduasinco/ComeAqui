@@ -4,14 +4,14 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:fitsSystemWindows="true"
         tools:context=".profile.ProfileFragment"
         android:orientation="vertical" android:id="@+id/profile">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
         <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/app_bar"
@@ -105,14 +105,14 @@
                     <LinearLayout
                             android:orientation="horizontal"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:padding="4dp">
+                            android:layout_height="50dp" android:padding="4dp">
                         <ImageView
                                 android:src="@drawable/message_profile"
                                 android:layout_width="match_parent"
-                                android:layout_height="40dp"
+                                android:layout_height="match_parent"
                                 android:id="@+id/message"
                                 android:scaleType="centerInside"
-                                android:visibility="visible"
+                                android:visibility="gone"
                                 tools:layout_editor_absoluteX="258dp" tools:layout_editor_absoluteY="262dp"
                                 android:layout_weight="1"/>
                         <ImageView
