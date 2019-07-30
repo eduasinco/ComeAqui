@@ -38,7 +38,7 @@
                             android:id="@+id/backGroundImage"
                             android:layout_weight="1"
                             android:layout_width="0dp"
-                            android:background="@android:color/white" android:alpha="0.8"
+                            android:background="@android:color/white"
                             android:layout_marginEnd="16dp"
                             app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="16dp"
                             app:layout_constraintStart_toStartOf="parent"
@@ -64,7 +64,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintHorizontal_bias="0.497"
-                            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="110dp"
+                            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="105dp"
                             app:civ_shadow="false"/>
 
                     <com.mikhaellopez.circularimageview.CircularImageView
