@@ -1,22 +1,14 @@
 package com.example.eduardorodriguez.comeaqui.profile;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Outline;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.eduardorodriguez.comeaqui.chat.ChatObject;
 import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
 import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.ChatFirebaseObject;
 import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.FirebaseUser;
-import com.example.eduardorodriguez.comeaqui.order.PastOderFragment;
-import com.example.eduardorodriguez.comeaqui.profile.settings.SettingsActivity;
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -29,40 +21,34 @@ import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.firebase.database.*;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
-import java.io.*;
 import java.util.concurrent.ExecutionException;
 
-import static android.app.Activity.RESULT_OK;
 import static com.example.eduardorodriguez.comeaqui.MainActivity.firebaseUser;
 
 public class ProfileFragment extends Fragment {
 
     public static String[] data;
-    static public View view;
+    public View view;
     public User user;
+    boolean isBackGound;
 
-    static ImageView profileImageView;
-    static ImageView messageImage;
-    static ImageView editProfileView;
-    static ImageView addProfilePhotoView;
-    static TextView emailView;
-    static TextView bioView;
-    static TextView nameView;
-    static LinearLayout selectFromCamera;
-    static LinearLayout selectFromGallery;
-    static LinearLayout selectFrom;
-    static ConstraintLayout outOfCard;
+    private ImageView profileImageView;
+    private ImageView backGroundImage;
+    private TextView emailView;
+    private TextView bioView;
+    private TextView nameView;
+    private ConstraintLayout outOfCard;
 
     public ProfileFragment() {
         // Required empty public constructor
     }
 
-    public static void setProfile(User user){
+    public void setProfile(User user){
         if(!user.profile_photo.contains("no-image")) Glide.with(view.getContext()).load(user.profile_photo).into(profileImageView);
+        if(!user.background_photo.contains("no-image")) Glide.with(view.getContext()).load(user.background_photo).into(backGroundImage);
         nameView.setText(user.first_name + " " + user.last_name);
         emailView.setText(user.email);
         bioView.setText(user.bio);
@@ -81,20 +67,20 @@ public class ProfileFragment extends Fragment {
         final ImageView backGroundImageView = view.findViewById(R.id.backGroundImage);
 
         profileImageView = view.findViewById(R.id.profile_image);
-        messageImage = view.findViewById(R.id.message);
+        backGroundImage = view.findViewById(R.id.backGroundImage);
+        ImageView messageImage = view.findViewById(R.id.message);
         emailView = view.findViewById(R.id.senderEmail);
         bioView = view.findViewById(R.id.bioView);
         nameView = view.findViewById(R.id.nameView);
-        editProfileView = view.findViewById(R.id.edit_profile);
-        addProfilePhotoView = view.findViewById(R.id.add_profile_photo);
-        selectFromCamera = view.findViewById(R.id.select_from_camera);
-        selectFromGallery = view.findViewById(R.id.select_from_gallery);
-        selectFrom = view.findViewById(R.id.select_from);
+        ImageView editProfileView = view.findViewById(R.id.edit_profile);
+        ImageView addProfilePhotoView = view.findViewById(R.id.add_profile_photo);
+        ImageView addBackGroundPhotoView = view.findViewById(R.id.add_background_photo);
+        LinearLayout selectFromCamera = view.findViewById(R.id.select_from_camera);
+        LinearLayout selectFromGallery = view.findViewById(R.id.select_from_gallery);
         outOfCard = view.findViewById(R.id.out_of_card);
 
         final CircularImageView circularImageView = view.findViewById(R.id.profile_image);
         final ImageView mImage =  view.findViewById(R.id.profile_image);
-
 //        circularImageView.setBorderWidth(10);
 //        AppBarLayout mAppBar = view.findViewById(R.id.app_bar);
 //        mAppBar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
@@ -123,7 +109,7 @@ public class ProfileFragment extends Fragment {
             setProfile(MainActivity.user);
         }
 
-        int curveRadius = 20;
+        int curveRadius = 40;
 
         view.findViewById(R.id.backGroundImage).setOutlineProvider(new ViewOutlineProvider() {
             @Override
@@ -135,22 +121,49 @@ public class ProfileFragment extends Fragment {
 
         addProfilePhotoView.setOnClickListener(v -> {
             outOfCard.setVisibility(View.VISIBLE);
+            outOfCard.setScaleX(0);
+            outOfCard.setScaleY(0);
+            outOfCard.animate().scaleX(1).scaleY(1).setDuration(200);
+            isBackGound = false;
+        });
+
+        addBackGroundPhotoView.setOnClickListener(v -> {
+            outOfCard.setVisibility(View.VISIBLE);
+            outOfCard.setScaleX(0);
+            outOfCard.setScaleY(0);
+            outOfCard.animate().scaleX(1).scaleY(1).setDuration(200);
+            isBackGound = true;
         });
 
         selectFromCamera.setOnClickListener(v -> {
-
+            Intent cropImage = new Intent(getContext(), CropImageActivity.class);
+            cropImage.putExtra("is_camera", true);
+            cropImage.putExtra("is_back_ground", isBackGound);
+            startActivity(cropImage);
         });
 
         selectFromGallery.setOnClickListener(v -> {
             Intent cropImage = new Intent(getContext(), CropImageActivity.class);
             cropImage.putExtra("is_camera", false);
+            cropImage.putExtra("is_back_ground", isBackGound);
             startActivity(cropImage);
         });
 
-        outOfCard.setOnClickListener(v -> {
-            if(v.getId() != R.id.select_from){
-                outOfCard.setVisibility(View.GONE);
+        outOfCard.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    outOfCard.animate().scaleX(0).scaleY(0).setDuration(200).withEndAction(() -> {
+                        outOfCard.setVisibility(View.GONE);
+                    });
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    break;
+                case MotionEvent.ACTION_UP:
+                    break;
+                default:
+                    return false;
             }
+            return true;
         });
 
         return view;

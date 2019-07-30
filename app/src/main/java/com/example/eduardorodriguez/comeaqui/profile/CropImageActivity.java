@@ -29,6 +29,7 @@ public class CropImageActivity extends AppCompatActivity {
     Button save;
     Button discard;
     String SAMPLE_CROP_IMAGE_NAME = "SampleCropImage";
+    boolean isBackGround;
 
     Uri imageUri;
     @Override
@@ -44,6 +45,7 @@ public class CropImageActivity extends AppCompatActivity {
         Bundle b = intent.getExtras();
         if(b != null && b.get("is_camera") != null) {
             boolean is_camera = b.getBoolean("is_camera");
+            isBackGround = b.getBoolean("is_back_ground");
             if(is_camera){
             } else {
                 openGallery();
@@ -61,8 +63,15 @@ public class CropImageActivity extends AppCompatActivity {
             if (bitmap != null){
                 PatchAsyncTask putTask = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
                 putTask.imageBitmap = bitmap;
-                putTask.execute("profile_photo", "", "true").get(15, TimeUnit.SECONDS);
-                finish();
+
+                if (isBackGround){
+                    putTask.execute("background_photo", "", "true").get(15, TimeUnit.SECONDS);
+                    finish();
+                }else {
+                    putTask.execute("profile_photo", "", "true").get(15, TimeUnit.SECONDS);
+                    finish();
+                }
+
             }
         } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {
             e.printStackTrace();

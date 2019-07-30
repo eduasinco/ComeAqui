@@ -16,6 +16,7 @@ public class User implements Serializable {
     public String profile_photo;
     public String is_active;
     public String is_admin;
+    public String background_photo;
 
     public User(JsonObject jo){
         id = jo.get("id").getAsInt();
@@ -26,6 +27,7 @@ public class User implements Serializable {
         phone_number = jo.get("phone_number").getAsString();
         phone_code = jo.get("phone_code").getAsString();
         profile_photo = jo.get("profile_photo").getAsString();
+        background_photo = jo.get("background_photo").getAsString();
         is_active = jo.get("is_active").getAsString();
         is_admin = jo.get("is_admin").getAsString();
     }
