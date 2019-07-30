@@ -22,13 +22,13 @@
         <Button
                 android:text="discard"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/button" android:layout_weight="1"
+                android:layout_height="wrap_content" android:id="@+id/discard" android:layout_weight="1"
                 style="@style/Widget.AppCompat.Button.Borderless" android:textColor="@android:color/holo_red_dark"
                 android:background="@color/grey_light"/>
         <Button
                 android:text="save"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/button2" android:layout_weight="1"
+                android:layout_height="wrap_content" android:id="@+id/save" android:layout_weight="1"
                 style="@style/Widget.AppCompat.Button.Borderless" android:textColor="@android:color/holo_green_dark"
                 android:background="@color/grey_light"/>
     </LinearLayout>

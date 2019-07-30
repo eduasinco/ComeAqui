@@ -3,28 +3,42 @@ package com.example.eduardorodriguez.comeaqui.profile;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.Image;
 import android.net.Uri;
+import android.provider.MediaStore;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.eduardorodriguez.comeaqui.FoodPost;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class CropImageActivity extends AppCompatActivity {
 
     ImageView image;
+    Button save;
+    Button discard;
+    String SAMPLE_CROP_IMAGE_NAME = "SampleCropImage";
 
+    Uri imageUri;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crop_image);
 
         image = findViewById(R.id.image);
+        save = findViewById(R.id.save);
+        discard = findViewById(R.id.discard);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -34,7 +48,24 @@ public class CropImageActivity extends AppCompatActivity {
             } else {
                 openGallery();
             }
+        }
+        discard.setOnClickListener(v -> finish());
+        save.setOnClickListener(v -> {
+            saveImage();
+        });
+    }
 
+    private void saveImage(){
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+            if (bitmap != null){
+                PatchAsyncTask putTask = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
+                putTask.imageBitmap = bitmap;
+                putTask.execute("profile_photo", "", "true").get(15, TimeUnit.SECONDS);
+                finish();
+            }
+        } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {
+            e.printStackTrace();
         }
     }
 
@@ -49,29 +80,23 @@ public class CropImageActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
-            try {
-                Uri selectedImage = data.getData();
-                if (selectedImage != null)
-                    startCrop(selectedImage);
+            Uri selectedImage = data.getData();
+            if (selectedImage != null)
+                startCrop(selectedImage);
 
-                InputStream imageStream = getContentResolver().openInputStream(selectedImage);
-                Bitmap bitmap = BitmapFactory.decodeStream(imageStream);
-                ByteArrayOutputStream bs = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bs);
-
-            } catch (IOException e){
-                e.printStackTrace();
-            }
         } else if(requestCode == UCrop.REQUEST_CROP && resultCode == RESULT_OK){
-            Uri imageResultCrop = UCrop.getOutput(data);
-            if(imageResultCrop != null){
-                image.setImageURI(imageResultCrop);
+            imageUri = UCrop.getOutput(data);
+            if(imageUri != null){
+                image.setImageURI(imageUri);
             }
         }
     }
 
     private void startCrop(Uri uri){
-        UCrop.of(uri, Uri.fromFile(new File(getCacheDir(), "MyImages")))
+        String destinationFileName = SAMPLE_CROP_IMAGE_NAME;
+        destinationFileName += ".jpg";
+
+        UCrop.of(uri, Uri.fromFile(new File(getCacheDir(), destinationFileName)))
                 .withAspectRatio(1, 1)
                 .withMaxResultSize(450, 450)
                 .withOptions(getCropOptions())
@@ -88,7 +113,8 @@ public class CropImageActivity extends AppCompatActivity {
         options.setFreeStyleCropEnabled(true);
 
         options.setStatusBarColor(getResources().getColor(R.color.colorPrimary));
-        options.setToolbarColor(getResources().getColor(R.color.colorPrimary));
+        options.setToolbarColor(Color.parseColor("#ffffff"));
+        options.setActiveWidgetColor(getResources().getColor(R.color.colorPrimary));
         options.setToolbarTitle("Image Crop");
 
         return options;
