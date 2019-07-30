@@ -25,6 +25,10 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
+        <activity android:name=".profile.CropImageActivity">
+        </activity>
+        <activity android:name=".profile.SelectImageFromGalleryActivity">
+        </activity>
         <activity android:name=".notification.NotificationLookActivity">
         </activity>
         <activity android:name=".profile.ProfileViewActivity">

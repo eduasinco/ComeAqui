@@ -1,164 +1,224 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        tools:context=".profile.ProfileFragment"
-        android:orientation="vertical" android:id="@+id/profile">
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_height="match_parent">
+    <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            android:clickable="true"
+            tools:context=".profile.ProfileFragment"
+            android:orientation="vertical" android:id="@+id/profile">
 
-        <com.google.android.material.appbar.AppBarLayout
-                android:id="@+id/app_bar"
-                android:fitsSystemWindows="true"
-                android:layout_height="wrap_content"
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:layout_width="match_parent"
-                android:theme="@style/AppTheme.AppBarOverlay">
+                android:layout_height="match_parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                    android:background="#FFFFFF"
+            <com.google.android.material.appbar.AppBarLayout
+                    android:id="@+id/app_bar"
+                    android:fitsSystemWindows="true"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:theme="@style/AppTheme.AppBarOverlay">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:background="#FFFFFF"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                        app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+                    <ImageView
+                            android:scaleType="centerCrop"
+                            android:layout_height="200dp"
+                            app:srcCompat="@drawable/background"
+                            android:id="@+id/backGroundImage"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:background="@android:color/white" android:alpha="0.8"
+                            android:layout_marginEnd="8dp"
+                            app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="8dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp"/>
+
+
+                    <ImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp" android:id="@+id/imageView9"
+                            app:layout_constraintEnd_toEndOf="@+id/backGroundImage" android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="8dp"
+                            app:layout_constraintBottom_toBottomOf="@+id/backGroundImage"
+                            app:srcCompat="@drawable/edit_profile_background_image"/>
+                    <com.mikhaellopez.circularimageview.CircularImageView
+                            android:layout_width="200dp"
+                            android:layout_height="200dp"
+                            android:src="@drawable/no_profile_photo"
+                            app:civ_border_color="#FFFFFF"
+                            app:civ_border_width="4dp"
+                            app:civ_shadow="true"
+                            app:civ_shadow_radius="10"
+                            app:civ_shadow_color="#FFFFFF"
+                            android:id="@+id/profile_image"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintHorizontal_bias="0.497"
+                            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="100dp"/>
+
+                    <com.mikhaellopez.circularimageview.CircularImageView
+                            android:src="@drawable/edit_profile_photo"
+                            android:layout_width="40dp"
+                            app:civ_border_width="2dp"
+                            android:layout_height="40dp" android:id="@+id/add_profile_photo"
+                            app:layout_constraintEnd_toEndOf="@+id/profile_image" android:layout_marginEnd="16dp"
+                            android:layout_marginBottom="16dp" app:layout_constraintBottom_toBottomOf="@+id/profile_image"/>
+                    <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+                            android:id="@+id/linearLayout4"
+                            app:layout_constraintTop_toBottomOf="@+id/profile_image">
+                        <TextView
+                                android:text="Eduardo Rodriguez"
+                                android:layout_width="match_parent"
+                                android:background="#ffffff"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/nameView"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                android:textAlignment="center" android:textSize="18sp" android:textStyle="bold"
+                                android:textColor="@android:color/black" android:alpha="0.9"
+                                app:layout_constraintBottom_toTopOf="@+id/senderEmail"
+                                app:layout_constraintTop_toTopOf="parent" android:gravity="center_vertical"/>
+                        <TextView
+                                android:text="eduasinco"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/senderEmail"
+                                android:background="#ffffff"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                android:textAlignment="center" android:textSize="18sp" android:textStyle="bold"
+                                android:textColor="@color/grey"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                android:alpha="0.8"
+                                app:layout_constraintBottom_toTopOf="@+id/bioView"/>
+                        <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp" android:padding="4dp">
+                            <ImageView
+                                    android:src="@drawable/message_profile"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:id="@+id/message"
+                                    android:scaleType="centerInside"
+                                    android:visibility="gone"
+                                    tools:layout_editor_absoluteX="258dp" tools:layout_editor_absoluteY="262dp"
+                                    android:layout_weight="1"/>
+                            <ImageView
+                                    android:src="@drawable/edit_profile"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent" android:id="@+id/edit_profile"
+                                    android:layout_weight="1" android:visibility="gone"/>
+                        </LinearLayout>
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                                android:background="#FFFFFF"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" app:layout_constraintTop_toBottomOf="@+id/senderEmail"
+                                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+                                android:alpha="0.9">
+
+                            <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:maxLines="3"
+                                    android:id="@+id/bioView"
+                                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/colorPrimaryDark"
+                                    android:alpha="0.9"
+                                    android:layout_marginEnd="32dp" android:layout_marginStart="32dp"
+                                    app:layout_constraintTop_toTopOf="parent"/>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tab_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layout_scrollFlags="scroll|enterAlways"/>
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/viewpager"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-                <ImageView
-                        android:scaleType="centerCrop"
-                        android:layout_height="200dp"
-                        app:srcCompat="@drawable/background"
-                        android:id="@+id/backGroundImage"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:background="@android:color/white" android:alpha="0.8"
-                        android:layout_marginEnd="8dp"
-                        app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="8dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp"/>
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            </androidx.viewpager.widget.ViewPager>
 
 
-                <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp" android:id="@+id/imageView9"
-                        app:layout_constraintEnd_toEndOf="@+id/backGroundImage" android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="8dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/backGroundImage"
-                        app:srcCompat="@drawable/edit_profile_background_image"/>
-                <com.mikhaellopez.circularimageview.CircularImageView
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-                        android:src="@drawable/no_profile_photo"
-                        app:civ_border_color="#FFFFFF"
-                        app:civ_border_width="4dp"
-                        app:civ_shadow="true"
-                        app:civ_shadow_radius="10"
-                        app:civ_shadow_color="#FFFFFF"
-                        android:id="@+id/profile_image"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintHorizontal_bias="0.497"
-                        app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="100dp"/>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </LinearLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:id="@+id/out_of_card" android:visibility="gone">
 
-                <com.mikhaellopez.circularimageview.CircularImageView
-                        android:src="@drawable/edit_profile_photo"
-                        android:layout_width="40dp"
-                        app:civ_border_width="2dp"
-                        android:layout_height="40dp" android:id="@+id/imageView8"
-                        app:layout_constraintEnd_toEndOf="@+id/profile_image" android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="16dp" app:layout_constraintBottom_toBottomOf="@+id/profile_image"/>
-                <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-                        android:id="@+id/linearLayout4"
-                        app:layout_constraintTop_toBottomOf="@+id/profile_image">
-                    <TextView
-                            android:text="Eduardo Rodriguez"
-                            android:layout_width="match_parent"
-                            android:background="#ffffff"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/nameView"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            android:textAlignment="center" android:textSize="18sp" android:textStyle="bold"
-                            android:textColor="@android:color/black" android:alpha="0.9"
-                            app:layout_constraintBottom_toTopOf="@+id/senderEmail"
-                            app:layout_constraintTop_toTopOf="parent" android:gravity="center_vertical"/>
-                    <TextView
-                            android:text="eduasinco"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/senderEmail"
-                            android:background="#ffffff"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            android:textAlignment="center" android:textSize="18sp" android:textStyle="bold"
-                            android:textColor="@color/grey"
-                            app:layout_constraintHorizontal_bias="0.0"
-                            android:alpha="0.8"
-                            app:layout_constraintBottom_toTopOf="@+id/bioView"/>
-                    <LinearLayout
-                            android:orientation="horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp" android:padding="4dp">
-                        <ImageView
-                                android:src="@drawable/message_profile"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:id="@+id/message"
-                                android:scaleType="centerInside"
-                                android:visibility="gone"
-                                tools:layout_editor_absoluteX="258dp" tools:layout_editor_absoluteY="262dp"
-                                android:layout_weight="1"/>
-                        <ImageView
-                                android:src="@drawable/edit_profile"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent" android:id="@+id/edit_profile"
-                                android:layout_weight="1" android:visibility="gone"/>
-                    </LinearLayout>
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                            android:background="#FFFFFF"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" app:layout_constraintTop_toBottomOf="@+id/senderEmail"
-                            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-                            android:alpha="0.9">
-
-                        <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:maxLines="3"
-                                android:id="@+id/bioView"
-                                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                android:textAlignment="center"
-                                android:textColor="@color/colorPrimaryDark"
-                                android:alpha="0.9"
-                                android:layout_marginEnd="32dp" android:layout_marginStart="32dp"
-                                app:layout_constraintTop_toTopOf="parent"/>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </LinearLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tab_layout"
+        <androidx.cardview.widget.CardView
+                android:layout_width="300dp"
+                android:layout_height="wrap_content" android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+            <LinearLayout
+                    android:background="#ffffff"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layout_scrollFlags="scroll|enterAlways"/>
-
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.viewpager.widget.ViewPager
-                android:id="@+id/viewpager"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        </androidx.viewpager.widget.ViewPager>
-
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-</LinearLayout>
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" android:visibility="visible"
+                    android:id="@+id/select_from" android:padding="8dp">
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp" android:id="@+id/select_from_camera">
+                    <ImageView
+                            android:src="@drawable/get_image_from_camera"
+                            android:layout_width="40dp"
+                            android:layout_height="wrap_content" android:id="@+id/imageView8" android:layout_weight="0"
+                            android:padding="4dp"/>
+                    <TextView
+                            android:text="Select Image from camera"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" android:id="@+id/textView5" android:layout_weight="0"
+                            android:gravity="center_vertical" android:textStyle="bold"
+                            android:textAlignment="textStart"/>
+                </LinearLayout>
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp" android:id="@+id/select_from_gallery">
+                    <ImageView
+                            android:src="@drawable/gallery"
+                            android:layout_width="40dp"
+                            android:layout_height="wrap_content" android:id="@+id/imageView7" android:padding="4dp"/>
+                    <TextView
+                            android:text="Select from gallery"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" android:id="@+id/textView4"
+                            android:gravity="center_vertical"
+                            android:textStyle="bold"/>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

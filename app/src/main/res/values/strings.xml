@@ -1,6 +1,6 @@
 <resources>
     <string name="google_key">AIzaSyDqkl1DgwHu03SmMoqVey3sgR62GnJ-VY4</string>
-<!--    <string name="server">http://192.168.1.40:65100</string>-->
+    <!--    <string name="server">http://192.168.1.40:65100</string>-->
     <!--    <string name="server">http://88.26.180.89:65100</string>-->
     <string name="server">http://127.0.0.1:8000</string>
 

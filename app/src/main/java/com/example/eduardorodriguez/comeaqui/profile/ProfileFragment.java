@@ -1,15 +1,21 @@
 package com.example.eduardorodriguez.comeaqui.profile;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Outline;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.eduardorodriguez.comeaqui.chat.ChatObject;
 import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
 import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.ChatFirebaseObject;
 import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.FirebaseUser;
 import com.example.eduardorodriguez.comeaqui.order.PastOderFragment;
+import com.example.eduardorodriguez.comeaqui.profile.settings.SettingsActivity;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
@@ -27,8 +33,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
+import java.io.*;
 import java.util.concurrent.ExecutionException;
 
+import static android.app.Activity.RESULT_OK;
 import static com.example.eduardorodriguez.comeaqui.MainActivity.firebaseUser;
 
 public class ProfileFragment extends Fragment {
@@ -40,9 +48,14 @@ public class ProfileFragment extends Fragment {
     static ImageView profileImageView;
     static ImageView messageImage;
     static ImageView editProfileView;
+    static ImageView addProfilePhotoView;
     static TextView emailView;
     static TextView bioView;
     static TextView nameView;
+    static LinearLayout selectFromCamera;
+    static LinearLayout selectFromGallery;
+    static LinearLayout selectFrom;
+    static ConstraintLayout outOfCard;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -67,6 +80,11 @@ public class ProfileFragment extends Fragment {
         bioView = view.findViewById(R.id.bioView);
         nameView = view.findViewById(R.id.nameView);
         editProfileView = view.findViewById(R.id.edit_profile);
+        addProfilePhotoView = view.findViewById(R.id.add_profile_photo);
+        selectFromCamera = view.findViewById(R.id.select_from_camera);
+        selectFromGallery = view.findViewById(R.id.select_from_gallery);
+        selectFrom = view.findViewById(R.id.select_from);
+        outOfCard = view.findViewById(R.id.out_of_card);
 
         final CircularImageView circularImageView = view.findViewById(R.id.profile_image);
         final ImageView mImage =  view.findViewById(R.id.profile_image);
@@ -108,7 +126,53 @@ public class ProfileFragment extends Fragment {
             }
         });
         view.findViewById(R.id.backGroundImage).setClipToOutline(true);
+
+        addProfilePhotoView.setOnClickListener(v -> {
+            outOfCard.setVisibility(View.VISIBLE);
+        });
+
+        selectFromCamera.setOnClickListener(v -> {
+
+        });
+
+        selectFromGallery.setOnClickListener(v -> {
+            openGallery();
+        });
+
+        outOfCard.setOnClickListener(v -> {
+            if(v.getId() != R.id.select_from){
+                outOfCard.setVisibility(View.GONE);
+            }
+        });
+
         return view;
+    }
+
+    public static final int PICK_IMAGE = 1;
+    private void openGallery(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
+            try {
+                Uri selectedImage = data.getData();
+                InputStream imageStream = getContext().getContentResolver().openInputStream(selectedImage);
+                Bitmap bitmap = BitmapFactory.decodeStream(imageStream);
+
+                Intent cropImage = new Intent(getContext(), CropImageActivity.class);
+                ByteArrayOutputStream bs = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bs);
+                cropImage.putExtra("image", bs.toByteArray());
+                startActivity(cropImage);
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
     }
 
     void goToConversationWithUser(User user){
@@ -256,7 +320,7 @@ public class ProfileFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            String[] titles = {"posts", "posts & reviews", "whatever"};
+            String[] titles = {"posts", "posts & reviews", "photos"};
             return titles[position];
         }
     }
