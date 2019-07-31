@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.profile.payment;
+package com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment;
 
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;

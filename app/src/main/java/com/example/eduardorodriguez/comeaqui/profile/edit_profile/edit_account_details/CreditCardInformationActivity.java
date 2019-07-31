@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.profile.payment.AddPaymentMethodActivity;
+import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.AddPaymentMethodActivity;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.google.gson.JsonParser;
 import com.hbb20.CountryCodePicker;

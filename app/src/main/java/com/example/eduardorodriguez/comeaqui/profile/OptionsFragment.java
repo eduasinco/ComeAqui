@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.profile.payment.AddPaymentMethodActivity;
+import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.AddPaymentMethodActivity;
 import com.example.eduardorodriguez.comeaqui.profile.settings.SettingsActivity;
 
 

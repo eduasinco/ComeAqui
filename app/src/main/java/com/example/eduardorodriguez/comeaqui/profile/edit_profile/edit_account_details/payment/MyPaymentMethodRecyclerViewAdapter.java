@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.profile.payment;
+package com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment;
 
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,7 +7,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.profile.payment.PaymentMethodFragment.OnListFragmentInteractionListener;
+import com.example.eduardorodriguez.comeaqui.objects.PaymentObject;
+import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodFragment.OnListFragmentInteractionListener;
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
 
 import java.util.ArrayList;

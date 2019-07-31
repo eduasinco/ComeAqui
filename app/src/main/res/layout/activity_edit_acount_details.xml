@@ -7,4 +7,94 @@
         android:layout_height="match_parent"
         tools:context=".profile.edit_profile.edit_account_details.EditAcountDetailsActivity">
 
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout6">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:orientation="vertical">
+            <TextView
+                    android:text="First name"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp" android:id="@+id/textView12" android:gravity="bottom"/>
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:text="Name"
+                    android:ems="10"
+                    android:id="@+id/editText"/>
+            <TextView
+                    android:text="Last name"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp" android:id="@+id/textView24" android:gravity="bottom"/>
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:text="Name"
+                    android:ems="10"
+                    android:id="@+id/editText2"/>
+            <TextView
+                    android:text="Email address"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp" android:id="@+id/textView28" android:gravity="bottom"/>
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:ems="10"
+                    android:id="@+id/editText3"/>
+            <TextView
+                    android:text="Payment method"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp" android:id="@+id/textView29" android:textStyle="bold"
+                    android:textSize="18sp" android:gravity="bottom" android:textColor="@android:color/black"/>
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp">
+                <ImageView
+                        android:layout_width="27dp"
+                        android:layout_height="match_parent"
+                        app:srcCompat="@drawable/credit_card"
+                        android:id="@+id/imageView11"/>
+                <TextView
+                        android:text="0000-0000-0000-0000"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:id="@+id/credit_card_number"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical" android:textSize="18sp" android:paddingStart="8dp"/>
+                <TextView
+                        android:text="Add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" android:id="@+id/textView31"
+                        android:gravity="center_vertical"/>
+            </LinearLayout>
+            <TextView
+                    android:text="Social accounts"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp" android:id="@+id/textView30" android:textStyle="bold"
+                    android:textSize="18sp" android:gravity="bottom" android:textColor="@android:color/black"/>
+        </LinearLayout>
+    </ScrollView>
+    <LinearLayout
+            android:background="@color/colorPrimary"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="56dp" android:gravity="center_vertical" android:paddingStart="8dp"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" android:id="@+id/linearLayout6">
+        <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp" app:srcCompat="@drawable/back_white" android:id="@+id/back"
+                android:layout_weight="0"/>
+        <TextView
+                android:text="Edit Profile"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" android:id="@+id/textView6" android:layout_weight="0"
+                android:gravity="center_vertical" android:textStyle="bold" android:textSize="24sp"
+                android:textColor="@android:color/white" android:paddingStart="24dp"/>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

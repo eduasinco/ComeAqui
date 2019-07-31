@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.profile.payment;
+package com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
+import com.example.eduardorodriguez.comeaqui.objects.PaymentObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -134,19 +135,3 @@ public class PaymentMethodFragment extends Fragment {
     }
 }
 
-class PaymentObject{
-    String card_number;
-    String expiration_date;
-    String card_type;
-    String cvv;
-    String zip_code;
-    String country;
-    public PaymentObject(JsonObject jo){
-        card_number = jo.get("card_number").getAsString();
-        expiration_date = jo.get("expiration_date").getAsString();
-        card_type = jo.get("card_type").getAsString();
-        cvv = jo.get("cvv").getAsString();
-        zip_code = jo.get("zip_code").getAsString();
-        country = jo.get("country").getAsString();
-    }
-}
