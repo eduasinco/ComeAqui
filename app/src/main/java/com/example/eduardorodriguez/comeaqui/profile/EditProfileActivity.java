@@ -80,7 +80,8 @@ public class EditProfileActivity extends AppCompatActivity {
             if(user.background_photo != null && !user.background_photo.contains("no-image")) Glide.with(this).load(user.background_photo).into(backgroundImageView);
             editFirstNameView.setText(user.first_name);
             editLastNameView.setText(user.last_name);
-            bioTextView.setText(user.bio);
+            if (user.bio != null && !user.bio.equals(""))
+                bioTextView.setText(user.bio);
         }
 
         editProfilePhotoView.setOnClickListener(v -> {
@@ -98,6 +99,11 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         addBioView.setOnClickListener(v -> {
+            Intent bioActivity = new Intent(this, AddBioActivity.class);
+            startActivity(bioActivity);
+        });
+
+        bioTextView.setOnClickListener(v -> {
             Intent bioActivity = new Intent(this, AddBioActivity.class);
             startActivity(bioActivity);
         });

@@ -57,7 +57,7 @@ public class AddBioActivity extends AppCompatActivity {
     private void saveImage(){
         PatchAsyncTask putTask = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
         try {
-            putTask.execute("bio", "", bioEditTextView.getText().toString()).get(5, TimeUnit.SECONDS);
+            putTask.execute("bio", bioEditTextView.getText().toString()).get(5, TimeUnit.SECONDS);
         } catch (ExecutionException | InterruptedException | TimeoutException e) {
             e.printStackTrace();
         }

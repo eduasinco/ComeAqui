@@ -53,7 +53,9 @@ public class ProfileFragment extends Fragment {
         if(!user.background_photo.contains("no-image")) Glide.with(view.getContext()).load(user.background_photo).into(backGroundImage);
         nameView.setText(user.first_name + " " + user.last_name);
         emailView.setText(user.email);
-        bioView.setText(user.bio);
+        if (user.bio != null && !user.bio.equals(""))
+            bioView.setVisibility(View.VISIBLE);
+            bioView.setText(user.bio);
     }
 
     @Override

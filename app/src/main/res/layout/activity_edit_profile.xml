@@ -92,14 +92,14 @@
             </LinearLayout>
             <TextView
                     android:id="@+id/bioText"
-                    android:gravity="top|left"
                     android:background="#ffffff"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:layout_width="match_parent"
                     android:scrollHorizontally="false"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    tools:layout_editor_absoluteY="19dp"/>
+                    tools:layout_editor_absoluteY="19dp" android:textAlignment="center"
+                    android:text="add your new bio..." android:gravity="center_vertical"/>
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
