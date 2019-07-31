@@ -87,7 +87,7 @@ public class AddFoodActivity extends AppCompatActivity {
         image = findViewById(R.id.image);
         seekbar = findViewById(R.id.seekBar);
         descriptionLayout = findViewById(R.id.descriptionLayout);
-        description = findViewById(R.id.orderMessage);
+        description = findViewById(R.id.bioText);
         submit = findViewById(R.id.submitButton);
         timePicker = findViewById(R.id.timePicker);
         doPhoto = findViewById(R.id.photo);

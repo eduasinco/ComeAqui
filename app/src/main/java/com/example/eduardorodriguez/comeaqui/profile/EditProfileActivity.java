@@ -3,13 +3,10 @@ package com.example.eduardorodriguez.comeaqui.profile;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.FrameLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
@@ -34,9 +31,10 @@ public class EditProfileActivity extends AppCompatActivity {
     private ImageView backgroundImageView;
     private TextView editFirstNameView;
     private TextView editLastNameView;
-    private TextView bioView;
+    private TextView addBioView;
     private TextView editCoverPhoto;
     private TextView editProfilePhotoView;
+    private TextView bioTextView;
     private FrameLayout selectFrom;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -66,7 +64,8 @@ public class EditProfileActivity extends AppCompatActivity {
         profileImageView = findViewById(R.id.profile_image);
         editFirstNameView = findViewById(R.id.first_name);
         editLastNameView = findViewById(R.id.last_name);
-        bioView = findViewById(R.id.orderMessage);
+        addBioView = findViewById(R.id.add_bio);
+        bioTextView = findViewById(R.id.bioText);
         editProfilePhotoView = findViewById(R.id.edit_profile_picture);
         editCoverPhoto = findViewById(R.id.edit_cover_photo);
         backView = findViewById(R.id.back);
@@ -81,7 +80,7 @@ public class EditProfileActivity extends AppCompatActivity {
             if(user.background_photo != null && !user.background_photo.contains("no-image")) Glide.with(this).load(user.background_photo).into(backgroundImageView);
             editFirstNameView.setText(user.first_name);
             editLastNameView.setText(user.last_name);
-            bioView.setText(user.bio);
+            bioTextView.setText(user.bio);
         }
 
         editProfilePhotoView.setOnClickListener(v -> {
@@ -98,6 +97,11 @@ public class EditProfileActivity extends AppCompatActivity {
                     .commit();
         });
 
+        addBioView.setOnClickListener(v -> {
+            Intent bioActivity = new Intent(this, AddBioActivity.class);
+            startActivity(bioActivity);
+        });
+
         backView.setOnClickListener(v -> finish());
     }
 
@@ -108,7 +112,7 @@ public class EditProfileActivity extends AppCompatActivity {
             PatchAsyncTask putTast2 = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
             putTast2.execute("last_name", editLastNameView.getText().toString()).get(5, TimeUnit.SECONDS);
             PatchAsyncTask putTast3 = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
-            putTast3.execute("bio", bioView.getText().toString()).get(5, TimeUnit.SECONDS);
+            putTast3.execute("bio", addBioView.getText().toString()).get(5, TimeUnit.SECONDS);
             if (imageBitmap != null){
                 PatchAsyncTask putTast4 = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
                 putTast4.imageBitmap = imageBitmap;

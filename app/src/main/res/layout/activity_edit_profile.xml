@@ -90,16 +90,13 @@
                         android:layout_weight="1" android:textAlignment="textEnd" android:gravity="center_vertical"
                         android:textColor="@color/colorPrimary" android:textSize="18sp"/>
             </LinearLayout>
-            <EditText
-                    android:id="@+id/orderMessage"
+            <TextView
+                    android:id="@+id/bioText"
                     android:gravity="top|left"
                     android:background="#ffffff"
-                    android:inputType="textMultiLine"
-                    android:layout_height="200dp"
+                    android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    android:lines="20"
                     android:scrollHorizontally="false"
-                    android:hint="Description"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     tools:layout_editor_absoluteY="19dp"/>

@@ -107,6 +107,8 @@ public class ProfileFragment extends Fragment {
                 getContext().startActivity(editProfile);
             });
             setProfile(MainActivity.user);
+            addProfilePhotoView.setVisibility(View.VISIBLE);
+            addBackGroundPhotoView.setVisibility(View.VISIBLE);
         }
 
         int curveRadius = 40;

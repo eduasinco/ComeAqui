@@ -51,7 +51,7 @@
                             app:layout_constraintEnd_toEndOf="@+id/backGroundImage" android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
                             app:layout_constraintBottom_toBottomOf="@+id/backGroundImage"
-                            app:srcCompat="@drawable/edit_profile_background_image"/>
+                            app:srcCompat="@drawable/edit_profile_background_image" android:visibility="gone"/>
                     <com.mikhaellopez.circularimageview.CircularImageView
                             android:layout_width="190dp"
                             android:layout_height="190dp"
@@ -76,7 +76,7 @@
                             app:layout_constraintEnd_toEndOf="@+id/profile_image"
                             android:layout_marginEnd="16dp"
                             android:layout_marginBottom="16dp"
-                            app:layout_constraintBottom_toBottomOf="@+id/profile_image"/>
+                            app:layout_constraintBottom_toBottomOf="@+id/profile_image" android:visibility="gone"/>
                     <LinearLayout
                             android:orientation="vertical"
                             android:layout_width="0dp"
