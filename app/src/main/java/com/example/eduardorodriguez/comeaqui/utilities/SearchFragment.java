@@ -1,20 +1,16 @@
-package com.example.eduardorodriguez.comeaqui;
+package com.example.eduardorodriguez.comeaqui.utilities;
 
-import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View.OnFocusChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.example.eduardorodriguez.comeaqui.chat.ChatFragment;
+import com.example.eduardorodriguez.comeaqui.R;
 
 
 /**

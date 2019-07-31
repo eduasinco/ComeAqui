@@ -2,7 +2,6 @@ package com.example.eduardorodriguez.comeaqui.profile;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import com.example.eduardorodriguez.comeaqui.FoodTypeFragment;
 import com.example.eduardorodriguez.comeaqui.R;
 
 public class ProfileViewActivity extends AppCompatActivity {

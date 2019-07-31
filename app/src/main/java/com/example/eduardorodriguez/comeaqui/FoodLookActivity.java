@@ -17,6 +17,7 @@ import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
+import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.JsonObject;

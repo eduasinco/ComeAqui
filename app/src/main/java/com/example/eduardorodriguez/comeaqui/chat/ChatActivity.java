@@ -1,18 +1,12 @@
 package com.example.eduardorodriguez.comeaqui.chat;
 
-import android.net.Uri;
-import android.view.View;
 import android.widget.ImageView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.SearchFragment;
-import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
-import com.google.gson.JsonParser;
-
-import java.util.concurrent.ExecutionException;
+import com.example.eduardorodriguez.comeaqui.utilities.SearchFragment;
 
 public class ChatActivity extends AppCompatActivity implements SearchFragment.OnFragmentInteractionListener{
 

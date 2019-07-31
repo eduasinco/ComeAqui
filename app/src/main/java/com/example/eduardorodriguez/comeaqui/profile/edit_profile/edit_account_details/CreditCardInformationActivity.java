@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui;
+package com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details;
 
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.profile.payment.AddPaymentMethodActivity;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.google.gson.JsonParser;
@@ -17,7 +18,7 @@ import io.card.payment.CreditCard;
 
 import java.util.concurrent.ExecutionException;
 
-public class CardInformationActivity extends AppCompatActivity {
+public class CreditCardInformationActivity extends AppCompatActivity {
 
     EditText creditCardView;
     EditText expiryDateView;
@@ -54,7 +55,7 @@ public class CardInformationActivity extends AppCompatActivity {
                 } catch (ExecutionException | InterruptedException e) {
                     e.printStackTrace();
                 }
-                Intent back = new Intent(CardInformationActivity.this, AddPaymentMethodActivity.class);
+                Intent back = new Intent(CreditCardInformationActivity.this, AddPaymentMethodActivity.class);
                 startActivity(back);
             }
         });

@@ -5,13 +5,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
-import android.view.View;
 
 import android.widget.*;
 import com.example.eduardorodriguez.comeaqui.*;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.utilities.AutocompleteLocationFragment;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 

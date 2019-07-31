@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui;
+package com.example.eduardorodriguez.comeaqui.utilities;
 
 import java.util.Timer;
 import java.util.TimerTask;

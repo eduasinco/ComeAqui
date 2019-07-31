@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui;
+package com.example.eduardorodriguez.comeaqui.utilities;
 
 import android.Manifest;
 import android.app.Activity;
@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.profile.settings.PlacesAutocompleteFragment;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.google.android.gms.location.FusedLocationProviderClient;

@@ -14,6 +14,7 @@ import com.example.eduardorodriguez.comeaqui.*;
 import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
+import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
 import com.google.gson.JsonObject;
 
 public class NotificationLookActivity extends AppCompatActivity {

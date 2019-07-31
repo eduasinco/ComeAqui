@@ -83,7 +83,7 @@
         </activity>
         <activity android:name=".profile.payment.AddPaymentMethodActivity">
         </activity>
-        <activity android:name=".CardInformationActivity">
+        <activity android:name=".profile.edit_profile.edit_account_details.CreditCardInformationActivity">
         </activity>
         <activity
                 android:name=".profile.settings.SettingsActivity"

@@ -14,7 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import com.example.eduardorodriguez.comeaqui.AutocompleteLocationFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.AutocompleteLocationFragment;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
