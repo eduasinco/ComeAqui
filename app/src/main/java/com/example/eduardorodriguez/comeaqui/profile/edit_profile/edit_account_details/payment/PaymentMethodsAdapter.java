@@ -43,7 +43,7 @@ public class PaymentMethodsAdapter extends RecyclerView.Adapter<PaymentMethodsAd
     public void onBindViewHolder(final PaymentMethodsAdapter.ViewHolder holder, int position) {
         holder.mItem = listPaymentMethods.get(position);
         holder.paymentType.setText(holder.mItem.card_type);
-        holder.paymentType.setText("Ending " + holder.mItem.card_number.substring(holder.mItem.card_number.length() - 4));
+        holder.paymentInfo.setText("Ending " + holder.mItem.card_number.substring(holder.mItem.card_number.length() - 4));
     }
 
     @Override
