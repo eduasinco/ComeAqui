@@ -5,6 +5,7 @@ import android.graphics.Outline;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import com.example.eduardorodriguez.comeaqui.FoodTypeFragment;
 import com.example.eduardorodriguez.comeaqui.chat.ChatObject;
 import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
 import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.ChatFirebaseObject;
@@ -41,6 +42,7 @@ public class ProfileFragment extends Fragment {
     private TextView bioView;
     private TextView nameView;
     private ConstraintLayout outOfCard;
+    FrameLayout fragmentView;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -57,7 +59,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        outOfCard.setVisibility(View.GONE);
+        fragmentView.setVisibility(View.GONE);
     }
 
     @Override
@@ -75,9 +77,7 @@ public class ProfileFragment extends Fragment {
         ImageView editProfileView = view.findViewById(R.id.edit_profile);
         ImageView addProfilePhotoView = view.findViewById(R.id.add_profile_photo);
         ImageView addBackGroundPhotoView = view.findViewById(R.id.add_background_photo);
-        LinearLayout selectFromCamera = view.findViewById(R.id.select_from_camera);
-        LinearLayout selectFromGallery = view.findViewById(R.id.select_from_gallery);
-        outOfCard = view.findViewById(R.id.out_of_card);
+        fragmentView = view.findViewById(R.id.select_from);
 
         final CircularImageView circularImageView = view.findViewById(R.id.profile_image);
         final ImageView mImage =  view.findViewById(R.id.profile_image);
@@ -120,50 +120,17 @@ public class ProfileFragment extends Fragment {
         view.findViewById(R.id.backGroundImage).setClipToOutline(true);
 
         addProfilePhotoView.setOnClickListener(v -> {
-            outOfCard.setVisibility(View.VISIBLE);
-            outOfCard.setScaleX(0);
-            outOfCard.setScaleY(0);
-            outOfCard.animate().scaleX(1).scaleY(1).setDuration(200);
-            isBackGound = false;
+            fragmentView.setVisibility(View.VISIBLE);
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.select_from, SelectImageFromFragment.newInstance(false))
+                    .commit();
         });
 
         addBackGroundPhotoView.setOnClickListener(v -> {
-            outOfCard.setVisibility(View.VISIBLE);
-            outOfCard.setScaleX(0);
-            outOfCard.setScaleY(0);
-            outOfCard.animate().scaleX(1).scaleY(1).setDuration(200);
-            isBackGound = true;
-        });
-
-        selectFromCamera.setOnClickListener(v -> {
-            Intent cropImage = new Intent(getContext(), CropImageActivity.class);
-            cropImage.putExtra("is_camera", true);
-            cropImage.putExtra("is_back_ground", isBackGound);
-            startActivity(cropImage);
-        });
-
-        selectFromGallery.setOnClickListener(v -> {
-            Intent cropImage = new Intent(getContext(), CropImageActivity.class);
-            cropImage.putExtra("is_camera", false);
-            cropImage.putExtra("is_back_ground", isBackGound);
-            startActivity(cropImage);
-        });
-
-        outOfCard.setOnTouchListener((v, event) -> {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    outOfCard.animate().scaleX(0).scaleY(0).setDuration(200).withEndAction(() -> {
-                        outOfCard.setVisibility(View.GONE);
-                    });
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    break;
-                case MotionEvent.ACTION_UP:
-                    break;
-                default:
-                    return false;
-            }
-            return true;
+            fragmentView.setVisibility(View.VISIBLE);
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.select_from, SelectImageFromFragment.newInstance(true))
+                    .commit();
         });
 
         return view;

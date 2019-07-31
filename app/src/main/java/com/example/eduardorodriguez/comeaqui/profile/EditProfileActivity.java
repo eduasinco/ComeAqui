@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.FrameLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -30,11 +31,13 @@ public class EditProfileActivity extends AppCompatActivity {
     private Bitmap imageBitmap;
     private ImageView profileImageView;
     private ImageView backView;
+    private ImageView backgroundImageView;
     private TextView editFirstNameView;
     private TextView editLastNameView;
     private TextView bioView;
+    private TextView editCoverPhoto;
     private TextView editProfilePhotoView;
-    private Button saveButtonView;
+    private FrameLayout selectFrom;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     @Override
@@ -48,6 +51,12 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        selectFrom.setVisibility(View.GONE);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
@@ -58,34 +67,35 @@ public class EditProfileActivity extends AppCompatActivity {
         editFirstNameView = findViewById(R.id.editFirstName);
         editLastNameView = findViewById(R.id.editLastName);
         bioView = findViewById(R.id.orderMessage);
-        saveButtonView = findViewById(R.id.saveButton);
         editProfilePhotoView = findViewById(R.id.edit_profile_picture);
+        editCoverPhoto = findViewById(R.id.edit_cover_photo);
         backView = findViewById(R.id.back);
+        backgroundImageView = findViewById(R.id.background_image);
+        selectFrom = findViewById(R.id.select_from);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if(b != null){
             User user = (User) b.get("object");
             if(user.profile_photo != null && !user.profile_photo.contains("no-image")) Glide.with(this).load(user.profile_photo).into(profileImageView);
+            if(user.background_photo != null && !user.background_photo.contains("no-image")) Glide.with(this).load(user.background_photo).into(backgroundImageView);
             editFirstNameView.setText(user.first_name);
             editLastNameView.setText(user.last_name);
             bioView.setText(user.bio);
         }
 
         editProfilePhotoView.setOnClickListener(v -> {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
+            selectFrom.setVisibility(View.VISIBLE);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.select_from, SelectImageFromFragment.newInstance(false))
+                    .commit();
         });
 
-        saveButtonView.setOnClickListener(v -> {
-            patchProfileData();
-            saveFirebaseProfile();
-
-            Intent k = new Intent(EditProfileActivity.this, MainActivity.class);
-            k.putExtra("profile", true);
-            startActivity(k);
+        editCoverPhoto.setOnClickListener(v -> {
+            selectFrom.setVisibility(View.VISIBLE);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.select_from, SelectImageFromFragment.newInstance(true))
+                    .commit();
         });
 
         backView.setOnClickListener(v -> finish());

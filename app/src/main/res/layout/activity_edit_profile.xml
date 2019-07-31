@@ -73,7 +73,7 @@
                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="wrap_content"
                     android:layout_height="200dp" app:srcCompat="@drawable/background"
-                    android:id="@+id/imageView10" android:scaleType="centerCrop"/>
+                    android:id="@+id/background_image" android:scaleType="centerCrop"/>
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
@@ -122,7 +122,7 @@
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="50dp">
                 <TextView
                         android:text="Name:"
                         android:layout_width="wrap_content"
@@ -132,35 +132,29 @@
                         app:layout_constraintStart_toStartOf="parent" android:textSize="18sp"
                         android:layout_weight="0"
                         android:gravity="center_vertical" android:textStyle="bold"/>
-                <EditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:inputType="textPersonName"
-                        android:ems="10"
-                        android:id="@+id/editFirstName" app:layout_constraintTop_toBottomOf="@+id/profile_image"
-                        app:layout_constraintStart_toStartOf="parent"
-                        android:gravity="center_vertical" android:hint="Eduardo"/>
+                <TextView
+                        android:text="Eduardo"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:id="@+id/firstName" android:layout_weight="0"
+                        android:gravity="center_vertical" android:textSize="18sp" android:paddingStart="8dp"/>
             </LinearLayout>
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="50dp">
                 <TextView
-                        android:text="Surname"
+                        android:text="Surname:"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         app:layout_constraintTop_toBottomOf="@+id/profile_image"
                         app:layout_constraintStart_toStartOf="parent" android:textSize="18sp"
                         android:layout_weight="0"
                         android:gravity="center_vertical" android:textStyle="bold"/>
-                <EditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:inputType="textPersonName"
-                        android:ems="10"
-                        android:id="@+id/editLastName" app:layout_constraintTop_toBottomOf="@+id/profile_image"
-                        app:layout_constraintStart_toStartOf="parent"
-                        android:gravity="center_vertical" android:hint="Rodriguez Perez"/>
+                <TextView
+                        android:text="Rodriguez Perez"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:id="@+id/second_name" android:layout_weight="0"
+                        android:gravity="center_vertical" android:textSize="18sp" android:paddingStart="8dp"/>
             </LinearLayout>
             <LinearLayout
                     android:orientation="horizontal"
@@ -170,12 +164,11 @@
                         android:layout_width="19dp"
                         android:layout_height="match_parent" app:srcCompat="@drawable/phone_icon"
                 />
-                <EditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:inputType="phone"
-                        android:ems="10"
-                        android:id="@+id/phone_number"/>
+                <TextView
+                        android:text="666 666 666"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:id="@+id/phone_number" android:layout_weight="1"
+                        android:gravity="center_vertical" android:textSize="18sp" android:paddingStart="8dp"/>
             </LinearLayout>
             <LinearLayout
                     android:orientation="horizontal"
@@ -186,25 +179,13 @@
                         android:layout_height="match_parent"
                         app:srcCompat="@drawable/credit_card"
                         android:id="@+id/imageView11"/>
-                <EditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:inputType="textPersonName"
-                        android:ems="10"
-                        android:id="@+id/credit_card" app:layout_constraintTop_toBottomOf="@+id/profile_image"
-                        app:layout_constraintStart_toStartOf="parent"
-                        android:gravity="center_vertical" android:hint="Rodriguez Perez"/>
+                <TextView
+                        android:text="0000-0000-0000-0000"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:id="@+id/credit_card_number"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical" android:textSize="18sp" android:paddingStart="8dp"/>
             </LinearLayout>
-            <Button
-                    android:text="Save"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:id="@+id/saveButton"
-                    app:layout_constraintTop_toBottomOf="@+id/orderMessage"
-                    app:layout_constraintEnd_toEndOf="@+id/orderMessage"
-                    app:layout_constraintStart_toStartOf="@+id/orderMessage"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:background="@color/colorPrimary" android:textColor="@android:color/white"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
     <LinearLayout
@@ -223,5 +204,10 @@
                 android:gravity="center_vertical" android:textStyle="bold" android:textSize="24sp"
                 android:textColor="@android:color/white" android:paddingStart="24dp"/>
     </LinearLayout>
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:id="@+id/select_from">
+
+    </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
