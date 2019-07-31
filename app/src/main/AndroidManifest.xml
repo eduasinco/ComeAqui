@@ -28,6 +28,8 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
+        <activity android:name=".profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity">
+        </activity>
         <activity android:name=".profile.edit_profile.edit_account_details.EditAcountDetailsActivity">
         </activity>
         <activity android:name=".profile.edit_profile.AddBioActivity">
@@ -81,9 +83,7 @@
                 android:label="@string/title_activity_edit_profile"
                 android:theme="@style/AppTheme">
         </activity>
-        <activity android:name=".profile.edit_profile.edit_account_details.payment.AddPaymentMethodActivity">
-        </activity>
-        <activity android:name=".profile.edit_profile.edit_account_details.CreditCardInformationActivity">
+        <activity android:name=".profile.edit_profile.edit_account_details.payment.CreditCardInformationActivity">
         </activity>
         <activity
                 android:name=".profile.settings.SettingsActivity"

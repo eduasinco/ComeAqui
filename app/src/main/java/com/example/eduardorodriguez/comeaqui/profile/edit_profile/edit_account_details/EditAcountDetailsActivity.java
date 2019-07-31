@@ -1,14 +1,13 @@
 package com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details;
 
 import android.content.Intent;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.AddPaymentMethodActivity;
+import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 
 import java.util.concurrent.ExecutionException;
@@ -36,7 +35,7 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
         LinearLayout paymentMethod = findViewById(R.id.payment_method);
 
         paymentMethod.setOnClickListener(v -> {
-            Intent addPaymentMethod = new Intent(this, AddPaymentMethodActivity.class);
+            Intent addPaymentMethod = new Intent(this, PaymentMethodsActivity.class);
             startActivity(addPaymentMethod);
         });
 

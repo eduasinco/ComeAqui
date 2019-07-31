@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.AddPaymentMethodActivity;
+import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
 import com.example.eduardorodriguez.comeaqui.profile.settings.SettingsActivity;
 
 
@@ -75,7 +75,7 @@ public class OptionsFragment extends Fragment {
         ConstraintLayout ordersView = view.findViewById(R.id.orders);
 
         paymentView.setOnClickListener(v -> {
-            Intent k = new Intent(getContext(), AddPaymentMethodActivity.class);
+            Intent k = new Intent(getContext(), PaymentMethodsActivity.class);
             startActivity(k);
         });
         settingsView.setOnClickListener(v -> {
