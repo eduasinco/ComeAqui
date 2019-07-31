@@ -1,6 +1,9 @@
 package com.example.eduardorodriguez.comeaqui.profile;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.widget.FrameLayout;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.eduardorodriguez.comeaqui.FoodElementFragment;
 import com.example.eduardorodriguez.comeaqui.FoodLookActivity;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
@@ -45,37 +49,25 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.my_post_element, parent, false);
-
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        TextView posterUserName = holder.mView.findViewById(R.id.poster_username);
-        TextView posterName = holder.mView.findViewById(R.id.poster_name);
-        TextView food_name = holder.mView.findViewById(R.id.plate_name);
-        TextView descriptionView = holder.mView.findViewById(R.id.description);
-        TextView time = holder.mView.findViewById(R.id.time);
-        TextView priceView = holder.mView.findViewById(R.id.price);
         ImageView imageView = holder.mView.findViewById(R.id.post_image);
         CardView imageLayout = holder.mView.findViewById(R.id.image_layout);
-        ConstraintLayout postButton = holder.mView.findViewById(R.id.post_button);
+        FrameLayout postButton = holder.mView.findViewById(R.id.post_button);
 
         final FoodPost foodPost = mValues.get(position);
 
-        posterName.setText(foodPost.owner.first_name + " " + foodPost.owner.last_name);
-        posterUserName.setText(foodPost.owner.username);
-        food_name.setText(foodPost.plate_name);
-        String priceTextE = foodPost.price + "€";
-        priceView.setText(priceTextE);
-        descriptionView.setText(foodPost.description);
-        time.setText(foodPost.time);
-        priceView.setText(foodPost.price);
-
         if (!foodPost.food_photo.contains("no-image")) {
             imageLayout.setVisibility(View.VISIBLE);
-            Glide.with(holder.mView.getContext()).load(foodPost.food_photo).into(imageView);
+            Glide.with(holder.mView.getContext()).load(holder.mView.getContext().getResources().getString(R.string.server) + foodPost.food_photo).into(imageView);
         }
+
+        ((AppCompatActivity) holder.mView.getContext()).getSupportFragmentManager().beginTransaction()
+                .replace(R.id.post_button, FoodElementFragment.newInstance(foodPost))
+                .commit();
 
         postButton.setOnClickListener(v -> {
             Intent foodLook = new Intent(holder.mView.getContext(), FoodLookActivity.class);

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
+import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
 
 public class FoodElementFragment extends Fragment {
@@ -24,6 +25,14 @@ public class FoodElementFragment extends Fragment {
 
     public FoodElementFragment() {
         // Required empty public constructor
+    }
+
+    public static FoodElementFragment newInstance(FoodPost foodPost) {
+        FoodElementFragment fragment = new FoodElementFragment();
+        Bundle args = new Bundle();
+        args.putSerializable("object", foodPost);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -50,13 +59,8 @@ public class FoodElementFragment extends Fragment {
         postTime.setText(foodPost.time);
         posterDescriptionView.setText(foodPost.description);
 
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("type", foodPost.type);
-        FoodTypeFragment fragment = new FoodTypeFragment();
-        fragment.setArguments(bundle);
         getFragmentManager().beginTransaction()
-                .replace(R.id.container3, fragment)
+                .replace(R.id.container3, FoodTypeFragment.newInstance(foodPost.type))
                 .commit();
 
         cardButtonView.setOnTouchListener((v, event) -> {

@@ -6,7 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import com.example.eduardorodriguez.comeaqui.FoodElementFragment;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 
 import java.util.ArrayList;
 
@@ -18,6 +20,13 @@ public class FoodTypeFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public static FoodTypeFragment newInstance(String type) {
+        FoodTypeFragment fragment = new FoodTypeFragment();
+        Bundle args = new Bundle();
+        args.putSerializable("type", type);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

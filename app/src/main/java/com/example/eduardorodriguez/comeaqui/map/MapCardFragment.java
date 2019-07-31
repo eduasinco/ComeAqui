@@ -39,6 +39,14 @@ public class MapCardFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public static MapCardFragment newInstance(FoodPost foodPost) {
+        MapCardFragment fragment = new MapCardFragment();
+        Bundle args = new Bundle();
+        args.putSerializable("object", foodPost);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,12 +62,9 @@ public class MapCardFragment extends Fragment {
         imageLayout = view.findViewById(R.id.image_layout);
 
         foodPost = (FoodPost) getArguments().getSerializable("object");
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("object", foodPost);
-        FoodElementFragment fragment = new FoodElementFragment();
-        fragment.setArguments(bundle);
+
         getFragmentManager().beginTransaction()
-                .replace(R.id.container2, fragment)
+                .replace(R.id.container2, FoodElementFragment.newInstance(foodPost))
                 .commit();
 
         favouriteId = foodPost.favouriteId;

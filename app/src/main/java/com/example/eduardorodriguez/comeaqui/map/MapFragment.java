@@ -164,12 +164,8 @@ public class MapFragment extends Fragment{
 
                 final int key = (int) (marker.getTag());
                 FoodPost foodPost = data.get(key);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("object", foodPost);
-                MapCardFragment fragment = new MapCardFragment();
-                fragment.setArguments(bundle);
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.container1, fragment)
+                        .replace(R.id.container1, MapCardFragment.newInstance(foodPost))
                         .commit();
                 moveCardUp();
                 return false;
