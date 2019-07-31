@@ -34,14 +34,20 @@ public class ProfileFragment extends Fragment {
 
     public static String[] data;
     public View view;
-    public User user;
     boolean isBackGound;
+    private User user;
 
     private ImageView profileImageView;
     private ImageView backGroundImage;
+    private ImageView messageImage;
+    private ImageView editProfileView;
+    private ImageView addProfilePhotoView;
+    private ImageView addBackGroundPhotoView;
+
     private TextView emailView;
     private TextView bioView;
     private TextView nameView;
+
     private ConstraintLayout outOfCard;
     FrameLayout fragmentView;
 
@@ -49,9 +55,22 @@ public class ProfileFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public void setProfile(User user){
-        if(!user.profile_photo.contains("no-image")) Glide.with(view.getContext()).load(user.profile_photo).into(profileImageView);
-        if(!user.background_photo.contains("no-image")) Glide.with(view.getContext()).load(user.background_photo).into(backGroundImage);
+
+    public void setProfile(User user, boolean isMyUser){
+        if(!user.profile_photo.contains("no-image")) {
+            if (isMyUser){
+                Glide.with(view.getContext()).load(user.profile_photo).into(profileImageView);
+            } else {
+                Glide.with(view.getContext()).load(getResources().getString(R.string.server) + user.profile_photo).into(profileImageView);
+            }
+        }
+        if(!user.background_photo.contains("no-image")) {
+            if (isMyUser) {
+                Glide.with(view.getContext()).load(user.background_photo).into(backGroundImage);
+            } else {
+                Glide.with(view.getContext()).load(getResources().getString(R.string.server) + user.background_photo).into(backGroundImage);
+            }
+        }
         nameView.setText(user.first_name + " " + user.last_name);
         emailView.setText(user.email);
         if (user.bio != null && !user.bio.equals(""))
@@ -63,6 +82,22 @@ public class ProfileFragment extends Fragment {
     public void onResume() {
         super.onResume();
         fragmentView.setVisibility(View.GONE);
+        if (user != null && user.id != MainActivity.user.id) {
+            messageImage.setVisibility(View.VISIBLE);
+            setProfile(user, false);
+            messageImage.setOnClickListener(v -> goToConversationWithUser(user));
+        } else {
+            User myUser = MainActivity.initializeUser();
+            editProfileView.setVisibility(View.VISIBLE);
+            editProfileView.setOnClickListener(v -> {
+                Intent editProfile = new Intent(getContext(), EditProfileActivity.class);
+                editProfile.putExtra("object", myUser);
+                getContext().startActivity(editProfile);
+            });
+            setProfile(myUser, true);
+            addProfilePhotoView.setVisibility(View.VISIBLE);
+            addBackGroundPhotoView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -73,13 +108,13 @@ public class ProfileFragment extends Fragment {
 
         profileImageView = view.findViewById(R.id.profile_image);
         backGroundImage = view.findViewById(R.id.backGroundImage);
-        ImageView messageImage = view.findViewById(R.id.message);
+        messageImage = view.findViewById(R.id.message);
         emailView = view.findViewById(R.id.senderEmail);
         bioView = view.findViewById(R.id.bioView);
         nameView = view.findViewById(R.id.nameView);
-        ImageView editProfileView = view.findViewById(R.id.edit_profile);
-        ImageView addProfilePhotoView = view.findViewById(R.id.add_profile_photo);
-        ImageView addBackGroundPhotoView = view.findViewById(R.id.add_background_photo);
+        editProfileView = view.findViewById(R.id.edit_profile);
+        addProfilePhotoView = view.findViewById(R.id.add_profile_photo);
+        addBackGroundPhotoView = view.findViewById(R.id.add_background_photo);
         fragmentView = view.findViewById(R.id.select_from);
 
         final CircularImageView circularImageView = view.findViewById(R.id.profile_image);
@@ -98,24 +133,8 @@ public class ProfileFragment extends Fragment {
         tabLayout.setupWithViewPager(viewPager);
 
         user = getArguments() != null ? (User) getArguments().getSerializable("user_email") : null;
-        if (user != null && user.id != MainActivity.user.id) {
-            messageImage.setVisibility(View.VISIBLE);
-            setProfile(user);
-            messageImage.setOnClickListener(v -> goToConversationWithUser(user));
-        } else {
-            editProfileView.setVisibility(View.VISIBLE);
-            editProfileView.setOnClickListener(v -> {
-                Intent editProfile = new Intent(getContext(), EditProfileActivity.class);
-                editProfile.putExtra("object", MainActivity.user);
-                getContext().startActivity(editProfile);
-            });
-            setProfile(MainActivity.user);
-            addProfilePhotoView.setVisibility(View.VISIBLE);
-            addBackGroundPhotoView.setVisibility(View.VISIBLE);
-        }
 
         int curveRadius = 40;
-
         view.findViewById(R.id.backGroundImage).setOutlineProvider(new ViewOutlineProvider() {
             @Override
             public void getOutline(View view, Outline outline) {

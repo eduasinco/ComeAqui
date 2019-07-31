@@ -1,6 +1,7 @@
 package com.example.eduardorodriguez.comeaqui;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     public static User user;
     public static FirebaseUser firebaseUser;
 
+    private static Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.CAMERA},
                     0);
         }
+        context = getApplicationContext();
 
         mMainFrame = findViewById(R.id.main_frame);
         mMainNav = findViewById(R.id.main_nav);
@@ -143,8 +147,8 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    private void initializeUser(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_profile/");
+    public static User initializeUser(){
+        GetAsyncTask process = new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/my_profile/");
         try {
             String response = process.execute().get();
             if (response != null)
@@ -153,6 +157,8 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         // initializeFirebaseUser();
+
+        return user;
     }
 
     private void initializeFirebaseUser(){

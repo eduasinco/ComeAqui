@@ -27,12 +27,27 @@ public class EditProfileActivity extends AppCompatActivity {
     private TextView lastNameView;
     private TextView addBioView;
     private FrameLayout selectFrom;
+    private TextView phoneNumber;
+    private TextView bioTextView;
+    private ImageView profileImageView;
+    private ImageView backgroundImageView;
 
 
     @Override
     protected void onResume() {
         super.onResume();
         selectFrom.setVisibility(View.GONE);
+        setProfile(MainActivity.initializeUser());
+    }
+
+    private void setProfile(User user){
+        if(user.profile_photo != null && !user.profile_photo.contains("no-image")) Glide.with(this).load(user.profile_photo).into(profileImageView);
+        if(user.background_photo != null && !user.background_photo.contains("no-image")) Glide.with(this).load(user.background_photo).into(backgroundImageView);
+        firstNameView.setText(user.first_name);
+        lastNameView.setText(user.last_name);
+        phoneNumber.setText(user.phone_number);
+        if (user.bio != null && !user.bio.equals(""))
+            bioTextView.setText(user.bio);
     }
 
     @Override
@@ -42,31 +57,25 @@ public class EditProfileActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ImageView profileImageView = findViewById(R.id.profile_image);
+        profileImageView = findViewById(R.id.profile_image);
         addBioView = findViewById(R.id.add_bio);
-        TextView bioTextView = findViewById(R.id.bioText);
+        bioTextView = findViewById(R.id.bioText);
         TextView editProfilePhotoView = findViewById(R.id.edit_profile_picture);
         TextView editCoverPhoto = findViewById(R.id.edit_cover_photo);
         ImageView backView = findViewById(R.id.back);
-        ImageView backgroundImageView = findViewById(R.id.background_image);
+        backgroundImageView = findViewById(R.id.background_image);
         selectFrom = findViewById(R.id.select_from);
         TextView editAccountDetailsView = findViewById(R.id.edit_account_details);
         firstNameView = findViewById(R.id.first_name);
         lastNameView = findViewById(R.id.last_name);
-        TextView phoneNumber = findViewById(R.id.phone_number);
+        phoneNumber = findViewById(R.id.phone_number);
         TextView creditCardNumber = findViewById(R.id.credit_card_number);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if(b != null){
             User user = (User) b.get("object");
-            if(user.profile_photo != null && !user.profile_photo.contains("no-image")) Glide.with(this).load(user.profile_photo).into(profileImageView);
-            if(user.background_photo != null && !user.background_photo.contains("no-image")) Glide.with(this).load(user.background_photo).into(backgroundImageView);
-            firstNameView.setText(user.first_name);
-            lastNameView.setText(user.last_name);
-            phoneNumber.setText(user.phone_number);
-            if (user.bio != null && !user.bio.equals(""))
-                bioTextView.setText(user.bio);
+            setProfile(user);
         }
 
         editProfilePhotoView.setOnClickListener(v -> {
