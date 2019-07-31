@@ -17,12 +17,9 @@ public class AddPaymentMethodActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_payment_method);
         TextView addPaymentView = findViewById(R.id.addPayment);
 
-        addPaymentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent card = new Intent(AddPaymentMethodActivity.this, CreditCardInformationActivity.class);
-                startActivity(card);
-            }
+        addPaymentView.setOnClickListener(v -> {
+            Intent card = new Intent(AddPaymentMethodActivity.this, CreditCardInformationActivity.class);
+            startActivity(card);
         });
     }
 }

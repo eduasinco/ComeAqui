@@ -113,24 +113,6 @@ public class EditProfileActivity extends AppCompatActivity {
         backView.setOnClickListener(v -> finish());
     }
 
-    private void patchProfileData(){
-        PatchAsyncTask putTast = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
-        try {
-            putTast.execute("first_name", editFirstNameView.getText().toString()).get(5, TimeUnit.SECONDS);
-            PatchAsyncTask putTast2 = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
-            putTast2.execute("last_name", editLastNameView.getText().toString()).get(5, TimeUnit.SECONDS);
-            PatchAsyncTask putTast3 = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
-            putTast3.execute("bio", addBioView.getText().toString()).get(5, TimeUnit.SECONDS);
-            if (imageBitmap != null){
-                PatchAsyncTask putTast4 = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
-                putTast4.imageBitmap = imageBitmap;
-                putTast4.execute("profile_photo", "", "true").get(15, TimeUnit.SECONDS);
-            }
-        } catch (ExecutionException | InterruptedException | TimeoutException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void saveFirebaseProfile(){
         uploadFirebaseUserImage();
 
