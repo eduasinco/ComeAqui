@@ -6,7 +6,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 
@@ -20,7 +22,14 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
     private EditText lastName;
     private EditText phoneNumber;
     private EditText emailAddress;
-    private TextView save;
+
+    private User user;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        user = MainActivity.user;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,15 +40,25 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
         lastName = findViewById(R.id.last_name);
         phoneNumber = findViewById(R.id.phone_number);
         emailAddress = findViewById(R.id.email_address);
-        save = findViewById(R.id.save);
+        TextView save = findViewById(R.id.save);
         LinearLayout paymentMethod = findViewById(R.id.payment_method);
 
+        user = MainActivity.user;
+
         paymentMethod.setOnClickListener(v -> {
-            Intent addPaymentMethod = new Intent(this, PaymentMethodsActivity.class);
-            startActivity(addPaymentMethod);
+            Intent paymentMethodA = new Intent(this, PaymentMethodsActivity.class);
+            startActivity(paymentMethodA);
         });
 
+        setData();
         save.setOnClickListener(v -> saveData());
+    }
+
+    void setData(){
+        firstName.setText(user.first_name);
+        lastName.setText(user.last_name);
+        phoneNumber.setText(user.phone_number);
+        emailAddress.setText(user.email);
     }
 
     private void saveData(){
@@ -49,9 +68,10 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
             PatchAsyncTask putTast2 = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
             putTast2.execute("last_name", lastName.getText().toString()).get(5, TimeUnit.SECONDS);
             PatchAsyncTask putTast3 = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
-            putTast2.execute("phone_number", phoneNumber.getText().toString()).get(5, TimeUnit.SECONDS);
+            putTast3.execute("phone_number", phoneNumber.getText().toString()).get(5, TimeUnit.SECONDS);
         } catch (ExecutionException | InterruptedException | TimeoutException e) {
             e.printStackTrace();
         }
+        finish();
     }
 }

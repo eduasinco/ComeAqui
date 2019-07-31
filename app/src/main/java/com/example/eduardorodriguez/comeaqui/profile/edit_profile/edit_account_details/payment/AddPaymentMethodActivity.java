@@ -1,5 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,7 +18,8 @@ public class AddPaymentMethodActivity extends AppCompatActivity {
         Button addCard = findViewById(R.id.add_card);
 
         addCard.setOnClickListener(v -> {
-
+            Intent addPaymentMethod = new Intent(this, CreditCardInformationActivity.class);
+            startActivity(addPaymentMethod);
         });
 
         back.setOnClickListener((v) -> finish());

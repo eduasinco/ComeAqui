@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.objects.User;
+import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.EditAcountDetailsActivity;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.google.firebase.database.DatabaseReference;
@@ -106,7 +107,7 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         editAccountDetailsView.setOnClickListener(v -> {
-            Intent bioActivity = new Intent(this, AddBioActivity.class);
+            Intent bioActivity = new Intent(this, EditAcountDetailsActivity.class);
             startActivity(bioActivity);
         });
 

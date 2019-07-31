@@ -22,7 +22,6 @@ public class CreditCardInformationActivity extends AppCompatActivity {
     EditText creditCardView;
     EditText expiryDateView;
     EditText cvvView;
-    EditText zipCodeView;
     String cardType = "";
 
     @Override
@@ -33,7 +32,6 @@ public class CreditCardInformationActivity extends AppCompatActivity {
         creditCardView = findViewById(R.id.creditCard);
         expiryDateView = findViewById(R.id.expiryDate);
         cvvView = findViewById(R.id.cvv);
-        final CountryCodePicker countryView = findViewById(R.id.ccp);
         Button saveCardButtonView = findViewById(R.id.saveCardButton);
 
         saveCardButtonView.setOnClickListener(v -> {
@@ -43,9 +41,7 @@ public class CreditCardInformationActivity extends AppCompatActivity {
                         new String[]{"card_number", creditCardView.getText().toString(), ""},
                         new String[]{"expiration_date", expiryDateView.getText().toString(), ""},
                         new String[]{"card_type", cardType, ""},
-                        new String[]{"cvv", cvvView.getText().toString(), ""},
-                        new String[]{"zip_code", zipCodeView.getText().toString(), ""},
-                        new String[]{"country", countryView.getDefaultCountryName(), ""}
+                        new String[]{"cvv", cvvView.getText().toString(), ""}
                 ).get();
                 new JsonParser().parse(response).getAsJsonObject();
             } catch (ExecutionException | InterruptedException e) {
@@ -55,6 +51,8 @@ public class CreditCardInformationActivity extends AppCompatActivity {
             startActivity(back);
         });
         creditCardView.addTextChangedListener(new CreditCardNumberFormattingTextWatcher());
+
+        findViewById(R.id.back).setOnClickListener((v) -> finish());
     }
 
     public void onScanPress(View v) {
@@ -131,7 +129,6 @@ public class CreditCardInformationActivity extends AppCompatActivity {
 
                 if (scanResult.postalCode != null) {
                     resultDisplayStr += "Postal Code: " + scanResult.postalCode + "\n";
-                    zipCodeView.setText(scanResult.postalCode);
                 }
             }
             else {
