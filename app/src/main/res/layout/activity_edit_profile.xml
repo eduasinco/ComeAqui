@@ -135,7 +135,7 @@
                 <TextView
                         android:text="Eduardo"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" android:id="@+id/firstName" android:layout_weight="0"
+                        android:layout_height="match_parent" android:id="@+id/first_name" android:layout_weight="0"
                         android:gravity="center_vertical" android:textSize="18sp" android:paddingStart="8dp"/>
             </LinearLayout>
             <LinearLayout
@@ -153,7 +153,7 @@
                 <TextView
                         android:text="Rodriguez Perez"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" android:id="@+id/second_name" android:layout_weight="0"
+                        android:layout_height="match_parent" android:id="@+id/last_name" android:layout_weight="0"
                         android:gravity="center_vertical" android:textSize="18sp" android:paddingStart="8dp"/>
             </LinearLayout>
             <LinearLayout

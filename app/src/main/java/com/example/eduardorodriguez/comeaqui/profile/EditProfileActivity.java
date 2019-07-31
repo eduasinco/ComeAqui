@@ -64,8 +64,8 @@ public class EditProfileActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         profileImageView = findViewById(R.id.profile_image);
-        editFirstNameView = findViewById(R.id.editFirstName);
-        editLastNameView = findViewById(R.id.editLastName);
+        editFirstNameView = findViewById(R.id.first_name);
+        editLastNameView = findViewById(R.id.last_name);
         bioView = findViewById(R.id.orderMessage);
         editProfilePhotoView = findViewById(R.id.edit_profile_picture);
         editCoverPhoto = findViewById(R.id.edit_cover_photo);
