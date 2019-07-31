@@ -33,32 +33,27 @@ public class CreditCardInformationActivity extends AppCompatActivity {
         creditCardView = findViewById(R.id.creditCard);
         expiryDateView = findViewById(R.id.expiryDate);
         cvvView = findViewById(R.id.cvv);
-        zipCodeView = findViewById(R.id.zipCode);
         final CountryCodePicker countryView = findViewById(R.id.ccp);
         Button saveCardButtonView = findViewById(R.id.saveCardButton);
 
-        saveCardButtonView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/card/");
-                try {
-                    String response = post.execute(
-                            new String[]{"card_number", creditCardView.getText().toString(), ""},
-                            new String[]{"expiration_date", expiryDateView.getText().toString(), ""},
-                            new String[]{"card_type", cardType, ""},
-                            new String[]{"cvv", cvvView.getText().toString(), ""},
-                            new String[]{"zip_code", zipCodeView.getText().toString(), ""},
-                            new String[]{"country", countryView.getDefaultCountryName(), ""}
-                    ).get();
-                    new JsonParser().parse(response).getAsJsonObject();
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-                Intent back = new Intent(CreditCardInformationActivity.this, PaymentMethodsActivity.class);
-                startActivity(back);
+        saveCardButtonView.setOnClickListener(v -> {
+            PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/card/");
+            try {
+                String response = post.execute(
+                        new String[]{"card_number", creditCardView.getText().toString(), ""},
+                        new String[]{"expiration_date", expiryDateView.getText().toString(), ""},
+                        new String[]{"card_type", cardType, ""},
+                        new String[]{"cvv", cvvView.getText().toString(), ""},
+                        new String[]{"zip_code", zipCodeView.getText().toString(), ""},
+                        new String[]{"country", countryView.getDefaultCountryName(), ""}
+                ).get();
+                new JsonParser().parse(response).getAsJsonObject();
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
             }
+            Intent back = new Intent(CreditCardInformationActivity.this, PaymentMethodsActivity.class);
+            startActivity(back);
         });
-
         creditCardView.addTextChangedListener(new CreditCardNumberFormattingTextWatcher());
     }
 
