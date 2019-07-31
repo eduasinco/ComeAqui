@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 
 public class FoodElementFragment extends Fragment {
 

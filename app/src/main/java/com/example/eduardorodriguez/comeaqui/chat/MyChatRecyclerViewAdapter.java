@@ -14,7 +14,7 @@ import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.ChatFragment.OnListFragmentInteractionListener;
 import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
-import com.example.eduardorodriguez.comeaqui.profile.User;
+import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 

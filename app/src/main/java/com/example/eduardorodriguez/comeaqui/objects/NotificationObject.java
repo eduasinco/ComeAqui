@@ -1,8 +1,5 @@
-package com.example.eduardorodriguez.comeaqui.notification;
+package com.example.eduardorodriguez.comeaqui.objects;
 
-import com.example.eduardorodriguez.comeaqui.FoodPost;
-import com.example.eduardorodriguez.comeaqui.OrderObject;
-import com.example.eduardorodriguez.comeaqui.profile.User;
 import com.google.gson.JsonObject;
 
 import java.io.Serializable;

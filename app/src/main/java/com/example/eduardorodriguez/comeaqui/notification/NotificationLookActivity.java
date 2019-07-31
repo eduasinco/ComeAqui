@@ -11,11 +11,10 @@ import android.os.Bundle;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.*;
+import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
+import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
-import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.google.gson.JsonObject;
-
-import java.util.concurrent.ExecutionException;
 
 public class NotificationLookActivity extends AppCompatActivity {
 

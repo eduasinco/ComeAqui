@@ -1,7 +1,6 @@
-package com.example.eduardorodriguez.comeaqui.chat.firebase_objects;
+package com.example.eduardorodriguez.comeaqui.objects.firebase_objects;
 
 import java.io.Serializable;
-import java.util.Map;
 
 public class ChatFirebaseObject implements Serializable {
     public String id;

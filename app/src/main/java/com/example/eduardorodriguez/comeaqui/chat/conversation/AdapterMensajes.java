@@ -13,7 +13,6 @@ import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.MessageObject;
-import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.MessageFirebaseObject;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 

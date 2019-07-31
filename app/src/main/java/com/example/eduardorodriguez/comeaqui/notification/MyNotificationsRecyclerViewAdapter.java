@@ -3,7 +3,6 @@ package com.example.eduardorodriguez.comeaqui.notification;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,7 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.DateFragment;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.map.MapCardFragment;
+import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
 
 import java.util.ArrayList;
 import java.util.List;

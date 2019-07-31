@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;

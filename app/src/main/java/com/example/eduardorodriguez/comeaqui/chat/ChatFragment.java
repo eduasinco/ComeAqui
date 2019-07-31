@@ -1,6 +1,5 @@
 package com.example.eduardorodriguez.comeaqui.chat;
 
-import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -10,8 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.SearchFragment;
-import com.example.eduardorodriguez.comeaqui.chat.firebase_objects.ChatFirebaseObject;
+import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.ChatFirebaseObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.firebase.database.*;
 import com.google.gson.JsonArray;

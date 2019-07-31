@@ -1,6 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.chat;
 
-import com.example.eduardorodriguez.comeaqui.profile.User;
+import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
