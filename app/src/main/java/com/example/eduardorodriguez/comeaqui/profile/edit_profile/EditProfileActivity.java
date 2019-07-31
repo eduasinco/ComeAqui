@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.profile;
+package com.example.eduardorodriguez.comeaqui.profile.edit_profile;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
+import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
+import com.example.eduardorodriguez.comeaqui.profile.User;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.google.firebase.database.DatabaseReference;
@@ -26,18 +28,12 @@ import java.util.concurrent.TimeoutException;
 public class EditProfileActivity extends AppCompatActivity {
 
     private Bitmap imageBitmap;
-    private ImageView profileImageView;
-    private ImageView backView;
-    private ImageView backgroundImageView;
     private TextView editFirstNameView;
     private TextView editLastNameView;
     private TextView addBioView;
-    private TextView editCoverPhoto;
-    private TextView editProfilePhotoView;
-    private TextView bioTextView;
     private FrameLayout selectFrom;
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         ImageView profileImageView = findViewById(R.id.profile_image);
@@ -61,16 +57,17 @@ public class EditProfileActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        profileImageView = findViewById(R.id.profile_image);
+        ImageView profileImageView = findViewById(R.id.profile_image);
         editFirstNameView = findViewById(R.id.first_name);
         editLastNameView = findViewById(R.id.last_name);
         addBioView = findViewById(R.id.add_bio);
-        bioTextView = findViewById(R.id.bioText);
-        editProfilePhotoView = findViewById(R.id.edit_profile_picture);
-        editCoverPhoto = findViewById(R.id.edit_cover_photo);
-        backView = findViewById(R.id.back);
-        backgroundImageView = findViewById(R.id.background_image);
+        TextView bioTextView = findViewById(R.id.bioText);
+        TextView editProfilePhotoView = findViewById(R.id.edit_profile_picture);
+        TextView editCoverPhoto = findViewById(R.id.edit_cover_photo);
+        ImageView backView = findViewById(R.id.back);
+        ImageView backgroundImageView = findViewById(R.id.background_image);
         selectFrom = findViewById(R.id.select_from);
+        TextView editAccountDetailsView = findViewById(R.id.edit_account_details);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -104,6 +101,11 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         bioTextView.setOnClickListener(v -> {
+            Intent bioActivity = new Intent(this, AddBioActivity.class);
+            startActivity(bioActivity);
+        });
+
+        editAccountDetailsView.setOnClickListener(v -> {
             Intent bioActivity = new Intent(this, AddBioActivity.class);
             startActivity(bioActivity);
         });

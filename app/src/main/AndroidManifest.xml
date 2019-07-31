@@ -28,9 +28,11 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
-        <activity android:name=".profile.AddBioActivity">
+        <activity android:name=".profile.edit_profile.edit_account_details.EditAcountDetailsActivity">
         </activity>
-        <activity android:name=".profile.CropImageActivity">
+        <activity android:name=".profile.edit_profile.AddBioActivity">
+        </activity>
+        <activity android:name=".profile.edit_profile.CropImageActivity">
         </activity>
         <activity android:name=".notification.NotificationLookActivity">
         </activity>
@@ -75,7 +77,7 @@
         <activity android:name=".map.AddFoodActivity">
         </activity>
         <activity
-                android:name=".profile.EditProfileActivity"
+                android:name=".profile.edit_profile.EditProfileActivity"
                 android:label="@string/title_activity_edit_profile"
                 android:theme="@style/AppTheme">
         </activity>

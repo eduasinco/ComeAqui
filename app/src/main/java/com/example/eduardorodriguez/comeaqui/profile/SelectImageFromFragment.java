@@ -1,8 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.profile;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
@@ -13,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.profile.edit_profile.CropImageActivity;
 
 
 public class SelectImageFromFragment extends Fragment {

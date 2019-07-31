@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:context=".profile.EditProfileActivity">
+        tools:context=".profile.edit_profile.EditProfileActivity">
 
     <androidx.core.widget.NestedScrollView
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -14,7 +14,7 @@
             android:background="#FFFFFF"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".profile.EditProfileActivity" android:layout_marginTop="56dp">
+            tools:context=".profile.edit_profile.EditProfileActivity" android:layout_marginTop="56dp">
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
@@ -112,7 +112,7 @@
                 <TextView
                         android:text="Edit"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" android:id="@+id/edit_cover_photo2"
+                        android:layout_height="match_parent" android:id="@+id/edit_account_details"
                         android:layout_weight="1" android:textAlignment="textEnd" android:gravity="center_vertical"
                         android:textColor="@color/colorPrimary" android:textSize="18sp"/>
             </LinearLayout>
