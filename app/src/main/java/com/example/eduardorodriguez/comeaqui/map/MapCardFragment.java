@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
-import com.example.eduardorodriguez.comeaqui.FoodElementFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.FoodElementFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;

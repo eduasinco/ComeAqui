@@ -144,8 +144,6 @@ public class NotificationsFragment extends Fragment {
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             View itemView = viewHolder.itemView;
             int iconMargin = (itemView.getHeight() - deleteIcon.getIntrinsicHeight()) / 2;
-            System.out.println(Math.abs(dX));
-
             int margin = getMargin(210, 300, 50, 180, 230, Math.abs(dX));
             if (dX > 0){
                 swipeBackgroundConfirm.setBounds(itemView.getLeft(), itemView.getTop(), (int) dX, itemView.getBottom());

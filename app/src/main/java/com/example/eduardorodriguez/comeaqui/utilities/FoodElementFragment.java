@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui;
+package com.example.eduardorodriguez.comeaqui.utilities;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,9 +10,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.example.eduardorodriguez.comeaqui.FoodLookActivity;
+import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
-import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
-import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
 
 public class FoodElementFragment extends Fragment {
 
@@ -22,6 +22,7 @@ public class FoodElementFragment extends Fragment {
     TextView postNameView;
     View cardButtonView;
 
+    boolean annuleFoodLook = false;
 
     public FoodElementFragment() {
         // Required empty public constructor
@@ -63,24 +64,27 @@ public class FoodElementFragment extends Fragment {
                 .replace(R.id.container3, FoodTypeFragment.newInstance(foodPost.type))
                 .commit();
 
+
+        cardButtonView.setOnClickListener(v -> {
+            Intent foodLook = new Intent(getContext(), FoodLookActivity.class);
+            foodLook.putExtra("object", foodPost);
+            getContext().startActivity(foodLook);
+        });
         cardButtonView.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     cardButtonView.setBackgroundColor(Color.TRANSPARENT);
                     break;
-
                 case MotionEvent.ACTION_MOVE:
+                    cardButtonView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.box_stroke));
                     break;
                 case MotionEvent.ACTION_UP:
                     cardButtonView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.box_stroke));
-                    Intent foodLook = new Intent(getContext(), FoodLookActivity.class);
-                    foodLook.putExtra("object", foodPost);
-                    getContext().startActivity(foodLook);
                     break;
                 default:
                     return false;
             }
-            return true;
+            return false;
         });
 
         return view;
