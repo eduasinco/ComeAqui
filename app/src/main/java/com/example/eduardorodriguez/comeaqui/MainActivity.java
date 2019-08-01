@@ -141,10 +141,7 @@ public class MainActivity extends AppCompatActivity {
         initializeUser();
     }
     private void setFragment(Fragment fragment) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-        fragmentTransaction.replace(R.id.main_frame, fragment);
-        fragmentTransaction.commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, fragment).commit();
     }
 
     public static User initializeUser(){
@@ -157,7 +154,6 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         // initializeFirebaseUser();
-
         return user;
     }
 

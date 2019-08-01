@@ -11,6 +11,7 @@ import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.ChatFireba
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.FirebaseUser;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.EditProfileActivity;
+import com.example.eduardorodriguez.comeaqui.utilities.ProfileImageGalleryFragment;
 import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -294,7 +295,7 @@ public class ProfileFragment extends Fragment {
                 bundle.putSerializable("user", MainActivity.user);
             }
             userPostFragment.setArguments(bundle);
-            Fragment[] tabFragment = {userPostFragment, new OptionsFragment(), new OptionsFragment()};
+            Fragment[] tabFragment = {userPostFragment, new OptionsFragment(), new ProfileImageGalleryFragment()};
             return tabFragment[position];
         }
 

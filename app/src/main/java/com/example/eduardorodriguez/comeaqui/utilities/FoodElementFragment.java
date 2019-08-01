@@ -60,8 +60,8 @@ public class FoodElementFragment extends Fragment {
         postTime.setText(foodPost.time);
         posterDescriptionView.setText(foodPost.description);
 
-        getFragmentManager().beginTransaction()
-                .replace(R.id.container3, FoodTypeFragment.newInstance(foodPost.type))
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.food_types, FoodTypeFragment.newInstance(foodPost.type))
                 .commit();
 
 

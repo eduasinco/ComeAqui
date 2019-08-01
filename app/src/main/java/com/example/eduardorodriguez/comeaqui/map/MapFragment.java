@@ -164,7 +164,7 @@ public class MapFragment extends Fragment{
 
                 final int key = (int) (marker.getTag());
                 FoodPost foodPost = data.get(key);
-                getFragmentManager().beginTransaction()
+                getChildFragmentManager().beginTransaction()
                         .replace(R.id.container1, MapCardFragment.newInstance(foodPost))
                         .commit();
                 moveCardUp();

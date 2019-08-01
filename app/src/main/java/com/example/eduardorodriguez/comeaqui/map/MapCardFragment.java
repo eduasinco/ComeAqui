@@ -63,7 +63,7 @@ public class MapCardFragment extends Fragment {
 
         foodPost = (FoodPost) getArguments().getSerializable("object");
 
-        getFragmentManager().beginTransaction()
+        getChildFragmentManager().beginTransaction()
                 .replace(R.id.container2, FoodElementFragment.newInstance(foodPost))
                 .commit();
 

@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.widget.FrameLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,11 +33,13 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
 
     private ArrayList<FoodPost> mValues;
     private final OnListFragmentInteractionListener mListener;
+    Fragment f;
 
 
-    public MyUserPostRecyclerViewAdapter(ArrayList<FoodPost> items, OnListFragmentInteractionListener listener) {
+    public MyUserPostRecyclerViewAdapter(ArrayList<FoodPost> items, OnListFragmentInteractionListener listener, Fragment f) {
         mValues = items;
         mListener = listener;
+        this.f = f;
     }
 
     public void addNewRow(ArrayList<FoodPost> data){
@@ -54,7 +58,7 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         ImageView imageView = holder.mView.findViewById(R.id.post_image);
         CardView imageLayout = holder.mView.findViewById(R.id.image_layout);
-        FrameLayout postButton = holder.mView.findViewById(R.id.post_button);
+        FrameLayout postButton = holder.mView.findViewById(R.id.post_button_element);
 
         final FoodPost foodPost = mValues.get(position);
 
@@ -63,9 +67,9 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
             Glide.with(holder.mView.getContext()).load(holder.mView.getContext().getResources().getString(R.string.server) + foodPost.food_photo).into(imageView);
         }
 
-        ((AppCompatActivity) holder.mView.getContext()).getSupportFragmentManager().beginTransaction()
-                .replace(R.id.post_button, FoodElementFragment.newInstance(foodPost))
-                .commit();
+        //f.getChildFragmentManager().beginTransaction()
+        //        .replace(R.id.post_button_element, FoodElementFragment.newInstance(foodPost))
+        //        .commit();
 
         postButton.setOnClickListener(v -> {
             Intent foodLook = new Intent(holder.mView.getContext(), FoodLookActivity.class);
