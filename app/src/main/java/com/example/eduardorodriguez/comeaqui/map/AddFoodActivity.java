@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.provider.MediaStore;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.AutocompleteLocationFragment;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
@@ -21,9 +23,10 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
-public class AddFoodActivity extends AppCompatActivity {
+public class AddFoodActivity extends AppCompatActivity implements SelectImageFromFragment.OnFragmentInteractionListener{
     EditText foodName;
     TextView price;
     ImageView image;
@@ -43,22 +46,6 @@ public class AddFoodActivity extends AppCompatActivity {
     double lat;
     double lng;
     String address;
-
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        ImageView photo = findViewById(R.id.photo);
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            imageBitmap = (Bitmap) extras.get("data");
-            photo.setImageBitmap(imageBitmap);
-
-            ViewGroup.LayoutParams params = photo.getLayoutParams();
-            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            photo.setLayoutParams(params);
-
-        }
-    }
 
     private String setTypes(){
         StringBuilder types = new StringBuilder();
@@ -108,10 +95,17 @@ public class AddFoodActivity extends AppCompatActivity {
                     .replace(R.id.locationAutocomplete, autocompleteLocationFragment)
                     .commit();
         }
+
+        doPhoto.setOnClickListener((v) -> {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.select_image_from, SelectImageFromFragment.newInstance(false))
+                    .commit();
+        });
+
+
         setFoodName();
         setPriceSeekBar();
         setFoodTypes();
-        setDoPhoto();
         setDinerButtons();
         setSubmit();
 
@@ -216,101 +210,74 @@ public class AddFoodActivity extends AppCompatActivity {
         });
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    void setDoPhoto(){
-        doPhoto.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                }
-                return false;
-            }
-        });
-    }
 
     void setFoodTypes(){
-        final ImageView vegetarian = (ImageView) findViewById(R.id.vegetarian);
-        vegetarian.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if(!pressed[4] && !pressed[5]){
-                    pressed[0] = !pressed[0];
-                }
-                if(pressed[0])
-                    vegetarian.setImageResource(R.drawable.vegetarianfill);
-                else
-                    vegetarian.setImageResource(R.drawable.vegetarian);
+        final ImageView vegetarian = findViewById(R.id.vegetarian);
+        vegetarian.setOnClickListener(v -> {
+            if(!pressed[4] && !pressed[5]){
+                pressed[0] = !pressed[0];
             }
+            if(pressed[0])
+                vegetarian.setImageResource(R.drawable.vegetarianfill);
+            else
+                vegetarian.setImageResource(R.drawable.vegetarian);
         });
-        final ImageView vegan = (ImageView) findViewById(R.id.vegan);
-        vegan.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if(!pressed[4] && !pressed[5] && !pressed[6]){
-                    pressed[1] = !pressed[1];
-                }
-                if(pressed[1])
-                    vegan.setImageResource(R.drawable.veganfill);
-                else
-                    vegan.setImageResource(R.drawable.vegan);
+        final ImageView vegan = findViewById(R.id.vegan);
+        vegan.setOnClickListener(v -> {
+            if(!pressed[4] && !pressed[5] && !pressed[6]){
+                pressed[1] = !pressed[1];
             }
+            if(pressed[1])
+                vegan.setImageResource(R.drawable.veganfill);
+            else
+                vegan.setImageResource(R.drawable.vegan);
         });
-        final ImageView cereal = (ImageView) findViewById(R.id.cereal);
-        cereal.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                pressed[2] = !pressed[2];
-                if(pressed[2])
-                    cereal.setImageResource(R.drawable.cerealfill);
-                else
-                    cereal.setImageResource(R.drawable.cereal);
-            }
+        final ImageView cereal = findViewById(R.id.cereal);
+        cereal.setOnClickListener(v -> {
+            pressed[2] = !pressed[2];
+            if(pressed[2])
+                cereal.setImageResource(R.drawable.cerealfill);
+            else
+                cereal.setImageResource(R.drawable.cereal);
         });
-        final ImageView spicy = (ImageView) findViewById(R.id.spicy);
-        spicy.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                pressed[3] = !pressed[3];
-                if(pressed[3])
-                    spicy.setImageResource(R.drawable.spicyfill);
-                else
-                    spicy.setImageResource(R.drawable.spicy);
-            }
+        final ImageView spicy = findViewById(R.id.spicy);
+        spicy.setOnClickListener(v -> {
+            pressed[3] = !pressed[3];
+            if(pressed[3])
+                spicy.setImageResource(R.drawable.spicyfill);
+            else
+                spicy.setImageResource(R.drawable.spicy);
         });
 
-        final ImageView fish = (ImageView) findViewById(R.id.fish);
-        fish.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if(!pressed[0] && !pressed[1]){
-                    pressed[4] = !pressed[4];
-                }
-                if(pressed[4])
-                    fish.setImageResource(R.drawable.fishfill);
-                else
-                    fish.setImageResource(R.drawable.fish);
+        final ImageView fish =  findViewById(R.id.fish);
+        fish.setOnClickListener(v -> {
+            if(!pressed[0] && !pressed[1]){
+                pressed[4] = !pressed[4];
             }
+            if(pressed[4])
+                fish.setImageResource(R.drawable.fishfill);
+            else
+                fish.setImageResource(R.drawable.fish);
         });
-        final ImageView meat = (ImageView) findViewById(R.id.meat);
-        meat.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if(!pressed[0] && !pressed[1]){
-                    pressed[5] = !pressed[5];
-                }
-                if(pressed[5])
-                    meat.setImageResource(R.drawable.meatfill);
-                else
-                    meat.setImageResource(R.drawable.meat);
+        final ImageView meat = findViewById(R.id.meat);
+        meat.setOnClickListener(v -> {
+            if(!pressed[0] && !pressed[1]){
+                pressed[5] = !pressed[5];
             }
+            if(pressed[5])
+                meat.setImageResource(R.drawable.meatfill);
+            else
+                meat.setImageResource(R.drawable.meat);
         });
-        final ImageView dairy = (ImageView) findViewById(R.id.dairy);
-        dairy.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if(!pressed[1]){
-                    pressed[6] = !pressed[6];
-                }
-                if(pressed[6])
-                    dairy.setImageResource(R.drawable.dairyfill);
-                else
-                    dairy.setImageResource(R.drawable.dairy);
+        final ImageView dairy = findViewById(R.id.dairy);
+        dairy.setOnClickListener(v -> {
+            if(!pressed[1]){
+                pressed[6] = !pressed[6];
             }
+            if(pressed[6])
+                dairy.setImageResource(R.drawable.dairyfill);
+            else
+                dairy.setImageResource(R.drawable.dairy);
         });
     }
 
@@ -366,5 +333,13 @@ public class AddFoodActivity extends AppCompatActivity {
         return px;
     }
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        try {
+            imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
 

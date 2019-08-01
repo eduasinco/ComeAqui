@@ -1,8 +1,12 @@
 package com.example.eduardorodriguez.comeaqui.profile;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Outline;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.eduardorodriguez.comeaqui.chat.ChatObject;
@@ -11,6 +15,7 @@ import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.ChatFireba
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.FirebaseUser;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.EditProfileActivity;
+import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.ProfileImageGalleryFragment;
 import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
@@ -27,11 +32,14 @@ import com.google.firebase.database.*;
 import com.google.gson.JsonParser;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static com.example.eduardorodriguez.comeaqui.MainActivity.firebaseUser;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements SelectImageFromFragment.OnFragmentInteractionListener{
 
     public static String[] data;
     public View view;
@@ -145,15 +153,17 @@ public class ProfileFragment extends Fragment {
         view.findViewById(R.id.backGroundImage).setClipToOutline(true);
 
         addProfilePhotoView.setOnClickListener(v -> {
+            isBackGound = false;
             fragmentView.setVisibility(View.VISIBLE);
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.select_from, SelectImageFromFragment.newInstance(false))
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.select_from, SelectImageFromFragment.newInstance(true))
                     .commit();
         });
 
         addBackGroundPhotoView.setOnClickListener(v -> {
+            isBackGound = true;
             fragmentView.setVisibility(View.VISIBLE);
-            getFragmentManager().beginTransaction()
+            getChildFragmentManager().beginTransaction()
                     .replace(R.id.select_from, SelectImageFromFragment.newInstance(true))
                     .commit();
         });
@@ -277,6 +287,31 @@ public class ProfileFragment extends Fragment {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        saveProfileImage(uri);
+    }
+
+
+    private void saveProfileImage(Uri imageUri){
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(view.getContext().getContentResolver(), imageUri);
+            if (bitmap != null){
+                PatchAsyncTask putTask = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
+                putTask.imageBitmap = bitmap;
+
+                if (isBackGound){
+                    putTask.execute("background_photo", "", "true").get(15, TimeUnit.SECONDS);
+                }else {
+                    putTask.execute("profile_photo", "", "true").get(15, TimeUnit.SECONDS);
+                }
+
+            }
+        } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {
+            e.printStackTrace();
+        }
     }
 
     class TestPagerAdapter extends FragmentPagerAdapter {

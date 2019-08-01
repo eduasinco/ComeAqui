@@ -115,9 +115,6 @@ public class ProfileImageGalleryFragment extends Fragment {
             String response = process.execute().get();
             if (response != null) {
                 JsonArray jsonArray = new JsonParser().parse(response).getAsJsonArray();
-                for (int i = 0; i < 3; i++) {
-                    jsonArray.addAll(jsonArray);
-                }
                 makeList(jsonArray);
             }
         } catch (ExecutionException | InterruptedException e) {
