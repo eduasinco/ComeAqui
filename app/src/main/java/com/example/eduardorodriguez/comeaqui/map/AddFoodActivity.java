@@ -37,6 +37,7 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
     ImageView doPhoto;
     ImageView backView;
     TimePicker timePicker;
+    FrameLayout selectFromLayout;
 
 
     Float price_data = 0f;
@@ -79,6 +80,8 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
         timePicker = findViewById(R.id.timePicker);
         doPhoto = findViewById(R.id.photo);
         backView = findViewById(R.id.back);
+        selectFromLayout = findViewById(R.id.select_image_from);
+
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -97,6 +100,7 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
         }
 
         doPhoto.setOnClickListener((v) -> {
+            selectFromLayout.setVisibility(View.VISIBLE);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.select_image_from, SelectImageFromFragment.newInstance(false))
                     .commit();
@@ -122,15 +126,12 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
         for (int i = 0; i < dinersViews.length; i++){
             int finalI = i;
             Button button = dinersViews[i];
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    diners = finalI + 1;
-                    button.setBackgroundColor(Color.TRANSPARENT);
-                    for (Button button2: dinersViews){
-                        if (button2 != button){
-                            button2.setBackgroundColor(Color.WHITE);
-                        }
+            button.setOnClickListener(v -> {
+                diners = finalI + 1;
+                button.setBackgroundColor(Color.TRANSPARENT);
+                for (Button button2: dinersViews){
+                    if (button2 != button){
+                        button2.setBackgroundColor(Color.WHITE);
                     }
                 }
             });
@@ -141,48 +142,35 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
         submit.setOnClickListener(v -> {
             PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/foods/");
             post.bitmap = imageBitmap;
-            try {
-                String response = post.execute(
-                        new String[]{"plate_name", foodName.getText().toString()},
-                        new String[]{"address", address},
-                        new String[]{"lat", Double.toString(lat)},
-                        new String[]{"lng", Double.toString(lng)},
-                        new String[]{"diners", Integer.toString(diners)},
-                        new String[]{"time", timePicker.getHour() + ":" + timePicker.getMinute()},
-                        new String[]{"price", price_data.toString()},
-                        new String[]{"food_type", setTypes()},
-                        new String[]{"description", description.getText().toString()},
-                        new String[]{"food_photo", ""}
-                ).get();
-                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
-                if (response != null) {
-                    // PastOderFragment.appendToList(response);
-                }
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
-            Intent k = new Intent(AddFoodActivity.this, MainActivity.class);
-            startActivity(k);
+
+            post.execute(
+                    new String[]{"plate_name", foodName.getText().toString()},
+                    new String[]{"address", address},
+                    new String[]{"lat", Double.toString(lat)},
+                    new String[]{"lng", Double.toString(lng)},
+                    new String[]{"diners", Integer.toString(diners)},
+                    new String[]{"time", timePicker.getHour() + ":" + timePicker.getMinute()},
+                    new String[]{"price", price_data.toString()},
+                    new String[]{"food_type", setTypes()},
+                    new String[]{"description", description.getText().toString()},
+                    new String[]{"food_photo", ""}
+            );
+
+            finish();
 
         });
     }
 
     @SuppressLint("ClickableViewAccessibility")
     void setFoodName(){
-        foodName.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                foodName.setHint("");
-                return false;
-            }
+        foodName.setOnTouchListener((v, event) -> {
+            foodName.setHint("");
+            return false;
         });
 
-        foodName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    foodName.setHint("What are you making?");
-                }
+        foodName.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                foodName.setHint("What are you making?");
             }
         });
     }
@@ -290,34 +278,22 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
         foodName.animate()
                 .translationYBy(transfromToDP(50f))
                 .setDuration(time*5)
-                .withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        seekbar.animate()
-                                .translationYBy(-transfromToDP(500f))
-                                .setDuration(150)
-                                .withEndAction(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        descriptionLayout.animate()
-                                                .translationYBy(-transfromToDP(500f))
-                                                .setDuration(200);
-                                        description.animate()
-                                                .translationYBy(-transfromToDP(500f))
-                                                .setDuration(300)
-                                                .withEndAction(new Runnable() {
-                                                    @Override
-                                                    public void run() {
+                .withEndAction(() -> seekbar.animate()
+                        .translationYBy(-transfromToDP(500f))
+                        .setDuration(150)
+                        .withEndAction(() -> {
+                            descriptionLayout.animate()
+                                    .translationYBy(-transfromToDP(500f))
+                                    .setDuration(200);
+                            description.animate()
+                                    .translationYBy(-transfromToDP(500f))
+                                    .setDuration(300)
+                                    .withEndAction(() -> {
 
-                                                    }
-                                                })
-                                                .start();
-                                    }
-                                })
-                                .start();
-
-                    }
-                })
+                                    })
+                                    .start();
+                        })
+                        .start())
                 .start();
 
 
@@ -337,6 +313,10 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
     public void onFragmentInteraction(Uri uri) {
         try {
             imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+            doPhoto.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+            doPhoto.getLayoutParams().height = 500;
+            doPhoto.setImageURI(uri);
+            selectFromLayout.setVisibility(View.GONE);
         } catch (IOException e) {
             e.printStackTrace();
         }

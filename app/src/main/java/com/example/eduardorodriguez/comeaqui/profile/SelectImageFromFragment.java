@@ -221,9 +221,16 @@ public class SelectImageFromFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else if(getParentFragment() == null){
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+
         if (getParentFragment() instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) getParentFragment();
-        } else {
+        } else if(getParentFragment() != null){
             throw new RuntimeException("The parent fragment must implement OnFragmentInteractionListener");
         }
     }
