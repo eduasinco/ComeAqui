@@ -1,10 +1,13 @@
 package com.example.eduardorodriguez.comeaqui.utilities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Outline;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.ViewOutlineProvider;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,10 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.example.eduardorodriguez.comeaqui.LoginActivity;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.User;
+import com.example.eduardorodriguez.comeaqui.profile.settings.ChangePasswordActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -50,6 +55,8 @@ public class ProfileImageGalleryFragment extends Fragment {
     LinearLayout imageListLayout;
     LinearLayout currentHorizontalLayout;
 
+    DisplayMetrics displayMetrics;
+
     public ProfileImageGalleryFragment() {
         // Required empty public constructor
     }
@@ -80,8 +87,9 @@ public class ProfileImageGalleryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_profile_image_gallery, container, false);
-        // initializeFirstLayout();
-        //getPostFromUser();
+        displayMetrics = view.getContext().getResources().getDisplayMetrics();
+        initializeFirstLayout();
+        getPostFromUser();
         return view;
     }
 
@@ -91,14 +99,12 @@ public class ProfileImageGalleryFragment extends Fragment {
         LinearLayout horizontalLayout = new LinearLayout(getContext());
         horizontalLayout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                dpToPx(200)));
-        horizontalLayout.setBackgroundColor(Color.parseColor("#000000"));
+                displayMetrics.widthPixels / 3));
         imageListLayout.addView(horizontalLayout);
         currentHorizontalLayout = horizontalLayout;
     }
 
     public int dpToPx(int dp) {
-        DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
         return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
@@ -107,8 +113,13 @@ public class ProfileImageGalleryFragment extends Fragment {
         GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_food_posts/" + MainActivity.user.id + "/");
         try {
             String response = process.execute().get();
-            if (response != null)
-                makeList(new JsonParser().parse(response).getAsJsonArray());
+            if (response != null) {
+                JsonArray jsonArray = new JsonParser().parse(response).getAsJsonArray();
+                for (int i = 0; i < 3; i++) {
+                    jsonArray.addAll(jsonArray);
+                }
+                makeList(jsonArray);
+            }
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -117,25 +128,45 @@ public class ProfileImageGalleryFragment extends Fragment {
     void makeList(JsonArray jsonArray){
         for (JsonElement pa : jsonArray) {
             count++;
-            if (count % 3 == 0){
-                LinearLayout horizontalLayout = new LinearLayout(getContext());
-                horizontalLayout.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        100));
-                horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
-                imageListLayout.addView(horizontalLayout);
-                currentHorizontalLayout = horizontalLayout;
-            }
             ImageView imageView = new ImageView(getContext());
             imageView.setLayoutParams(new LinearLayout.LayoutParams(
-                    dpToPx(200),
+                    displayMetrics.widthPixels / 3,
                     LinearLayout.LayoutParams.MATCH_PARENT));
             currentHorizontalLayout.addView(imageView);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+            // makeImageRoundCornered(imageView, 20);
 
             JsonObject jo = pa.getAsJsonObject();
             FoodPost foodPost = new FoodPost(jo);
             Glide.with(view.getContext()).load(getResources().getString(R.string.server) + foodPost.food_photo).into(imageView);
+
+            imageView.setOnClickListener((v) -> {
+                Intent imageLook = new Intent(getContext(), ImageLookActivity.class);
+                imageLook.putExtra("image_url", foodPost.food_photo);
+                startActivity(imageLook);
+            });
+
+            if (count % 3 == 0){
+                LinearLayout horizontalLayout = new LinearLayout(getContext());
+                horizontalLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        displayMetrics.widthPixels / 3));
+                horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
+                imageListLayout.addView(horizontalLayout);
+                currentHorizontalLayout = horizontalLayout;
+            }
         }
+    }
+
+    private void makeImageRoundCornered(ImageView imageView, int curveRadius){
+        imageView.setOutlineProvider(new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), curveRadius);
+            }
+        });
+        imageView.setClipToOutline(true);
     }
 
 

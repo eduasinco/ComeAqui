@@ -28,6 +28,8 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
+        <activity android:name=".utilities.ImageLookActivity">
+        </activity>
         <activity android:name=".profile.edit_profile.edit_account_details.payment.AddPaymentMethodActivity">
         </activity>
         <activity android:name=".profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity">
