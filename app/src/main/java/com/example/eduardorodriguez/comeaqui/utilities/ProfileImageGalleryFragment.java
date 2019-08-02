@@ -72,6 +72,7 @@ public class ProfileImageGalleryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        count = 0;
     }
 
     @Override
@@ -87,6 +88,7 @@ public class ProfileImageGalleryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_profile_image_gallery, container, false);
+        count = 0;
         displayMetrics = view.getContext().getResources().getDisplayMetrics();
         initializeFirstLayout();
         getPostFromUser();
@@ -124,34 +126,40 @@ public class ProfileImageGalleryFragment extends Fragment {
 
     void makeList(JsonArray jsonArray){
         for (JsonElement pa : jsonArray) {
-            count++;
-            ImageView imageView = new ImageView(getContext());
-            imageView.setLayoutParams(new LinearLayout.LayoutParams(
-                    displayMetrics.widthPixels / 3,
-                    LinearLayout.LayoutParams.MATCH_PARENT));
-            currentHorizontalLayout.addView(imageView);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-            // makeImageRoundCornered(imageView, 20);
 
             JsonObject jo = pa.getAsJsonObject();
             FoodPost foodPost = new FoodPost(jo);
-            Glide.with(view.getContext()).load(getResources().getString(R.string.server) + foodPost.food_photo).into(imageView);
+            if (foodPost.food_photo != null && !foodPost.food_photo.contains("no-image")){
+                count++;
+                ImageView imageView = new ImageView(getContext());
+                imageView.setLayoutParams(new LinearLayout.LayoutParams(
+                        displayMetrics.widthPixels / 3,
+                        LinearLayout.LayoutParams.MATCH_PARENT));
+                currentHorizontalLayout.addView(imageView);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-            imageView.setOnClickListener((v) -> {
-                Intent imageLook = new Intent(getContext(), ImageLookActivity.class);
-                imageLook.putExtra("image_url", foodPost.food_photo);
-                startActivity(imageLook);
-            });
+                int padding = 10;
+                imageView.setPadding(padding,padding,padding,padding);
 
-            if (count % 3 == 0){
-                LinearLayout horizontalLayout = new LinearLayout(getContext());
-                horizontalLayout.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        displayMetrics.widthPixels / 3));
-                horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
-                imageListLayout.addView(horizontalLayout);
-                currentHorizontalLayout = horizontalLayout;
+                makeImageRoundCornered(imageView, 20);
+
+                Glide.with(view.getContext()).load(getResources().getString(R.string.server) + foodPost.food_photo).into(imageView);
+
+                imageView.setOnClickListener((v) -> {
+                    Intent imageLook = new Intent(getContext(), ImageLookActivity.class);
+                    imageLook.putExtra("image_url", foodPost.food_photo);
+                    startActivity(imageLook);
+                });
+
+                if (count % 3 == 0){
+                    LinearLayout horizontalLayout = new LinearLayout(getContext());
+                    horizontalLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            displayMetrics.widthPixels / 3));
+                    horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
+                    imageListLayout.addView(horizontalLayout);
+                    currentHorizontalLayout = horizontalLayout;
+                }
             }
         }
     }
