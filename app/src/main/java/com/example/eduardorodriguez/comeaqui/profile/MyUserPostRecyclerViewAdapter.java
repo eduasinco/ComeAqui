@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.widget.FrameLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,13 +31,11 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
 
     private ArrayList<FoodPost> mValues;
     private final OnListFragmentInteractionListener mListener;
-    Fragment f;
 
 
-    public MyUserPostRecyclerViewAdapter(ArrayList<FoodPost> items, OnListFragmentInteractionListener listener, Fragment f) {
+    public MyUserPostRecyclerViewAdapter(ArrayList<FoodPost> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
-        this.f = f;
     }
 
     public void addNewRow(ArrayList<FoodPost> data){
@@ -58,20 +54,27 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         ImageView imageView = holder.mView.findViewById(R.id.post_image);
         CardView imageLayout = holder.mView.findViewById(R.id.image_layout);
-        FrameLayout postButton = holder.mView.findViewById(R.id.post_button_element);
+        FrameLayout postButton = holder.mView.findViewById(R.id.post_button);
 
         final FoodPost foodPost = mValues.get(position);
+
+        holder.postNameView.setText(foodPost.plate_name);
+        holder.postPrice.setText(foodPost.price + "€");
+        holder.postTime.setText(foodPost.time);
+        holder.posterDescriptionView.setText(foodPost.description);
 
         if (!foodPost.food_photo.contains("no-image")) {
             imageLayout.setVisibility(View.VISIBLE);
             Glide.with(holder.mView.getContext()).load(holder.mView.getContext().getResources().getString(R.string.server) + foodPost.food_photo).into(imageView);
         }
 
-        //f.getChildFragmentManager().beginTransaction()
-        //        .replace(R.id.post_button_element, FoodElementFragment.newInstance(foodPost))
-        //        .commit();
+        holder.cardButtonView.setOnClickListener(v -> {
+                Intent foodLook = new Intent(holder.mView.getContext(), FoodLookActivity.class);
+                foodLook.putExtra("object", foodPost);
+                holder.mView.getContext().startActivity(foodLook);
+            });
 
-        postButton.setOnClickListener(v -> {
+        holder.cardButtonView.setOnClickListener(v -> {
             Intent foodLook = new Intent(holder.mView.getContext(), FoodLookActivity.class);
             foodLook.putExtra("object", foodPost);
 
@@ -94,12 +97,21 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView foodNameView;
-        public DummyItem mItem;
+        public TextView postTime;
+        public TextView postPrice;
+        public TextView posterDescriptionView;
+        public TextView postNameView;
+        public View cardButtonView;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             foodNameView = view.findViewById(R.id.plateName);
+            postNameView = view.findViewById(R.id.plate_name);
+            postTime = view.findViewById(R.id.time);
+            postPrice = view.findViewById(R.id.price);
+            posterDescriptionView = view.findViewById(R.id.description);
+            cardButtonView = view.findViewById(R.id.cardButton);
         }
     }
 }

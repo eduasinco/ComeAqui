@@ -89,7 +89,7 @@ public class UserPostFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_userpost_list, container, false);
-        this.adapter = new MyUserPostRecyclerViewAdapter(data, mListener, this);
+        this.adapter = new MyUserPostRecyclerViewAdapter(data, mListener);
 
         Context context = view.getContext();
         RecyclerView recyclerView = (RecyclerView) view;
