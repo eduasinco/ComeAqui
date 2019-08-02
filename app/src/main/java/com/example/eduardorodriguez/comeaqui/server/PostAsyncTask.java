@@ -36,7 +36,7 @@ public class PostAsyncTask extends AsyncTask<String[], Void, String>
         String boundary = "-------------" + System.currentTimeMillis();
         httpPost.setHeader("Content-type","multipart/form-data; boundary="+boundary);
 
-        MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create()
+        MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create()
                 .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
                 .setBoundary(boundary);
 
@@ -45,16 +45,15 @@ public class PostAsyncTask extends AsyncTask<String[], Void, String>
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
                 byte[] imageBytes = baos.toByteArray();
-                multipartEntityBuilder.addPart(ss[0], new ByteArrayBody(imageBytes, "ANDROID.png"));
+                entityBuilder.addPart(ss[0], new ByteArrayBody(imageBytes, "ANDROID.png"));
             } else {
-                multipartEntityBuilder.addPart(ss[0], new StringBody(ss[1], ContentType.TEXT_PLAIN));
+                entityBuilder.addPart(ss[0], new StringBody(ss[1], ContentType.TEXT_PLAIN));;
             }
         }
 
-        HttpEntity entity = multipartEntityBuilder.build();
+        HttpEntity entity = entityBuilder.build();
 
         httpPost.setEntity(entity);
-
         try {
             HttpResponse response = httpclient.execute(httpPost);
             InputStream instream = response.getEntity().getContent();

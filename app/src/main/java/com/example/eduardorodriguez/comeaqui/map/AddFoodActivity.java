@@ -1,6 +1,7 @@
 package com.example.eduardorodriguez.comeaqui.map;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -11,20 +12,15 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.TypedValue;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.AutocompleteLocationFragment;
-import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 
 public class AddFoodActivity extends AppCompatActivity implements SelectImageFromFragment.OnFragmentInteractionListener{
     EditText foodName;
@@ -47,6 +43,8 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
     double lat;
     double lng;
     String address;
+
+    Context context;
 
     private String setTypes(){
         StringBuilder types = new StringBuilder();
@@ -81,6 +79,8 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
         doPhoto = findViewById(R.id.photo);
         backView = findViewById(R.id.back);
         selectFromLayout = findViewById(R.id.select_image_from);
+
+        context = getApplicationContext();
 
 
         Intent intent = getIntent();
@@ -155,9 +155,7 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
                     new String[]{"description", description.getText().toString()},
                     new String[]{"food_photo", ""}
             );
-
             finish();
-
         });
     }
 
@@ -312,7 +310,7 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
     @Override
     public void onFragmentInteraction(Uri uri) {
         try {
-            imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+            imageBitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
             doPhoto.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
             doPhoto.getLayoutParams().height = 500;
             doPhoto.setImageURI(uri);

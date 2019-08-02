@@ -301,13 +301,11 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
             if (bitmap != null){
                 PatchAsyncTask putTask = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
                 putTask.imageBitmap = bitmap;
-
                 if (isBackGound){
                     putTask.execute("background_photo", "", "true").get(15, TimeUnit.SECONDS);
                 }else {
                     putTask.execute("profile_photo", "", "true").get(15, TimeUnit.SECONDS);
                 }
-
             }
         } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {
             e.printStackTrace();
