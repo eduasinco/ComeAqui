@@ -96,14 +96,14 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
             setProfile(user, false);
             messageImage.setOnClickListener(v -> goToConversationWithUser(user));
         } else {
-            User myUser = MainActivity.initializeUser();
+            user = MainActivity.initializeUser();
             editProfileView.setVisibility(View.VISIBLE);
             editProfileView.setOnClickListener(v -> {
                 Intent editProfile = new Intent(getContext(), EditProfileActivity.class);
-                editProfile.putExtra("object", myUser);
+                editProfile.putExtra("object", user);
                 getContext().startActivity(editProfile);
             });
-            setProfile(myUser, true);
+            setProfile(user, true);
             addProfilePhotoView.setVisibility(View.VISIBLE);
             addBackGroundPhotoView.setVisibility(View.VISIBLE);
         }
@@ -320,15 +320,11 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
 
         @Override
         public Fragment getItem(int position) {
-            UserPostFragment userPostFragment = new UserPostFragment();
-            Bundle bundle = new Bundle();
-            if (user != null && user.id != MainActivity.user.id) {
-                bundle.putSerializable("user", user);
-            } else {
-                bundle.putSerializable("user", MainActivity.user);
-            }
-            userPostFragment.setArguments(bundle);
-            Fragment[] tabFragment = {userPostFragment, new OptionsFragment(), new ProfileImageGalleryFragment()};
+            Fragment[] tabFragment = {
+                    UserPostFragment.newInstance((user != null && user.id != MainActivity.user.id) ? user : MainActivity.user),
+                    new OptionsFragment(),
+                    ProfileImageGalleryFragment.newInstance(user)
+            };
             return tabFragment[position];
         }
 

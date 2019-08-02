@@ -2,13 +2,11 @@ package com.example.eduardorodriguez.comeaqui.utilities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Outline;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.ViewOutlineProvider;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import androidx.fragment.app.Fragment;
@@ -17,19 +15,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
-import com.example.eduardorodriguez.comeaqui.LoginActivity;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.User;
-import com.example.eduardorodriguez.comeaqui.profile.settings.ChangePasswordActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -43,10 +38,10 @@ import java.util.concurrent.ExecutionException;
 public class ProfileImageGalleryFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM1 = "user";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
+    private User user;
 
     private OnFragmentInteractionListener mListener;
     int count;
@@ -57,14 +52,16 @@ public class ProfileImageGalleryFragment extends Fragment {
 
     DisplayMetrics displayMetrics;
 
+    int IMAGE_BY_ROW = 2;
+
     public ProfileImageGalleryFragment() {
         // Required empty public constructor
     }
 
-    public static ProfileImageGalleryFragment newInstance(String param1, String param2) {
+    public static ProfileImageGalleryFragment newInstance(User user) {
         ProfileImageGalleryFragment fragment = new ProfileImageGalleryFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        args.putSerializable(ARG_PARAM1, user);
         fragment.setArguments(args);
         return fragment;
     }
@@ -79,7 +76,7 @@ public class ProfileImageGalleryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            user = (User) getArguments().getSerializable(ARG_PARAM1);
 
         }
     }
@@ -101,7 +98,7 @@ public class ProfileImageGalleryFragment extends Fragment {
         LinearLayout horizontalLayout = new LinearLayout(getContext());
         horizontalLayout.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                displayMetrics.widthPixels / 3));
+                displayMetrics.widthPixels / IMAGE_BY_ROW));
         imageListLayout.addView(horizontalLayout);
         currentHorizontalLayout = horizontalLayout;
     }
@@ -112,7 +109,7 @@ public class ProfileImageGalleryFragment extends Fragment {
 
 
     void getPostFromUser(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_food_posts/" + MainActivity.user.id + "/");
+        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_food_posts/" + user.id + "/");
         try {
             String response = process.execute().get();
             if (response != null) {
@@ -133,7 +130,7 @@ public class ProfileImageGalleryFragment extends Fragment {
                 count++;
                 ImageView imageView = new ImageView(getContext());
                 imageView.setLayoutParams(new LinearLayout.LayoutParams(
-                        displayMetrics.widthPixels / 3,
+                        displayMetrics.widthPixels / IMAGE_BY_ROW,
                         LinearLayout.LayoutParams.MATCH_PARENT));
                 currentHorizontalLayout.addView(imageView);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -151,11 +148,11 @@ public class ProfileImageGalleryFragment extends Fragment {
                     startActivity(imageLook);
                 });
 
-                if (count % 3 == 0){
+                if (count % IMAGE_BY_ROW == 0){
                     LinearLayout horizontalLayout = new LinearLayout(getContext());
                     horizontalLayout.setLayoutParams(new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT,
-                            displayMetrics.widthPixels / 3));
+                            displayMetrics.widthPixels / IMAGE_BY_ROW));
                     horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
                     imageListLayout.addView(horizontalLayout);
                     currentHorizontalLayout = horizontalLayout;
