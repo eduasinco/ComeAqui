@@ -58,6 +58,12 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
         return types.toString();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        selectFromLayout.setVisibility(View.GONE);
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -310,11 +316,11 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
     @Override
     public void onFragmentInteraction(Uri uri) {
         try {
+            selectFromLayout.setVisibility(View.GONE);
             imageBitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
             doPhoto.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
             doPhoto.getLayoutParams().height = 500;
             doPhoto.setImageURI(uri);
-            selectFromLayout.setVisibility(View.GONE);
         } catch (IOException e) {
             e.printStackTrace();
         }

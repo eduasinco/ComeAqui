@@ -122,54 +122,60 @@ public class MapFragment extends Fragment{
             e.printStackTrace();
         }
 
-        setMap();
-        setFabFunctionality();
-        setCancelPost();
+        cancelPostView.setOnClickListener(v -> {
+            cancelPost();
+        });
+
+        myFab.setOnClickListener(v -> {
+            fabFunctionality();
+        });
+
+        mMapView.getMapAsync(mMap -> {
+            setMap(mMap);
+        });
 
         return rootView;
     }
 
     @SuppressLint("RestrictedApi")
-    void setMap(){
-        mMapView.getMapAsync(mMap -> {
-            googleMap = mMap;
-            googleMap.setMyLocationEnabled(true);
+    void setMap(GoogleMap mMap){
+        googleMap = mMap;
+        googleMap.setMyLocationEnabled(true);
 
-            setLocationPicker();
-            setMapMarkers();
-            // For dropping a marker at a point on the Map
-            MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
-                @Override
-                public void gotLocation(Location location){
-                    //Got the location!
-                    double lng = location.getLongitude();
-                    double lat = location.getLatitude();
+        setLocationPicker();
+        setMapMarkers();
+        // For dropping a marker at a point on the Map
+        MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
+            @Override
+            public void gotLocation(Location location){
+                //Got the location!
+                double lng = location.getLongitude();
+                double lat = location.getLatitude();
 
-                    LatLng place = new LatLng(lat, lng);
-                    // For zooming automatically to the location of the marker
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(place).zoom(15).build();
-                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                LatLng place = new LatLng(lat, lng);
+                // For zooming automatically to the location of the marker
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(place).zoom(15).build();
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-                }
-            };
-            MyLocation myLocation = new MyLocation();
-            myLocation.getLocation(getContext(), locationResult);
+            }
+        };
+        MyLocation myLocation = new MyLocation();
+        myLocation.getLocation(getContext(), locationResult);
 
 
-            googleMap.setOnMarkerClickListener(marker -> {
+        googleMap.setOnMarkerClickListener(marker -> {
 
-                cardView.setVisibility(View.GONE);
-                myFab.setVisibility(View.GONE);
-                cancelPostView.setVisibility(View.VISIBLE);
+            cardView.setVisibility(View.GONE);
+            myFab.setVisibility(View.GONE);
+            cancelPostView.setVisibility(View.VISIBLE);
 
-                final int key = (int) (marker.getTag());
-                FoodPost foodPost = data.get(key);
-                getChildFragmentManager().beginTransaction()
-                        .replace(R.id.container1, MapCardFragment.newInstance(foodPost))
-                        .commit();
-                moveCardUp();
-                return false;
-            });
+            final int key = (int) (marker.getTag());
+            FoodPost foodPost = data.get(key);
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.container1, MapCardFragment.newInstance(foodPost))
+                    .commit();
+            moveCardUp();
+            return false;
         });
     }
 
@@ -240,38 +246,34 @@ public class MapFragment extends Fragment{
         });
     }
 
-    void setFabFunctionality(){
-        myFab.setOnClickListener(v -> {
-            apearMapPicker(true, 40);
-            if (fabCount == 0){
-                markersVisibility(false);
-                fabCount = 1;
-                cancelPostView.setVisibility(View.VISIBLE);
-                switchFabImage(true);
-            } else if (fabCount == 1) {
-                Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
-                addFood.putExtra("address" , pickedAdress.getText().toString());
-                addFood.putExtra("lat" , latLng.latitude);
-                addFood.putExtra("lng" , latLng.longitude);
-                getActivity().startActivity(addFood);
-            } else {
-                fabCount = 2;
-                switchFabImage(false);
-            }
-        });
+    void fabFunctionality(){
+        apearMapPicker(true, 40);
+        if (fabCount == 0){
+            markersVisibility(false);
+            fabCount = 1;
+            cancelPostView.setVisibility(View.VISIBLE);
+            switchFabImage(true);
+        } else if (fabCount == 1) {
+            Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
+            addFood.putExtra("address" , pickedAdress.getText().toString());
+            addFood.putExtra("lat" , latLng.latitude);
+            addFood.putExtra("lng" , latLng.longitude);
+            getActivity().startActivity(addFood);
+        } else {
+            fabCount = 2;
+            switchFabImage(false);
+        }
     }
 
     @SuppressLint("RestrictedApi")
-    void setCancelPost(){
-        cancelPostView.setOnClickListener(v -> {
-            markersVisibility(true);
-            switchFabImage(false);
-            fabCount = 0;
-            cancelPostView.setVisibility(View.GONE);
-            myFab.setVisibility(View.VISIBLE);
-            apearMapPicker(false, -40);
-            moveCardDown();
-        });
+    void cancelPost(){
+        markersVisibility(true);
+        switchFabImage(false);
+        fabCount = 0;
+        cancelPostView.setVisibility(View.GONE);
+        myFab.setVisibility(View.VISIBLE);
+        apearMapPicker(false, -40);
+        moveCardDown();
     }
 
     void switchFabImage(boolean toPlus){
@@ -334,6 +336,7 @@ public class MapFragment extends Fragment{
     public void onResume() {
         super.onResume();
         mMapView.onResume();
+        cancelPost();
     }
 
     @Override
