@@ -19,6 +19,7 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.profile.UserPostFragment.OnListFragmentInteractionListener;
 import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
+import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
 
 import java.util.ArrayList;
 
@@ -86,6 +87,10 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
 
             holder.mView.getContext().startActivity(foodLook);
         });
+
+        ((AppCompatActivity) holder.mView.getContext()).getSupportFragmentManager().beginTransaction()
+                .replace(R.id.food_types, FoodTypeFragment.newInstance(foodPost.type))
+                .commit();
     }
 
     @Override

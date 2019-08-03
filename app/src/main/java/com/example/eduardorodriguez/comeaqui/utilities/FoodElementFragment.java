@@ -76,7 +76,6 @@ public class FoodElementFragment extends Fragment {
                     cardButtonView.setBackgroundColor(Color.TRANSPARENT);
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    cardButtonView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.box_stroke));
                     break;
                 case MotionEvent.ACTION_UP:
                     cardButtonView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.box_stroke));

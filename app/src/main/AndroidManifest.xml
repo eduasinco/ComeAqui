@@ -38,8 +38,6 @@
         </activity>
         <activity android:name=".profile.edit_profile.AddBioActivity">
         </activity>
-        <activity android:name=".profile.edit_profile.CropImageActivity">
-        </activity>
         <activity android:name=".notification.NotificationLookActivity">
         </activity>
         <activity android:name=".profile.ProfileViewActivity">

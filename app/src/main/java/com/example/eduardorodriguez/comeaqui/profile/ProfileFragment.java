@@ -335,7 +335,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
 
         @Override
         public CharSequence getPageTitle(int position) {
-            String[] titles = {"posts", "posts & reviews", "photos"};
+            String[] titles = {"posts", "posts & reviews", "media"};
             return titles[position];
         }
     }
