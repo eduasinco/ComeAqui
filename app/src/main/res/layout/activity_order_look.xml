@@ -60,90 +60,16 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toTopOf="parent"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
-            <androidx.constraintlayout.widget.ConstraintLayout
-                    android:background="@drawable/box_element"
+            <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/constraintLayout4">
-
-                <View
-                        android:layout_height="1dp"
-                        android:background="@color/colorPrimary"
-                        android:layout_width="0dp"
-                        android:id="@+id/view5"
-                        android:alpha="0.5"
-                        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-                        android:layout_marginStart="24dp" android:layout_marginEnd="24dp"
-                        app:layout_constraintHorizontal_bias="0.0" android:layout_marginTop="16dp"
-                        app:layout_constraintTop_toBottomOf="@+id/postName"/>
-                <View
-                        android:layout_height="1dp"
-                        android:background="@color/colorPrimary"
-                        android:layout_width="0dp"
-                        android:id="@+id/view6"
-                        android:alpha="0.5"
-                        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-                        android:layout_marginStart="24dp" android:layout_marginEnd="24dp"
-                        app:layout_constraintTop_toBottomOf="@+id/textView26" android:layout_marginTop="16dp"/>
-                <TextView
-                        android:text="Plate Name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="24dp"
-                        android:id="@+id/postName"
-                        android:layout_marginTop="24dp" app:layout_constraintTop_toBottomOf="@+id/constraintLayout7"/>
-                <TextView
-                        android:text="€9.50"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/postPrice" app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginEnd="24dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/postName"/>
-                <TextView
-                        android:text="€9.50"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/totalPrice" app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginEnd="24dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView27"/>
-                <TextView
-                        android:text="€9.50"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/postSubtotalPrice" app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginEnd="24dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/subtotal"/>
-                <TextView
-                        android:text="Free"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/deliveryFee" app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginEnd="24dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView26"/>
-                <TextView
-                        android:text="Subtotal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/subtotal"
-                        app:layout_constraintStart_toStartOf="parent"
-                        android:layout_marginStart="24dp"
-                        app:layout_constraintTop_toBottomOf="@+id/view5" android:layout_marginTop="16dp"/>
-                <TextView
-                        android:text="TextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/textView26" android:layout_marginTop="8dp"
-                        app:layout_constraintTop_toBottomOf="@+id/subtotal"
-                        app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="24dp"/>
+                    android:layout_height="match_parent">
                 <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content" android:id="@+id/constraintLayout7"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="24dp">
+                        app:layout_constraintTop_toTopOf="parent" android:layout_weight="0" android:padding="16dp">
 
                     <ImageView
                             android:layout_width="300dp"
@@ -151,7 +77,8 @@
                             android:id="@+id/static_map"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"/>
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
                     <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" app:srcCompat="@drawable/map_food_icon"
@@ -159,14 +86,78 @@
                             app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
-                <TextView
-                        android:text="Total"
-                        android:layout_width="wrap_content"
+                <LinearLayout
+                        android:background="@drawable/box_element"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/textView27"
-                        app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="24dp"
-                        app:layout_constraintTop_toBottomOf="@+id/view6" android:layout_marginTop="16dp"/>
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                        app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/constraintLayout7">
+                    <LinearLayout
+                            android:background="@drawable/box_element"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp" android:padding="16dp">
+                        <TextView
+                                android:maxLines="1"
+                                android:ellipsize="end"
+                                android:text="Plate Name"
+                                android:layout_height="match_parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                android:id="@+id/postName"
+                                app:layout_constraintTop_toBottomOf="@+id/constraintLayout7" android:layout_weight="1"
+                                android:gravity="center_vertical" android:layout_width="wrap_content"/>
+                        <TextView
+                                android:text="€9.50"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:id="@+id/postPrice" app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintBottom_toBottomOf="@+id/postName"
+                                android:gravity="center_vertical"/>
+                    </LinearLayout>
+                    <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp" android:padding="16dp">
+                        <TextView
+                                android:text="Subtotal"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/subtotal"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/view5" android:layout_weight="1"
+                                android:gravity="center_vertical"/>
+                        <TextView
+                                android:text="€9.50"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:id="@+id/postSubtotalPrice" app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintBottom_toBottomOf="@+id/postName"
+                                android:gravity="center_vertical"/>
+                    </LinearLayout>
+                    <LinearLayout
+                            android:background="@drawable/box_element"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp" android:padding="16dp">
+                        <TextView
+                                android:text="Total"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:id="@+id/textView27"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/view6" android:layout_weight="1"
+                                android:gravity="center_vertical"/>
+                        <TextView
+                                android:text="€9.50"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:id="@+id/totalPrice" app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintBottom_toBottomOf="@+id/textView27"
+                                android:gravity="center_vertical"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -259,18 +250,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
                     <TextView
+                            android:maxLines="1"
+                            android:ellipsize="end"
                             android:text="Plate Name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/plate_name"
                             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
                             android:textStyle="bold" android:textColor="@color/colorPrimary"
-                            android:paddingBottom="8dp"/>
+                            android:paddingBottom="8dp" android:layout_weight="1"/>
                     <TextView
                             android:text="Status"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" android:id="@+id/order_status"
-                            android:layout_weight="1" android:textAlignment="textEnd" android:textStyle="bold"/>
+                            android:textAlignment="textEnd" android:textStyle="bold"/>
                 </LinearLayout>
                 <TextView
                         android:text="Description"
@@ -288,7 +281,6 @@
                     <TextView
                             android:text="Meal time: "
                             android:layout_height="wrap_content" android:id="@+id/textView25"
-                            android:layout_weight="1"
                             android:textStyle="bold" android:textColor="@color/colorPrimary"
                             android:layout_width="wrap_content"/>
                     <TextView
