@@ -37,6 +37,8 @@
         </LinearLayout>
         <TextView
                 android:text="Description"
+                android:ellipsize="end"
+                android:maxLines="3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/description"

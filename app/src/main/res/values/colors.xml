@@ -12,13 +12,14 @@
     <color name="grey_light">#F3F3F3</color>
     <color name="grey_lighter">#FAFAFA</color>
 
-    <color name="mapPickerFill">#E6FFFFFF</color>
-    <color name="mapPicker">#9539ff</color>
+    <color name="mapPickerFill">#92278f</color>
+    <color name="mapPicker">#92278f</color>
     <color name="favourite">#FFBF00</color>
 
-    <color name="bottom_bottom">#809E9E9E</color>
+    <color name="bottom_bottom">#17000000</color>
     <color name="bottom_top">#FFFFFF</color>
 
     <color name="success">#4CAF50</color>
     <color name="canceled">#BE0D00</color>
 </resources>
+

@@ -52,7 +52,7 @@ public class ProfileImageGalleryFragment extends Fragment {
 
     DisplayMetrics displayMetrics;
 
-    int IMAGE_BY_ROW = 2;
+    int IMAGE_BY_ROW = 3;
 
     public ProfileImageGalleryFragment() {
         // Required empty public constructor
@@ -135,7 +135,7 @@ public class ProfileImageGalleryFragment extends Fragment {
                 currentHorizontalLayout.addView(imageView);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-                int padding = 10;
+                int padding = 5;
                 imageView.setPadding(padding,padding,padding,padding);
 
                 makeImageRoundCornered(imageView, 20);
