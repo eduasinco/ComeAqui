@@ -145,6 +145,7 @@ public class NotificationsFragment extends Fragment {
             View itemView = viewHolder.itemView;
             int iconMargin = (itemView.getHeight() - deleteIcon.getIntrinsicHeight()) / 2;
             int margin = getMargin(210, 300, 50, 180, 230, Math.abs(dX));
+            System.out.println(margin);
             if (dX > 0){
                 swipeBackgroundConfirm.setBounds(itemView.getLeft(), itemView.getTop(), (int) dX, itemView.getBottom());
                 confirmIcon.setBounds(itemView.getLeft() + iconMargin + margin, itemView.getTop() + iconMargin + margin, itemView.getLeft() + iconMargin + deleteIcon.getIntrinsicWidth() - margin,
