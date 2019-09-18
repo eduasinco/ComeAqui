@@ -14,6 +14,7 @@ import com.example.eduardorodriguez.comeaqui.*;
 import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
+import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
 import com.google.gson.JsonObject;
 
@@ -114,6 +115,15 @@ public class NotificationLookActivity extends AppCompatActivity {
             });
         }
         backView.setOnClickListener(v -> finish());
+        dinnerImage.setOnClickListener(v -> {
+            goToProfileView();
+        });
+    }
+
+    void goToProfileView(){
+        Intent k = new Intent(this, ProfileViewActivity.class);
+        k.putExtra("user_email", notificationObject.sender);
+        startActivity(k);
     }
 
     void setConfirmCancelButton(){
