@@ -6,8 +6,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.*;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,13 +14,8 @@ import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.ChatObject;
 import com.example.eduardorodriguez.comeaqui.chat.MessageObject;
-import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.MessageFirebaseObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
-import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
-import com.google.firebase.database.*;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -44,9 +37,6 @@ public class ConversationActivity extends AppCompatActivity {
     private ImageView backView;
     private AdapterMensajes adapter;
 
-
-    private Button start;
-    private TextView output;
     private OkHttpClient client;
 
     WebSocket ws;
@@ -82,10 +72,6 @@ public class ConversationActivity extends AppCompatActivity {
             chat = (ChatObject) b.get("chat");
             chattingWith = MainActivity.user.id == (chat.users.get(0).id) ? chat.users.get(1) : chat.users.get(0);
 
-            StorageReference firebaseStorage = FirebaseStorage.getInstance().getReference().child("user_image/" + chattingWith.id);
-            firebaseStorage.getDownloadUrl().addOnSuccessListener(uri -> {
-                Glide.with(this).load(uri.toString()).into(fotoPerfil);
-            }).addOnFailureListener(exception -> {});
             nombre.setText(chattingWith.first_name + " " + chattingWith.last_name);
             getChatMessages();
         }
@@ -142,49 +128,6 @@ public class ConversationActivity extends AppCompatActivity {
         }
     }
 
-    private void createServerMessage(){
-        PostAsyncTask emitMessage = new PostAsyncTask(getResources().getString(R.string.server) + "/create_message/");
-        emitMessage.execute(
-                new String[]{"message", txtMensaje.getText().toString()},
-                new String[]{"chat_id", chat.id + ""}
-        );
-    }
-
-    private void createFirebaseMessage(){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("messages");
-        MessageFirebaseObject message = new MessageFirebaseObject();
-        message.message = txtMensaje.getText().toString();
-        //message.chat = chat.signature;
-        message.sender = MainActivity.firebaseUser;
-        DatabaseReference newRef = reference.push();
-        newRef.setValue(message);
-
-        DatabaseReference chats = FirebaseDatabase.getInstance().getReference("chats");
-        //chats.child(chat.id).child("last_message").setValue(txtMensaje.getText().toString());
-    }
-
-    private void getChatFirebaseMessages(String chatSignature){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("messages");
-        reference
-                .orderByChild("chat")
-                .equalTo(chatSignature)
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        MessageFirebaseObject message = dataSnapshot.getValue(MessageFirebaseObject.class);
-                        // adapter.addMensaje(message);
-                    }
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) { }
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {}
-                });
-    }
-
     private void setScrollbar(){
         rvMensajes.scrollToPosition(adapter.getItemCount() - 1);
     }
@@ -221,7 +164,7 @@ public class ConversationActivity extends AppCompatActivity {
     }
 
     private void start() {
-        Request request = new Request.Builder().url("http://127.0.0.1:6379/ws/chat/" + chat.id + "/")
+        Request request = new Request.Builder().url(getResources().getString(R.string.server) + "/ws/chat/" + chat.id + "/")
                 .build();
         EchoWebSocketListener listener = new EchoWebSocketListener(this);
         ws = client.newWebSocket(request, listener);

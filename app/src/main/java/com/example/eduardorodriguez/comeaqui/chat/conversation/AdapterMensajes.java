@@ -13,11 +13,17 @@ import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.MessageObject;
+import com.example.eduardorodriguez.comeaqui.utilities.DateFragment;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHolder>{
 
@@ -48,6 +54,8 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
         holder.mItem = listMensaje.get(position);
         holder.messageView.setText(holder.mItem.message);
         holder.username.setText(holder.mItem.sender.username);
+        holder.dateView.setText(DateFragment.getDateInFormat(holder.mItem.createdAt));
+
         if (position < listMensaje.size() - 1) {
             MessageObject messageAfter = listMensaje.get(position + 1);
             if (MainActivity.user.id == (holder.mItem.sender.id)){
@@ -75,12 +83,6 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
             }
         }
         Glide.with(holder.mView.getContext()).load(holder.mItem.sender.profile_photo).into(holder.chattererImage);
-
-//        firebaseStorage
-//                .child("user_image/" + holder.mItem.sender.id)
-//                .getDownloadUrl().addOnSuccessListener(uri -> {
-//            Glide.with(holder.mView.getContext()).load(uri.toString()).into(holder.chattererImage);
-//        }).addOnFailureListener(exception -> {});
     }
 
     @Override

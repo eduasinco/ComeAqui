@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.*;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
+import com.example.eduardorodriguez.comeaqui.utilities.DateFragment;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -95,17 +96,8 @@ public class OrderAdapter extends BaseAdapter {
             foodLook.putExtra("delete", delete);
             context.startActivity(foodLook);
         });
+        dateView.setText(DateFragment.getDateInSimpleFormat(orderObject.createdAt));
 
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.ENGLISH);
-        try {
-            Date date = format.parse(orderObject.createdAt);
-            String pattern = "dd MMMM yyyy";
-            DateFormat df = new SimpleDateFormat(pattern);
-            String todayAsString = df.format(date);
-            dateView.setText(todayAsString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         return view;
     }
 

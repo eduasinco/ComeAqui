@@ -60,7 +60,32 @@ public class DateFragment extends Fragment {
         return view;
     }
 
-    String getDateTextString(Date date){
+    public static String getDateInFormat(String dateString){
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.US);
+        try {
+            Date date = format.parse(dateString);
+            return getDateTextString(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String getDateInSimpleFormat(String dateString){
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.US);
+        try {
+            Date date = format.parse(dateString);
+            String pattern = "dd MMMM yyyy";
+            DateFormat df = new SimpleDateFormat(pattern);
+            String todayAsString = df.format(date);
+            return todayAsString;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    static String getDateTextString(Date date){
         String[] week_days = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
         String dateTextString = "";
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
