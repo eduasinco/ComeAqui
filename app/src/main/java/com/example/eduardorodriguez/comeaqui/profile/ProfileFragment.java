@@ -67,18 +67,10 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
 
     public void setProfile(User user, boolean isMyUser){
         if(!user.profile_photo.contains("no-image")) {
-            if (isMyUser){
-                Glide.with(view.getContext()).load(user.profile_photo).into(profileImageView);
-            } else {
-                Glide.with(view.getContext()).load(getResources().getString(R.string.server) + user.profile_photo).into(profileImageView);
-            }
+            Glide.with(view.getContext()).load(user.profile_photo).into(profileImageView);
         }
         if(!user.background_photo.contains("no-image")) {
-            if (isMyUser) {
-                Glide.with(view.getContext()).load(user.background_photo).into(backGroundImage);
-            } else {
-                Glide.with(view.getContext()).load(getResources().getString(R.string.server) + user.background_photo).into(backGroundImage);
-            }
+            Glide.with(view.getContext()).load(user.background_photo).into(backGroundImage);
         }
         nameView.setText(user.first_name + " " + user.last_name);
         emailView.setText(user.email);

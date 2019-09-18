@@ -140,7 +140,7 @@ public class ProfileImageGalleryFragment extends Fragment {
 
                 makeImageRoundCornered(imageView, 20);
 
-                Glide.with(view.getContext()).load(getResources().getString(R.string.server) + foodPost.food_photo).into(imageView);
+                Glide.with(view.getContext()).load(foodPost.food_photo).into(imageView);
 
                 imageView.setOnClickListener((v) -> {
                     Intent imageLook = new Intent(getContext(), ImageLookActivity.class);

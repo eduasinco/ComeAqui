@@ -19,7 +19,7 @@ public class ImageLookActivity extends AppCompatActivity {
 
         if(b != null && b.get("image_url") != null) {
             String imageUrl = b.getString("image_url");
-            Glide.with(this).load(getResources().getString(R.string.server) + imageUrl).into(((ImageView) findViewById(R.id.image)));
+            Glide.with(this).load(imageUrl).into(((ImageView) findViewById(R.id.image)));
         }
 
         findViewById(R.id.close).setOnClickListener((v) -> finish());

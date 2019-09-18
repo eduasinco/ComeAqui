@@ -67,7 +67,7 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
 
         if (!foodPost.food_photo.contains("no-image")) {
             imageLayout.setVisibility(View.VISIBLE);
-            Glide.with(holder.mView.getContext()).load(holder.mView.getContext().getResources().getString(R.string.server) + foodPost.food_photo).into(imageView);
+            Glide.with(holder.mView.getContext()).load(foodPost.food_photo).into(imageView);
         }
 
         holder.cardButtonView.setOnClickListener(v -> {

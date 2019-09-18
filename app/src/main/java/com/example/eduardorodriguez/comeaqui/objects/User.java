@@ -1,7 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.objects;
 
 import com.google.gson.JsonObject;
-
 import java.io.Serializable;
 
 public class User implements Serializable {
@@ -26,8 +25,8 @@ public class User implements Serializable {
         bio = jo.get("bio").getAsString();
         phone_number = jo.get("phone_number").getAsString();
         phone_code = jo.get("phone_code").getAsString();
-        profile_photo = jo.get("profile_photo").getAsString();
-        background_photo = jo.get("background_photo").getAsString();
+        profile_photo = ImageStringProcessor.processString(jo.get("profile_photo").getAsString());
+        background_photo = ImageStringProcessor.processString(jo.get("background_photo").getAsString());
         is_active = jo.get("is_active").getAsString();
         is_admin = jo.get("is_admin").getAsString();
     }

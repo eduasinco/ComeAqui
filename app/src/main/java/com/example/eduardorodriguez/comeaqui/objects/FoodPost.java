@@ -25,7 +25,7 @@ public class FoodPost implements Serializable {
         price = jo.get("price").getAsString();
         type = jo.get("food_type").getAsString();
         description = jo.get("description").getAsString();
-        food_photo = jo.get("food_photo").isJsonNull() ? null: jo.get("food_photo").getAsString();
+        food_photo = ImageStringProcessor.processString(jo.get("food_photo").getAsString());
         time = jo.get("time").getAsString();
         lat = jo.get("lat").getAsFloat();
         lng = jo.get("lng").getAsFloat();

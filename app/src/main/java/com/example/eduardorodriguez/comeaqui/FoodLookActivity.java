@@ -102,10 +102,10 @@ public class FoodLookActivity extends AppCompatActivity {
                     .commit();
 
 
-            if(!getFoodObject.owner.profile_photo.contains("no-image")) Glide.with(this).load(getFoodObject.favourite_from_server ? getFoodObject.owner.profile_photo : getResources().getString(R.string.server) + getFoodObject.owner.profile_photo).into(posterImage);
+            if(!getFoodObject.owner.profile_photo.contains("no-image")) Glide.with(this).load(getFoodObject.owner.profile_photo).into(posterImage);
             if(!getFoodObject.food_photo.contains("no-image")){
                 postImageLayout.setVisibility(View.VISIBLE);
-                Glide.with(this).load(getFoodObject.favourite_from_server ? getFoodObject.food_photo: getResources().getString(R.string.server) +  getFoodObject.food_photo).into(postImage);
+                Glide.with(this).load(getFoodObject.food_photo).into(postImage);
             }
             String url = "http://maps.google.com/maps/api/staticmap?center=" + getFoodObject.lat + "," + getFoodObject.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
             Glide.with(this).load(url).into(staticMapView);
@@ -142,7 +142,6 @@ public class FoodLookActivity extends AppCompatActivity {
             });
         }
     }
-
 
     private void createNotificationFirebase(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("userNotifications");
