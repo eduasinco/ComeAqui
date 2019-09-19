@@ -1,17 +1,17 @@
 package com.example.eduardorodriguez.comeaqui.chat.conversation;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
@@ -22,7 +22,6 @@ import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.DateFragment;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.*;
@@ -34,6 +33,11 @@ public class ConversationActivity extends AppCompatActivity {
 
     ChatObject chat;
     User chattingWith;
+
+    MessageObject lastMessage = null;
+    MessageObject lastBrandNewMessage = null;
+    String lastMessageDate = "";
+
 
     private CircleImageView fotoPerfil;
     private TextView nombre;
@@ -117,18 +121,22 @@ public class ConversationActivity extends AppCompatActivity {
 
         rvMensajes.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dx > 0) {
+                    System.out.println("Scrolled Right");
+                } else if (dx < 0) {
+                    System.out.println("Scrolled Left");
+                } else {
+                    System.out.println("No Horizontal Scrolled");
+                }
 
-                switch (newState) {
-                    case RecyclerView.SCROLL_STATE_IDLE:
-                        break;
-                    case RecyclerView.SCROLL_STATE_DRAGGING:
-                        hideKeyboard();
-                        break;
-                    case RecyclerView.SCROLL_STATE_SETTLING:
-                        break;
-
+                if (dy > 0) {
+                    System.out.println("Scrolled Downwards");
+                } else if (dy < 0) {
+                    hideKeyboard();
+                    System.out.println("Scrolled Upwards");
+                } else {
+                    System.out.println("No Vertical Scrolled");
                 }
             }
         });
@@ -150,14 +158,40 @@ public class ConversationActivity extends AppCompatActivity {
         GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/chat_detail/" + chat.id + "/");
         try {
             String response = process.execute().get();
-            if (response != null)
+            if (response != null) {
                 for (JsonElement je: new JsonParser().parse(response).getAsJsonObject().get("message_set").getAsJsonArray()){
                     MessageObject currentMessage = new MessageObject(je.getAsJsonObject());
+
+                    setMessageMode(currentMessage);
+
                     adapter.addMensaje(currentMessage);
                 }
+            }
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setMessageMode(MessageObject currentMessage){
+
+        String currentMessageDate = DateFragment.getDateInSimpleFormat(currentMessage.createdAt);
+        if (!lastMessageDate.equals(currentMessageDate)){
+            currentMessage.newDay = true;
+        }
+        lastMessageDate = currentMessageDate;
+
+        if (lastMessage == null){
+            currentMessage.topSpace = true;
+        } else if (currentMessage.sender.id != lastMessage.sender.id){
+            currentMessage.topSpace = true;
+            lastMessage.lastInGroup = true;
+        }
+
+        if (MainActivity.user.id == currentMessage.sender.id){
+            currentMessage.isOwner = true;
+        }
+
+        lastMessage = currentMessage;
     }
 
 
@@ -205,6 +239,16 @@ public class ConversationActivity extends AppCompatActivity {
     }
 
     private void output(final String txt) {
-        runOnUiThread(() -> adapter.addMensaje(new MessageObject(new JsonParser().parse(txt).getAsJsonObject().get("message").getAsJsonObject())));
+        runOnUiThread(() -> {
+            MessageObject brandNewMessage = new MessageObject(new JsonParser().parse(txt).getAsJsonObject().get("message").getAsJsonObject());
+            if (lastBrandNewMessage != null){
+                lastBrandNewMessage.lastInGroup = false;
+            }
+            brandNewMessage.lastInGroup = true;
+            brandNewMessage.isOwner = true;
+            adapter.addMensaje(brandNewMessage);
+            lastBrandNewMessage = brandNewMessage;
+        });
     }
+
 }

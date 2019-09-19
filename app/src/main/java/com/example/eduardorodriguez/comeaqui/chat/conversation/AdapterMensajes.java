@@ -27,8 +27,6 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
     private Context c;
     StorageReference firebaseStorage;
 
-    String lastMessageDate = "";
-
     public AdapterMensajes(Context c) {
         this.c = c;
     }
@@ -53,38 +51,28 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
         holder.mItem = listMensaje.get(position);
         holder.messageView.setText(holder.mItem.message);
         holder.username.setText(holder.mItem.sender.username);
-        holder.dateView.setText(DateFragment.getDateInFormat(holder.mItem.createdAt));
+        holder.dateView.setText(DateFragment.getDateForMessage(holder.mItem.createdAt));
+        holder.datePopContainer.setVisibility(View.GONE);
 
-        String currentMessageDate = DateFragment.getDateInSimpleFormat(holder.mItem.createdAt);
-        if (!lastMessageDate.equals(currentMessageDate)){
+        if (holder.mItem.newDay) {
             holder.datePopContainer.setVisibility(View.VISIBLE);
-            holder.datePop.setText(DateFragment.getDateInFormat(holder.mItem.createdAt));
+            holder.datePop.setText(DateFragment.getDateInForMessageConversation(holder.mItem.createdAt));
         }
-        lastMessageDate = currentMessageDate;
 
-        if (position < listMensaje.size() - 1) {
-            MessageObject messageAfter = listMensaje.get(position + 1);
-            if (MainActivity.user.id == (holder.mItem.sender.id)){
-                holder.wholeMessage.setGravity(Gravity.RIGHT);
-                holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_send));
-                if (!(holder.mItem.sender.id == messageAfter.sender.id)){
-                    holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_final_right));
-                    holder.wholeMessage.setPadding(0, 0, 0, 50);
-                }
-            } else {
-                holder.wholeMessage.setGravity(Gravity.LEFT);
-                holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message));
-                if (!(holder.mItem.sender.id == messageAfter.sender.id)){
-                    holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_final_left));
-                    holder.wholeMessage.setPadding(0, 0, 0, 50);
-                }
+        if (holder.mItem.topSpace){
+            // holder.wholeMessage.setPadding(0, 50, 0, 0);
+        }
+
+        if (holder.mItem.isOwner){
+            holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_send));
+            holder.wholeMessage.setGravity(Gravity.RIGHT);
+            if (holder.mItem.lastInGroup){
+                holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_final_right));
             }
         } else {
-            if (MainActivity.user.id == (holder.mItem.sender.id)){
-                holder.wholeMessage.setGravity(Gravity.RIGHT);
-                holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_final_right));
-            } else {
-                holder.wholeMessage.setGravity(Gravity.LEFT);
+            holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message));
+            holder.wholeMessage.setGravity(Gravity.LEFT);
+            if (holder.mItem.lastInGroup){
                 holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_final_left));
             }
         }
