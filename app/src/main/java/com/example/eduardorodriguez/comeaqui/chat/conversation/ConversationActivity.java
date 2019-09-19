@@ -9,14 +9,16 @@ import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.ChatObject;
+import com.example.eduardorodriguez.comeaqui.chat.DateBetweenMessages;
 import com.example.eduardorodriguez.comeaqui.chat.MessageObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.utilities.DateFragment;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.*;
@@ -28,6 +30,7 @@ public class ConversationActivity extends AppCompatActivity {
 
     ChatObject chat;
     User chattingWith;
+    String lastMessageDate = null;
 
     private CircleImageView fotoPerfil;
     private TextView nombre;
@@ -101,7 +104,6 @@ public class ConversationActivity extends AppCompatActivity {
                 } else {
                     btnEnviar.animate().scaleX(0).setDuration(200).withEndAction(() -> btnEnviar.setVisibility(View.GONE));
                 }
-
             }
 
             @Override
@@ -121,12 +123,22 @@ public class ConversationActivity extends AppCompatActivity {
             String response = process.execute().get();
             if (response != null)
                 for (JsonElement je: new JsonParser().parse(response).getAsJsonObject().get("message_set").getAsJsonArray()){
+
+                    MessageObject currentMessage = new MessageObject(je.getAsJsonObject());
+                    String currentMessageDate = DateFragment.getDateInSimpleFormat(currentMessage.createdAt);
+                    if (!lastMessageDate.equals(currentMessageDate)){
+                        JsonObject jo = new JsonParser().parse("{ \"message\" : \"" + DateFragment.getDateInFormat(currentMessage.createdAt + "\"")).getAsJsonObject();
+                        DateBetweenMessages dateBetweenMessages = new DateBetweenMessages(jo);
+                        adapter.addMensaje(dateBetweenMessages);
+                    }
+                    lastMessageDate = currentMessageDate;
                     adapter.addMensaje(new MessageObject(je.getAsJsonObject()));
                 }
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
     }
+
 
     private void setScrollbar(){
         rvMensajes.scrollToPosition(adapter.getItemCount() - 1);

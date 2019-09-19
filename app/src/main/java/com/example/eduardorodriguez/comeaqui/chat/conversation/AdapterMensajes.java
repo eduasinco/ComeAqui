@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.chat.DateBetweenMessages;
 import com.example.eduardorodriguez.comeaqui.chat.MessageObject;
 import com.example.eduardorodriguez.comeaqui.utilities.DateFragment;
 import com.google.firebase.storage.FirebaseStorage;
@@ -30,6 +31,7 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
     private List<MessageObject> listMensaje = new ArrayList<>();
     private Context c;
     StorageReference firebaseStorage;
+
 
     public AdapterMensajes(Context c) {
         this.c = c;
@@ -55,6 +57,15 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
         holder.messageView.setText(holder.mItem.message);
         holder.username.setText(holder.mItem.sender.username);
         holder.dateView.setText(DateFragment.getDateInFormat(holder.mItem.createdAt));
+
+        if (holder.mItem instanceof DateBetweenMessages){
+            holder.messageCard.setVisibility(View.GONE);
+            TextView tv = new TextView(holder.mView.getContext());
+            tv.setText(holder.mItem.message);
+            tv.setGravity(Gravity.CENTER);
+            // tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
+            return;
+        }
 
         if (position < listMensaje.size() - 1) {
             MessageObject messageAfter = listMensaje.get(position + 1);

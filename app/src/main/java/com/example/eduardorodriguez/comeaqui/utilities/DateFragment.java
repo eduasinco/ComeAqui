@@ -61,7 +61,7 @@ public class DateFragment extends Fragment {
     }
 
     public static String getDateInFormat(String dateString){
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.US);
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault());
         try {
             Date date = format.parse(dateString);
             return getDateTextString(date);
