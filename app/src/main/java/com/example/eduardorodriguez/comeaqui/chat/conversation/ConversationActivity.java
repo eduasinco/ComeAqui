@@ -122,21 +122,8 @@ public class ConversationActivity extends AppCompatActivity {
         rvMensajes.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dx > 0) {
-                    System.out.println("Scrolled Right");
-                } else if (dx < 0) {
-                    System.out.println("Scrolled Left");
-                } else {
-                    System.out.println("No Horizontal Scrolled");
-                }
-
-                if (dy > 0) {
-                    System.out.println("Scrolled Downwards");
-                } else if (dy < 0) {
+                if (dy < 0) {
                     hideKeyboard();
-                    System.out.println("Scrolled Upwards");
-                } else {
-                    System.out.println("No Vertical Scrolled");
                 }
             }
         });

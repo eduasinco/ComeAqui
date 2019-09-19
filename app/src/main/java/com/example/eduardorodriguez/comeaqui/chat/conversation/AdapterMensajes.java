@@ -53,14 +53,15 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
         holder.username.setText(holder.mItem.sender.username);
         holder.dateView.setText(DateFragment.getDateForMessage(holder.mItem.createdAt));
         holder.datePopContainer.setVisibility(View.GONE);
+        holder.wholeMessage.setPadding(0, 0, 0, 0);
 
         if (holder.mItem.newDay) {
+            holder.datePop.setVisibility(View.VISIBLE);
             holder.datePopContainer.setVisibility(View.VISIBLE);
             holder.datePop.setText(DateFragment.getDateInForMessageConversation(holder.mItem.createdAt));
-        }
-
-        if (holder.mItem.topSpace){
-            // holder.wholeMessage.setPadding(0, 50, 0, 0);
+        } else if (holder.mItem.topSpace){
+            holder.datePop.setText(DateFragment.getDateInForMessageConversation(holder.mItem.createdAt));
+            holder.wholeMessage.setPadding(0, 50, 0, 0);
         }
 
         if (holder.mItem.isOwner){
@@ -76,6 +77,7 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
                 holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_final_left));
             }
         }
+
         Glide.with(holder.mView.getContext()).load(holder.mItem.sender.profile_photo).into(holder.chattererImage);
     }
 
