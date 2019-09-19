@@ -6,6 +6,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         cardview:cardCornerRadius="10sp" android:id="@+id/view">
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_weight="0" android:visibility="gone"
+            android:id="@+id/datePopContainer">
+
+        <TextView
+                android:text="00/00/00"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/datePop"
+                cardview:layout_constraintStart_toStartOf="parent"
+                cardview:layout_constraintEnd_toEndOf="parent" cardview:layout_constraintTop_toTopOf="parent"
+                cardview:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <LinearLayout
             android:background="@drawable/box_message"
             android:layout_width="wrap_content"

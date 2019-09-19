@@ -7,24 +7,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.chat.DateBetweenMessages;
 import com.example.eduardorodriguez.comeaqui.chat.MessageObject;
 import com.example.eduardorodriguez.comeaqui.utilities.DateFragment;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHolder>{
 
@@ -32,6 +27,7 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
     private Context c;
     StorageReference firebaseStorage;
 
+    String lastMessageDate = "";
 
     public AdapterMensajes(Context c) {
         this.c = c;
@@ -53,19 +49,18 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+
         holder.mItem = listMensaje.get(position);
         holder.messageView.setText(holder.mItem.message);
         holder.username.setText(holder.mItem.sender.username);
         holder.dateView.setText(DateFragment.getDateInFormat(holder.mItem.createdAt));
 
-        if (holder.mItem instanceof DateBetweenMessages){
-            holder.messageCard.setVisibility(View.GONE);
-            TextView tv = new TextView(holder.mView.getContext());
-            tv.setText(holder.mItem.message);
-            tv.setGravity(Gravity.CENTER);
-            // tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
-            return;
+        String currentMessageDate = DateFragment.getDateInSimpleFormat(holder.mItem.createdAt);
+        if (!lastMessageDate.equals(currentMessageDate)){
+            holder.datePopContainer.setVisibility(View.VISIBLE);
+            holder.datePop.setText(DateFragment.getDateInFormat(holder.mItem.createdAt));
         }
+        lastMessageDate = currentMessageDate;
 
         if (position < listMensaje.size() - 1) {
             MessageObject messageAfter = listMensaje.get(position + 1);
@@ -106,10 +101,12 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
         public final TextView username;
         public final TextView messageView;
         public final TextView dateView;
+        public final TextView datePop;
         public final ImageView chattererImage;
         public MessageObject mItem;
         public LinearLayout wholeMessage;
         public LinearLayout messageCard;
+        public ConstraintLayout datePopContainer;
 
         public ViewHolder(View view) {
             super(view);
@@ -120,6 +117,9 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
             dateView = view.findViewById(R.id.horaMensaje);
             chattererImage = view.findViewById(R.id.fotoPerfilMensaje);
             messageCard = view.findViewById(R.id.message_card);
+
+            datePop = view.findViewById(R.id.datePop);
+            datePopContainer = view.findViewById(R.id.datePopContainer);
         }
     }
 }

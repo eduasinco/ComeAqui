@@ -1,18 +1,22 @@
 package com.example.eduardorodriguez.comeaqui.chat.conversation;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.ChatObject;
-import com.example.eduardorodriguez.comeaqui.chat.DateBetweenMessages;
 import com.example.eduardorodriguez.comeaqui.chat.MessageObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
@@ -30,7 +34,6 @@ public class ConversationActivity extends AppCompatActivity {
 
     ChatObject chat;
     User chattingWith;
-    String lastMessageDate = null;
 
     private CircleImageView fotoPerfil;
     private TextView nombre;
@@ -112,9 +115,35 @@ public class ConversationActivity extends AppCompatActivity {
             }
         });
 
+        rvMensajes.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                switch (newState) {
+                    case RecyclerView.SCROLL_STATE_IDLE:
+                        break;
+                    case RecyclerView.SCROLL_STATE_DRAGGING:
+                        hideKeyboard();
+                        break;
+                    case RecyclerView.SCROLL_STATE_SETTLING:
+                        break;
+
+                }
+            }
+        });
+
         backView.setOnClickListener(v -> finish());
         client = new OkHttpClient();
         start();
+    }
+
+    private void hideKeyboard(){
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     private void getChatMessages(){
@@ -123,16 +152,8 @@ public class ConversationActivity extends AppCompatActivity {
             String response = process.execute().get();
             if (response != null)
                 for (JsonElement je: new JsonParser().parse(response).getAsJsonObject().get("message_set").getAsJsonArray()){
-
                     MessageObject currentMessage = new MessageObject(je.getAsJsonObject());
-                    String currentMessageDate = DateFragment.getDateInSimpleFormat(currentMessage.createdAt);
-                    if (!lastMessageDate.equals(currentMessageDate)){
-                        JsonObject jo = new JsonParser().parse("{ \"message\" : \"" + DateFragment.getDateInFormat(currentMessage.createdAt + "\"")).getAsJsonObject();
-                        DateBetweenMessages dateBetweenMessages = new DateBetweenMessages(jo);
-                        adapter.addMensaje(dateBetweenMessages);
-                    }
-                    lastMessageDate = currentMessageDate;
-                    adapter.addMensaje(new MessageObject(je.getAsJsonObject()));
+                    adapter.addMensaje(currentMessage);
                 }
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
