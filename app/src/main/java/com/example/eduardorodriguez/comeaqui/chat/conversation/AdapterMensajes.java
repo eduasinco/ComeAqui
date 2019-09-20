@@ -53,8 +53,9 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
         holder.dateView.setText(DateFragment.getDateForMessage(holder.mItem.createdAt));
         holder.datePopContainer.setVisibility(View.GONE);
 
-        int paddingsides = holder.wholeMessage.getPaddingLeft();
-        holder.wholeMessage.setPadding(paddingsides, 0, paddingsides, 0);
+        int paddingSides = holder.wholeMessage.getPaddingLeft();
+        int topBottomPadding = holder.wholeMessage.getPaddingTop();
+        holder.wholeMessage.setPadding(paddingSides, 0, paddingSides, 0);
 
         if (holder.mItem.newDay) {
             holder.datePop.setVisibility(View.VISIBLE);
@@ -62,7 +63,7 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
             holder.datePop.setText(DateFragment.getDateInForMessageConversation(holder.mItem.createdAt));
         } else if (holder.mItem.topSpace){
             holder.datePop.setText(DateFragment.getDateInForMessageConversation(holder.mItem.createdAt));
-            holder.wholeMessage.setPadding(paddingsides, 30, paddingsides, 0);
+            holder.wholeMessage.setPadding(paddingSides, topBottomPadding * 2, paddingSides, topBottomPadding);
         }
 
         if (holder.mItem.isOwner){
