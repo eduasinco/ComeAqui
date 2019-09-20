@@ -5,8 +5,6 @@
       <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/jetified-ccp-2.2.5.aar/7e496972d7b1f5384d337cf20b2da7ee/res" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.hbb20/ccp/2.2.5/d218a277e327a208efea782ed8873fd30fe347c9/ccp-2.2.5-sources.jar!/" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

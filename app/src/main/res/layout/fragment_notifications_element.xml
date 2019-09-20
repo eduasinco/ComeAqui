@@ -6,7 +6,7 @@
                                                    android:layout_height="wrap_content"
                                                    android:orientation="horizontal"
                                                    android:background="@drawable/box_element"
->
+                                                   android:id="@+id/wholenotification">
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="0dp"
