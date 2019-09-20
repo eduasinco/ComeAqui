@@ -75,7 +75,10 @@ public class DateFragment extends Fragment {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault());
         try {
             Date date = format.parse(dateString);
-            return getDateTextString(date);
+            String pattern = "K:mm a";
+            DateFormat df = new SimpleDateFormat(pattern);
+            String dateTextString = df.format(date);
+            return dateTextString;
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -136,7 +139,7 @@ public class DateFragment extends Fragment {
             long differenceToStartOrDay = now - startOfDay;
 
             if (differenceToStartOrDay >= differenceToDate) {
-                String pattern = "HH:mm:ss";
+                String pattern = "K:mm a";
                 DateFormat df = new SimpleDateFormat(pattern);
                 dateTextString = df.format(date);
             } else if (differenceToStartOrDay + TimeUnit.DAYS.toMillis(1) >= differenceToDate && differenceToDate > differenceToStartOrDay) {

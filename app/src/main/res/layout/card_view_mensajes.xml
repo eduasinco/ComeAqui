@@ -24,11 +24,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             cardview:layout_constraintEnd_toEndOf="parent" cardview:layout_constraintTop_toTopOf="parent"
-            cardview:layout_constraintBottom_toBottomOf="parent" android:padding="8dp" android:id="@+id/message_card">
+            cardview:layout_constraintBottom_toBottomOf="parent" android:id="@+id/message_card"
+            android:paddingBottom="4dp" android:paddingTop="4dp" android:paddingEnd="6dp" android:paddingStart="6dp">
         <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="10sp">
+                android:padding="10sp" android:visibility="gone">
             <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/fotoPerfilMensaje"
                     android:layout_width="24sp"
@@ -37,31 +38,22 @@
             />
         </LinearLayout>
         <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                <TextView
-                        android:id="@+id/nombreMensaje"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="..."
-                        android:layout_weight="1"/>
-                <TextView
-                        android:id="@+id/horaMensaje"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="00:00" android:layout_weight="0"/>
-            </LinearLayout>
+                android:orientation="vertical" android:gravity="right">
             <TextView
                     android:maxWidth="250dp"
                     android:visibility="visible"
                     android:id="@+id/mensajeMensaje"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Hola bienvenido"/>
+                    android:text="pues eso un poco de texto para este mensaje"
+                    android:textColor="@android:color/black" android:textSize="16sp"/>
+            <TextView
+                    android:id="@+id/horaMensaje"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00:00" android:textSize="12sp"/>
             <ImageView
                     android:id="@+id/mensajeFoto"
                     android:layout_width="wrap_content"

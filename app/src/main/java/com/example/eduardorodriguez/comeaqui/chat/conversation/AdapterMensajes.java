@@ -50,7 +50,6 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
 
         holder.mItem = listMensaje.get(position);
         holder.messageView.setText(holder.mItem.message);
-        holder.username.setText(holder.mItem.sender.username);
         holder.dateView.setText(DateFragment.getDateForMessage(holder.mItem.createdAt));
         holder.datePopContainer.setVisibility(View.GONE);
         holder.wholeMessage.setPadding(0, 0, 0, 0);
@@ -88,7 +87,6 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView username;
         public final TextView messageView;
         public final TextView dateView;
         public final TextView datePop;
@@ -102,7 +100,6 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
             super(view);
             mView = view;
             wholeMessage = view.findViewById(R.id.view);
-            username = view.findViewById(R.id.nombreMensaje);
             messageView = view.findViewById(R.id.mensajeMensaje);
             dateView = view.findViewById(R.id.horaMensaje);
             chattererImage = view.findViewById(R.id.fotoPerfilMensaje);
