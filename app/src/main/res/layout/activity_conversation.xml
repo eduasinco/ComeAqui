@@ -19,28 +19,34 @@
             tools:context=".chat.conversation.ConversationActivity"
             android:orientation="vertical">
 
-        <LinearLayout
-                android:background="#EBEBEB"
+        <androidx.cardview.widget.CardView
+                android:elevation="30dp"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:orientation="horizontal" android:gravity="center_vertical">
-            <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp" app:srcCompat="@drawable/back" android:id="@+id/back"
-                    android:layout_marginEnd="16dp" android:layout_marginStart="8dp"/>
-            <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/dinner_image"
-                    android:layout_width="45sp"
-                    android:layout_height="45sp"
-                    android:src="@drawable/no_profile_photo"/>
-            <TextView
-                    android:id="@+id/nombre"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Kevin"
-                    android:layout_gravity="center" android:paddingLeft="8dp" android:textStyle="bold"
-                    android:textColor="@color/colorPrimary"/>
-        </LinearLayout>
+                android:layout_height="wrap_content">
+
+            <LinearLayout
+                    android:background="#EBEBEB"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:orientation="horizontal" android:gravity="center_vertical">
+                <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp" app:srcCompat="@drawable/back" android:id="@+id/back"
+                        android:layout_marginEnd="16dp" android:layout_marginStart="8dp"/>
+                <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/dinner_image"
+                        android:layout_width="40sp"
+                        android:layout_height="40sp"
+                        android:src="@drawable/no_profile_photo"/>
+                <TextView
+                        android:id="@+id/nombre"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Kevin"
+                        android:layout_gravity="center" android:paddingLeft="8dp" android:textStyle="bold"
+                        android:textColor="@color/colorPrimary"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvMensajes"
                 android:layout_width="match_parent"
@@ -48,25 +54,31 @@
                 android:layout_weight="1"
         />
         <LinearLayout
-                android:background="#EBEBEB"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" android:padding="16dp">
+                android:orientation="horizontal" android:padding="4dp">
             <EditText
                     android:background="@drawable/send_input_text"
                     android:id="@+id/txtMensaje"
                     android:layout_width="match_parent"
-                    android:layout_height="35dp"
+                    android:layout_height="45dp"
                     android:hint="Escribe un mensaje"
                     android:layout_weight="1" android:layout_marginEnd="16dp" android:layout_marginStart="16dp"
                     android:paddingStart="16dp"/>
 
-            <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="35dp" app:srcCompat="@drawable/send_icon"
-                    android:id="@+id/btnEnviar" app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+            <LinearLayout
+                    android:background="@drawable/box_send_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                <ImageView
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        app:srcCompat="@drawable/send_icon"
+                        android:id="@+id/btnEnviar"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

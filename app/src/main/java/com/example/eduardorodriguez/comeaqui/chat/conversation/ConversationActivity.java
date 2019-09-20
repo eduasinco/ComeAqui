@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.ChatObject;
@@ -83,6 +84,7 @@ public class ConversationActivity extends AppCompatActivity {
             chattingWith = MainActivity.user.id == (chat.users.get(0).id) ? chat.users.get(1) : chat.users.get(0);
 
             nombre.setText(chattingWith.first_name + " " + chattingWith.last_name);
+            Glide.with(this).load(chattingWith.profile_photo).into(fotoPerfil);
             getChatMessages();
         }
         btnEnviar.setOnClickListener(view -> {
