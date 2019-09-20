@@ -5,13 +5,15 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        cardview:cardCornerRadius="10sp" android:id="@+id/view">
+        cardview:cardCornerRadius="10sp" android:id="@+id/view" android:paddingEnd="20dp" android:paddingStart="20dp"
+        android:gravity="right|left">
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:layout_weight="0" android:visibility="gone"
             android:id="@+id/datePopContainer">
 
         <TextView
+
                 android:text="00/00/00"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/datePop"
@@ -25,7 +27,7 @@
             android:layout_height="wrap_content"
             cardview:layout_constraintEnd_toEndOf="parent" cardview:layout_constraintTop_toTopOf="parent"
             cardview:layout_constraintBottom_toBottomOf="parent" android:id="@+id/message_card"
-            android:paddingBottom="4dp" android:paddingTop="4dp" android:paddingEnd="6dp" android:paddingStart="6dp">
+            android:paddingBottom="4dp" android:paddingTop="4dp" android:paddingEnd="8dp" android:paddingStart="8dp">
         <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,12 +55,7 @@
                     android:id="@+id/horaMensaje"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="00:00" android:textSize="12sp"/>
-            <ImageView
-                    android:id="@+id/mensajeFoto"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"/>
+                    android:text="00:00 AM" android:textSize="12sp"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
