@@ -100,7 +100,7 @@ public class DateFragment extends Fragment {
     }
 
     static String getDateForPopUpChat(Date date){
-        String[] week_days = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+        String[] week_days = {"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"};
         String dateTextString = "";
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
 
@@ -111,9 +111,9 @@ public class DateFragment extends Fragment {
             long differenceToStartOrDay = now - startOfDay;
 
             if (differenceToStartOrDay >= differenceToDate) {
-                dateTextString = "Today";
+                dateTextString = "TODAY";
             } else if (differenceToStartOrDay + TimeUnit.DAYS.toMillis(1) >= differenceToDate && differenceToDate > differenceToStartOrDay) {
-                dateTextString = "Yesterday";
+                dateTextString = "YESTERDAY";
             } else if (differenceToStartOrDay + TimeUnit.DAYS.toMillis(7) >= differenceToDate && differenceToDate > differenceToStartOrDay + TimeUnit.DAYS.toMillis(1)) {
                 Calendar c = Calendar.getInstance();
                 c.setTime(date);

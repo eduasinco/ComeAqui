@@ -21,5 +21,11 @@
 
     <color name="success">#4CAF50</color>
     <color name="canceled">#BE0D00</color>
+
+
+
+    <color name="green_soft">#D5FFDB</color>
+
+
 </resources>
 
