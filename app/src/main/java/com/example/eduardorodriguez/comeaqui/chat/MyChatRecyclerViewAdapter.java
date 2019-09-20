@@ -65,7 +65,7 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
         Glide.with(holder.mView.getContext()).load(chattingWith.profile_photo).into(holder.chattererImage);
 
         ((AppCompatActivity)holder.mView.getContext()).getSupportFragmentManager().beginTransaction()
-                .replace(R.id.date, DateFragment.newInstance(holder.mItem.createdAt))
+                .replace(R.id.date, DateFragment.newInstance(holder.mItem.messages.get(holder.mItem.messages.size() - 1).createdAt))
                 .commit();
 //        firebaseStorage.child("user_image/" + chattingWith.id).getDownloadUrl().addOnSuccessListener(uri -> {
 //            Glide.with(holder.mView.getContext()).load(uri.toString()).into(holder.chattererImage);

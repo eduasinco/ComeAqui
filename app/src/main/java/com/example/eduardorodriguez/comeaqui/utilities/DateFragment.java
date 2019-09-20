@@ -75,7 +75,7 @@ public class DateFragment extends Fragment {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault());
         try {
             Date date = format.parse(dateString);
-            String pattern = "K:mm a";
+            String pattern = "h:mm a";
             DateFormat df = new SimpleDateFormat(pattern);
             String dateTextString = df.format(date);
             return dateTextString;
@@ -128,7 +128,7 @@ public class DateFragment extends Fragment {
     }
 
     static String getDateTextString(Date date){
-        String[] week_days = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+        String[] week_days = {"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"};
         String dateTextString = "";
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
 
@@ -139,11 +139,11 @@ public class DateFragment extends Fragment {
             long differenceToStartOrDay = now - startOfDay;
 
             if (differenceToStartOrDay >= differenceToDate) {
-                String pattern = "K:mm a";
+                String pattern = "h:mm a";
                 DateFormat df = new SimpleDateFormat(pattern);
                 dateTextString = df.format(date);
             } else if (differenceToStartOrDay + TimeUnit.DAYS.toMillis(1) >= differenceToDate && differenceToDate > differenceToStartOrDay) {
-                dateTextString = "Yesterday";
+                dateTextString = "YESTERDAY";
             } else if (differenceToStartOrDay + TimeUnit.DAYS.toMillis(7) >= differenceToDate && differenceToDate > differenceToStartOrDay + TimeUnit.DAYS.toMillis(1)) {
                 Calendar c = Calendar.getInstance();
                 c.setTime(date);
