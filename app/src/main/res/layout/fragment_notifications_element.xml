@@ -24,17 +24,25 @@
                     android:text="@eduasinco"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" android:id="@+id/username" android:layout_weight="1"/>
-            <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent" android:id="@+id/date">
-
-            </FrameLayout>
         </LinearLayout>
         <TextView
                 android:text="Eduardo Rodriguez Perez quiere probar tu comida! pero solo un poco @string/appbar_scrolling_view_behavior"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/notification" android:lines="2"
                 android:textStyle="bold"/>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            <TextView
+                    android:text="STATUS"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/status" android:layout_weight="1"/>
+            <TextView
+                    android:text="00/00/00"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/date" android:layout_weight="0"/>
+        </LinearLayout>
     </LinearLayout>
     <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/dinner_image"

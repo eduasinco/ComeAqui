@@ -48,12 +48,14 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
         holder.mItem = mValues.get(position);
         holder.usernameView.setText(holder.mItem.sender.email);
         holder.notificationView.setText(holder.mItem.sender.first_name + " " + holder.mItem.sender.last_name + " quiere probar tu plato!");
+        holder.status.setText(holder.mItem.order.status);
+        holder.date.setText(DateFragment.getDateInSimpleFormat(holder.mItem.createdAt));
         Glide.with(holder.mView.getContext()).load(holder.mItem.sender.profile_photo).into(holder.senderImageView);
 
         if (holder.mItem.order.status.equals("CONFIRMED")){
-            holder.mView.setBackgroundColor(Color.parseColor("#FFD0FFD2"));
+            holder.status.setTextColor(Color.parseColor("#FFD0FFD2"));
         } else if (holder.mItem.order.status.equals("CANCELED")) {
-            holder.mView.setBackgroundColor(Color.parseColor("#FFD3D2"));
+            holder.status.setTextColor(Color.parseColor("#FFD3D2"));
         }
 
         holder.mView.setOnClickListener(v -> {
@@ -61,10 +63,6 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
             notification.putExtra("object", holder.mItem);
             context.startActivity(notification);
         });
-
-        ((AppCompatActivity)context).getSupportFragmentManager().beginTransaction()
-                .replace(R.id.date, DateFragment.newInstance(holder.mItem.createdAt))
-                .commit();
     }
 
     @Override
@@ -76,6 +74,8 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
         public final View mView;
         public final TextView usernameView;
         public final TextView notificationView;
+        public final TextView status;
+        public final TextView date;
         public final ImageView senderImageView;
         public NotificationObject mItem;
 
@@ -85,6 +85,8 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
             usernameView = view.findViewById(R.id.username);
             notificationView = view.findViewById(R.id.notification);
             senderImageView = view.findViewById(R.id.dinner_image);
+            status = view.findViewById(R.id.status);
+            date = view.findViewById(R.id.date);
         }
 
         @Override

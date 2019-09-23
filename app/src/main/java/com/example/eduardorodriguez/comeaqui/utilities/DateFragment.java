@@ -71,7 +71,7 @@ public class DateFragment extends Fragment {
         return null;
     }
 
-    public static String getDateForMessage(String dateString){
+    public static String getHourForMessage(String dateString){
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault());
         try {
             Date date = format.parse(dateString);

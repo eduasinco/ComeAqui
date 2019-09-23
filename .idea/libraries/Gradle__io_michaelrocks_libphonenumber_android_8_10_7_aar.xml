@@ -5,6 +5,8 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/libphonenumber-android-8.10.7.aar/5b5a909ad897efd5cf966e08cb1538db/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.michaelrocks/libphonenumber-android/8.10.7/df8cd97e3d224e332d0b21d04f72720fc7ddfbf8/libphonenumber-android-8.10.7-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

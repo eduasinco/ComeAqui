@@ -11,7 +11,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
-import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.MessageObject;
 import com.example.eduardorodriguez.comeaqui.utilities.DateFragment;
@@ -50,7 +49,7 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
 
         holder.mItem = listMensaje.get(position);
         holder.messageView.setText(holder.mItem.message);
-        holder.dateView.setText(DateFragment.getDateForMessage(holder.mItem.createdAt));
+        holder.dateView.setText(DateFragment.getHourForMessage(holder.mItem.createdAt));
         holder.datePopContainer.setVisibility(View.GONE);
 
         int paddingSides = holder.wholeMessage.getPaddingLeft();
