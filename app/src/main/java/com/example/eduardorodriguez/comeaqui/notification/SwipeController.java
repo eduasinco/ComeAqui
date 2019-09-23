@@ -64,7 +64,7 @@ public class SwipeController extends ItemTouchHelper.SimpleCallback {
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         if (dX == 0){
-            viewHolder.itemView.setBackgroundColor(Color.parseColor("#ffffff"));
+            viewHolder.itemView.setBackground(ContextCompat.getDrawable(viewHolder.itemView.getContext(), R.drawable.box_swipe_element));
         } else {
             viewHolder.itemView.setBackground(ContextCompat.getDrawable(viewHolder.itemView.getContext(), R.drawable.box_swipe_list_element));
         }

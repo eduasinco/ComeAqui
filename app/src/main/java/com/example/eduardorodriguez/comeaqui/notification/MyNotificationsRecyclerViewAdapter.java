@@ -53,9 +53,9 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
         Glide.with(holder.mView.getContext()).load(holder.mItem.sender.profile_photo).into(holder.senderImageView);
 
         if (holder.mItem.order.status.equals("CONFIRMED")){
-            holder.status.setTextColor(Color.parseColor("#FFD0FFD2"));
+            holder.status.setTextColor(holder.mView.getResources().getColor(R.color.confirm));
         } else if (holder.mItem.order.status.equals("CANCELED")) {
-            holder.status.setTextColor(Color.parseColor("#FFD3D2"));
+            holder.status.setTextColor(holder.mView.getResources().getColor(R.color.canceled));
         }
 
         holder.mView.setOnClickListener(v -> {
