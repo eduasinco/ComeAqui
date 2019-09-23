@@ -76,11 +76,6 @@ public class NotificationsFragment extends Fragment {
         Context context = view.getContext();
         recyclerView = (RecyclerView) view;
 
-
-
-        deleteIcon = view.getContext().getDrawable(R.drawable.cancel);
-        confirmIcon = view.getContext().getDrawable(R.drawable.confirm);
-
         getData();
         setupRecyclerView();
 
@@ -96,8 +91,12 @@ public class NotificationsFragment extends Fragment {
         swipeController = new SwipeController(new SwipeControllerActions() {
             @Override
             public void onRightClicked(int position) {
-                notificationAdapter.notifyItemRemoved(position);
-                notificationAdapter.notifyItemRangeChanged(position, notificationAdapter.getItemCount());
+                confirmOrder(notificationAdapter.mValues.get(position).order, false, getContext());
+            }
+
+            @Override
+            public void onLeftClicked(int position) {
+                confirmOrder(notificationAdapter.mValues.get(position).order, true, getContext());
             }
         });
 

@@ -21,7 +21,7 @@ import java.util.List;
 
 public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyNotificationsRecyclerViewAdapter.ViewHolder> {
 
-    private  List<NotificationObject> mValues;
+    public  List<NotificationObject> mValues;
     Context context;
 
     public MyNotificationsRecyclerViewAdapter(Context context, ArrayList<NotificationObject> data){

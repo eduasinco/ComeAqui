@@ -6,8 +6,10 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.View;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.eduardorodriguez.comeaqui.R;
 
 import static androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE;
 
@@ -28,7 +30,7 @@ public class SwipeController extends ItemTouchHelper.SimpleCallback {
 
     private SwipeControllerActions buttonsActions = null;
 
-    private static final float buttonWidth = 300;
+    private static final float buttonWidth = 200;
 
     public SwipeController(SwipeControllerActions buttonsActions) {
         super(0,   ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT);
@@ -61,6 +63,12 @@ public class SwipeController extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        if (dX == 0){
+            viewHolder.itemView.setBackgroundColor(Color.parseColor("#ffffff"));
+        } else {
+            viewHolder.itemView.setBackground(ContextCompat.getDrawable(viewHolder.itemView.getContext(), R.drawable.box_swipe_list_element));
+        }
+
         if (actionState == ACTION_STATE_SWIPE) {
             if (buttonShowedState != ButtonsState.GONE) {
                 if (buttonShowedState == ButtonsState.LEFT_VISIBLE) dX = Math.max(dX, buttonWidth);
@@ -147,21 +155,21 @@ public class SwipeController extends ItemTouchHelper.SimpleCallback {
     }
 
     private void drawButtons(Canvas c, RecyclerView.ViewHolder viewHolder) {
-        float buttonWidthWithoutPadding = buttonWidth - 20;
-        float corners = 16;
+        float buttonWidthWithoutPadding = buttonWidth;
+        float corners = 0;
 
         View itemView = viewHolder.itemView;
         Paint p = new Paint();
 
         RectF leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidthWithoutPadding, itemView.getBottom());
-        p.setColor(Color.BLUE);
+        p.setColor(viewHolder.itemView.getResources().getColor(R.color.confirm));
         c.drawRoundRect(leftButton, corners, corners, p);
-        drawText("EDIT", c, leftButton, p);
+        drawText("CONFIRM", c, leftButton, p);
 
         RectF rightButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop(), itemView.getRight(), itemView.getBottom());
-        p.setColor(Color.RED);
+        p.setColor(viewHolder.itemView.getResources().getColor(R.color.canceled));
         c.drawRoundRect(rightButton, corners, corners, p);
-        drawText("DELETE", c, rightButton, p);
+        drawText("CANCEL", c, rightButton, p);
 
         buttonInstance = null;
         if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
@@ -173,7 +181,7 @@ public class SwipeController extends ItemTouchHelper.SimpleCallback {
     }
 
     private void drawText(String text, Canvas c, RectF button, Paint p) {
-        float textSize = 60;
+        float textSize = 30;
         p.setColor(Color.WHITE);
         p.setAntiAlias(true);
         p.setTextSize(textSize);
