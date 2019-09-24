@@ -1,16 +1,19 @@
 package com.example.eduardorodriguez.comeaqui;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
+import android.app.Notification;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import static com.example.eduardorodriguez.comeaqui.App.CHANNEL_1_ID;
+
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
+
+    private NotificationManagerCompat notificationManager;
+
 
     @Override
     public void onNewToken(String s) {
@@ -23,19 +26,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
 
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setContentTitle("My notification")
-                        .setSmallIcon(R.drawable.camera_icon)
-                        .setContentText(remoteMessage.getData().get("message"))
-                        .setAutoCancel(true)
-                        .setContentIntent(pendingIntent);
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(0, mBuilder.build());
-        System.out.println(remoteMessage.getData().get("message"));
+        notificationManager = NotificationManagerCompat.from(this);
+
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
+                .setSmallIcon(R.drawable.ic_one)
+                .setContentTitle("My notification")
+                .setContentText(remoteMessage.getData().get("message"))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .build();
+
+        notificationManager.notify(1, notification);
+
+        System.out.println("HOLAAAAAAAA: " + remoteMessage.getData().get("message"));
         super.onMessageReceived(remoteMessage);
     }
 }
