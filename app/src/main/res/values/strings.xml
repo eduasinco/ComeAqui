@@ -3,6 +3,7 @@
 <!--    <string name="server">http://192.168.1.39:65100</string>-->
 <!--    <string name="server">http://88.26.180.89:65100</string>-->
     <string name="server">http://127.0.0.1:8000</string>
+    <string name="default_notification_channel_id">1</string>
 
     <string name="app_name">ComeAqui</string>
     <string name="nav_get">Get</string>

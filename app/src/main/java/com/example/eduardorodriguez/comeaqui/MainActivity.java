@@ -4,8 +4,15 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
+import android.util.Log;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.FirebaseUser;
+import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
@@ -25,9 +32,13 @@ import com.example.eduardorodriguez.comeaqui.profile.ProfileFragment;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.firebase.database.*;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.JsonParser;
 
 import java.util.concurrent.ExecutionException;
+
+import static com.yalantis.ucrop.UCropFragment.TAG;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -139,7 +150,44 @@ public class MainActivity extends AppCompatActivity {
 
         });
         initializeUser();
+        getFirebaseToken();
     }
+
+    private void getFirebaseToken(){
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.w(TAG, "getInstanceId failed", task.getException());
+                        return;
+                    }
+
+                    // Get new Instance ID token
+                    String token = task.getResult().getToken();
+                    System.out.println("TOKEEEEEEEEN " + token.toString());
+
+                    postTokenToServer(token.toString());
+                    // Log and toast
+//                    String msg = getString(R.string.msg_token_fmt, token);
+//                    Log.d(TAG, msg);
+//                    Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void postTokenToServer(String token){
+//        TelephonyManager TelephonyMgr = (TelephonyManager)getSystemService(TELEPHONY_SERVICE);
+//        String imei = TelephonyMgr.getDeviceId();
+
+        String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+
+        PostAsyncTask postToken = new PostAsyncTask(getResources().getString(R.string.server) + "/fcm/v1/devices/");
+        postToken.execute(
+                new String[]{"dev_id", androidID},
+                new String[]{"reg_id", token},
+                new String[]{"name", "Edu's device"}
+        );
+    }
+
     private void setFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, fragment).commit();
     }
