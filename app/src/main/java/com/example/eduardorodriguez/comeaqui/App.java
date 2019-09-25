@@ -7,8 +7,8 @@ import android.os.Build;
 
 public class App extends Application {
 
-    public static final String CHANNEL_1_ID = "channel1";
-    public static final String CHANNEL_2_ID = "channel2";
+    public static final String MESSAGES_CHANNEL_ID = "messages";
+    public static final String NOTIFICATIONS_CHANNEL_ID = "notifications";
 
     @Override
     public void onCreate() {
@@ -18,23 +18,23 @@ public class App extends Application {
 
     private void createNotificationChannels(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            NotificationChannel channel1 = new NotificationChannel(
-                    CHANNEL_1_ID,
-                    "Channel_1",
+            NotificationChannel messagesChannel = new NotificationChannel(
+                    MESSAGES_CHANNEL_ID,
+                    "Messages",
                     NotificationManager.IMPORTANCE_HIGH
             );
-            channel1.setDescription("This is channel 1");
+            messagesChannel.setDescription("This is the channel for chat messages");
 
-            NotificationChannel channel2 = new NotificationChannel(
-                    CHANNEL_2_ID,
-                    "Channel_2",
-                    NotificationManager.IMPORTANCE_LOW
+            NotificationChannel notificationsChannel = new NotificationChannel(
+                    NOTIFICATIONS_CHANNEL_ID,
+                    "Notifications",
+                    NotificationManager.IMPORTANCE_HIGH
             );
-            channel2.setDescription("This is channel 2");
+            notificationsChannel.setDescription("This is the channel for notifitications");
 
             NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel1);
-            manager.createNotificationChannel(channel2);
+            manager.createNotificationChannel(messagesChannel);
+            manager.createNotificationChannel(notificationsChannel);
         }
     }
 }
