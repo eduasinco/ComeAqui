@@ -45,10 +45,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             case NOTIFICATIONS_CHANNEL_ID:
                 Notification notificationNotification = new NotificationCompat.Builder(this, NOTIFICATIONS_CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_one)
-                        .setContentTitle("My notification")
-                        .setContentText(remoteMessage.getData().get("message"))
+                        .setContentTitle(remoteMessage.getNotification().getTitle())
+                        .setContentText(remoteMessage.getNotification().getBody())
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
-                        .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                        .setCategory(NotificationCompat.CATEGORY_EVENT)
                         .build();
                 notificationManager.notify(1, notificationNotification);
                 break;
