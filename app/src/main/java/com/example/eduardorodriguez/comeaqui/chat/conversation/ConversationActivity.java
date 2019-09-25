@@ -5,13 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
@@ -36,7 +33,6 @@ public class ConversationActivity extends AppCompatActivity {
     User chattingWith;
 
     MessageObject lastMessage = null;
-    MessageObject lastBrandNewMessage = null;
     String lastMessageDate = "";
 
 
@@ -151,7 +147,7 @@ public class ConversationActivity extends AppCompatActivity {
                 for (JsonElement je: new JsonParser().parse(response).getAsJsonObject().get("message_set").getAsJsonArray()){
                     MessageObject currentMessage = new MessageObject(je.getAsJsonObject());
 
-                    setMessageMode(currentMessage);
+                    setMessageStatus(currentMessage);
 
                     adapter.addMensaje(currentMessage);
                 }
@@ -161,7 +157,7 @@ public class ConversationActivity extends AppCompatActivity {
         }
     }
 
-    public void setMessageMode(MessageObject currentMessage){
+    public void setMessageStatus(MessageObject currentMessage){
 
         String currentMessageDate = DateFragment.getDateInSimpleFormat(currentMessage.createdAt);
         if (!lastMessageDate.equals(currentMessageDate)){
@@ -230,13 +226,8 @@ public class ConversationActivity extends AppCompatActivity {
     private void output(final String txt) {
         runOnUiThread(() -> {
             MessageObject brandNewMessage = new MessageObject(new JsonParser().parse(txt).getAsJsonObject().get("message").getAsJsonObject());
-            if (lastBrandNewMessage != null){
-                lastBrandNewMessage.lastInGroup = false;
-            }
-            brandNewMessage.lastInGroup = true;
-            brandNewMessage.isOwner = true;
+            setMessageStatus(brandNewMessage);
             adapter.addMensaje(brandNewMessage);
-            lastBrandNewMessage = brandNewMessage;
         });
     }
 
