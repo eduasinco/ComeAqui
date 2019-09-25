@@ -163,20 +163,13 @@ public class MainActivity extends AppCompatActivity {
 
                     // Get new Instance ID token
                     String token = task.getResult().getToken();
-                    System.out.println("TOKEEEEEEEEN " + token.toString());
+                    System.out.println("TOKEEEEEEEEN " + token);
 
-                    postTokenToServer(token.toString());
-                    // Log and toast
-//                    String msg = getString(R.string.msg_token_fmt, token);
-//                    Log.d(TAG, msg);
-//                    Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    postTokenToServer(token);
                 });
     }
 
     private void postTokenToServer(String token){
-//        TelephonyManager TelephonyMgr = (TelephonyManager)getSystemService(TELEPHONY_SERVICE);
-//        String imei = TelephonyMgr.getDeviceId();
-
         String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
 
@@ -184,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
         postToken.execute(
                 new String[]{"dev_id", androidID},
                 new String[]{"reg_id", token},
-                new String[]{"name", "Edu's device"}
+                new String[]{"name", "" + user.id}
         );
     }
 
