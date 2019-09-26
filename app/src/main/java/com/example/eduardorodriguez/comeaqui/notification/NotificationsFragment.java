@@ -129,7 +129,7 @@ public class NotificationsFragment extends Fragment {
             e.printStackTrace();
         }
         notificationAdapter.notifyDataSetChanged();
-        startSend("/ws/orders/" + order.id +  "/", order);
+        startSend("/ws/orders/" + order.owner.id +  "/", order);
     }
 
     public static void startSend(String url, OrderObject orderObject) {
@@ -140,7 +140,7 @@ public class NotificationsFragment extends Fragment {
                 public void onOpen(ServerHandshake serverHandshake) {
                     f.getActivity().runOnUiThread(() -> {
                         Toast.makeText(f.getActivity(), "Connection Established!", Toast.LENGTH_LONG).show();
-                        send("{\"order_id\": \"" + orderObject.owner.id + "\", \"seen\": false}");
+                        send("{\"order_id\": \"" + orderObject.id + "\", \"seen\": false}");
                     });
                 }
                 @Override
