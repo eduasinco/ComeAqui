@@ -94,6 +94,7 @@ public class OrderAdapter extends BaseAdapter {
                 delete = true;
             }
             foodLook.putExtra("delete", delete);
+            MainActivity.mWebSocketClient.send("{\"order_id\": \"" + orderObject.id + "\", \"seen\": true}");
             context.startActivity(foodLook);
         });
         dateView.setText(DateFragment.getDateInSimpleFormat(orderObject.createdAt));

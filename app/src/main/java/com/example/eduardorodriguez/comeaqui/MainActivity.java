@@ -8,6 +8,8 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
@@ -17,6 +19,8 @@ import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import com.example.eduardorodriguez.comeaqui.chat.MessageObject;
+import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.FirebaseUser;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import androidx.core.app.ActivityCompat;
@@ -35,7 +39,13 @@ import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.firebase.database.*;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.JsonParser;
+import okhttp3.*;
+import okio.ByteString;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -54,10 +64,10 @@ public class MainActivity extends AppCompatActivity {
     private ImageView notifications;
     private ImageView profile;
 
-    private TextView notMap;
-    private TextView notOrders;
-    private TextView notNotifications;
-    private TextView notProfile;
+    private static TextView notMap;
+    private static TextView notOrders;
+    private static TextView notNotifications;
+    private static TextView notProfile;
 
     private OrderFragment getPastOderFragment;
     private MapFragment mapFragment;
@@ -67,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
     public static User user;
     public static FirebaseUser firebaseUser;
 
+    public static WebSocketClient mWebSocketClient;
     private static Context context;
 
     @Override
@@ -84,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.CAMERA},
                     0);
         }
+
 
         map = findViewById(R.id.map);
         orders = findViewById(R.id.order);
@@ -142,6 +154,8 @@ public class MainActivity extends AppCompatActivity {
 
         initializeUser();
         getFirebaseToken();
+
+        start();
     }
 
     public void createBubble(int n, ConstraintLayout constraintView, View icon){
@@ -236,5 +250,39 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void start(){
+        try {
+            URI uri = new URI(getResources().getString(R.string.server) + "/ws/orders/" + user.id +  "/");
+            mWebSocketClient = new WebSocketClient(uri) {
+                @Override
+                public void onOpen(ServerHandshake serverHandshake) {
+                    runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Connection Established!", Toast.LENGTH_LONG).show());
+                }
+                @Override
+                public void onMessage(String s) {
+                    final String message = s;
+                    runOnUiThread(() -> {
+                        int ordersNotSeen = new JsonParser().parse(s).getAsJsonObject().get("orders_not_seen").getAsInt();
+                        if (ordersNotSeen > 0){
+                            notOrders.setVisibility(View.VISIBLE);
+                            notOrders.setText("" + ordersNotSeen);
+                        }
+                    });
+                }
+                @Override
+                public void onClose(int i, String s, boolean b) {
+                    Log.i("Websocket", "Closed " + s);
+                }
+                @Override
+                public void onError(Exception e) {
+                    Log.i("Websocket", "Error " + e.getMessage());
+                }
+            };
+            mWebSocketClient.connect();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 }

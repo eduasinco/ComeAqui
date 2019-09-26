@@ -1,5 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.notification;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -8,8 +9,10 @@ import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -20,6 +23,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.example.eduardorodriguez.comeaqui.MainActivity;
+import com.example.eduardorodriguez.comeaqui.chat.MessageObject;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
@@ -29,7 +34,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import okhttp3.*;
+import okio.ByteString;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -37,13 +48,12 @@ public class NotificationsFragment extends Fragment {
 
     ArrayList<NotificationObject> data;
     static MyNotificationsRecyclerViewAdapter notificationAdapter;
-    ColorDrawable swipeBackgroundConfirm = new ColorDrawable(Color.parseColor("#FF4CAF50"));
-    ColorDrawable swipeBackgroundCancel= new ColorDrawable(Color.parseColor("#FF0000"));
-    Drawable deleteIcon;
-    Drawable confirmIcon;
 
     RecyclerView recyclerView;
     SwipeController swipeController = null;
+
+    static WebSocketClient mWebSocketClient;
+    static NotificationsFragment f;
 
 
     public NotificationsFragment() {
@@ -73,8 +83,8 @@ public class NotificationsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_notifications_list, container, false);
         notificationAdapter = new MyNotificationsRecyclerViewAdapter(getContext(), data);
 
-        Context context = view.getContext();
         recyclerView = (RecyclerView) view;
+        f = this;
 
         getData();
         setupRecyclerView();
@@ -133,6 +143,38 @@ public class NotificationsFragment extends Fragment {
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
+        start("/ws/orders/" + order.owner.id +  "/");
+        mWebSocketClient.send("{\"order_id\": \"" + order.id + "\", \"seen\": false}");
         notificationAdapter.notifyDataSetChanged();
+    }
+
+    public static void start(String url) {
+        try {
+            URI uri = new URI(f.getActivity().getResources().getString(R.string.server) + url);
+            mWebSocketClient = new WebSocketClient(uri) {
+                @Override
+                public void onOpen(ServerHandshake serverHandshake) {
+                    f.getActivity().runOnUiThread(() -> Toast.makeText(f.getActivity(), "Connection Established!", Toast.LENGTH_LONG).show());
+                }
+                @Override
+                public void onMessage(String s) {
+                    final String message = s;
+                    f.getActivity().runOnUiThread(() -> {
+                        int ordersNotSeen = new JsonParser().parse(s).getAsJsonObject().get("orders_not_seen").getAsInt();
+                    });
+                }
+                @Override
+                public void onClose(int i, String s, boolean b) {
+                    Log.i("Websocket", "Closed " + s);
+                }
+                @Override
+                public void onError(Exception e) {
+                    Log.i("Websocket", "Error " + e.getMessage());
+                }
+            };
+            mWebSocketClient.connect();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 }

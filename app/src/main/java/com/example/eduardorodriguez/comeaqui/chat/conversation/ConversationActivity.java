@@ -2,9 +2,12 @@ package com.example.eduardorodriguez.comeaqui.chat.conversation;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
@@ -14,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.SplashActivity;
 import com.example.eduardorodriguez.comeaqui.chat.ChatObject;
 import com.example.eduardorodriguez.comeaqui.chat.MessageObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
@@ -24,7 +28,16 @@ import com.google.gson.JsonParser;
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.*;
 import okio.ByteString;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.drafts.Draft_10;
+import org.java_websocket.handshake.ServerHandshake;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class ConversationActivity extends AppCompatActivity {
@@ -47,6 +60,8 @@ public class ConversationActivity extends AppCompatActivity {
     private OkHttpClient client;
 
     WebSocket ws;
+    WebSocketClient mWebSocketClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,15 +98,6 @@ public class ConversationActivity extends AppCompatActivity {
             Glide.with(this).load(chattingWith.profile_photo).into(fotoPerfil);
             getChatMessages();
         }
-        btnEnviar.setOnClickListener(view -> {
-            //createServerMessage();
-            ws.send("{ \"message\": \"" + txtMensaje.getText().toString() + "\"," +
-                    "\"command\": \"new_message\"," +
-                    "\"from\": \"" + MainActivity.user.id + "\"," +
-                    "\"chatId\": \"" + chat.id + "\"}"
-            );
-            txtMensaje.setText("");
-        });
 
         btnEnviar.setScaleX(0);
         btnEnviar.setVisibility(View.GONE);
@@ -129,6 +135,16 @@ public class ConversationActivity extends AppCompatActivity {
         backView.setOnClickListener(v -> finish());
         client = new OkHttpClient();
         start();
+        btnEnviar.setOnClickListener(view -> {
+            //createServerMessage();
+            mWebSocketClient.send("{ \"message\": \"" + txtMensaje.getText().toString() + "\"," +
+                    "\"command\": \"new_message\"," +
+                    "\"from\": \"" + MainActivity.user.id + "\"," +
+                    "\"chatId\": \"" + chat.id + "\"}"
+            );
+            txtMensaje.setText("");
+        });
+
     }
 
     private void hideKeyboard(){
@@ -185,50 +201,35 @@ public class ConversationActivity extends AppCompatActivity {
     }
 
 
-    private final class EchoWebSocketListener extends WebSocketListener {
-        private static final int NORMAL_CLOSURE_STATUS = 1000;
-
-        public ConversationActivity activity;
-        public EchoWebSocketListener(ConversationActivity activity) {
-            this.activity = activity;
-        }
-        @Override
-        public void onOpen(WebSocket webSocket, Response response) {
-            activity.runOnUiThread(() -> Toast.makeText(activity, "Connection Established!", Toast.LENGTH_LONG).show());
-        }
-        @Override
-        public void onMessage(WebSocket webSocket, String text) {
-            output(text);
-        }
-        @Override
-        public void onMessage(WebSocket webSocket, ByteString bytes) {
-            output(bytes.hex());
-        }
-        @Override
-        public void onClosing(WebSocket webSocket, int code, String reason) {
-            webSocket.close(NORMAL_CLOSURE_STATUS, null);
-            output("Closing : " + code + " / " + reason);
-        }
-        @Override
-        public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            output("Error : " + t.getMessage());
+    public void start(){
+        try {
+            String url = getResources().getString(R.string.server) + "/ws/chat/" + chat.id + "/";
+            URI uri = new URI(url);
+            mWebSocketClient = new WebSocketClient(uri) {
+                @Override
+                public void onOpen(ServerHandshake serverHandshake) {
+                    runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Connection Established!", Toast.LENGTH_LONG).show());
+                }
+                @Override
+                public void onMessage(String s) {
+                    runOnUiThread(() -> {
+                        MessageObject brandNewMessage = new MessageObject(new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject());
+                        setMessageStatus(brandNewMessage);
+                        adapter.addMensaje(brandNewMessage);
+                    });
+                }
+                @Override
+                public void onClose(int i, String s, boolean b) {
+                    Log.i("Websocket", "Closed " + s);
+                }
+                @Override
+                public void onError(Exception e) {
+                    Log.i("Websocket", "Error " + e.getMessage());
+                }
+            };
+            mWebSocketClient.connect();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
     }
-
-    private void start() {
-        Request request = new Request.Builder().url(getResources().getString(R.string.server) + "/ws/chat/" + chat.id + "/")
-                .build();
-        EchoWebSocketListener listener = new EchoWebSocketListener(this);
-        ws = client.newWebSocket(request, listener);
-        client.dispatcher().executorService().shutdown();
-    }
-
-    private void output(final String txt) {
-        runOnUiThread(() -> {
-            MessageObject brandNewMessage = new MessageObject(new JsonParser().parse(txt).getAsJsonObject().get("message").getAsJsonObject());
-            setMessageStatus(brandNewMessage);
-            adapter.addMensaje(brandNewMessage);
-        });
-    }
-
 }
