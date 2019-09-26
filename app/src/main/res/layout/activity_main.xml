@@ -62,6 +62,17 @@
                                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintBottom_toBottomOf="parent"/>
+                        <TextView
+                                android:background="@drawable/box_notification"
+                                android:text="1234"
+                                android:layout_width="wrap_content"
+                                android:layout_height="18dp" android:id="@+id/not_map"
+                                android:gravity="center"
+                                android:textSize="10sp" android:textColor="@android:color/white"
+                                android:paddingStart="6dp" android:paddingEnd="6dp" android:textStyle="bold"
+                                app:layout_constraintBottom_toBottomOf="@+id/map" android:layout_marginBottom="15dp"
+                                app:layout_constraintStart_toStartOf="@+id/map" android:layout_marginStart="15dp"
+                                android:visibility="invisible"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 <androidx.constraintlayout.widget.ConstraintLayout
                         android:clickable="false"
@@ -80,12 +91,13 @@
                                 android:background="@drawable/box_notification"
                                 android:text="1234"
                                 android:layout_width="wrap_content"
-                                android:layout_height="18dp" android:id="@+id/textView11"
+                                android:layout_height="18dp" android:id="@+id/not_order"
                                 android:gravity="center"
                                 android:layout_marginStart="15dp" app:layout_constraintStart_toStartOf="@+id/order"
                                 android:layout_marginBottom="15dp" app:layout_constraintBottom_toBottomOf="@+id/order"
                                 android:textSize="10sp" android:textColor="@android:color/white"
-                                android:paddingStart="6dp" android:paddingEnd="6dp" android:textStyle="bold"/>
+                                android:paddingStart="6dp" android:paddingEnd="6dp" android:textStyle="bold"
+                                android:visibility="invisible"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 <androidx.constraintlayout.widget.ConstraintLayout
                         android:clickable="false"
@@ -101,12 +113,36 @@
                                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintBottom_toBottomOf="parent"/>
+                        <TextView
+                                android:background="@drawable/box_notification"
+                                android:text="1234"
+                                android:layout_width="wrap_content"
+                                android:layout_height="18dp" android:id="@+id/not_not"
+                                android:gravity="center"
+                                android:textSize="10sp" android:textColor="@android:color/white"
+                                android:paddingStart="6dp" android:paddingEnd="6dp" android:textStyle="bold"
+                                android:layout_marginBottom="15dp"
+                                app:layout_constraintBottom_toBottomOf="@+id/notification"
+                                android:layout_marginStart="15dp"
+                                app:layout_constraintStart_toStartOf="@+id/notification"
+                                android:visibility="invisible"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 <androidx.constraintlayout.widget.ConstraintLayout
                         android:clickable="false"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" android:layout_weight="1" android:id="@+id/nav_profile">
 
+                        <TextView
+                                android:background="@drawable/box_notification"
+                                android:text="1234"
+                                android:layout_width="wrap_content"
+                                android:layout_height="18dp" android:id="@+id/not_profile"
+                                android:gravity="center"
+                                android:textSize="10sp" android:textColor="@android:color/white"
+                                android:paddingStart="6dp" android:paddingEnd="6dp" android:textStyle="bold"
+                                android:layout_marginStart="15dp"
+                                app:layout_constraintStart_toStartOf="@+id/profile" android:layout_marginBottom="15dp"
+                                app:layout_constraintBottom_toBottomOf="@+id/profile" android:visibility="invisible"/>
                         <ImageView
                                 android:clickable="true"
                                 android:layout_width="24dp"

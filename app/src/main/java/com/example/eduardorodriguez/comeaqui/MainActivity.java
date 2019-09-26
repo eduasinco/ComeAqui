@@ -3,29 +3,28 @@ package com.example.eduardorodriguez.comeaqui;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.provider.Settings;
-import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.view.ViewGroup;
+import android.widget.*;
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.FirebaseUser;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
-import android.view.Menu;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import com.example.eduardorodriguez.comeaqui.chat.ChatActivity;
 import com.example.eduardorodriguez.comeaqui.notification.NotificationsFragment;
 import com.example.eduardorodriguez.comeaqui.order.OrderFragment;
@@ -35,9 +34,9 @@ import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.firebase.database.*;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.JsonParser;
 
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 import static com.yalantis.ucrop.UCropFragment.TAG;
@@ -54,6 +53,11 @@ public class MainActivity extends AppCompatActivity {
     private ImageView orders;
     private ImageView notifications;
     private ImageView profile;
+
+    private TextView notMap;
+    private TextView notOrders;
+    private TextView notNotifications;
+    private TextView notProfile;
 
     private OrderFragment getPastOderFragment;
     private MapFragment mapFragment;
@@ -86,6 +90,11 @@ public class MainActivity extends AppCompatActivity {
         notifications = findViewById(R.id.notification);
         profile = findViewById(R.id.profile);
 
+        notMap = findViewById(R.id.not_map);
+        notOrders = findViewById(R.id.not_order);
+        notNotifications = findViewById(R.id.not_not);
+        notProfile = findViewById(R.id.not_profile);
+
         context = getApplicationContext();
 
         mMainFrame = findViewById(R.id.main_frame);
@@ -106,10 +115,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(chatIntent);
         });
 
-        // load the store fragment by default
-
-        Intent intent = getIntent();
-        Bundle b = intent.getExtras();
         setFragment(mapFragment);
         toolbar.setTitle(null);
         map.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.foodfill));
@@ -138,6 +143,31 @@ public class MainActivity extends AppCompatActivity {
         initializeUser();
         getFirebaseToken();
     }
+
+    public void createBubble(int n, ConstraintLayout constraintView, View icon){
+        TextView textView = new TextView(this);
+        textView.setText(n + "");
+        textView.setLayoutParams(new ViewGroup.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, dpToPx(18)));
+        textView.setBackground(ContextCompat.getDrawable(this, R.drawable.box_notification));
+        textView.setGravity(Gravity.CENTER);
+        textView.setPadding(dpToPx(6),0, dpToPx(6), 0);
+        textView.setTextColor(Color.WHITE);
+        textView.setTypeface(null, Typeface.BOLD);
+        textView.setTextSize(10);
+        textView.setId(View.generateViewId());
+        constraintView.addView(textView);
+
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintView);
+        constraintSet.connect(textView.getId(), ConstraintSet.LEFT, icon.getId(), ConstraintSet.LEFT, dpToPx(15));
+        constraintSet.connect(textView.getId(), ConstraintSet.BOTTOM, icon.getId(), ConstraintSet.BOTTOM, dpToPx(15));
+        constraintSet.applyTo(constraintView);
+    }
+
+    public static int dpToPx(int dp) {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+    }
+
 
     private void initiateIcons(){
         map.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.food));

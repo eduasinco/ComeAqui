@@ -28,15 +28,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
-        SharedPreferences notificationsPref = getSharedPreferences("notifications", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = notificationsPref.edit();
 
         notificationManager = NotificationManagerCompat.from(this);
         String channel = remoteMessage.getData().get("channel");
 
         switch (channel){
             case MESSAGES_CHANNEL_ID:
-                editor.putInt(MESSAGES_CHANNEL_ID, notificationsPref.getInt(MESSAGES_CHANNEL_ID, 0) + 1);
                 Notification messageNotification = new NotificationCompat.Builder(this, MESSAGES_CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_one)
                         .setContentTitle(remoteMessage.getNotification().getTitle())
@@ -48,7 +45,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 break;
 
             case ORDERS_CHANNEL_ID:
-                editor.putInt(ORDERS_CHANNEL_ID, notificationsPref.getInt(MESSAGES_CHANNEL_ID, 0) + 1);
                 Notification orderNotification = new NotificationCompat.Builder(this, ORDERS_CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_one)
                         .setContentTitle(remoteMessage.getNotification().getTitle())
@@ -60,7 +56,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 break;
 
             case NOTIFICATIONS_CHANNEL_ID:
-                editor.putInt(NOTIFICATIONS_CHANNEL_ID, notificationsPref.getInt(MESSAGES_CHANNEL_ID, 0) + 1);
                 Notification notificationNotification = new NotificationCompat.Builder(this, NOTIFICATIONS_CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_one)
                         .setContentTitle(remoteMessage.getNotification().getTitle())
