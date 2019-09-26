@@ -45,14 +45,67 @@
                  android:layout_alignParentStart="true" android:layout_alignParentTop="true"
                  android:layout_above="@+id/main_nav" android:visibility="gone" android:id="@+id/fragmentMap">
         </include>
-        <com.google.android.material.bottomnavigation.BottomNavigationView
+        <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                app:itemIconTint="@color/nav_item_colors"
-                app:itemTextColor="@color/nav_item_colors"
-                app:menu="@menu/nav_items"
-                android:id="@+id/main_nav">
-        </com.google.android.material.bottomnavigation.BottomNavigationView>
+                android:layout_height="56dp" android:layout_alignParentBottom="true"
+                android:layout_marginBottom="0dp" android:id="@+id/main_nav">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:layout_weight="1" android:id="@+id/nav_map">
+                        <ImageView
+                                android:clickable="true"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp" app:srcCompat="@drawable/food"
+                                android:id="@+id/map"
+                                android:layout_weight="1"
+                                app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:clickable="false"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:layout_weight="1" android:id="@+id/nav_orders">
+
+                        <ImageView
+                                android:clickable="true"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp" app:srcCompat="@drawable/order"
+                                android:id="@+id/order" android:layout_weight="1"
+                                app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:clickable="false"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:layout_weight="1"
+                        android:id="@+id/nav_notifications">
+
+                        <ImageView
+                                android:clickable="true"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp" app:srcCompat="@drawable/notification"
+                                android:id="@+id/notification" android:layout_weight="1"
+                                app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:clickable="false"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:layout_weight="1" android:id="@+id/nav_profile">
+
+                        <ImageView
+                                android:clickable="true"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp" app:srcCompat="@drawable/profile"
+                                android:id="@+id/profile" android:layout_weight="1"
+                                app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
 </RelativeLayout>

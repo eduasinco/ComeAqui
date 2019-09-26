@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.FirebaseUser;
@@ -43,10 +45,15 @@ import static com.yalantis.ucrop.UCropFragment.TAG;
 public class MainActivity extends AppCompatActivity {
 
     static public String data;
-    private BottomNavigationView mMainNav;
+    private LinearLayout mMainNav;
     private FrameLayout mMainFrame;
     private Toolbar toolbar;
     private ImageView chatView;
+
+    private ImageView map;
+    private ImageView orders;
+    private ImageView notifications;
+    private ImageView profile;
 
     private OrderFragment getPastOderFragment;
     private MapFragment mapFragment;
@@ -73,6 +80,12 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.CAMERA},
                     0);
         }
+
+        map = findViewById(R.id.map);
+        orders = findViewById(R.id.order);
+        notifications = findViewById(R.id.notification);
+        profile = findViewById(R.id.profile);
+
         context = getApplicationContext();
 
         mMainFrame = findViewById(R.id.main_frame);
@@ -95,62 +108,42 @@ public class MainActivity extends AppCompatActivity {
 
         // load the store fragment by default
 
-        Menu menu = mMainNav.getMenu();
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
-        if(b == null){
-            setFragment(mapFragment);
-            toolbar.setTitle(null);
-            menu.findItem(R.id.nav_map).setIcon(R.drawable.foodfill);
-        } else {
-            switch (b.getString("goTo")){
-                case "notifications":
-                    setFragment(notificationFragment);
-                    toolbar.setTitle(null);
-                    menu.findItem(R.id.nav_notifications).setIcon(R.drawable.notificationfill);
-                    break;
-                case "orders":
-                    setFragment(getPastOderFragment);
-                    toolbar.setTitle(null);
-                    menu.findItem(R.id.nav_orders).setIcon(R.drawable.orderfill);
-                    break;
-                case "profile":
-                    setFragment(profileFragment);
-                    toolbar.setTitle(null);
-                    menu.findItem(R.id.nav_profile).setIcon(R.drawable.profilefill);
-                    break;
-            }
-        }
-        mMainNav.setOnNavigationItemSelectedListener(menuItem -> {
-            Menu menu1 = mMainNav.getMenu();
-            menu1.findItem(R.id.nav_map).setIcon(R.drawable.food);
-            menu1.findItem(R.id.nav_notifications).setIcon(R.drawable.notification);
-            menu1.findItem(R.id.nav_orders).setIcon(R.drawable.order);
-            menu1.findItem(R.id.nav_profile).setIcon(R.drawable.profile);
-            switch (menuItem.getItemId()){
-                case R.id.nav_map:
-                    setFragment(mapFragment);
-                    menuItem.setIcon(R.drawable.foodfill);
-                    return true;
-                case R.id.nav_notifications:
-                    setFragment(notificationFragment);
-                    menuItem.setIcon(R.drawable.notificationfill);
-                    return true;
-                case R.id.nav_orders:
-                    setFragment(getPastOderFragment);
-                    menuItem.setIcon(R.drawable.orderfill);
-                    return true;
-                case R.id.nav_profile:
-                    setFragment(profileFragment);
-                    menuItem.setIcon(R.drawable.profilefill);
-                    return true;
-                    default:
-                        return false;
-            }
+        setFragment(mapFragment);
+        toolbar.setTitle(null);
+        map.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.foodfill));
 
+        map.setOnClickListener(v -> {
+            initiateIcons();
+            setFragment(mapFragment);
+            map.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.foodfill));
         });
+        orders.setOnClickListener(v -> {
+            initiateIcons();
+            setFragment(getPastOderFragment);
+            orders.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.orderfill));
+        });
+         notifications.setOnClickListener(v -> {
+             initiateIcons();
+             setFragment(notificationFragment);
+             notifications.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.notificationfill));
+        });
+        profile.setOnClickListener(v -> {
+            initiateIcons();
+            setFragment(profileFragment);
+            profile.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.profilefill));
+        });
+
         initializeUser();
         getFirebaseToken();
+    }
+
+    private void initiateIcons(){
+        map.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.food));
+        orders.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.order));
+        notifications.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.notification));
+        profile.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.profile));
     }
 
     private void getFirebaseToken(){
