@@ -154,7 +154,6 @@ public class MainActivity extends AppCompatActivity {
 
         initializeUser();
         getFirebaseToken();
-
         start();
     }
 

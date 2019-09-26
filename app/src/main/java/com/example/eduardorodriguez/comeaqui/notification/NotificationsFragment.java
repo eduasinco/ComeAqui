@@ -1,30 +1,17 @@
 package com.example.eduardorodriguez.comeaqui.notification;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.widget.LinearLayout;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.example.eduardorodriguez.comeaqui.MainActivity;
-import com.example.eduardorodriguez.comeaqui.chat.MessageObject;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
@@ -34,8 +21,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import okhttp3.*;
-import okio.ByteString;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -143,18 +128,20 @@ public class NotificationsFragment extends Fragment {
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-        start("/ws/orders/" + order.owner.id +  "/");
-        mWebSocketClient.send("{\"order_id\": \"" + order.id + "\", \"seen\": false}");
         notificationAdapter.notifyDataSetChanged();
+        startSend("/ws/orders/" + order.id +  "/", order);
     }
 
-    public static void start(String url) {
+    public static void startSend(String url, OrderObject orderObject) {
         try {
             URI uri = new URI(f.getActivity().getResources().getString(R.string.server) + url);
             mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
-                    f.getActivity().runOnUiThread(() -> Toast.makeText(f.getActivity(), "Connection Established!", Toast.LENGTH_LONG).show());
+                    f.getActivity().runOnUiThread(() -> {
+                        Toast.makeText(f.getActivity(), "Connection Established!", Toast.LENGTH_LONG).show();
+                        send("{\"order_id\": \"" + orderObject.owner.id + "\", \"seen\": false}");
+                    });
                 }
                 @Override
                 public void onMessage(String s) {
