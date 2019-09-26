@@ -9,6 +9,7 @@ public class App extends Application {
 
     public static final String MESSAGES_CHANNEL_ID = "messages";
     public static final String NOTIFICATIONS_CHANNEL_ID = "notifications";
+    public static final String ORDERS_CHANNEL_ID = "orders";
 
     @Override
     public void onCreate() {
@@ -25,6 +26,13 @@ public class App extends Application {
             );
             messagesChannel.setDescription("This is the channel for chat messages");
 
+            NotificationChannel ordersChannel = new NotificationChannel(
+                    ORDERS_CHANNEL_ID,
+                    "Orders",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            ordersChannel.setDescription("This is the channel for orders");
+
             NotificationChannel notificationsChannel = new NotificationChannel(
                     NOTIFICATIONS_CHANNEL_ID,
                     "Notifications",
@@ -34,6 +42,7 @@ public class App extends Application {
 
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(messagesChannel);
+            manager.createNotificationChannel(ordersChannel);
             manager.createNotificationChannel(notificationsChannel);
         }
     }

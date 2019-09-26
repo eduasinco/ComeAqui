@@ -76,6 +76,16 @@
                                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintBottom_toBottomOf="parent"/>
+                        <TextView
+                                android:background="@drawable/box_notification"
+                                android:text="1234"
+                                android:layout_width="wrap_content"
+                                android:layout_height="18dp" android:id="@+id/textView11"
+                                android:gravity="center"
+                                android:layout_marginStart="15dp" app:layout_constraintStart_toStartOf="@+id/order"
+                                android:layout_marginBottom="15dp" app:layout_constraintBottom_toBottomOf="@+id/order"
+                                android:textSize="10sp" android:textColor="@android:color/white"
+                                android:paddingStart="6dp" android:paddingEnd="6dp" android:textStyle="bold"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 <androidx.constraintlayout.widget.ConstraintLayout
                         android:clickable="false"
