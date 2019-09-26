@@ -21,6 +21,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import com.example.eduardorodriguez.comeaqui.chat.MessageObject;
 import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
+import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.FirebaseUser;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import androidx.core.app.ActivityCompat;
@@ -38,6 +40,8 @@ import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.firebase.database.*;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import okhttp3.*;
 import okio.ByteString;
@@ -46,6 +50,7 @@ import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -154,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
 
         initializeUser();
         getFirebaseToken();
+        getNotificationsCount();
         start();
     }
 
@@ -282,6 +288,24 @@ public class MainActivity extends AppCompatActivity {
             mWebSocketClient.connect();
         } catch (URISyntaxException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void getNotificationsCount(){
+        ArrayList<OrderObject> orderObjects = new ArrayList<>();
+        GetAsyncTask getPostLocations = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/unseen_orders/");
+        try {
+            String response = getPostLocations.execute().get();
+            if (response != null)
+                for (JsonElement pa : new JsonParser().parse(response).getAsJsonArray()) {
+                    orderObjects.add(new OrderObject(pa.getAsJsonObject()));
+                }
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (orderObjects.size() > 0){
+            notOrders.setVisibility(View.VISIBLE);
+            notOrders.setText("" + orderObjects.size());
         }
     }
 }
