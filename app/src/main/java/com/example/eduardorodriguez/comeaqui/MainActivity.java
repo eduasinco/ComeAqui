@@ -3,13 +3,10 @@ package com.example.eduardorodriguez.comeaqui;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.net.Uri;
-import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
@@ -19,9 +16,7 @@ import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import com.example.eduardorodriguez.comeaqui.chat.MessageObject;
-import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
-import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
+import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.FirebaseUser;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
@@ -41,17 +36,13 @@ import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.firebase.database.*;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import okhttp3.*;
-import okio.ByteString;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 import static com.yalantis.ucrop.UCropFragment.TAG;
@@ -82,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
     public static User user;
     public static FirebaseUser firebaseUser;
 
-    public static WebSocketClient mWebSocketClient;
     private static Context context;
 
     int currentFrame, previousFrame = 0;
@@ -164,34 +154,10 @@ public class MainActivity extends AppCompatActivity {
 
         initializeUser();
         getFirebaseToken();
-        getNotificationsCount();
-        start();
+        setNotificationsBubbles();
+        listenToOrdersChanges();
+        listenToNotificationsChanges();
     }
-
-    public void createBubble(int n, ConstraintLayout constraintView, View icon){
-        TextView textView = new TextView(this);
-        textView.setText(n + "");
-        textView.setLayoutParams(new ViewGroup.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, dpToPx(18)));
-        textView.setBackground(ContextCompat.getDrawable(this, R.drawable.box_notification));
-        textView.setGravity(Gravity.CENTER);
-        textView.setPadding(dpToPx(6),0, dpToPx(6), 0);
-        textView.setTextColor(Color.WHITE);
-        textView.setTypeface(null, Typeface.BOLD);
-        textView.setTextSize(10);
-        textView.setId(View.generateViewId());
-        constraintView.addView(textView);
-
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintView);
-        constraintSet.connect(textView.getId(), ConstraintSet.LEFT, icon.getId(), ConstraintSet.LEFT, dpToPx(15));
-        constraintSet.connect(textView.getId(), ConstraintSet.BOTTOM, icon.getId(), ConstraintSet.BOTTOM, dpToPx(15));
-        constraintSet.applyTo(constraintView);
-    }
-
-    public static int dpToPx(int dp) {
-        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
-    }
-
 
     private void initiateIcons(int cf){
         previousFrame = currentFrame;
@@ -218,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
                     postTokenToServer(token);
                 });
     }
-
     private void postTokenToServer(String token){
         String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
@@ -248,36 +213,19 @@ public class MainActivity extends AppCompatActivity {
         return user;
     }
 
-    private void initializeFirebaseUser(){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
-        reference.orderByChild("email")
-                .equalTo(MainActivity.user.email).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                firebaseUser = dataSnapshot.getChildren().iterator().next().getValue(FirebaseUser.class);
-                firebaseUser.id = dataSnapshot.getChildren().iterator().next().getKey();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    public void start(){
+    public void listenToOrdersChanges(){
         try {
             URI uri = new URI(getResources().getString(R.string.server) + "/ws/orders/" + user.id +  "/");
-            mWebSocketClient = new WebSocketClient(uri) {
+            WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
-                    runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Connection Established!", Toast.LENGTH_LONG).show());
+                    runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Orders!", Toast.LENGTH_LONG).show());
                 }
                 @Override
                 public void onMessage(String s) {
                     final String message = s;
                     runOnUiThread(() -> {
-                        int ordersNotSeen = new JsonParser().parse(s).getAsJsonObject().get("orders_not_seen").getAsInt();
+                        int ordersNotSeen = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("orders_not_seen").getAsInt();
                         if (ordersNotSeen > 0 ){
                             notOrders.setVisibility(View.VISIBLE);
                             notOrders.setText("" + ordersNotSeen);
@@ -298,8 +246,45 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    public void listenToNotificationsChanges(){
+        try {
+            URI uri = new URI(getResources().getString(R.string.server) + "/ws/notifications/" + user.id +  "/");
+            WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
+                @Override
+                public void onOpen(ServerHandshake serverHandshake) {
+                    runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Notifications!", Toast.LENGTH_LONG).show());
+                }
+                @Override
+                public void onMessage(String s) {
+                    final String message = s;
+                    runOnUiThread(() -> {
+                        int ordersNotSeen = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("notifications_not_seen").getAsInt();
+                        if (ordersNotSeen > 0 ){
+                            notNotifications.setVisibility(View.VISIBLE);
+                            notNotifications.setText("" + ordersNotSeen);
+                        }
+                    });
+                }
+                @Override
+                public void onClose(int i, String s, boolean b) {
+                    Log.i("Websocket", "Closed " + s);
+                }
+                @Override
+                public void onError(Exception e) {
+                    Log.i("Websocket", "Error " + e.getMessage());
+                }
+            };
+            mWebSocketClient.connect();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
 
-    private void getNotificationsCount(){
+    private void setNotificationsBubbles(){
+        setUnseenOrders();
+        setUnseenNotifications();
+    }
+    private void setUnseenOrders(){
         ArrayList<OrderObject> orderObjects = new ArrayList<>();
         GetAsyncTask getPostLocations = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/unseen_orders/");
         try {
@@ -315,5 +300,62 @@ public class MainActivity extends AppCompatActivity {
             notOrders.setVisibility(View.VISIBLE);
             notOrders.setText("" + orderObjects.size());
         }
+    }
+    private void setUnseenNotifications(){
+        ArrayList<NotificationObject> notificationObjects = new ArrayList<>();
+        GetAsyncTask getPostLocations = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/unseen_notifications/");
+        try {
+            String response = getPostLocations.execute().get();
+            if (response != null)
+                for (JsonElement pa : new JsonParser().parse(response).getAsJsonArray()) {
+                    notificationObjects.add(new NotificationObject(pa.getAsJsonObject()));
+                }
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (notificationObjects.size() > 0){
+            notNotifications.setVisibility(View.VISIBLE);
+            notNotifications.setText("" + notificationObjects.size());
+        }
+    }
+
+
+    public void createBubble(int n, ConstraintLayout constraintView, View icon){
+        TextView textView = new TextView(this);
+        textView.setText(n + "");
+        textView.setLayoutParams(new ViewGroup.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, dpToPx(18)));
+        textView.setBackground(ContextCompat.getDrawable(this, R.drawable.box_notification));
+        textView.setGravity(Gravity.CENTER);
+        textView.setPadding(dpToPx(6),0, dpToPx(6), 0);
+        textView.setTextColor(Color.WHITE);
+        textView.setTypeface(null, Typeface.BOLD);
+        textView.setTextSize(10);
+        textView.setId(View.generateViewId());
+        constraintView.addView(textView);
+
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintView);
+        constraintSet.connect(textView.getId(), ConstraintSet.LEFT, icon.getId(), ConstraintSet.LEFT, dpToPx(15));
+        constraintSet.connect(textView.getId(), ConstraintSet.BOTTOM, icon.getId(), ConstraintSet.BOTTOM, dpToPx(15));
+        constraintSet.applyTo(constraintView);
+    }
+    public static int dpToPx(int dp) {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+    }
+    private void initializeFirebaseUser(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
+        reference.orderByChild("email")
+                .equalTo(MainActivity.user.email).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                firebaseUser = dataSnapshot.getChildren().iterator().next().getValue(FirebaseUser.class);
+                firebaseUser.id = dataSnapshot.getChildren().iterator().next().getKey();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.chat.MessageObject;
+import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.NotificationFirebase;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
@@ -48,14 +49,13 @@ public class FoodLookActivity extends AppCompatActivity {
     ImageView backView;
     CardView postImageLayout;
 
-    FoodPost getFoodObject;
+    FoodPost foodPost;
 
     private OkHttpClient client;
     WebSocket ws;
 
-    public static void goToOrder(JsonObject jsonObject){
+    public static void goToOrder(OrderObject orderObject){
         try{
-            OrderObject orderObject = new OrderObject(jsonObject);
             Intent goToOrders = new Intent(context, OrderLookActivity.class);
             goToOrders.putExtra("object", orderObject);
             context.startActivity(goToOrders);
@@ -89,19 +89,19 @@ public class FoodLookActivity extends AppCompatActivity {
         Bundle b = intent.getExtras();
 
         if(b != null && b.get("object") != null){
-            getFoodObject = (FoodPost) b.get("object");
+            foodPost = (FoodPost) b.get("object");
             boolean delete = b.getBoolean("delete");
 
-            posterNameView.setText(getFoodObject.owner.first_name + " " + getFoodObject.owner.last_name);
-            usernameView.setText(getFoodObject.owner.email);
-            plateNameView.setText(getFoodObject.plate_name);
-            descriptionView.setText(getFoodObject.description);
-            posterLocationView.setText(getFoodObject.address);
-            priceView.setText(getFoodObject.price);
-            timeView.setText(getFoodObject.time);
+            posterNameView.setText(foodPost.owner.first_name + " " + foodPost.owner.last_name);
+            usernameView.setText(foodPost.owner.email);
+            plateNameView.setText(foodPost.plate_name);
+            descriptionView.setText(foodPost.description);
+            posterLocationView.setText(foodPost.address);
+            priceView.setText(foodPost.price);
+            timeView.setText(foodPost.time);
 
             Bundle bundle = new Bundle();
-            bundle.putSerializable("type", getFoodObject.type);
+            bundle.putSerializable("type", foodPost.type);
             FoodTypeFragment fragment = new FoodTypeFragment();
             fragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction()
@@ -109,12 +109,12 @@ public class FoodLookActivity extends AppCompatActivity {
                     .commit();
 
 
-            if(!getFoodObject.owner.profile_photo.contains("no-image")) Glide.with(this).load(getFoodObject.owner.profile_photo).into(posterImage);
-            if(!getFoodObject.food_photo.contains("no-image")){
+            if(!foodPost.owner.profile_photo.contains("no-image")) Glide.with(this).load(foodPost.owner.profile_photo).into(posterImage);
+            if(!foodPost.food_photo.contains("no-image")){
                 postImageLayout.setVisibility(View.VISIBLE);
-                Glide.with(this).load(getFoodObject.food_photo).into(postImage);
+                Glide.with(this).load(foodPost.food_photo).into(postImage);
             }
-            String url = "http://maps.google.com/maps/api/staticmap?center=" + getFoodObject.lat + "," + getFoodObject.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
+            String url = "http://maps.google.com/maps/api/staticmap?center=" + foodPost.lat + "," + foodPost.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
             Glide.with(this).load(url).into(staticMapView);
 
 
@@ -129,7 +129,7 @@ public class FoodLookActivity extends AppCompatActivity {
             placeOrderButton.setText("Delete Post");
             placeOrderButton.setBackgroundColor(Color.parseColor("#FFFF0E01"));
             placeOrderButton.setOnClickListener(v -> {
-                Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/foods/" + getFoodObject.id + "/");
+                Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/foods/" + foodPost.id + "/");
                 deleteFoodPost.execute();
                 finish();
             });
@@ -138,10 +138,16 @@ public class FoodLookActivity extends AppCompatActivity {
                 PostAsyncTask createOrder = new PostAsyncTask(getResources().getString(R.string.server) + "/create_order_and_notification/");
                 try {
                     String response = createOrder.execute(
-                            new String[]{"food_post_id", "" + getFoodObject.id}
+                            new String[]{"food_post_id", "" + foodPost.id}
                     ).get();
-                    JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
-                    FoodLookActivity.goToOrder(jo);
+                    JsonObject jo = new JsonParser().parse(response).getAsJsonObject().get("notification").getAsJsonObject();
+                    NotificationObject notificationObject = new NotificationObject(jo);
+                    FoodLookActivity.goToOrder(notificationObject.order);
+
+                    WebSocketMessage.send(this,
+                        "/ws/notifications/" + foodPost.owner.id +  "/",
+                        "{\"notification_id\": \"" + notificationObject.id + "\", \"seen\": false}"
+                    );
                 } catch (ExecutionException | InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -186,7 +192,7 @@ public class FoodLookActivity extends AppCompatActivity {
     }
 
     private void start() {
-        Request request = new Request.Builder().url(getResources().getString(R.string.server) + "/ws/notification/" + getFoodObject.owner.id +  "/")
+        Request request = new Request.Builder().url(getResources().getString(R.string.server) + "/ws/notification/" + foodPost.owner.id +  "/")
                 .build();
         EchoWebSocketListener listener = new EchoWebSocketListener(this);
         ws = client.newWebSocket(request, listener);
