@@ -76,6 +76,12 @@ public class PendingOrdersFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getDataAndSet();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -126,7 +132,7 @@ public class PendingOrdersFragment extends Fragment {
                         OrderObject orderChanged = new OrderObject(new JsonParser().parse(s).getAsJsonObject().get("order_changed").getAsJsonObject());
                         data.get(orderChanged.id).seen = orderChanged.seen;
                         data.get(orderChanged.id).status = orderChanged.status;
-                        orderAdapter.notifyItemChanged(new ArrayList<>(data.keySet()).indexOf(orderChanged.id));
+                        orderAdapter.notifyDataSetChanged();
                     });
                 }
                 @Override
@@ -148,6 +154,17 @@ public class PendingOrdersFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    private void setAllOrdersAsSeen(){
+        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/set_my_orders_as_seen/");
+        try {
+            String response = process.execute().get();
+            if (response != null)
+                makeList(new JsonParser().parse(response).getAsJsonArray());
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

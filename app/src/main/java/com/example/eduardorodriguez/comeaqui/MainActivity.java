@@ -85,6 +85,10 @@ public class MainActivity extends AppCompatActivity {
     public static WebSocketClient mWebSocketClient;
     private static Context context;
 
+    int currentFrame, previousFrame = 0;
+    TextView[] notArray;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
         notOrders = findViewById(R.id.not_order);
         notNotifications = findViewById(R.id.not_not);
         notProfile = findViewById(R.id.not_profile);
+        notArray = new TextView[]{notMap, notOrders, notNotifications, notProfile};
 
         context = getApplicationContext();
 
@@ -137,23 +142,22 @@ public class MainActivity extends AppCompatActivity {
         map.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.foodfill));
 
         map.setOnClickListener(v -> {
-            initiateIcons();
+            initiateIcons(0);
             setFragment(mapFragment);
             map.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.foodfill));
         });
         orders.setOnClickListener(v -> {
-            notOrders.setVisibility(View.INVISIBLE);
-            initiateIcons();
+            initiateIcons(1);
             setFragment(getPastOderFragment);
             orders.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.orderfill));
         });
          notifications.setOnClickListener(v -> {
-             initiateIcons();
+             initiateIcons(2);
              setFragment(notificationFragment);
              notifications.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.notificationfill));
         });
         profile.setOnClickListener(v -> {
-            initiateIcons();
+            initiateIcons(3);
             setFragment(profileFragment);
             profile.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.profilefill));
         });
@@ -189,7 +193,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void initiateIcons(){
+    private void initiateIcons(int cf){
+        previousFrame = currentFrame;
+        currentFrame = cf;
+        notArray[previousFrame].setVisibility(View.INVISIBLE);
         map.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.food));
         orders.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.order));
         notifications.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.notification));
@@ -271,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
                     final String message = s;
                     runOnUiThread(() -> {
                         int ordersNotSeen = new JsonParser().parse(s).getAsJsonObject().get("orders_not_seen").getAsInt();
-                        if (ordersNotSeen > 0){
+                        if (ordersNotSeen > 0 ){
                             notOrders.setVisibility(View.VISIBLE);
                             notOrders.setText("" + ordersNotSeen);
                         }
