@@ -2,6 +2,8 @@ package com.example.eduardorodriguez.comeaqui.order;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.*;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
@@ -60,7 +63,6 @@ public class OrderAdapter extends BaseAdapter {
         price = view.findViewById(R.id.price);
         posterUsername = view.findViewById(R.id.poster_username);
         postAddress = view.findViewById(R.id.address);
-        imageView = view.findViewById(R.id.poster_image);
         orderStatus = view.findViewById(R.id.order_status);
         dateView = view.findViewById(R.id.date);
 
@@ -73,20 +75,19 @@ public class OrderAdapter extends BaseAdapter {
         price.setText(priceTextE);
         orderStatus.setText(orderObject.status);
 
-        if (orderObject.status.equals("CONFIRMED")){
-            orderStatus.setTextColor(context.getResources().getColor(R.color.success));
+        if (!orderObject.seen){
+            orderStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.box_notification_status_changed));
+            orderStatus.setTypeface(null, Typeface.BOLD);
+            orderStatus.setTextColor(Color.WHITE);
+        } else if (orderObject.status.equals("CONFIRMED")){
+            orderStatus.setTextColor(ContextCompat.getColor(context, R.color.success));
         } else if (orderObject.status.equals("CANCELED")){
-            orderStatus.setTextColor(context.getResources().getColor(R.color.canceled));
+            orderStatus.setTextColor(ContextCompat.getColor(context, R.color.canceled));
         } else {
-            orderStatus.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+            orderStatus.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
         }
 
-        if (!orderObject.owner.profile_photo.contains("no-image")){
-            Glide.with(context).load(orderObject.owner.profile_photo).into(imageView);
-        }
-        ConstraintLayout item = view.findViewById(R.id.listItem);
-
-        item.setOnClickListener(v -> {
+        view.findViewById(R.id.listItem).setOnClickListener(v -> {
             Intent foodLook = new Intent(context, OrderLookActivity.class);
             foodLook.putExtra("object", orderObject);
             boolean delete = false;

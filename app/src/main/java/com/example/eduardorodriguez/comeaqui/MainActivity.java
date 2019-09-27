@@ -142,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
             map.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.foodfill));
         });
         orders.setOnClickListener(v -> {
+            notOrders.setVisibility(View.INVISIBLE);
             initiateIcons();
             setFragment(getPastOderFragment);
             orders.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.orderfill));

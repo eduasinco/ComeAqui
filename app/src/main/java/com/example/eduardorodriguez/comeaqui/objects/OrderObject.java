@@ -11,7 +11,7 @@ public class OrderObject implements Serializable {
     public User poster;
     public String status;
     public String createdAt;
-    boolean seen;
+    public boolean seen;
     public OrderObject(JsonObject jo){
         id = jo.get("id").getAsInt();
         owner = new User(jo.get("owner").getAsJsonObject());
