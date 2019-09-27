@@ -135,37 +135,4 @@ public class NotificationsFragment extends Fragment {
                 "{\"order_id\": \"" + order.id + "\", \"seen\": false}"
         );
     }
-
-    public static void startSend(String url, OrderObject orderObject) {
-        try {
-            URI uri = new URI(f.getActivity().getResources().getString(R.string.server) + url);
-            mWebSocketClient = new WebSocketClient(uri) {
-                @Override
-                public void onOpen(ServerHandshake serverHandshake) {
-                    f.getActivity().runOnUiThread(() -> {
-                        Toast.makeText(f.getActivity(), "Connection Established!", Toast.LENGTH_LONG).show();
-                        send("{\"order_id\": \"" + orderObject.id + "\", \"seen\": false}");
-                    });
-                }
-                @Override
-                public void onMessage(String s) {
-                    final String message = s;
-                    f.getActivity().runOnUiThread(() -> {
-                        int ordersNotSeen = new JsonParser().parse(s).getAsJsonObject().get("orders_not_seen").getAsInt();
-                    });
-                }
-                @Override
-                public void onClose(int i, String s, boolean b) {
-                    Log.i("Websocket", "Closed " + s);
-                }
-                @Override
-                public void onError(Exception e) {
-                    Log.i("Websocket", "Error " + e.getMessage());
-                }
-            };
-            mWebSocketClient.connect();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-    }
 }

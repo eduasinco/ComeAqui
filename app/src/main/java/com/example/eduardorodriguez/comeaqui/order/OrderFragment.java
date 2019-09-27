@@ -48,17 +48,7 @@ public class OrderFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            PastOderFragment pastOderFragment = new PastOderFragment();
-            Bundle bundle1 = new Bundle();
-            bundle1.putBoolean("pending", false);
-            pastOderFragment.setArguments(bundle1);
-
-            PastOderFragment pendingOderFragment = new PastOderFragment();
-            Bundle bundle2 = new Bundle();
-            bundle2.putBoolean("pending", true);
-            pendingOderFragment.setArguments(bundle2);
-
-            Fragment[] tabFragment = {pendingOderFragment, pastOderFragment};
+            Fragment[] tabFragment = {PendingOrdersFragment.newInstance(true), PendingOrdersFragment.newInstance(false)};
             return tabFragment[position];
         }
 
