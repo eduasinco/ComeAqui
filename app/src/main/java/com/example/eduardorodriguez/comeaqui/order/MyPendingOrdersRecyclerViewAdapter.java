@@ -14,17 +14,12 @@ import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.order.PendingOrdersFragment.OnListFragmentInteractionListener;
-import com.example.eduardorodriguez.comeaqui.order.dummy.DummyContent.DummyItem;
 import com.example.eduardorodriguez.comeaqui.utilities.DateFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
+
 public class MyPendingOrdersRecyclerViewAdapter extends RecyclerView.Adapter<MyPendingOrdersRecyclerViewAdapter.ViewHolder> {
 
     private final List<OrderObject> mValues;
@@ -52,9 +47,9 @@ public class MyPendingOrdersRecyclerViewAdapter extends RecyclerView.Adapter<MyP
         String priceTextE = "€" + holder.mItem.post.price + " - ";
         holder.price.setText(priceTextE);
         holder.orderStatus.setText(holder.mItem.status);
+        holder.orderStatus.setBackgroundColor(Color.TRANSPARENT);
 
         if (!holder.mItem.seen){
-
             holder.orderStatus.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_notification_status_changed));
             holder.orderStatus.setTypeface(null, Typeface.BOLD);
             holder.orderStatus.setTextColor(Color.WHITE);
