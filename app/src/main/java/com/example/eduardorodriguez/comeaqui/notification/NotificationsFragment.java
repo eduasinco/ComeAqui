@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.example.eduardorodriguez.comeaqui.WebSocketMessage;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
@@ -129,7 +130,10 @@ public class NotificationsFragment extends Fragment {
             e.printStackTrace();
         }
         notificationAdapter.notifyDataSetChanged();
-        startSend("/ws/orders/" + order.owner.id +  "/", order);
+        WebSocketMessage.send(f.getActivity(),
+                "/ws/orders/" + order.owner.id +  "/",
+                "{\"order_id\": \"" + order.id + "\", \"seen\": false}"
+        );
     }
 
     public static void startSend(String url, OrderObject orderObject) {

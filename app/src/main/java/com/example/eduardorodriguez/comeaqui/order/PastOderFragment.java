@@ -1,17 +1,24 @@
 package com.example.eduardorodriguez.comeaqui.order;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.gson.*;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -47,14 +54,6 @@ public class PastOderFragment extends Fragment {
         }
     }
 
-    public static void appendToList(JsonObject jo){
-        if (data == null){
-            data = new ArrayList<>();
-        }
-        data.add(0, new OrderObject(jo));
-        fa.addNewRow(data);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -74,6 +73,7 @@ public class PastOderFragment extends Fragment {
             pullToRefresh.setRefreshing(false);
         });
 
+        start();
         return view;
     }
 
@@ -84,6 +84,37 @@ public class PastOderFragment extends Fragment {
             if (response != null)
                 makeList(new JsonParser().parse(response).getAsJsonArray());
         } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void start(){
+        try {
+            URI uri = new URI(getActivity().getResources().getString(R.string.server) + "/ws/orders_data_changed/" + MainActivity.user.id +  "/");
+            WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
+                @Override
+                public void onOpen(ServerHandshake serverHandshake) {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getActivity(), "Connection Established!", Toast.LENGTH_LONG).show();
+                    });
+                }
+                @Override
+                public void onMessage(String s) {
+                    getActivity().runOnUiThread(() -> {
+                        OrderObject orderChanged = new OrderObject(new JsonParser().parse(s).getAsJsonObject().get("order_changed").getAsJsonObject());
+                    });
+                }
+                @Override
+                public void onClose(int i, String s, boolean b) {
+                    Log.i("Websocket", "Closed " + s);
+                }
+                @Override
+                public void onError(Exception e) {
+                    Log.i("Websocket", "Error " + e.getMessage());
+                }
+            };
+            mWebSocketClient.connect();
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
     }
