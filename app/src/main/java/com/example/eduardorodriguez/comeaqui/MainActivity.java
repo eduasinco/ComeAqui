@@ -50,8 +50,6 @@ import static com.yalantis.ucrop.UCropFragment.TAG;
 public class MainActivity extends AppCompatActivity {
 
     static public String data;
-    private LinearLayout mMainNav;
-    private FrameLayout mMainFrame;
     private Toolbar toolbar;
     private ImageView chatView;
 
@@ -94,7 +92,9 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.CAMERA},
                     0);
         }
+        context = getApplicationContext();
 
+        chatView = findViewById(R.id.chat);
 
         map = findViewById(R.id.map);
         orders = findViewById(R.id.order);
@@ -107,20 +107,10 @@ public class MainActivity extends AppCompatActivity {
         notProfile = findViewById(R.id.not_profile);
         notArray = new TextView[]{notMap, notOrders, notNotifications, notProfile};
 
-        context = getApplicationContext();
-
-        mMainFrame = findViewById(R.id.main_frame);
-        mMainNav = findViewById(R.id.main_nav);
-        chatView = findViewById(R.id.chat);
-
         getPastOderFragment = new OrderFragment();
         mapFragment = new MapFragment();
         profileFragment = new ProfileFragment();
         notificationFragment = new NotificationsFragment();
-
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
 
         chatView.setOnClickListener(v -> {
             Intent chatIntent = new Intent(this, ChatActivity.class);
@@ -128,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         setFragment(mapFragment);
-        toolbar.setTitle(null);
         map.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.foodfill));
 
         map.setOnClickListener(v -> {

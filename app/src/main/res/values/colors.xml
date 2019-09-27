@@ -10,6 +10,7 @@
 
     <color name="grey">#797979</color>
     <color name="grey_light">#F3F3F3</color>
+    <color name="grey_light2">#D1D1D1</color>
     <color name="grey_lighter">#FAFAFA</color>
 
     <color name="mapPickerFill">#92278f</color>
