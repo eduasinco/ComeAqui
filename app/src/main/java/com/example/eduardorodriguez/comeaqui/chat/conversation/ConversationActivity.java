@@ -2,11 +2,9 @@ package com.example.eduardorodriguez.comeaqui.chat.conversation;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -17,28 +15,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.SplashActivity;
-import com.example.eduardorodriguez.comeaqui.WebSocketMessage;
-import com.example.eduardorodriguez.comeaqui.chat.ChatObject;
-import com.example.eduardorodriguez.comeaqui.chat.MessageObject;
+import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
+import com.example.eduardorodriguez.comeaqui.chat.chat_objects.MessageObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.DateFragment;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import de.hdodenhof.circleimageview.CircleImageView;
-import okhttp3.*;
-import okio.ByteString;
 import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.drafts.Draft_10;
 import org.java_websocket.handshake.ServerHandshake;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class ConversationActivity extends AppCompatActivity {

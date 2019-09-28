@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.gson.JsonArray;
@@ -22,12 +21,6 @@ import com.google.gson.JsonParser;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
 public class UserPostFragment extends Fragment {
 
     // TODO: Customize parameter argument names
@@ -37,8 +30,6 @@ public class UserPostFragment extends Fragment {
 
     private static ArrayList<FoodPost> data;
     private static MyUserPostRecyclerViewAdapter adapter;
-
-    private OnListFragmentInteractionListener mListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -89,7 +80,7 @@ public class UserPostFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_userpost_list, container, false);
-        this.adapter = new MyUserPostRecyclerViewAdapter(data, mListener);
+        this.adapter = new MyUserPostRecyclerViewAdapter(data);
 
         Context context = view.getContext();
         RecyclerView recyclerView = (RecyclerView) view;
@@ -116,21 +107,6 @@ public class UserPostFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
-    }
 }

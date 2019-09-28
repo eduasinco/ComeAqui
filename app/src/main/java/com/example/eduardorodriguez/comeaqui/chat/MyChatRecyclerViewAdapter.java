@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
+import com.example.eduardorodriguez.comeaqui.chat.chat_objects.MessageObject;
 import com.example.eduardorodriguez.comeaqui.utilities.DateFragment;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
@@ -57,19 +59,23 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
         holder.username.setText(chattingWith.first_name + ", " + chattingWith.last_name);
         MessageObject lastMessage = holder.mItem.messages.get(holder.mItem.messages.size() - 1);
         holder.lastMessage.setText(lastMessage.message);
+        holder.notChat.setVisibility(View.INVISIBLE);
+
         holder.mView.setOnClickListener(v -> {
             Intent conversation = new Intent(holder.mView.getContext(), ConversationActivity.class);
             conversation.putExtra("chat", holder.mItem);
             holder.mView.getContext().startActivity(conversation);
         });
+
+        if (holder.mItem.unread_count > 0 ){
+            holder.notChat.setVisibility(View.VISIBLE);
+            holder.notChat.setText("" + holder.mItem.unread_count);
+        }
         Glide.with(holder.mView.getContext()).load(chattingWith.profile_photo).into(holder.chattererImage);
 
         ((AppCompatActivity)holder.mView.getContext()).getSupportFragmentManager().beginTransaction()
                 .replace(R.id.date, DateFragment.newInstance(holder.mItem.messages.get(holder.mItem.messages.size() - 1).createdAt))
                 .commit();
-//        firebaseStorage.child("user_image/" + chattingWith.id).getDownloadUrl().addOnSuccessListener(uri -> {
-//            Glide.with(holder.mView.getContext()).load(uri.toString()).into(holder.chattererImage);
-//        }).addOnFailureListener(exception -> {});
     }
 
     @Override
@@ -81,6 +87,7 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
         public final View mView;
         public final TextView username;
         public final TextView lastMessage;
+        public final TextView notChat;
         public final ImageView chattererImage;
         public ChatObject mItem;
 
@@ -90,6 +97,7 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
             username = view.findViewById(R.id.username);
             lastMessage = view.findViewById(R.id.last_message);
             chattererImage = view.findViewById(R.id.receiver_image);
+            notChat = view.findViewById(R.id.notChat);
         }
     }
 }

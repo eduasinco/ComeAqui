@@ -7,25 +7,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.eduardorodriguez.comeaqui.utilities.AutocompleteLocationFragment;
-import com.example.eduardorodriguez.comeaqui.profile.settings.PlacesAutocompleteFragment.OnListFragmentInteractionListener;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.dummy.DummyContent.DummyItem;
 
 import java.util.ArrayList;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class MyPlacesAutocompleteRecyclerViewAdapter extends RecyclerView.Adapter<MyPlacesAutocompleteRecyclerViewAdapter.ViewHolder> {
 
     private ArrayList<String[]> mValues;
-    private final OnListFragmentInteractionListener mListener;
 
-    public MyPlacesAutocompleteRecyclerViewAdapter(ArrayList<String[]> items, OnListFragmentInteractionListener listener) {
+    public MyPlacesAutocompleteRecyclerViewAdapter(ArrayList<String[]> items) {
         mValues = items;
-        mListener = listener;
     }
 
     public void updateData(ArrayList<String[]> data){

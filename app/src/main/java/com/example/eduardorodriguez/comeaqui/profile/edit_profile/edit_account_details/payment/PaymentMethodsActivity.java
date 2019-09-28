@@ -1,7 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment;
 
 import android.content.Intent;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,9 +8,7 @@ import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.chat.ChatObject;
 import com.example.eduardorodriguez.comeaqui.objects.PaymentObject;
-import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -19,7 +16,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutionException;
 
 public class PaymentMethodsActivity extends AppCompatActivity {

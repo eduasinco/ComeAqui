@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.chat;
+package com.example.eduardorodriguez.comeaqui.chat.chat_objects;
 
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.google.gson.JsonObject;

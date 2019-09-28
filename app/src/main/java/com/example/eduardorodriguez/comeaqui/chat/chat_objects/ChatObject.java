@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.chat;
+package com.example.eduardorodriguez.comeaqui.chat.chat_objects;
 
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.google.gson.JsonElement;
@@ -12,6 +12,9 @@ public class ChatObject implements Serializable {
     public ArrayList<User> users;
     public ArrayList<MessageObject> messages;
     public String createdAt;
+
+    public int unread_count = 0;
+
     public ChatObject(JsonObject jo){
         users = new ArrayList<>();
         id = jo.get("id").getAsInt();

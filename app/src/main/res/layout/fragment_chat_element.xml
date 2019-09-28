@@ -7,30 +7,50 @@
                                                    android:orientation="horizontal"
                                                    android:background="@drawable/box_element"
                                                    tools:context=".chat.ChatFragment">
-    <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" android:id="@+id/last_message" android:lines="2"
-            android:text="Last message from sender" android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-            app:layout_constraintStart_toEndOf="@+id/receiver_image"
-            android:layout_marginStart="8dp"/>
     <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="0dp"
-            android:layout_height="21dp"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp" android:id="@+id/linearLayout"
-            app:layout_constraintStart_toEndOf="@+id/receiver_image" android:layout_marginStart="8dp"
-            app:layout_constraintTop_toTopOf="@+id/receiver_image">
-        <TextView
-                android:text="@eduasinco"
+            android:layout_height="wrap_content" app:layout_constraintStart_toEndOf="@+id/receiver_image"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp">
+        <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/username" android:textStyle="bold"
-                android:layout_weight="1"/>
-        <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent" android:id="@+id/date">
-        </FrameLayout>
+                android:layout_height="21dp"
+                app:layout_constraintEnd_toEndOf="parent" android:id="@+id/linearLayout"
+                app:layout_constraintStart_toEndOf="@+id/receiver_image"
+                app:layout_constraintTop_toTopOf="@+id/receiver_image">
+            <TextView
+                    android:text="@eduasinco"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/username" android:textStyle="bold"
+                    android:layout_weight="1"/>
+            <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" android:id="@+id/date">
+            </FrameLayout>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/last_message" android:lines="1"
+                    android:text="Last message from sender"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+                    app:layout_constraintStart_toEndOf="@+id/receiver_image"
+                    android:layout_weight="1"/>
+            <TextView
+                    android:background="@drawable/box_notification_status_changed"
+                    android:text="12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/notChat" android:layout_weight="0"
+                    android:paddingEnd="6dp" android:paddingStart="6dp" android:textStyle="bold"
+                    android:textColor="@android:color/white"/>
+        </LinearLayout>
     </LinearLayout>
     <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/receiver_image"

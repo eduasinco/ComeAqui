@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.ChatFirebaseObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
@@ -78,6 +79,7 @@ public class ChatFragment extends Fragment{
         adapter = new MyChatRecyclerViewAdapter(data, mListener);
         recyclerView.setAdapter(adapter);
         getChatsAndSet();
+        start();
         return view;
     }
 
@@ -88,6 +90,7 @@ public class ChatFragment extends Fragment{
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
                 ChatObject chat = new ChatObject(jo);
+                chat.unread_count = getChatUnreadCount(chat.id);
                 data.put(chat.id, chat);
                 adapter.addChatObject(chat);
             }
@@ -127,6 +130,7 @@ public class ChatFragment extends Fragment{
 
     }
 
+
     void getChatsAndSet(){
         GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_chats/");
         try {
@@ -136,6 +140,18 @@ public class ChatFragment extends Fragment{
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    int getChatUnreadCount(int chatId){
+        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/chat_unread_count/" + chatId + "/");
+        try {
+            String response = process.execute().get();
+            if (response != null)
+                return new JsonParser().parse(response).getAsJsonObject().get("count").getAsInt();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     private void start(){
@@ -151,8 +167,11 @@ public class ChatFragment extends Fragment{
                 @Override
                 public void onMessage(String s) {
                     getActivity().runOnUiThread(() -> {
-                        MessageObject messageObject = new MessageObject(new JsonParser().parse(s).getAsJsonObject().get("order_changed").getAsJsonObject());
-
+                        JsonObject jo = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject();
+                        ChatObject chatObject = new ChatObject(jo.get("chat").getAsJsonObject());
+                        int count = jo.get("chat_unread_messages").getAsInt();
+                        System.out.println("COOOOOOOOOOOUNT: " + count);
+                        data.get(chatObject.id).unread_count = count;
                         adapter.notifyDataSetChanged();
                     });
                 }
@@ -170,7 +189,6 @@ public class ChatFragment extends Fragment{
             e.printStackTrace();
         }
     }
-
 
     @Override
     public void onDetach() {
