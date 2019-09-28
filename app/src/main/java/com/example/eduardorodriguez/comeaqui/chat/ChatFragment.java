@@ -1,6 +1,8 @@
 package com.example.eduardorodriguez.comeaqui.chat;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.ChatFirebaseObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.firebase.database.*;
@@ -16,6 +19,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -130,16 +138,37 @@ public class ChatFragment extends Fragment{
         }
     }
 
-    MessageObject getLastMessage(int id){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/last_chat_message/" + id + "/");
+    private void start(){
         try {
-            String response = process.execute().get();
-            if (response != null)
-                return new MessageObject(new JsonParser().parse(response).getAsJsonObject());
-        } catch (ExecutionException | InterruptedException e) {
+            URI uri = new URI(getActivity().getResources().getString(R.string.server) + "/ws/unread_messages/" + MainActivity.user.id +  "/");
+            WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
+                @Override
+                public void onOpen(ServerHandshake serverHandshake) {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getActivity(), "Connection Established!", Toast.LENGTH_LONG).show();
+                    });
+                }
+                @Override
+                public void onMessage(String s) {
+                    getActivity().runOnUiThread(() -> {
+                        MessageObject messageObject = new MessageObject(new JsonParser().parse(s).getAsJsonObject().get("order_changed").getAsJsonObject());
+
+                        adapter.notifyDataSetChanged();
+                    });
+                }
+                @Override
+                public void onClose(int i, String s, boolean b) {
+                    Log.i("Websocket", "Closed " + s);
+                }
+                @Override
+                public void onError(Exception e) {
+                    Log.i("Websocket", "Error " + e.getMessage());
+                }
+            };
+            mWebSocketClient.connect();
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        return null;
     }
 
 

@@ -136,12 +136,16 @@ public class ConversationActivity extends AppCompatActivity {
             mWebSocketClient.send("{ \"message\": \"" + txtMensaje.getText().toString() + "\"," +
                     "\"command\": \"new_message\"," +
                     "\"from\": \"" + MainActivity.user.id + "\"," +
+                    "\"to\": \"" + chattingWith.id + "\"," +
                     "\"chatId\": \"" + chat.id + "\"}"
             );
-            WebSocketMessage.send(this,
-                    "/ws/unread_messages/" + chattingWith.id +  "/",
-                    "{}"
-            );
+//            WebSocketMessage.send(this,
+//                    "/ws/unread_messages/" + chattingWith.id +  "/",
+//                    "{ \"message\": \"" + txtMensaje.getText().toString() + "\"," +
+//                            "\"command\": \"new_message\"," +
+//                            "\"from\": \"" + MainActivity.user.id + "\"," +
+//                            "\"chatId\": \"" + chat.id + "\"}"
+//            );
             txtMensaje.setText("");
         });
 
