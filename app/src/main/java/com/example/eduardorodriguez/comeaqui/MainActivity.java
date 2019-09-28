@@ -16,6 +16,7 @@ import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import com.example.eduardorodriguez.comeaqui.chat.MessageObject;
 import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.FirebaseUser;
@@ -308,6 +309,7 @@ public class MainActivity extends AppCompatActivity {
     private void setNotificationsBubbles(){
         setUnseenOrders();
         setUnseenNotifications();
+        setUnseenChatMessages();
     }
     private void setUnseenOrders(){
         ArrayList<OrderObject> orderObjects = new ArrayList<>();
@@ -341,6 +343,23 @@ public class MainActivity extends AppCompatActivity {
         if (notificationObjects.size() > 0){
             notNotifications.setVisibility(View.VISIBLE);
             notNotifications.setText("" + notificationObjects.size());
+        }
+    }
+    private void setUnseenChatMessages(){
+        ArrayList<MessageObject> messageObjects = new ArrayList<>();
+        GetAsyncTask getPostLocations = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/unseen_chat_messages/");
+        try {
+            String response = getPostLocations.execute().get();
+            if (response != null)
+                for (JsonElement pa : new JsonParser().parse(response).getAsJsonArray()) {
+                    messageObjects.add(new MessageObject(pa.getAsJsonObject()));
+                }
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (messageObjects.size() > 0){
+            notChat.setVisibility(View.VISIBLE);
+            notChat.setText("" + messageObjects.size());
         }
     }
 
