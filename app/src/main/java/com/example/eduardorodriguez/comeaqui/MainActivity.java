@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private static TextView notOrders;
     private static TextView notNotifications;
     private static TextView notProfile;
+    private static TextView notChat;
 
     private OrderFragment getPastOderFragment;
     private MapFragment mapFragment;
@@ -105,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
         notOrders = findViewById(R.id.not_order);
         notNotifications = findViewById(R.id.not_not);
         notProfile = findViewById(R.id.not_profile);
+        notChat = findViewById(R.id.notChat);
         notArray = new TextView[]{notMap, notOrders, notNotifications, notProfile};
 
         getPastOderFragment = new OrderFragment();
@@ -146,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
         setNotificationsBubbles();
         listenToOrdersChanges();
         listenToNotificationsChanges();
+        listenToChatMessages();
     }
 
     private void initiateIcons(int cf){
@@ -251,6 +254,39 @@ public class MainActivity extends AppCompatActivity {
                         if (ordersNotSeen > 0 ){
                             notNotifications.setVisibility(View.VISIBLE);
                             notNotifications.setText("" + ordersNotSeen);
+                        }
+                    });
+                }
+                @Override
+                public void onClose(int i, String s, boolean b) {
+                    Log.i("Websocket", "Closed " + s);
+                }
+                @Override
+                public void onError(Exception e) {
+                    Log.i("Websocket", "Error " + e.getMessage());
+                }
+            };
+            mWebSocketClient.connect();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+    public void listenToChatMessages(){
+        try {
+            URI uri = new URI(getResources().getString(R.string.server) + "/ws/unread_messages/" + user.id +  "/");
+            WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
+                @Override
+                public void onOpen(ServerHandshake serverHandshake) {
+                    runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Unread Messages!", Toast.LENGTH_LONG).show());
+                }
+                @Override
+                public void onMessage(String s) {
+                    final String message = s;
+                    runOnUiThread(() -> {
+                        int ordersNotSeen = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("unread_messages").getAsInt();
+                        if (ordersNotSeen > 0 ){
+                            notChat.setVisibility(View.VISIBLE);
+                            notChat.setText("" + ordersNotSeen);
                         }
                     });
                 }

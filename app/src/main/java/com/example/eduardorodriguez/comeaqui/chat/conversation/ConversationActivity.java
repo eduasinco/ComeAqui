@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.SplashActivity;
+import com.example.eduardorodriguez.comeaqui.WebSocketMessage;
 import com.example.eduardorodriguez.comeaqui.chat.ChatObject;
 import com.example.eduardorodriguez.comeaqui.chat.MessageObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
@@ -56,10 +57,6 @@ public class ConversationActivity extends AppCompatActivity {
     private ImageView btnEnviar;
     private ImageView backView;
     private AdapterMensajes adapter;
-
-    private OkHttpClient client;
-
-    WebSocket ws;
     WebSocketClient mWebSocketClient;
 
 
@@ -133,7 +130,6 @@ public class ConversationActivity extends AppCompatActivity {
         });
 
         backView.setOnClickListener(v -> finish());
-        client = new OkHttpClient();
         start();
         btnEnviar.setOnClickListener(view -> {
             //createServerMessage();
@@ -141,6 +137,10 @@ public class ConversationActivity extends AppCompatActivity {
                     "\"command\": \"new_message\"," +
                     "\"from\": \"" + MainActivity.user.id + "\"," +
                     "\"chatId\": \"" + chat.id + "\"}"
+            );
+            WebSocketMessage.send(this,
+                    "/ws/unread_messages/" + chattingWith.id +  "/",
+                    "{}"
             );
             txtMensaje.setText("");
         });
@@ -213,7 +213,7 @@ public class ConversationActivity extends AppCompatActivity {
                 @Override
                 public void onMessage(String s) {
                     runOnUiThread(() -> {
-                        MessageObject brandNewMessage = new MessageObject(new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject());
+                        MessageObject brandNewMessage = new MessageObject(new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("message").getAsJsonObject());
                         setMessageStatus(brandNewMessage);
                         adapter.addMensaje(brandNewMessage);
                     });
