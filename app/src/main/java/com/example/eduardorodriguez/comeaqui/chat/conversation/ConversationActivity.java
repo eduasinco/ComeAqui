@@ -19,6 +19,7 @@ import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.MessageObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.PutAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.DateFragment;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -157,7 +158,6 @@ public class ConversationActivity extends AppCompatActivity {
                     MessageObject currentMessage = new MessageObject(je.getAsJsonObject());
 
                     setMessageStatus(currentMessage);
-
                     adapter.addMensaje(currentMessage);
                 }
             }
@@ -209,6 +209,9 @@ public class ConversationActivity extends AppCompatActivity {
                         MessageObject brandNewMessage = new MessageObject(new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("message").getAsJsonObject());
                         setMessageStatus(brandNewMessage);
                         adapter.addMensaje(brandNewMessage);
+                        if (brandNewMessage.sender.id != MainActivity.user.id){
+                            setMessagAsSeen(brandNewMessage.id);
+                        }
                     });
                 }
                 @Override
@@ -224,5 +227,10 @@ public class ConversationActivity extends AppCompatActivity {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+    }
+
+    private void setMessagAsSeen(int messageId){
+        PutAsyncTask resetPassword = new PutAsyncTask(getResources().getString(R.string.server) + "/mark_message_as_seen/" + messageId + "/");
+        resetPassword.execute();
     }
 }

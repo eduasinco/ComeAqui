@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import java.io.Serializable;
 
 public class MessageObject implements Serializable {
+    public int id;
     public User sender;
     public String message;
     public String createdAt;
@@ -16,6 +17,7 @@ public class MessageObject implements Serializable {
     public boolean isOwner = false;
 
     public MessageObject(JsonObject jo){
+        id = jo.get("id").getAsInt();
         sender = new User(jo.get("sender").getAsJsonObject());
         message = jo.get("message").getAsString();
         createdAt = jo.get("created_at").getAsString();

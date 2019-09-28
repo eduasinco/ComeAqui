@@ -72,6 +72,13 @@ public class ChatFragment extends Fragment{
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getChatsAndSet();
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
@@ -172,6 +179,7 @@ public class ChatFragment extends Fragment{
                         int count = jo.get("chat_unread_messages").getAsInt();
                         System.out.println("COOOOOOOOOOOUNT: " + count);
                         data.get(chatObject.id).unread_count = count;
+                        data.get(chatObject.id).messages = chatObject.messages;
                         adapter.notifyDataSetChanged();
                     });
                 }
