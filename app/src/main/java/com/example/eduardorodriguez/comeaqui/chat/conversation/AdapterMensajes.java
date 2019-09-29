@@ -68,13 +68,13 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
         if (holder.mItem.isOwner){
             holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_send));
             holder.wholeMessage.setGravity(Gravity.RIGHT);
-            if (holder.mItem.lastInGroup){
+            if (holder.mItem.topSpace){
                 holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_final_right));
             }
         } else {
             holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message));
             holder.wholeMessage.setGravity(Gravity.LEFT);
-            if (holder.mItem.lastInGroup){
+            if (holder.mItem.topSpace){
                 holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_final_left));
             }
         }
