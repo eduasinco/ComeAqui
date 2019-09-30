@@ -122,14 +122,14 @@ public class PendingOrdersFragment extends Fragment {
             WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
-                    getActivity().runOnUiThread(() -> {
-                        Toast.makeText(getActivity(), "Connection Established!", Toast.LENGTH_LONG).show();
-                    });
+                    // getActivity().runOnUiThread(() -> {
+                    //    Toast.makeText(getActivity(), "Connection Established!", Toast.LENGTH_LONG).show();
+                    // });
                 }
                 @Override
                 public void onMessage(String s) {
                     getActivity().runOnUiThread(() -> {
-                        OrderObject orderChanged = new OrderObject(new JsonParser().parse(s).getAsJsonObject().get("order_changed").getAsJsonObject());
+                        OrderObject orderChanged = new OrderObject(new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("order_changed").getAsJsonObject());
                         data.get(orderChanged.id).seen = orderChanged.seen;
                         data.get(orderChanged.id).status = orderChanged.status;
                         orderAdapter.notifyDataSetChanged();

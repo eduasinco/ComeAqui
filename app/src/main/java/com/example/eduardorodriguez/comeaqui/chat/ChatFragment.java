@@ -167,9 +167,9 @@ public class ChatFragment extends Fragment{
             WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
-                    getActivity().runOnUiThread(() -> {
-                        Toast.makeText(getActivity(), "Connection Established!", Toast.LENGTH_LONG).show();
-                    });
+                    // getActivity().runOnUiThread(() -> {
+                    //    Toast.makeText(getActivity(), "Connection Established!", Toast.LENGTH_LONG).show();
+                    // });
                 }
                 @Override
                 public void onMessage(String s) {

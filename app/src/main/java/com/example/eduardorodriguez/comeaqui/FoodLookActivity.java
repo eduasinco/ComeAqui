@@ -170,7 +170,7 @@ public class FoodLookActivity extends AppCompatActivity {
         }
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
-            activity.runOnUiThread(() -> Toast.makeText(activity, "Connection Established!", Toast.LENGTH_LONG).show());
+            // activity.runOnUiThread(() -> Toast.makeText(activity, "Connection Established!", Toast.LENGTH_LONG).show());
         }
         @Override
         public void onMessage(WebSocket webSocket, String text) {
