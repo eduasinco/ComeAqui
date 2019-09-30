@@ -3,7 +3,7 @@ package com.example.eduardorodriguez.comeaqui;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.widget.Toast;
+
 import androidx.cardview.widget.CardView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -83,7 +83,7 @@ public class FoodLookActivity extends AppCompatActivity {
         posterImage = findViewById(R.id.poster_image);
         staticMapView = findViewById(R.id.static_map);
         postImageLayout = findViewById(R.id.image_layout);
-        backView = findViewById(R.id.back);
+        backView = findViewById(R.id.back_arrow);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();

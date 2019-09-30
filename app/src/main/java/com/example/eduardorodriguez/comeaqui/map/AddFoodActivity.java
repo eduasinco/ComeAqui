@@ -83,7 +83,7 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
         submit = findViewById(R.id.submitButton);
         timePicker = findViewById(R.id.timePicker);
         doPhoto = findViewById(R.id.photo);
-        backView = findViewById(R.id.back);
+        backView = findViewById(R.id.back_arrow);
         selectFromLayout = findViewById(R.id.select_image_from);
 
         context = getApplicationContext();

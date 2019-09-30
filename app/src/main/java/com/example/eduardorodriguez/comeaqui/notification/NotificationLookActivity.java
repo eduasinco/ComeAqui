@@ -69,7 +69,7 @@ public class NotificationLookActivity extends AppCompatActivity {
         dinnerImage = findViewById(R.id.dinner_image);
         staticMapView = findViewById(R.id.static_map);
         postImageLayout = findViewById(R.id.post_image_layout);
-        backView = findViewById(R.id.back);
+        backView = findViewById(R.id.back_arrow);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();

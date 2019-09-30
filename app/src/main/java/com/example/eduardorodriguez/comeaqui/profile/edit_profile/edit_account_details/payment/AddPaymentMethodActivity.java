@@ -1,7 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment;
 
 import android.content.Intent;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,7 +13,7 @@ public class AddPaymentMethodActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_payment_method);
-        ImageView back = findViewById(R.id.back);
+        ImageView back = findViewById(R.id.back_arrow);
         Button addCard = findViewById(R.id.add_card);
 
         addCard.setOnClickListener(v -> {

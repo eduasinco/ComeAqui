@@ -45,7 +45,7 @@ public class ConversationActivity extends AppCompatActivity {
     private RecyclerView rvMensajes;
     private EditText txtMensaje;
     private ImageView btnEnviar;
-    private ImageView backView;
+    private View backView;
     private AdapterMensajes adapter;
     WebSocketClient mWebSocketClient;
 
@@ -60,7 +60,7 @@ public class ConversationActivity extends AppCompatActivity {
         rvMensajes = findViewById(R.id.rvMensajes);
         txtMensaje = findViewById(R.id.txtMensaje);
         btnEnviar = findViewById(R.id.btnEnviar);
-        backView = findViewById(R.id.back);
+        backView = findViewById(R.id.back_arrow);
 
         adapter = new AdapterMensajes(this);
         LinearLayoutManager l = new LinearLayoutManager(this);

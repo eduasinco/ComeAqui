@@ -98,7 +98,7 @@
             app:layout_constraintEnd_toEndOf="parent" android:id="@+id/linearLayout6">
         <ImageView
                 android:layout_width="20dp"
-                android:layout_height="20dp" app:srcCompat="@drawable/back_white" android:id="@+id/back"
+                android:layout_height="20dp" app:srcCompat="@drawable/back_white" android:id="@+id/back_arrow"
                 android:layout_weight="0"/>
         <TextView
                 android:text="Edit Profile"

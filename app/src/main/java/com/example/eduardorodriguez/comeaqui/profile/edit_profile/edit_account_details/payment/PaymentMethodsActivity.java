@@ -28,7 +28,7 @@ public class PaymentMethodsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_methods);
         LinearLayout addPaymentMethod = findViewById(R.id.add_payment_method);
-        ImageView back = findViewById(R.id.back);
+        ImageView back = findViewById(R.id.back_arrow);
 
         RecyclerView recyclerView = findViewById(R.id.payment_methods_recycleview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

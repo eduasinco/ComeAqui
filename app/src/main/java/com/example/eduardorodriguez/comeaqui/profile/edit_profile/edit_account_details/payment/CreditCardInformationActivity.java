@@ -11,7 +11,7 @@ import android.widget.EditText;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.google.gson.JsonParser;
-import com.hbb20.CountryCodePicker;
+
 import io.card.payment.CardIOActivity;
 import io.card.payment.CreditCard;
 
@@ -52,7 +52,7 @@ public class CreditCardInformationActivity extends AppCompatActivity {
         });
         creditCardView.addTextChangedListener(new CreditCardNumberFormattingTextWatcher());
 
-        findViewById(R.id.back).setOnClickListener((v) -> finish());
+        findViewById(R.id.back_arrow).setOnClickListener((v) -> finish());
     }
 
     public void onScanPress(View v) {

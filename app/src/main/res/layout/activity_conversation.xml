@@ -29,10 +29,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:orientation="horizontal" android:gravity="center_vertical">
-                <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp" app:srcCompat="@drawable/back" android:id="@+id/back"
-                        android:layout_marginEnd="16dp" android:layout_marginStart="8dp"/>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/back_arrow"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/back_arrow" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/dinner_image"
                         android:layout_width="40sp"

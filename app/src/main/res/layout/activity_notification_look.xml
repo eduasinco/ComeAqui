@@ -148,7 +148,7 @@
 
             <ImageView
                     android:layout_width="20dp"
-                    android:layout_height="20dp" app:srcCompat="@drawable/back" android:id="@+id/back"
+                    android:layout_height="20dp" app:srcCompat="@drawable/back" android:id="@+id/back_arrow"
                     android:layout_marginTop="16dp" app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"/>
             <ImageView

@@ -62,7 +62,7 @@ public class EditProfileActivity extends AppCompatActivity {
         bioTextView = findViewById(R.id.bioText);
         TextView editProfilePhotoView = findViewById(R.id.edit_profile_picture);
         TextView editCoverPhoto = findViewById(R.id.edit_cover_photo);
-        ImageView backView = findViewById(R.id.back);
+        ImageView backView = findViewById(R.id.back_arrow);
         backgroundImageView = findViewById(R.id.background_image);
         selectFrom = findViewById(R.id.select_from);
         TextView editAccountDetailsView = findViewById(R.id.edit_account_details);

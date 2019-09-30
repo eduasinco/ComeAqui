@@ -1,5 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.chat;
 
+import android.view.View;
 import android.widget.ImageView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -15,9 +16,8 @@ public class ChatActivity extends AppCompatActivity implements SearchFragment.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         setFragment(new ChatFragment(), R.id.chat_frame);
-        setFragment(new SearchFragment(), R.id.search_frame);
 
-        ImageView backView = findViewById(R.id.back);
+        View backView = findViewById(R.id.back);
         backView.setOnClickListener(v -> finish());
     }
 

@@ -8,7 +8,7 @@
             android:layout_width="match_parent"
             android:background="@drawable/text_input_shape"
             android:layout_height="32dp"
-            app:layout_constraintStart_toEndOf="@+id/back"
+            app:layout_constraintStart_toEndOf="@+id/back_arrow"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
