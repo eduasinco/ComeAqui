@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class ChatObject implements Serializable {
     public int id;
     public ArrayList<User> users;
-    public ArrayList<MessageObject> messages;
+    public MessageObject last_message;
     public String createdAt;
 
     public int unread_count = 0;
@@ -23,9 +23,6 @@ public class ChatObject implements Serializable {
             users.add(new User(je.getAsJsonObject()));
         }
 
-        messages = new ArrayList<>();
-        for (JsonElement je: jo.get("message_set").getAsJsonArray()){
-            messages.add(new MessageObject(je.getAsJsonObject()));
-        }
+        last_message = new MessageObject(jo.get("last_message").getAsJsonObject());
     }
 }

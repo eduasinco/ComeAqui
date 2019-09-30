@@ -100,7 +100,7 @@ public class DateFragment extends Fragment {
     }
 
     static String getDateForPopUpChat(Date date){
-        String[] week_days = {"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"};
+        String[] week_days = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"};
         String dateTextString = "";
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
 
@@ -117,7 +117,7 @@ public class DateFragment extends Fragment {
             } else if (differenceToStartOrDay + TimeUnit.DAYS.toMillis(7) >= differenceToDate && differenceToDate > differenceToStartOrDay + TimeUnit.DAYS.toMillis(1)) {
                 Calendar c = Calendar.getInstance();
                 c.setTime(date);
-                dateTextString = week_days[c.get(Calendar.DAY_OF_WEEK)];
+                dateTextString = week_days[c.get(Calendar.DAY_OF_WEEK) - 1];
             } else{
                 String pattern = "MM/dd/yyyy";
                 DateFormat df = new SimpleDateFormat(pattern);
@@ -147,7 +147,7 @@ public class DateFragment extends Fragment {
             } else if (differenceToStartOrDay + TimeUnit.DAYS.toMillis(7) >= differenceToDate && differenceToDate > differenceToStartOrDay + TimeUnit.DAYS.toMillis(1)) {
                 Calendar c = Calendar.getInstance();
                 c.setTime(date);
-                dateTextString = week_days[c.get(Calendar.DAY_OF_WEEK)];
+                dateTextString = week_days[c.get(Calendar.DAY_OF_WEEK) - 1];
             } else{
                 String pattern = "MM/dd/yyyy";
                 DateFormat df = new SimpleDateFormat(pattern);

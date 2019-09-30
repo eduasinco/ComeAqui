@@ -177,9 +177,8 @@ public class ChatFragment extends Fragment{
                         JsonObject jo = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject();
                         ChatObject chatObject = new ChatObject(jo.get("chat").getAsJsonObject());
                         int count = jo.get("chat_unread_messages").getAsInt();
-                        System.out.println("COOOOOOOOOOOUNT: " + count);
                         data.get(chatObject.id).unread_count = count;
-                        data.get(chatObject.id).messages = chatObject.messages;
+                        data.get(chatObject.id).last_message = chatObject.last_message;
                         adapter.notifyDataSetChanged();
                     });
                 }
