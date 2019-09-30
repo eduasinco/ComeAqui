@@ -46,7 +46,7 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="$USER_HOME$/Desktop/camera_icon.png" />
+                                      <entry key="imageAsset" value="$USER_HOME$/Desktop/vd_vector.xml" />
                                       <entry key="outputName" value="camera_icon" />
                                       <entry key="theme" value="CUSTOM" />
                                       <entry key="themeColor" value="565656" />
@@ -66,11 +66,20 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
+                                                <entry key="scalingPercent" value="77" />
+                                                <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
                                           </PersistentState>
                                         </value>
                                       </entry>
+                                    </map>
+                                  </option>
+                                  <option name="values">
+                                    <map>
+                                      <entry key="backgroundAssetType" value="COLOR" />
+                                      <entry key="backgroundColor" value="92278f" />
+                                      <entry key="foregroundImage" value="$USER_HOME$/Desktop/vd_vector.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -118,11 +127,6 @@
                                 </PersistentState>
                               </value>
                             </entry>
-                          </map>
-                        </option>
-                        <option name="values">
-                          <map>
-                            <entry key="outputIconType" value="ACTIONBAR" />
                           </map>
                         </option>
                       </PersistentState>
