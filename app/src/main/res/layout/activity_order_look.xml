@@ -23,15 +23,17 @@
                     android:layout_marginEnd="32dp" android:layout_marginStart="32dp">
 
                 <ImageView
-                        android:src="@drawable/no_food"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/image_layout"
-                        android:background="@color/colorPrimaryLight"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:visibility="visible" app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                    android:id="@+id/image_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimaryLight"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/no_food"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.cardview.widget.CardView>
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:background="@drawable/box_element"

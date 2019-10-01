@@ -44,8 +44,6 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        ImageView imageView = holder.mView.findViewById(R.id.image_layout);
-        CardView imageLayout = holder.mView.findViewById(R.id.image_layout);
         FrameLayout postButton = holder.mView.findViewById(R.id.post_button);
 
         final FoodPost foodPost = mValues.get(position);
@@ -56,8 +54,8 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         holder.posterDescriptionView.setText(foodPost.description);
 
         if (!foodPost.food_photo.contains("no-image")) {
-            imageLayout.setVisibility(View.VISIBLE);
-            Glide.with(holder.mView.getContext()).load(foodPost.food_photo).into(imageView);
+            holder.imageLayout.setVisibility(View.VISIBLE);
+            Glide.with(holder.mView.getContext()).load(foodPost.food_photo).into(holder.imageView);
         }
 
         holder.cardButtonView.setOnClickListener(v -> {
@@ -98,6 +96,9 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         public TextView posterDescriptionView;
         public TextView postNameView;
         public View cardButtonView;
+        public ImageView imageView;
+        public CardView imageLayout;
+
 
         public ViewHolder(View view) {
             super(view);
@@ -108,6 +109,8 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
             postPrice = view.findViewById(R.id.price);
             posterDescriptionView = view.findViewById(R.id.description);
             cardButtonView = view.findViewById(R.id.cardButton);
+            imageView = view.findViewById(R.id.image);
+            imageLayout = view.findViewById(R.id.image_layout);
         }
     }
 }

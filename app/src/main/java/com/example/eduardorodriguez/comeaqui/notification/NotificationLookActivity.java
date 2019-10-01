@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.*;
@@ -35,7 +37,7 @@ public class NotificationLookActivity extends AppCompatActivity {
     ImageView dinnerImage;
     ImageView staticMapView;
     ImageView backView;
-    ConstraintLayout postImageLayout;
+    CardView postImageLayout;
 
     NotificationObject notificationObject;
 
@@ -65,10 +67,10 @@ public class NotificationLookActivity extends AppCompatActivity {
         posterNameView = findViewById(R.id.dinner_name);
         posterLocationView = findViewById(R.id.posterLocation);
 
-        postImage = findViewById(R.id.image_layout);
+        postImage = findViewById(R.id.image);
         dinnerImage = findViewById(R.id.dinner_image);
         staticMapView = findViewById(R.id.static_map);
-        postImageLayout = findViewById(R.id.post_image_layout);
+        postImageLayout = findViewById(R.id.image_layout);
         backView = findViewById(R.id.back_arrow);
 
         Intent intent = getIntent();
