@@ -101,7 +101,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" android:layout_weight="1" android:id="@+id/nav_map">
                         <ImageView
-                                android:clickable="true"
                                 android:layout_width="24dp"
                                 android:layout_height="24dp" app:srcCompat="@drawable/food"
                                 android:id="@+id/map"
@@ -127,7 +126,6 @@
                         android:layout_height="match_parent" android:layout_weight="1" android:id="@+id/nav_orders">
 
                         <ImageView
-                                android:clickable="true"
                                 android:layout_width="24dp"
                                 android:layout_height="24dp" app:srcCompat="@drawable/order"
                                 android:id="@+id/order" android:layout_weight="1"
@@ -153,11 +151,12 @@
                         android:id="@+id/nav_notifications">
 
                         <ImageView
-                                android:clickable="true"
                                 android:layout_width="24dp"
-                                android:layout_height="24dp" app:srcCompat="@drawable/notification"
+                                android:layout_height="24dp"
+                            app:srcCompat="@drawable/notification"
                                 android:id="@+id/notification" android:layout_weight="1"
-                                app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintBottom_toBottomOf="parent"/>
                         <TextView
@@ -191,7 +190,6 @@
                                 app:layout_constraintStart_toStartOf="@+id/profile" android:layout_marginBottom="15dp"
                                 app:layout_constraintBottom_toBottomOf="@+id/profile" android:visibility="invisible"/>
                         <ImageView
-                                android:clickable="true"
                                 android:layout_width="24dp"
                                 android:layout_height="24dp" app:srcCompat="@drawable/profile"
                                 android:id="@+id/profile" android:layout_weight="1"

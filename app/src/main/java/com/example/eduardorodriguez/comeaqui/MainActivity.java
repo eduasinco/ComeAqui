@@ -65,6 +65,11 @@ public class MainActivity extends AppCompatActivity {
     private TextView notProfile;
     private TextView notChat;
 
+    private ConstraintLayout navMap;
+    private ConstraintLayout navOrders;
+    private ConstraintLayout navNotifications;
+    private ConstraintLayout navProfile;
+
     private FrameLayout mapFrame;
     private FrameLayout mainFrame;
 
@@ -114,6 +119,11 @@ public class MainActivity extends AppCompatActivity {
         mapFrame = findViewById(R.id.map_frame);
         mainFrame = findViewById(R.id.main_frame);
 
+        navMap = findViewById(R.id.nav_map);
+        navOrders = findViewById(R.id.nav_orders);
+        navNotifications = findViewById(R.id.nav_notifications);
+        navProfile = findViewById(R.id.nav_profile);
+
         notMap = findViewById(R.id.not_map);
         notOrders = findViewById(R.id.not_order);
         notNotifications = findViewById(R.id.not_not);
@@ -134,23 +144,23 @@ public class MainActivity extends AppCompatActivity {
         setMapFragment(mapFragment);
         map.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.foodfill));
 
-        map.setOnClickListener(v -> {
+        navMap.setOnClickListener(v -> {
             initiateIcons(0);
             mainFrame.setVisibility(View.INVISIBLE);
             setFragment(new Fragment());
             map.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.foodfill));
         });
-        orders.setOnClickListener(v -> {
+        navOrders.setOnClickListener(v -> {
             initiateIcons(1);
             setFragment(getPastOderFragment);
             orders.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.orderfill));
         });
-         notifications.setOnClickListener(v -> {
+         navNotifications.setOnClickListener(v -> {
              initiateIcons(2);
              setFragment(notificationFragment);
              notifications.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.notificationfill));
         });
-        profile.setOnClickListener(v -> {
+        navProfile.setOnClickListener(v -> {
             initiateIcons(3);
             setFragment(profileFragment);
             profile.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.profilefill));
