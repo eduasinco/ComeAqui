@@ -146,25 +146,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="65dp">
 
-            <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="20dp" app:srcCompat="@drawable/back"
-                    android:id="@+id/back_arrow"
-                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" android:layout_marginStart="8dp"/>
-            <com.mikhaellopez.circularimageview.CircularImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/no_profile_photo"
-                    app:civ_border_color="@color/colorPrimaryDark"
-                    app:civ_border_width="2dp"
-                    app:civ_shadow="true"
-                    app:civ_shadow_radius="1"
-                    app:civ_shadow_color="@color/colorPrimaryDark"
-                    android:id="@+id/poster_image"
-                    app:layout_constraintTop_toTopOf="parent"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginStart="50dp" app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/back_arrow" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/poster_image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/no_profile_photo"
+                app:civ_border_color="@color/colorPrimaryDark"
+                app:civ_border_width="2dp"
+                app:civ_shadow="true"
+                app:civ_shadow_color="@color/colorPrimaryDark"
+                app:civ_shadow_radius="1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/back"
+                app:layout_constraintTop_toTopOf="parent" />
             <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="0dp"

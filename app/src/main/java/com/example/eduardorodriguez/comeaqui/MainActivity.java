@@ -78,6 +78,11 @@ public class MainActivity extends AppCompatActivity {
     int currentFrame, previousFrame = 0;
     TextView[] notArray;
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setNotificationsBubbles();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
