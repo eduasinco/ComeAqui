@@ -10,52 +10,88 @@
         android:orientation="vertical">
 
         <LinearLayout
-                android:background="@drawable/box_soft_outline"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="56dp">
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/box_soft_outline"
+            android:orientation="horizontal">
+
                 <TextView
-                        android:text="ComeAquí"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent" android:id="@+id/title" android:layout_weight="1"
-                        android:gravity="center_vertical" android:textSize="18sp" android:textStyle="bold"
-                        android:textColor="@color/colorPrimary" android:layout_marginLeft="14dp"/>
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="14dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="ComeAquí"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
                 <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent">
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
 
                         <ImageView
-                                android:layout_gravity="right"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp" app:srcCompat="@drawable/messege_icon"
-                                android:id="@+id/chat"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="@+id/notChat" android:layout_marginEnd="8dp"/>
+                            android:id="@+id/chat"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="right"
+                            android:layout_marginEnd="8dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@+id/notChat"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/messege_icon" />
+
                         <TextView
-                                android:background="@drawable/box_notification"
-                                android:text="3"
-                                android:layout_width="wrap_content"
-                                android:layout_height="18dp" android:id="@+id/notChat"
-                                android:gravity="center"
-                                android:textSize="10sp" android:textColor="@android:color/white"
-                                android:paddingStart="6dp" android:paddingEnd="6dp" android:textStyle="bold"
-                                android:visibility="invisible"
-                                android:layout_marginTop="8dp"
-                                app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                                android:layout_marginEnd="15dp"/>
+                            android:id="@+id/notChat"
+                            android:layout_width="wrap_content"
+                            android:layout_height="18dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="15dp"
+                            android:background="@drawable/box_notification"
+                            android:gravity="center"
+                            android:paddingStart="6dp"
+                            android:paddingEnd="6dp"
+                            android:text="3"
+                            android:textColor="@android:color/white"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:visibility="invisible"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 
-        <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@id/main_nav"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:id="@+id/main_frame"
-                android:layout_weight="1">
-        </FrameLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1 ">
+
+                <FrameLayout
+                    android:id="@+id/map_frame"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/main_frame"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_weight="1"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:visibility="invisible"></FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"

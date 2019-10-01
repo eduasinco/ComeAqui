@@ -59,16 +59,19 @@ public class MainActivity extends AppCompatActivity {
     private ImageView notifications;
     private ImageView profile;
 
-    private static TextView notMap;
-    private static TextView notOrders;
-    private static TextView notNotifications;
-    private static TextView notProfile;
-    private static TextView notChat;
+    private TextView notMap;
+    private TextView notOrders;
+    private TextView notNotifications;
+    private TextView notProfile;
+    private TextView notChat;
 
-    private OrderFragment getPastOderFragment;
+    private FrameLayout mapFrame;
+    private FrameLayout mainFrame;
+
     private MapFragment mapFragment;
-    private ProfileFragment profileFragment;
+    private OrderFragment getPastOderFragment;
     private NotificationsFragment notificationFragment;
+    private ProfileFragment profileFragment;
 
     public static User user;
     public static FirebaseUser firebaseUser;
@@ -108,6 +111,9 @@ public class MainActivity extends AppCompatActivity {
         notifications = findViewById(R.id.notification);
         profile = findViewById(R.id.profile);
 
+        mapFrame = findViewById(R.id.map_frame);
+        mainFrame = findViewById(R.id.main_frame);
+
         notMap = findViewById(R.id.not_map);
         notOrders = findViewById(R.id.not_order);
         notNotifications = findViewById(R.id.not_not);
@@ -125,12 +131,13 @@ public class MainActivity extends AppCompatActivity {
             startActivity(chatIntent);
         });
 
-        setFragment(mapFragment);
+        setMapFragment(mapFragment);
         map.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.foodfill));
 
         map.setOnClickListener(v -> {
             initiateIcons(0);
-            setFragment(mapFragment);
+            mainFrame.setVisibility(View.INVISIBLE);
+            setFragment(new Fragment());
             map.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.foodfill));
         });
         orders.setOnClickListener(v -> {
@@ -194,8 +201,14 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
+    private void setMapFragment(Fragment fragment) {
+        mainFrame.setVisibility(View.INVISIBLE);
+        getSupportFragmentManager().beginTransaction().replace(R.id.map_frame, fragment).commit();
+    }
+
     private void setFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, fragment).commit();
+        mainFrame.setVisibility(View.VISIBLE);
     }
 
     public static User initializeUser(){
