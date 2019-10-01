@@ -15,6 +15,7 @@ import com.example.eduardorodriguez.comeaqui.WebSocketMessage;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -118,6 +119,11 @@ public class OrderLookActivity extends AppCompatActivity {
         if(!order.post.food_photo.contains("no-image")){
             imageCard.setVisibility(View.VISIBLE);
             Glide.with(context).load(order.post.food_photo).into(postImageView);
+            imageCard.setOnClickListener((v) -> {
+                Intent imageLook = new Intent(this, ImageLookActivity.class);
+                imageLook.putExtra("image_url", order.post.food_photo);
+                startActivity(imageLook);
+            });
         }
     }
 }

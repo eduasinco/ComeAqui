@@ -21,6 +21,7 @@ import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.JsonObject;
@@ -113,6 +114,11 @@ public class FoodLookActivity extends AppCompatActivity {
             if(!foodPost.food_photo.contains("no-image")){
                 postImageLayout.setVisibility(View.VISIBLE);
                 Glide.with(this).load(foodPost.food_photo).into(postImage);
+                postImageLayout.setOnClickListener((v) -> {
+                    Intent imageLook = new Intent(this, ImageLookActivity.class);
+                    imageLook.putExtra("image_url", foodPost.food_photo);
+                    startActivity(imageLook);
+                });
             }
             String url = "http://maps.google.com/maps/api/staticmap?center=" + foodPost.lat + "," + foodPost.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
             Glide.with(this).load(url).into(staticMapView);

@@ -15,6 +15,7 @@ import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.FirebaseUs
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.EditProfileActivity;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
+import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.ProfileImageGalleryFragment;
 import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
@@ -67,9 +68,19 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
     public void setProfile(User user, boolean isMyUser){
         if(!user.profile_photo.contains("no-image")) {
             Glide.with(view.getContext()).load(user.profile_photo).into(profileImageView);
+            profileImageView.setOnClickListener((v) -> {
+                Intent imageLook = new Intent(getContext(), ImageLookActivity.class);
+                imageLook.putExtra("image_url", user.profile_photo);
+                getContext().startActivity(imageLook);
+            });
         }
         if(!user.background_photo.contains("no-image")) {
             Glide.with(view.getContext()).load(user.background_photo).into(backGroundImage);
+            backGroundImage.setOnClickListener((v) -> {
+                Intent imageLook = new Intent(getContext(), ImageLookActivity.class);
+                imageLook.putExtra("image_url", user.background_photo);
+                getContext().startActivity(imageLook);
+            });
         }
         nameView.setText(user.first_name + " " + user.last_name);
         emailView.setText(user.email);

@@ -11,12 +11,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.example.eduardorodriguez.comeaqui.FoodLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodElementFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
+import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 
 import java.util.concurrent.ExecutionException;
 
@@ -59,7 +61,6 @@ public class MapCardFragment extends Fragment {
 
         posterImageView = view.findViewById(R.id.poster_image);
         postImageView = view.findViewById(R.id.image_layout);
-        imageLayout = view.findViewById(R.id.image_layout);
 
         foodPost = (FoodPost) getArguments().getSerializable("object");
 
@@ -76,8 +77,13 @@ public class MapCardFragment extends Fragment {
 
         if(!foodPost.owner.profile_photo.contains("no-image")) Glide.with(view.getContext()).load(foodPost.owner.profile_photo).into(posterImageView);
         if(!foodPost.food_photo.contains("no-image")){
-            imageLayout.setVisibility(View.VISIBLE);
+            postImageView.setVisibility(View.VISIBLE);
             Glide.with(view.getContext()).load(foodPost.food_photo).into(postImageView);
+            postImageView.setOnClickListener((v) -> {
+                Intent foodLook = new Intent(getContext(), FoodLookActivity.class);
+                foodLook.putExtra("object", foodPost);
+                startActivity(foodLook);
+            });
         }
 
         posterImageView.setOnClickListener(v -> goToProfileView());

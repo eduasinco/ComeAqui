@@ -17,6 +17,7 @@ import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 
 import java.util.ArrayList;
 
@@ -56,6 +57,11 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         if (!foodPost.food_photo.contains("no-image")) {
             holder.imageLayout.setVisibility(View.VISIBLE);
             Glide.with(holder.mView.getContext()).load(foodPost.food_photo).into(holder.imageView);
+            holder.imageView.setOnClickListener((v) -> {
+                Intent imageLook = new Intent(holder.mView.getContext(), ImageLookActivity.class);
+                imageLook.putExtra("image_url", foodPost.food_photo);
+                holder.mView.getContext().startActivity(imageLook);
+            });
         }
 
         holder.cardButtonView.setOnClickListener(v -> {

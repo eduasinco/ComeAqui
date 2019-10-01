@@ -18,6 +18,7 @@ import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.google.gson.JsonObject;
 
 public class NotificationLookActivity extends AppCompatActivity {
@@ -101,6 +102,11 @@ public class NotificationLookActivity extends AppCompatActivity {
             if(!notificationObject.order.post.food_photo.contains("no-image")){
                 postImageLayout.setVisibility(View.VISIBLE);
                 Glide.with(this).load(notificationObject.order.post.food_photo).into(postImage);
+                postImageLayout.setOnClickListener((v) -> {
+                    Intent imageLook = new Intent(this, ImageLookActivity.class);
+                    imageLook.putExtra("image_url", notificationObject.order.post.food_photo);
+                    startActivity(imageLook);
+                });
             }
             String url = "http://maps.google.com/maps/api/staticmap?center=" + notificationObject.order.post.lat + "," + notificationObject.order.post.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
             Glide.with(this).load(url).into(staticMapView);
