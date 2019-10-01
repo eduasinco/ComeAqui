@@ -44,7 +44,7 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        ImageView imageView = holder.mView.findViewById(R.id.post_image);
+        ImageView imageView = holder.mView.findViewById(R.id.image_layout);
         CardView imageLayout = holder.mView.findViewById(R.id.image_layout);
         FrameLayout postButton = holder.mView.findViewById(R.id.post_button);
 

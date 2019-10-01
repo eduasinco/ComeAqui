@@ -65,7 +65,7 @@ public class NotificationLookActivity extends AppCompatActivity {
         posterNameView = findViewById(R.id.dinner_name);
         posterLocationView = findViewById(R.id.posterLocation);
 
-        postImage = findViewById(R.id.post_image);
+        postImage = findViewById(R.id.image_layout);
         dinnerImage = findViewById(R.id.dinner_image);
         staticMapView = findViewById(R.id.static_map);
         postImageLayout = findViewById(R.id.post_image_layout);

@@ -79,7 +79,7 @@ public class FoodLookActivity extends AppCompatActivity {
         posterNameView = findViewById(R.id.poster_name);
         posterLocationView = findViewById(R.id.posterLocation);
 
-        postImage = findViewById(R.id.post_image);
+        postImage = findViewById(R.id.image_layout);
         posterImage = findViewById(R.id.poster_image);
         staticMapView = findViewById(R.id.static_map);
         postImageLayout = findViewById(R.id.image_layout);

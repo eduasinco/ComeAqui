@@ -59,7 +59,7 @@
                 <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="0dp" app:srcCompat="@drawable/no_food"
-                        android:id="@+id/post_image" android:visibility="visible"
+                        android:id="@+id/image_layout" android:visibility="visible"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"/>

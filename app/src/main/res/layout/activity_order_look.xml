@@ -26,7 +26,7 @@
                         android:src="@drawable/no_food"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/post_image"
+                        android:id="@+id/image_layout"
                         android:background="@color/colorPrimaryLight"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"

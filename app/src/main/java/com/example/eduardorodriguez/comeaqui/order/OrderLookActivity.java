@@ -2,26 +2,20 @@ package com.example.eduardorodriguez.comeaqui.order;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
-import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
-import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.WebSocketMessage;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.concurrent.ExecutionException;
 
 public class OrderLookActivity extends AppCompatActivity {
@@ -65,7 +59,7 @@ public class OrderLookActivity extends AppCompatActivity {
         orderStatus = findViewById(R.id.order_status);
 
         posterImageView = findViewById(R.id.poster_image);
-        postImageView = findViewById(R.id.post_image);
+        postImageView = findViewById(R.id.image_layout);
         staticMapView = findViewById(R.id.static_map);
 
         Intent intent = getIntent();
