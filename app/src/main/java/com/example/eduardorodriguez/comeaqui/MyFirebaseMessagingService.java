@@ -35,7 +35,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         switch (channel){
             case MESSAGES_CHANNEL_ID:
                 Notification messageNotification = new NotificationCompat.Builder(this, MESSAGES_CHANNEL_ID)
-                        .setSmallIcon(R.drawable.ic_one)
+                        .setSmallIcon(R.drawable.app_icon)
                         .setContentTitle(remoteMessage.getNotification().getTitle())
                         .setContentText(remoteMessage.getNotification().getBody())
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -46,7 +46,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             case ORDERS_CHANNEL_ID:
                 Notification orderNotification = new NotificationCompat.Builder(this, ORDERS_CHANNEL_ID)
-                        .setSmallIcon(R.drawable.ic_one)
+                        .setSmallIcon(R.drawable.app_icon)
                         .setContentTitle(remoteMessage.getNotification().getTitle())
                         .setContentText(remoteMessage.getNotification().getBody())
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -57,7 +57,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             case NOTIFICATIONS_CHANNEL_ID:
                 Notification notificationNotification = new NotificationCompat.Builder(this, NOTIFICATIONS_CHANNEL_ID)
-                        .setSmallIcon(R.drawable.ic_one)
+                        .setSmallIcon(R.drawable.app_icon)
                         .setContentTitle(remoteMessage.getNotification().getTitle())
                         .setContentText(remoteMessage.getNotification().getBody())
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
