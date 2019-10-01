@@ -18,6 +18,7 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.MessageObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
+import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PutAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.DateFragment;
@@ -83,6 +84,8 @@ public class ConversationActivity extends AppCompatActivity {
 
             nombre.setText(chattingWith.first_name + " " + chattingWith.last_name);
             Glide.with(this).load(chattingWith.profile_photo).into(fotoPerfil);
+            fotoPerfil.setOnClickListener(v -> goToProfileView(chattingWith));
+
             getChatMessages();
         }
 
@@ -139,6 +142,12 @@ public class ConversationActivity extends AppCompatActivity {
             txtMensaje.setText("");
         });
 
+    }
+
+    void goToProfileView(User user){
+        Intent k = new Intent(this, ProfileViewActivity.class);
+        k.putExtra("user_email", user);
+        startActivity(k);
     }
 
     private void hideKeyboard(){

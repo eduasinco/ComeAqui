@@ -14,6 +14,8 @@ import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.WebSocketMessage;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.objects.User;
+import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.google.gson.JsonObject;
@@ -88,6 +90,11 @@ public class OrderLookActivity extends AppCompatActivity {
 
     }
 
+    void goToProfileView(User user){
+        Intent k = new Intent(getApplicationContext(), ProfileViewActivity.class);
+        k.putExtra("user_email", user);
+        startActivity(k);
+    }
 
     void createStringArray(JsonObject jo){
         order = new OrderObject(jo);
@@ -115,6 +122,7 @@ public class OrderLookActivity extends AppCompatActivity {
         Glide.with(this).load(url).into(staticMapView);
         if(!order.poster.profile_photo.contains("no-image")) {
             Glide.with(context).load(order.poster.profile_photo).into(posterImageView);
+            posterImageView.setOnClickListener(v -> goToProfileView(order.poster));
         }
         if(!order.post.food_photo.contains("no-image")){
             imageCard.setVisibility(View.VISIBLE);

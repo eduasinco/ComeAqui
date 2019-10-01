@@ -14,10 +14,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.MessageObject;
 import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
+import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.NotificationFirebase;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
+import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
@@ -110,7 +112,10 @@ public class FoodLookActivity extends AppCompatActivity {
                     .commit();
 
 
-            if(!foodPost.owner.profile_photo.contains("no-image")) Glide.with(this).load(foodPost.owner.profile_photo).into(posterImage);
+            if(!foodPost.owner.profile_photo.contains("no-image")) {
+                Glide.with(this).load(foodPost.owner.profile_photo).into(posterImage);
+                posterImage.setOnClickListener(v -> goToProfileView(foodPost.owner));
+            }
             if(!foodPost.food_photo.contains("no-image")){
                 postImageLayout.setVisibility(View.VISIBLE);
                 Glide.with(this).load(foodPost.food_photo).into(postImage);
@@ -128,6 +133,12 @@ public class FoodLookActivity extends AppCompatActivity {
         }
 
         backView.setOnClickListener(v -> finish());
+    }
+
+    void goToProfileView(User user){
+        Intent k = new Intent(this, ProfileViewActivity.class);
+        k.putExtra("user_email", user);
+        startActivity(k);
     }
 
     void setPlaceButton(boolean delete){
