@@ -4,22 +4,16 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.*;
-import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.MessageObject;
 import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.FirebaseUser;
+import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
@@ -34,7 +28,6 @@ import com.example.eduardorodriguez.comeaqui.map.MapFragment;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileFragment;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
-import com.google.firebase.database.*;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -199,10 +192,15 @@ public class MainActivity extends AppCompatActivity {
                     postTokenToServer(token);
                 });
     }
+    private void postUserDeviceId(String id){
+        PatchAsyncTask putTask = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
+        putTask.execute("dev_id", id);
+    }
+
     private void postTokenToServer(String token){
         String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-
+        postUserDeviceId(androidID);
         PostAsyncTask postToken = new PostAsyncTask(getResources().getString(R.string.server) + "/fcm/v1/devices/");
         postToken.execute(
                 new String[]{"dev_id", androidID},
@@ -389,45 +387,5 @@ public class MainActivity extends AppCompatActivity {
             notChat.setVisibility(View.VISIBLE);
             notChat.setText("" + messageObjects.size());
         }
-    }
-
-
-    public void createBubble(int n, ConstraintLayout constraintView, View icon){
-        TextView textView = new TextView(this);
-        textView.setText(n + "");
-        textView.setLayoutParams(new ViewGroup.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, dpToPx(18)));
-        textView.setBackground(ContextCompat.getDrawable(this, R.drawable.box_notification));
-        textView.setGravity(Gravity.CENTER);
-        textView.setPadding(dpToPx(6),0, dpToPx(6), 0);
-        textView.setTextColor(Color.WHITE);
-        textView.setTypeface(null, Typeface.BOLD);
-        textView.setTextSize(10);
-        textView.setId(View.generateViewId());
-        constraintView.addView(textView);
-
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintView);
-        constraintSet.connect(textView.getId(), ConstraintSet.LEFT, icon.getId(), ConstraintSet.LEFT, dpToPx(15));
-        constraintSet.connect(textView.getId(), ConstraintSet.BOTTOM, icon.getId(), ConstraintSet.BOTTOM, dpToPx(15));
-        constraintSet.applyTo(constraintView);
-    }
-    public static int dpToPx(int dp) {
-        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
-    }
-    private void initializeFirebaseUser(){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
-        reference.orderByChild("email")
-                .equalTo(MainActivity.user.email).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                firebaseUser = dataSnapshot.getChildren().iterator().next().getValue(FirebaseUser.class);
-                firebaseUser.id = dataSnapshot.getChildren().iterator().next().getKey();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 }
