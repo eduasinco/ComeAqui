@@ -6,6 +6,8 @@ import android.graphics.*;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
+
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.utilities.MyLocation;
@@ -47,7 +49,7 @@ public class MapFragment extends Fragment{
     int fabCount;
 
     ConstraintLayout mapPickerPanView;
-    ConstraintLayout cardView;
+    CardView cardView;
     ImageView shadow;
     ImageView hande;
     ImageView shadowPoint;

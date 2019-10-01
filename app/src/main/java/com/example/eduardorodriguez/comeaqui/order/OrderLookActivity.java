@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,6 +38,8 @@ public class OrderLookActivity extends AppCompatActivity {
     ImageView postImageView;
     ImageView staticMapView;
 
+    CardView imageCard;
+
     OrderObject order;
 
     Context context;
@@ -60,6 +64,7 @@ public class OrderLookActivity extends AppCompatActivity {
 
         posterImageView = findViewById(R.id.poster_image);
         postImageView = findViewById(R.id.image_layout);
+        imageCard = findViewById(R.id.image_card);
         staticMapView = findViewById(R.id.static_map);
 
         Intent intent = getIntent();
@@ -111,7 +116,7 @@ public class OrderLookActivity extends AppCompatActivity {
             Glide.with(context).load(order.poster.profile_photo).into(posterImageView);
         }
         if(!order.post.food_photo.contains("no-image")){
-            postImageView.setVisibility(View.VISIBLE);
+            imageCard.setVisibility(View.VISIBLE);
             Glide.with(context).load(order.post.food_photo).into(postImageView);
         }
     }
