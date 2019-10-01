@@ -220,10 +220,10 @@ public class MapFragment extends Fragment{
     void setLocationPicker(){
         googleMap.setOnCameraMoveStartedListener(i -> {
             pickedAdress.setVisibility(View.GONE);
-            moveMapPicker(40, 200);
+            moveMapPicker(true);
         });
         googleMap.setOnCameraIdleListener(() -> {
-            moveMapPicker(-40, 200);
+            moveMapPicker(false);
             latLng = googleMap.getCameraPosition().target;
             String latLngString = latLng.latitude + "," + latLng.longitude;
             String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLngString + "&key=" + getResources().getString(R.string.google_key);
@@ -247,7 +247,7 @@ public class MapFragment extends Fragment{
     }
 
     void fabFunctionality(){
-        apearMapPicker(true, 40);
+        apearMapPicker(true);
         if (fabCount == 0){
             markersVisibility(false);
             fabCount = 1;
@@ -272,7 +272,7 @@ public class MapFragment extends Fragment{
         fabCount = 0;
         cancelPostView.setVisibility(View.GONE);
         myFab.setVisibility(View.VISIBLE);
-        apearMapPicker(false, -40);
+        apearMapPicker(false);
         moveCardDown();
     }
 
@@ -283,30 +283,30 @@ public class MapFragment extends Fragment{
         }).start();
     }
 
-    void apearMapPicker(boolean apear, int move){
-
-        mapPickerPanView.setTranslationY(move);
-        hande.setTranslationY(-move);
-        shadow.setTranslationY(-move * 2 / 3);
-        shadow.setTranslationX(move * 1 / 3);
-
-        shadowPoint.setVisibility(apear ? View.VISIBLE: View.GONE);
+    void apearMapPicker(boolean apear){
+        shadowPoint.setVisibility(apear ? View.VISIBLE: View.INVISIBLE);
         mapPickerPanView.setVisibility(apear ? View.VISIBLE: View.GONE);
         hande.setVisibility(apear ? View.VISIBLE: View.GONE);
         shadow.setVisibility(apear ? View.VISIBLE: View.GONE);
         shadow.setVisibility(apear ? View.VISIBLE: View.GONE);
-        moveMapPicker(0, 200);
     }
 
-    void moveMapPicker(int move, int secs){
-        float a = 0f;
-        if (move > 0)
-            a = 0.5f;
-        shadowPoint.animate().alpha(a).setDuration(secs);
-        mapPickerPanView.animate().translationY(-move).setDuration(secs);
-        hande.animate().translationY(-move).setDuration(secs);
-        shadow.animate().translationY(-move * 2 / 3).setDuration(secs);
-        shadow.animate().translationX(move * 1 / 3).setDuration(secs);
+    void moveMapPicker(boolean up){
+        int move = 50;
+        int secs = move * 2;
+        if (up) {
+            shadowPoint.animate().alpha(0.5f).setDuration(secs);
+            mapPickerPanView.animate().translationY(-move).setDuration(secs);
+            hande.animate().translationY(-move).setDuration(secs);
+            shadow.animate().translationY(-move * 2 / 3).setDuration(secs);
+            shadow.animate().translationX(move * 1 / 3).setDuration(secs);
+        } else {
+            shadowPoint.animate().alpha(0).setDuration(secs);
+            mapPickerPanView.animate().translationY(0).setDuration(secs);
+            hande.animate().translationY(0).setDuration(secs);
+            shadow.animate().translationY(0).setDuration(secs);
+            shadow.animate().translationX(0).setDuration(secs);
+        }
     }
 
     void markersVisibility(boolean visible){
