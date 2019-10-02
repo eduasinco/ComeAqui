@@ -186,8 +186,9 @@
                 android:id="@+id/image_card"
                 android:layout_width="match_parent"
                 android:layout_height="230dp"
-                android:padding="32dp"
-                android:visibility="gone">
+                android:layout_margin="16dp"
+                android:visibility="visible"
+                app:cardCornerRadius="8dp">
 
                 <ImageView
                     android:id="@+id/image_layout"
@@ -257,6 +258,7 @@
                         android:id="@+id/static_map"
                         android:layout_width="0dp"
                         android:layout_height="200dp"
+                        android:scaleType="centerCrop"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

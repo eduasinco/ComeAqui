@@ -141,17 +141,22 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
     <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/box_stroke"
-            app:cardElevation="3dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="16dp" android:layout_marginEnd="16dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/box_stroke"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="3dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
         <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/back"
@@ -177,45 +182,67 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp" app:srcCompat="@drawable/background"
-                    android:id="@+id/imageView4"
-                    app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
-                    app:layout_constraintTop_toTopOf="parent" android:scaleType="centerCrop"
-                    app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                    android:alpha="0.3"/>
+                android:id="@+id/imageView4"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:alpha="0.3"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/background" />
+
             <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/dinner_image"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/no_profile_photo"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                android:id="@+id/dinner_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/no_profile_photo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="415dp"
-                    android:layout_height="66dp" android:id="@+id/linearLayout5"
-                    app:layout_constraintTop_toBottomOf="@+id/dinner_image"
-                    app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" android:layout_marginTop="8dp">
+                android:id="@+id/linearLayout5"
+                android:layout_width="415dp"
+                android:layout_height="66dp"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dinner_image">
+
                 <TextView
-                        android:text="Eduardo Rodriguez"
-                        android:background="@color/colorPrimary"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:id="@+id/dinner_name"
-                        android:textAlignment="center"
-                        android:textStyle="bold" android:textSize="18sp" android:textColor="@android:color/white"/>
+                    android:id="@+id/dinner_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    android:text="Eduardo Rodriguez"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
                 <TextView
-                        android:text="username"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:id="@+id/username" android:textAlignment="center"
-                        android:textSize="14sp" android:textStyle="bold" android:textColor="@color/colorPrimaryDark"/>
+                    android:id="@+id/username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="username"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
                 <TextView
-                        android:text="Quiere probar to plato!"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:id="@+id/textView17" android:textAlignment="center"
-                        android:textColor="@color/text_color" android:textStyle="bold"/>
+                    android:id="@+id/textView17"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Quiere probar to plato!"
+                    android:textAlignment="center"
+                    android:textColor="@color/text_color"
+                    android:textStyle="bold" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
