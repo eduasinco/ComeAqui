@@ -18,6 +18,7 @@ public class User implements Serializable {
     public String background_photo;
     public float rating;
     public int ratingN;
+    public String timeZone;
 
     public User(JsonObject jo){
         id = jo.get("id").getAsInt();

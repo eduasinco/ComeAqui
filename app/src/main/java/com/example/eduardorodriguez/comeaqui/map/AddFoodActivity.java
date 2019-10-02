@@ -17,6 +17,8 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+
+import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.utilities.AutocompleteLocationFragment;
@@ -60,7 +62,6 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
     String address;
 
 
-    String timeZone;
     int minutes = 30;
     Context context;
 
@@ -139,7 +140,6 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
         setDinerButtons();
         setSubmit();
         setTimeLogic();
-        timeZone = getPostimeZone();
         setTimePickerLogic();
 
         backView.setOnClickListener(v -> finish());
@@ -157,7 +157,7 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
                 if (now.getTime() + minutes*60*1000 > postTimeDate.getTime()){
                     Date date = new Date(now.getTime() + minutes*60*1000);
                     DateFormat formatter = new SimpleDateFormat("HH:mm");
-                    formatter.setTimeZone(TimeZone.getTimeZone(timeZone));
+                    formatter.setTimeZone(TimeZone.getTimeZone(MainActivity.user.timeZone));
                     String dateFormatted = formatter.format(date);
 
                     timeTextView.setText("Please pick a time greater than " + dateFormatted);
@@ -166,20 +166,6 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
                 e.printStackTrace();
             }
         });
-    }
-
-    String getPostimeZone(){
-        Server gAPI2 = new Server("GET", "https://maps.googleapis.com/maps/api/timezone/json?location=" +
-                lat + "," + lng + "&timestamp=0&key=" + getResources().getString(R.string.google_key));
-        try {
-            String response = gAPI2.execute().get();
-            if (response != null) {
-                return new JsonParser().parse(response).getAsJsonObject().get("timeZoneId").getAsString();
-            }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     void setTimeLogic(){
@@ -247,6 +233,7 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
                     new String[]{"lng", Double.toString(lng)},
                     new String[]{"diners", Integer.toString(diners)},
                     new String[]{"time", postTimeString},
+                    new String[]{"time_zone", MainActivity.user.timeZone},
                     new String[]{"is_now", isNow + ""},
                     new String[]{"price", price_data.toString()},
                     new String[]{"food_type", setTypes()},

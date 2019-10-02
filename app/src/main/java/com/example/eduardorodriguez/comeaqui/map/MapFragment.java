@@ -9,7 +9,10 @@ import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
+import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.MyLocation;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.fragment.app.Fragment;
@@ -57,14 +60,17 @@ public class MapFragment extends Fragment{
     FloatingActionButton myFab;
     ImageView cancelPostView;
 
+    double lng;
+    double lat;
+
     public static HashMap<Integer, Marker> markers = new HashMap<>();
     LatLng latLng;
 
     void setMarkers(){
         for (int key : data.keySet()) {
             FoodPost fp = data.get(key);
-            float lat = fp.lat;
-            float lng = fp.lng;
+            lat = fp.lat;
+            lng = fp.lng;
 
             Marker marker =  googleMap.addMarker(new MarkerOptions()
                     .position(new LatLng(lat, lng)));
@@ -151,8 +157,8 @@ public class MapFragment extends Fragment{
             @Override
             public void gotLocation(Location location){
                 //Got the location!
-                double lng = location.getLongitude();
-                double lat = location.getLatitude();
+                lng = location.getLongitude();
+                lat = location.getLatitude();
 
                 LatLng place = new LatLng(lat, lng);
                 // For zooming automatically to the location of the marker
@@ -179,6 +185,41 @@ public class MapFragment extends Fragment{
             moveCardUp();
             return false;
         });
+
+        getUserTimeZone();
+    }
+
+    void getUserTimeZone(){
+        MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
+            @Override
+            public void gotLocation(Location location){
+                //Got the location!
+                lng = location.getLongitude();
+                lat = location.getLatitude();
+
+                Server gAPI2 = new Server("GET", "https://maps.googleapis.com/maps/api/timezone/json?location=" +
+                        lat + "," + lng + "&timestamp=0&key=" + getResources().getString(R.string.google_key));
+                try {
+                    String response = gAPI2.execute().get();
+                    if (response != null) {
+                        String timeZone = new JsonParser().parse(response).getAsJsonObject().get("timeZoneId").getAsString();
+                        MainActivity.user.timeZone = timeZone;
+                        setUserTimeZone(timeZone);
+                    }
+                } catch (ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+    }
+
+    private void setUserTimeZone(String timeZone){
+        PatchAsyncTask putTask = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
+        try {
+            putTask.execute("time_zone", timeZone).get(5, TimeUnit.SECONDS);
+        } catch (ExecutionException | InterruptedException | TimeoutException e) {
+            e.printStackTrace();
+        }
     }
 
     void moveCardUp(){
