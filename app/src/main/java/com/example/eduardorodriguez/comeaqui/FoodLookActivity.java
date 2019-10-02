@@ -6,10 +6,13 @@ import android.graphics.Color;
 
 import androidx.cardview.widget.CardView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.MessageObject;
@@ -50,6 +53,7 @@ public class FoodLookActivity extends AppCompatActivity {
     ImageView posterImage;
     ImageView staticMapView;
     View backView;
+    LinearLayout paymentMethod;
     CardView postImageLayout;
 
     FoodPost foodPost;
@@ -87,20 +91,20 @@ public class FoodLookActivity extends AppCompatActivity {
         staticMapView = findViewById(R.id.static_map);
         postImageLayout = findViewById(R.id.image_layout);
         backView = findViewById(R.id.back);
+        paymentMethod = findViewById(R.id.payment_method_layout);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
 
         if(b != null && b.get("object") != null){
             foodPost = (FoodPost) b.get("object");
-            boolean delete = b.getBoolean("delete");
 
             posterNameView.setText(foodPost.owner.first_name + " " + foodPost.owner.last_name);
             usernameView.setText(foodPost.owner.email);
             plateNameView.setText(foodPost.plate_name);
             descriptionView.setText(foodPost.description);
             posterLocationView.setText(foodPost.address);
-            priceView.setText(foodPost.price);
+            priceView.setText(foodPost.price + "$");
             timeView.setText(foodPost.time);
 
             Bundle bundle = new Bundle();
@@ -129,7 +133,7 @@ public class FoodLookActivity extends AppCompatActivity {
             Glide.with(this).load(url).into(staticMapView);
 
 
-            setPlaceButton(delete);
+            setPlaceButton();
         }
 
         backView.setOnClickListener(v -> finish());
@@ -141,10 +145,11 @@ public class FoodLookActivity extends AppCompatActivity {
         startActivity(k);
     }
 
-    void setPlaceButton(boolean delete){
-        if (delete){
+    void setPlaceButton(){
+        if (foodPost.owner.id == MainActivity.user.id){
+            paymentMethod.setVisibility(View.GONE);
             placeOrderButton.setText("Delete Post");
-            placeOrderButton.setBackgroundColor(Color.parseColor("#FFFF0E01"));
+            placeOrderButton.setBackgroundColor(ContextCompat.getColor(this, R.color.canceled));
             placeOrderButton.setOnClickListener(v -> {
                 Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/foods/" + foodPost.id + "/");
                 deleteFoodPost.execute();

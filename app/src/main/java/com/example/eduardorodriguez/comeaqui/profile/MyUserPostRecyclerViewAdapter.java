@@ -73,13 +73,6 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         holder.cardButtonView.setOnClickListener(v -> {
             Intent foodLook = new Intent(holder.mView.getContext(), FoodLookActivity.class);
             foodLook.putExtra("object", foodPost);
-
-            if (foodPost.owner.id == MainActivity.user.id){
-                foodLook.putExtra("delete", true);
-            } else {
-                foodLook.putExtra("delete", false);
-            }
-
             holder.mView.getContext().startActivity(foodLook);
         });
 
