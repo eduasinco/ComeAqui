@@ -23,6 +23,7 @@ import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
+import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
@@ -47,6 +48,7 @@ public class FoodLookActivity extends AppCompatActivity {
     TextView usernameView;
     TextView posterNameView;
     TextView posterLocationView;
+    TextView changePaymentMethod;
     Button placeOrderButton;
 
     ImageView postImage;
@@ -92,6 +94,7 @@ public class FoodLookActivity extends AppCompatActivity {
         postImageLayout = findViewById(R.id.image_layout);
         backView = findViewById(R.id.back);
         paymentMethod = findViewById(R.id.payment_method_layout);
+        changePaymentMethod = findViewById(R.id.change_payment);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -132,10 +135,13 @@ public class FoodLookActivity extends AppCompatActivity {
             String url = "http://maps.google.com/maps/api/staticmap?center=" + foodPost.lat + "," + foodPost.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
             Glide.with(this).load(url).into(staticMapView);
 
-
             setPlaceButton();
         }
 
+        changePaymentMethod.setOnClickListener(v -> {
+            Intent paymentMethod = new Intent(this, PaymentMethodsActivity.class);
+            startActivity(paymentMethod);
+        });
         backView.setOnClickListener(v -> finish());
     }
 
