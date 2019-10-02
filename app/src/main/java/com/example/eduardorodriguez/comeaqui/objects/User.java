@@ -16,6 +16,8 @@ public class User implements Serializable {
     public String is_active;
     public String is_admin;
     public String background_photo;
+    public float rating;
+    public int ratingN;
 
     public User(JsonObject jo){
         id = jo.get("id").getAsInt();
@@ -29,5 +31,7 @@ public class User implements Serializable {
         background_photo = ImageStringProcessor.processString(jo.get("background_photo").getAsString());
         is_active = jo.get("is_active").getAsString();
         is_admin = jo.get("is_admin").getAsString();
+        rating = jo.get("rating").getAsFloat();
+        ratingN = jo.get("rating_n").getAsInt();
     }
 }

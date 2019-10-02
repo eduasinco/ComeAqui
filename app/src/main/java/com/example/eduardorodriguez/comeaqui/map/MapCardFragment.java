@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.FoodLookActivity;
+import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodElementFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.R;
@@ -19,6 +20,7 @@ import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
+import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 
 import java.util.concurrent.ExecutionException;
 
@@ -66,6 +68,10 @@ public class MapCardFragment extends Fragment {
 
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.container2, FoodElementFragment.newInstance(foodPost))
+                .commit();
+
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.profile_rating, RatingFragment.newInstance(MainActivity.user.rating, MainActivity.user.ratingN))
                 .commit();
 
         favouriteId = foodPost.favouriteId;

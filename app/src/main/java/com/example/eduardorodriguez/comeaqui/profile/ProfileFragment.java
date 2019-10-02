@@ -17,6 +17,7 @@ import com.example.eduardorodriguez.comeaqui.profile.edit_profile.EditProfileAct
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.ProfileImageGalleryFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -169,6 +170,10 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
                     .replace(R.id.select_from, SelectImageFromFragment.newInstance(true))
                     .commit();
         });
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.profile_rating, RatingFragment.newInstance(user.rating, user.ratingN))
+                .commit();
 
         return view;
     }

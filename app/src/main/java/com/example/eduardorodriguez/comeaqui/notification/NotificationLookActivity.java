@@ -19,6 +19,7 @@ import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
+import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 import com.google.gson.JsonObject;
 
 public class NotificationLookActivity extends AppCompatActivity {
@@ -121,6 +122,10 @@ public class NotificationLookActivity extends AppCompatActivity {
                 }
                 finish();
             });
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.profile_rating, RatingFragment.newInstance(MainActivity.user.rating, MainActivity.user.ratingN))
+                    .commit();
         }
         backView.setOnClickListener(v -> finish());
         dinnerImage.setOnClickListener(v -> {
