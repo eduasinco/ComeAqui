@@ -13,18 +13,179 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
+
         <LinearLayout
-                android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:alpha="0.5"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/background_chat" />
+
+                <LinearLayout
+                    android:id="@+id/constraintLayout5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/box_thik_stroke"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        tools:layout_editor_absoluteX="73dp"
+                        tools:layout_editor_absoluteY="20dp">
+
+                        <com.mikhaellopez.circularimageview.CircularImageView
+                            android:id="@+id/poster_image"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="0"
+                            android:src="@drawable/no_profile_photo"
+                            app:civ_border_color="@color/colorPrimaryDark"
+                            app:civ_border_width="2dp"
+                            app:civ_shadow="true"
+                            app:civ_shadow_color="@color/colorPrimaryDark"
+                            app:civ_shadow_radius="1"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_weight="0"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/poster_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:lines="1"
+                                android:text="Eduardo Rodriguez Perez"
+                                android:textColor="@color/colorPrimaryDark"
+                                android:textStyle="bold"
+                                tools:layout_editor_absoluteX="81dp"
+                                tools:layout_editor_absoluteY="22dp" />
+
+                            <TextView
+                                android:id="@+id/poster_username"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@eduasinco"
+                                tools:layout_editor_absoluteX="262dp"
+                                tools:layout_editor_absoluteY="26dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/plate_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="Plate Name"
+                                android:textColor="@color/colorPrimary"
+                                android:textStyle="bold"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/order_status"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Status"
+                                android:textAlignment="textEnd"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/description"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="Description"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/food_types" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/textView25"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Meal time: "
+                                android:textColor="@color/colorPrimary"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="-- : --"
+                                android:textAlignment="textStart"
+                                android:textColor="@color/grey"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/price"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="_ . __€"
+                                app:layout_constraintBottom_toBottomOf="@+id/time"
+                                app:layout_constraintEnd_toEndOf="parent" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/image_card"
                 android:layout_width="match_parent"
                 android:layout_height="230dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="230dp"
-                android:layout_marginEnd="32dp"
                 android:padding="32dp"
                 android:visibility="gone">
 
@@ -41,297 +202,148 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.cardview.widget.CardView>
+
             <androidx.constraintlayout.widget.ConstraintLayout
-                    android:background="@drawable/box_element"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-                    android:id="@+id/constraintLayout4"
-                    app:layout_constraintHorizontal_bias="0.0" tools:layout_editor_absoluteY="381dp">
-
-                <TextView
-                        android:text="Calle Julian Romea, 5, 6D"
-                        android:lines="2"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/posterLocation"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/locationImage" android:layout_marginStart="16dp"
-                        android:gravity="center_vertical" app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginEnd="16dp"/>
-                <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" app:srcCompat="@drawable/loc_icon"
-                        android:id="@+id/locationImage" app:layout_constraintStart_toStartOf="parent"
-                        android:layout_marginStart="24dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-            <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:id="@+id/constraintLayout7"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" android:layout_weight="0" android:padding="16dp">
-
-                    <ImageView
-                            android:layout_width="300dp"
-                            android:layout_height="200dp" app:srcCompat="@drawable/world_map"
-                            android:id="@+id/static_map"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"/>
-                    <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" app:srcCompat="@drawable/map_food_icon"
-                            android:id="@+id/map_icon" app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"/>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-                <LinearLayout
-                        android:background="@drawable/box_element"
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/constraintLayout7">
-                    <LinearLayout
-                            android:background="@drawable/box_element"
-                            android:orientation="horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp" android:padding="16dp">
-                        <TextView
-                                android:maxLines="1"
-                                android:ellipsize="end"
-                                android:text="Plate Name"
-                                android:layout_height="match_parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                android:id="@+id/postName"
-                                app:layout_constraintTop_toBottomOf="@+id/constraintLayout7" android:layout_weight="1"
-                                android:gravity="center_vertical" android:layout_width="wrap_content"/>
-                        <TextView
-                                android:text="€9.50"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:id="@+id/postPrice" app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintBottom_toBottomOf="@+id/postName"
-                                android:gravity="center_vertical"/>
-                    </LinearLayout>
-                    <LinearLayout
-                            android:orientation="horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp" android:padding="16dp">
-                        <TextView
-                                android:text="Subtotal"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:id="@+id/subtotal"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/view5" android:layout_weight="1"
-                                android:gravity="center_vertical"/>
-                        <TextView
-                                android:text="€9.50"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:id="@+id/postSubtotalPrice" app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintBottom_toBottomOf="@+id/postName"
-                                android:gravity="center_vertical"/>
-                    </LinearLayout>
-                    <LinearLayout
-                            android:background="@drawable/box_element"
-                            android:orientation="horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp" android:padding="16dp">
-                        <TextView
-                                android:text="Total"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:id="@+id/textView27"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/view6" android:layout_weight="1"
-                                android:gravity="center_vertical"/>
-                        <TextView
-                                android:text="€9.50"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:id="@+id/totalPrice" app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintBottom_toBottomOf="@+id/textView27"
-                                android:gravity="center_vertical"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent">
-
-        <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="200dp"
-                                           app:layout_constraintTop_toTopOf="parent"
-                                           app:layout_constraintStart_toStartOf="parent"
-                                           android:elevation="4dp"
-                                           app:layout_constraintEnd_toEndOf="parent"
-                                           app:layout_constraintBottom_toBottomOf="parent"
-                                           android:layout_marginBottom="20dp">
-
-            <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" app:srcCompat="@drawable/background"
-                    android:id="@+id/imageView5"
-                    android:scaleType="centerCrop"/>
-        </androidx.cardview.widget.CardView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <LinearLayout
-        android:id="@+id/constraintLayout5"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/box"
-        android:orientation="vertical"
-        android:padding="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            tools:layout_editor_absoluteX="73dp"
-            tools:layout_editor_absoluteY="20dp">
-
-            <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/poster_image"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_weight="0"
-                android:src="@drawable/no_profile_photo"
-                app:civ_border_color="@color/colorPrimaryDark"
-                app:civ_border_width="2dp"
-                app:civ_shadow="true"
-                app:civ_shadow_color="@color/colorPrimaryDark"
-                app:civ_shadow_radius="1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <LinearLayout
+                android:id="@+id/constraintLayout4"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_weight="0"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/poster_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:lines="1"
-                    android:text="Eduardo Rodriguez Perez"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textStyle="bold"
-                    tools:layout_editor_absoluteX="81dp"
-                    tools:layout_editor_absoluteY="22dp" />
-
-                <TextView
-                    android:id="@+id/poster_username"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@eduasinco"
-                    tools:layout_editor_absoluteX="262dp"
-                    tools:layout_editor_absoluteY="26dp" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="8dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/plate_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="Plate Name"
-                    android:textColor="@color/colorPrimary"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/order_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Status"
-                    android:textAlignment="textEnd"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/description"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Description"
+                android:layout_height="70dp"
+                android:background="@drawable/box_soft_outline"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/food_types" />
+                tools:layout_editor_absoluteY="381dp">
+
+                <TextView
+                    android:id="@+id/posterLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:gravity="center_vertical"
+                    android:lines="2"
+                    android:text="Calle Julian Romea, 5, 6D"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/locationImage"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/locationImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/loc_icon" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textView25"
-                    android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout7"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Meal time: "
-                    android:textColor="@color/colorPrimary"
-                    android:textStyle="bold" />
+                    android:layout_weight="0"
+                    android:padding="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="-- : --"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/grey"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    <ImageView
+                        android:id="@+id/static_map"
+                        android:layout_width="0dp"
+                        android:layout_height="200dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/world_map" />
 
-                <TextView
-                    android:id="@+id/price"
-                    android:layout_width="wrap_content"
+                    <ImageView
+                        android:id="@+id/map_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/map_food_icon" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="_ . __€"
-                    app:layout_constraintBottom_toBottomOf="@+id/time"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    android:background="@drawable/box_soft_outline"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:id="@+id/subtotal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:text="Subtotal"
+                            app:layout_constraintStart_toStartOf="parent"/>
+
+                        <TextView
+                            android:id="@+id/postSubtotalPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="€9.50"
+                            app:layout_constraintEnd_toEndOf="parent" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/box_soft_outline"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:id="@+id/textView27"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:text="Total"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                        <TextView
+                            android:id="@+id/totalPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="€9.50"
+                            app:layout_constraintBottom_toBottomOf="@+id/textView27"
+                            app:layout_constraintEnd_toEndOf="parent" />
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/button"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/canceled"
+                android:text="@android:string/cancel"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+    </ScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

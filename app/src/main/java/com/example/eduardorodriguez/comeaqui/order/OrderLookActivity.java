@@ -54,11 +54,9 @@ public class OrderLookActivity extends AppCompatActivity {
         setContentView(R.layout.activity_order_look);
         context = getApplicationContext();
         plateName = findViewById(R.id.plate_name);
-        postNameView = findViewById(R.id.postName);
         posterNameView = findViewById(R.id.poster_name);
         posterDescription = findViewById(R.id.description);
         posterLocationView = findViewById(R.id.posterLocation);
-        postPriceView = findViewById(R.id.postPrice);
         price = findViewById(R.id.price);
         subtotalView = findViewById(R.id.postSubtotalPrice);
         totalPriceView = findViewById(R.id.totalPrice);
@@ -99,12 +97,10 @@ public class OrderLookActivity extends AppCompatActivity {
     void createStringArray(JsonObject jo){
         order = new OrderObject(jo);
         plateName.setText(order.post.plate_name);
-        postNameView.setText(order.post.plate_name);
         posterNameView.setText(order.poster.first_name + " " + order.poster.last_name);
         posterDescription.setText(order.post.description);
         posterLocationView.setText(order.post.address);
         price.setText("€" + order.post.price);
-        postPriceView.setText("€" + order.post.price);
         subtotalView.setText("€" + order.post.price);
         totalPriceView.setText("€" + order.post.price);
         mealTimeView.setText(order.post.time);
