@@ -10,17 +10,29 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
+import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.utilities.AutocompleteLocationFragment;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.concurrent.ExecutionException;
 
 public class AddFoodActivity extends AppCompatActivity implements SelectImageFromFragment.OnFragmentInteractionListener{
     EditText foodName;
@@ -34,16 +46,22 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
     ImageView backView;
     TimePicker timePicker;
     FrameLayout selectFromLayout;
+    TextView timeTextView;
 
 
     Float price_data = 0f;
     boolean[] pressed = {false, false, false, false, false, false, false};
     Bitmap imageBitmap;
     int diners;
+    boolean isNow = false;
+    String postTimeString;
     double lat;
     double lng;
     String address;
 
+
+    String timeZone;
+    int minutes = 30;
     Context context;
 
     private String setTypes(){
@@ -85,6 +103,7 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
         doPhoto = findViewById(R.id.photo);
         backView = findViewById(R.id.back_arrow);
         selectFromLayout = findViewById(R.id.select_image_from);
+        timeTextView = findViewById(R.id.time_text);
 
         context = getApplicationContext();
 
@@ -100,6 +119,7 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
             bundle.putString("address", address);
             AutocompleteLocationFragment autocompleteLocationFragment = new AutocompleteLocationFragment();
             autocompleteLocationFragment.setArguments(bundle);
+
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.locationAutocomplete, autocompleteLocationFragment)
                     .commit();
@@ -118,8 +138,79 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
         setFoodTypes();
         setDinerButtons();
         setSubmit();
+        setTimeLogic();
+        timeZone = getPostimeZone();
+        setTimePickerLogic();
 
         backView.setOnClickListener(v -> finish());
+    }
+
+    void setTimePickerLogic(){
+        timePicker.setOnTimeChangedListener((arg0, arg1, arg2) -> {
+            timeTextView.setText("Today at: " + arg0.getHour() + ":" + arg0.getMinute());
+
+            Date now = Calendar.getInstance().getTime();
+            String formattedDate = new SimpleDateFormat("dd-MMM-yyyy").format(now);
+            postTimeString = formattedDate + " " + arg0.getHour() + ":" + arg0.getMinute();
+            try {
+                Date postTimeDate = new SimpleDateFormat("dd-MMM-yyyy H:mm", Locale.ENGLISH).parse(postTimeString);
+                if (now.getTime() + minutes*60*1000 > postTimeDate.getTime()){
+                    Date date = new Date(now.getTime() + minutes*60*1000);
+                    DateFormat formatter = new SimpleDateFormat("HH:mm");
+                    formatter.setTimeZone(TimeZone.getTimeZone(timeZone));
+                    String dateFormatted = formatter.format(date);
+
+                    timeTextView.setText("Please pick a time greater than " + dateFormatted);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    String getPostimeZone(){
+        Server gAPI2 = new Server("GET", "https://maps.googleapis.com/maps/api/timezone/json?location=" +
+                lat + "," + lng + "&timestamp=0&key=" + getResources().getString(R.string.google_key));
+        try {
+            String response = gAPI2.execute().get();
+            if (response != null) {
+                return new JsonParser().parse(response).getAsJsonObject().get("timeZoneId").getAsString();
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    void setTimeLogic(){
+        Button nowButton = findViewById(R.id.anytime_button);
+        Button scheduleButton = findViewById(R.id.schedule_button);
+
+        nowButton.setOnClickListener(v -> {
+            isNow = true;
+            timeTextView.setText("Now (the post will be visible for an hour)");
+            nowButton.setBackgroundColor(Color.TRANSPARENT);
+            scheduleButton.setBackground(ContextCompat.getDrawable(this, R.drawable.text_input_shape));
+            showTimePicker(false);
+        });
+
+        scheduleButton.setOnClickListener(v -> {
+            timeTextView.setText("-- --");
+            nowButton.setBackground(ContextCompat.getDrawable(this, R.drawable.text_input_shape));
+            scheduleButton.setBackgroundColor(Color.TRANSPARENT);
+            showTimePicker(true);
+        });
+    }
+
+    void showTimePicker(boolean show){
+        int duration = 200;
+        if (show){
+            timePicker.setScaleX(0);
+            timePicker.setVisibility(View.VISIBLE);
+            timePicker.animate().scaleX(1).setDuration(duration);
+        } else {
+            timePicker.animate().scaleX(0).setDuration(duration).withEndAction(() -> timePicker.setVisibility(View.GONE));
+        }
     }
 
     void setDinerButtons(){
@@ -155,7 +246,8 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
                     new String[]{"lat", Double.toString(lat)},
                     new String[]{"lng", Double.toString(lng)},
                     new String[]{"diners", Integer.toString(diners)},
-                    new String[]{"time", timePicker.getHour() + ":" + timePicker.getMinute()},
+                    new String[]{"time", postTimeString},
+                    new String[]{"is_now", isNow + ""},
                     new String[]{"price", price_data.toString()},
                     new String[]{"food_type", setTypes()},
                     new String[]{"description", description.getText().toString()},
