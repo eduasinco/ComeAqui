@@ -14,6 +14,8 @@ import com.example.eduardorodriguez.comeaqui.chat.chat_objects.MessageObject;
 import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.FirebaseUser;
+import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
+import com.example.eduardorodriguez.comeaqui.review.ReviewActivity;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import androidx.core.app.ActivityCompat;
@@ -171,6 +173,33 @@ public class MainActivity extends AppCompatActivity {
         listenToNotificationsChanges();
         listenToChatMessages();
         getUserTimeZone();
+        openRatingActivity(null);
+    }
+
+    void openRatingActivity(OrderObject order){
+        ArrayList<OrderObject> orderObjects = checkUnratedOrders();
+        if(orderObjects.size() > 0){
+            Intent k = new Intent(this, ReviewActivity.class);
+            k.putExtra("order", orderObjects.get(0));
+            startActivity(k);
+        }
+    }
+
+    ArrayList<OrderObject> checkUnratedOrders(){
+        GetAsyncTask process = new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/my_unreviewed_orders/");
+        ArrayList<OrderObject> orderObjects = new ArrayList<>();
+        try {
+            String response = process.execute().get();
+            if (response != null){
+                for (JsonElement je: new JsonParser().parse(response).getAsJsonArray()){
+                    orderObjects.add(new OrderObject(je.getAsJsonObject()));
+                }
+                return orderObjects;
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return orderObjects;
     }
 
     void getUserTimeZone(){

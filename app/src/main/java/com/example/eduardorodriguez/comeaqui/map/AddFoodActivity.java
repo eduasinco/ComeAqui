@@ -16,16 +16,13 @@ import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.*;
 
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
-import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.utilities.AutocompleteLocationFragment;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -35,7 +32,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.concurrent.ExecutionException;
 
 public class AddFoodActivity extends AppCompatActivity implements SelectImageFromFragment.OnFragmentInteractionListener{
     EditText foodName;
@@ -223,10 +219,10 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
     }
 
     void setDinerButtons(){
-        Button diner1 = findViewById(R.id.diner1);
-        Button diner2 = findViewById(R.id.diner2);
-        Button diner3 = findViewById(R.id.diner3);
-        Button diner4 = findViewById(R.id.diner4);
+        Button diner1 = findViewById(R.id.dinner0);
+        Button diner2 = findViewById(R.id.dinner1);
+        Button diner3 = findViewById(R.id.dinner2);
+        Button diner4 = findViewById(R.id.dinner3);
 
         Button[] dinersViews = new Button[]{diner1, diner2, diner3, diner4};
         for (int i = 0; i < dinersViews.length; i++){

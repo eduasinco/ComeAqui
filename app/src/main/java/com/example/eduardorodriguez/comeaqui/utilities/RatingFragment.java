@@ -50,6 +50,11 @@ public class RatingFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_rating, container, false);
         ratingTextView = view.findViewById(R.id.profile_rating);
         ratingNTextView = view.findViewById(R.id.rating_n);
+        setStars(view);
+        return view;
+    }
+
+    void setStars(View view){
         starArray = new ImageView[]{
                 view.findViewById(R.id.star0),
                 view.findViewById(R.id.star1),
@@ -75,7 +80,6 @@ public class RatingFragment extends Fragment {
 
         ratingTextView.setText(String.format("%.02f", rating) + "");
         ratingNTextView.setText("(" + ratingN + ")");
-        return view;
     }
 
     @Override
