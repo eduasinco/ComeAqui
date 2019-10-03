@@ -211,6 +211,8 @@ public class MapFragment extends Fragment{
                 }
             }
         };
+        MyLocation myLocation = new MyLocation();
+        myLocation.getLocation(getContext(), locationResult);
     }
 
     private void setUserTimeZone(String timeZone){

@@ -150,10 +150,13 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
             timeTextView.setText("Today at: " + arg0.getHour() + ":" + arg0.getMinute());
 
             Date now = Calendar.getInstance().getTime();
-            String formattedDate = new SimpleDateFormat("dd-MMM-yyyy").format(now);
-            postTimeString = formattedDate + " " + arg0.getHour() + ":" + arg0.getMinute();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-ddZ");
+            format.setTimeZone(TimeZone.getTimeZone(MainActivity.user.timeZone));
+            String formattedDate = format.format(now);
             try {
-                Date postTimeDate = new SimpleDateFormat("dd-MMM-yyyy H:mm", Locale.ENGLISH).parse(postTimeString);
+                Date todayDate = new SimpleDateFormat("yyyy-MM-ddZ", Locale.US).parse(formattedDate);
+                Date postTimeDate = new Date(todayDate.getTime() + (arg0.getHour()*60 + arg0.getMinute())*60*1000);
+                postTimeString = new SimpleDateFormat("yyyy-MM-dd HH:mmZ").format(postTimeDate);
                 if (now.getTime() + minutes*60*1000 > postTimeDate.getTime()){
                     Date date = new Date(now.getTime() + minutes*60*1000);
                     DateFormat formatter = new SimpleDateFormat("HH:mm");
@@ -173,6 +176,19 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
         Button scheduleButton = findViewById(R.id.schedule_button);
 
         nowButton.setOnClickListener(v -> {
+
+            Date now = Calendar.getInstance().getTime();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mmZ");
+            sdf.setTimeZone(TimeZone.getTimeZone(MainActivity.user.timeZone));
+            String nowString = sdf.format(now);
+            try {
+                Date nowDate = new SimpleDateFormat("yyyy-MM-dd HH:mmZ", Locale.US).parse(nowString);
+                Date postTimeDate = new Date(nowDate.getTime() + minutes*60*1000);
+                postTimeString = new SimpleDateFormat("yyyy-MM-dd HH:mmZ").format(postTimeDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
             isNow = true;
             timeTextView.setText("Now (the post will be visible for an hour)");
             nowButton.setBackgroundColor(Color.TRANSPARENT);
@@ -234,7 +250,6 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
                     new String[]{"diners", Integer.toString(diners)},
                     new String[]{"time", postTimeString},
                     new String[]{"time_zone", MainActivity.user.timeZone},
-                    new String[]{"is_now", isNow + ""},
                     new String[]{"price", price_data.toString()},
                     new String[]{"food_type", setTypes()},
                     new String[]{"description", description.getText().toString()},

@@ -47,7 +47,7 @@ public class PostAsyncTask extends AsyncTask<String[], Void, String>
                 byte[] imageBytes = baos.toByteArray();
                 entityBuilder.addPart(ss[0], new ByteArrayBody(imageBytes, "ANDROID.png"));
             } else {
-                entityBuilder.addPart(ss[0], new StringBody(ss[1], ContentType.TEXT_PLAIN));;
+                entityBuilder.addPart(ss[0], new StringBody(ss[1], ContentType.TEXT_PLAIN));
             }
         }
 
