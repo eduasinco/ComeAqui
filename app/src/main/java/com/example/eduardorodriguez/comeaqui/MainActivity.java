@@ -11,11 +11,11 @@ import android.view.View;
 import android.widget.*;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.MessageObject;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.FirebaseUser;
-import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
-import com.example.eduardorodriguez.comeaqui.review.ReviewActivity;
+import com.example.eduardorodriguez.comeaqui.review.ReviewPostActivity;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import androidx.core.app.ActivityCompat;
@@ -34,6 +34,7 @@ import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.utilities.MyLocation;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import org.java_websocket.client.WebSocketClient;
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         setNotificationsBubbles();
+        checkRatings();
     }
 
     @Override
@@ -173,33 +175,48 @@ public class MainActivity extends AppCompatActivity {
         listenToNotificationsChanges();
         listenToChatMessages();
         getUserTimeZone();
-        openRatingActivity(null);
+        checkRatings();
     }
 
-    void openRatingActivity(OrderObject order){
-        ArrayList<OrderObject> orderObjects = checkUnratedOrders();
-        if(orderObjects.size() > 0){
-            Intent k = new Intent(this, ReviewActivity.class);
-            k.putExtra("order", orderObjects.get(0));
-            startActivity(k);
-        }
+    void checkRatings(){
+        checkUnratedOrders();
+        checkUnratedFoodPosts();
     }
 
-    ArrayList<OrderObject> checkUnratedOrders(){
-        GetAsyncTask process = new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/my_unreviewed_orders/");
-        ArrayList<OrderObject> orderObjects = new ArrayList<>();
+    void checkUnratedFoodPosts(){
+        GetAsyncTask process = new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/my_unreviewed_foodposts/");
         try {
             String response = process.execute().get();
             if (response != null){
-                for (JsonElement je: new JsonParser().parse(response).getAsJsonArray()){
-                    orderObjects.add(new OrderObject(je.getAsJsonObject()));
+                JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
+                if (ja.size() > 0){
+                    FoodPost foodPost = new FoodPost(ja.get(0).getAsJsonObject());
+                    Intent k = new Intent(this, ReviewPostActivity.class);
+                    k.putExtra("order", foodPost);
+                    startActivity(k);
                 }
-                return orderObjects;
             }
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-        return orderObjects;
+    }
+
+    void checkUnratedOrders(){
+        GetAsyncTask process = new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/my_unreviewed_orders/");
+        try {
+            String response = process.execute().get();
+            if (response != null){
+                JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
+                if (ja.size() > 0){
+                    OrderObject orderObject = new OrderObject(ja.get(0).getAsJsonObject());
+                    Intent k = new Intent(this, ReviewPostActivity.class);
+                    k.putExtra("order", orderObject);
+                    startActivity(k);
+                }
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     void getUserTimeZone(){

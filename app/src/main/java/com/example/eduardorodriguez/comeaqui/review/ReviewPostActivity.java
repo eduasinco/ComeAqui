@@ -42,7 +42,7 @@ enum SubmitButtonStatus{
     NEXT, SUBMIT, DISABLED
 }
 
-public class ReviewActivity extends AppCompatActivity {
+public class ReviewPostActivity extends AppCompatActivity {
 
     TextView rateMessage1;
     TextView rateMessage2;

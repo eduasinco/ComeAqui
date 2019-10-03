@@ -30,7 +30,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".review.ReviewActivity"></activity>
+        <activity android:name=".review.ReviewPostActivity"></activity>
 
         <service
             android:name=".MyFirebaseMessagingService"
