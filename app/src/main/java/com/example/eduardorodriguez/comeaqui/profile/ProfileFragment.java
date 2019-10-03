@@ -67,6 +67,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
 
 
     public void setProfile(User user, boolean isMyUser){
+
         if(!user.profile_photo.contains("no-image")) {
             Glide.with(view.getContext()).load(user.profile_photo).into(profileImageView);
             profileImageView.setOnClickListener((v) -> {
@@ -88,6 +89,10 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         if (user.bio != null && !user.bio.equals(""))
             bioView.setVisibility(View.VISIBLE);
             bioView.setText(user.bio);
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.profile_rating, RatingFragment.newInstance(user.rating, user.ratingN))
+                .commit();
     }
 
     @Override
@@ -170,10 +175,6 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
                     .replace(R.id.select_from, SelectImageFromFragment.newInstance(true))
                     .commit();
         });
-
-        getFragmentManager().beginTransaction()
-                .replace(R.id.profile_rating, RatingFragment.newInstance(user.rating, user.ratingN))
-                .commit();
 
         return view;
     }

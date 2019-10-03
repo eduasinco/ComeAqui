@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.*;
 
 import com.example.eduardorodriguez.comeaqui.MainActivity;
@@ -49,6 +50,7 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
     TimePicker timePicker;
     FrameLayout selectFromLayout;
     TextView timeTextView;
+    ScrollView scrollView;
 
 
     Float price_data = 0f;
@@ -105,6 +107,7 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
         backView = findViewById(R.id.back_arrow);
         selectFromLayout = findViewById(R.id.select_image_from);
         timeTextView = findViewById(R.id.time_text);
+        scrollView = findViewById(R.id.scrollview);
 
         context = getApplicationContext();
 
@@ -141,6 +144,10 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
         setSubmit();
         setTimeLogic();
         setTimePickerLogic();
+
+        scrollView.getViewTreeObserver().addOnScrollChangedListener(() -> {
+            foodName.clearFocus();
+        });
 
         backView.setOnClickListener(v -> finish());
     }
