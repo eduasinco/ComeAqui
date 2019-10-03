@@ -12,8 +12,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
+import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.MyLocation;
+import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.UpperNotificationFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
@@ -31,6 +34,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import org.json.JSONArray;
 
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
@@ -142,7 +147,28 @@ public class MapFragment extends Fragment{
             setMap(mMap);
         });
 
+        getConfirmedOrders();
+
         return rootView;
+    }
+
+    void getConfirmedOrders(){
+        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) +  "/my_confirmed_orders/");
+        try {
+            String response = process.execute().get();
+            if (response != null){
+                JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
+                if (ja.size() > 0){
+                    OrderObject orderObject = new OrderObject(ja.get(0).getAsJsonObject());
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.upper_notification, UpperNotificationFragment.newInstance(orderObject))
+                            .commit();
+                }
+
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @SuppressLint("RestrictedApi")
@@ -185,43 +211,6 @@ public class MapFragment extends Fragment{
             moveCardUp();
             return false;
         });
-
-        getUserTimeZone();
-    }
-
-    void getUserTimeZone(){
-        MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
-            @Override
-            public void gotLocation(Location location){
-                //Got the location!
-                lng = location.getLongitude();
-                lat = location.getLatitude();
-
-                Server gAPI2 = new Server("GET", "https://maps.googleapis.com/maps/api/timezone/json?location=" +
-                        lat + "," + lng + "&timestamp=0&key=" + getResources().getString(R.string.google_key));
-                try {
-                    String response = gAPI2.execute().get();
-                    if (response != null) {
-                        String timeZone = new JsonParser().parse(response).getAsJsonObject().get("timeZoneId").getAsString();
-                        MainActivity.user.timeZone = timeZone;
-                        setUserTimeZone(timeZone);
-                    }
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        MyLocation myLocation = new MyLocation();
-        myLocation.getLocation(getContext(), locationResult);
-    }
-
-    private void setUserTimeZone(String timeZone){
-        PatchAsyncTask putTask = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
-        try {
-            putTask.execute("time_zone", timeZone).get(5, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException | TimeoutException e) {
-            e.printStackTrace();
-        }
     }
 
     void moveCardUp(){

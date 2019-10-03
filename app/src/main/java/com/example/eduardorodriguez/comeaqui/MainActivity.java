@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +29,8 @@ import com.example.eduardorodriguez.comeaqui.map.MapFragment;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileFragment;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.Server;
+import com.example.eduardorodriguez.comeaqui.utilities.MyLocation;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -38,6 +41,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static com.yalantis.ucrop.UCropFragment.TAG;
 
@@ -165,7 +170,45 @@ public class MainActivity extends AppCompatActivity {
         listenToOrdersChanges();
         listenToNotificationsChanges();
         listenToChatMessages();
+        getUserTimeZone();
     }
+
+    void getUserTimeZone(){
+        MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
+            @Override
+            public void gotLocation(Location location){
+                //Got the location!
+                double lng = location.getLongitude();
+                double lat = location.getLatitude();
+
+                Server gAPI2 = new Server("GET", "https://maps.googleapis.com/maps/api/timezone/json?location=" +
+                        lat + "," + lng + "&timestamp=0&key=" + getResources().getString(R.string.google_key));
+                try {
+                    String response = gAPI2.execute().get();
+                    if (response != null) {
+                        String timeZone = new JsonParser().parse(response).getAsJsonObject().get("timeZoneId").getAsString();
+                        user.timeZone = timeZone;
+                        setUserTimeZone(timeZone);
+                    }
+                } catch (ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        MyLocation myLocation = new MyLocation();
+        myLocation.getLocation(this, locationResult);
+    }
+
+
+    private void setUserTimeZone(String timeZone){
+        PatchAsyncTask putTask = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
+        try {
+            putTask.execute("time_zone", timeZone).get(5, TimeUnit.SECONDS);
+        } catch (ExecutionException | InterruptedException | TimeoutException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void initiateIcons(int cf){
         previousFrame = currentFrame;
