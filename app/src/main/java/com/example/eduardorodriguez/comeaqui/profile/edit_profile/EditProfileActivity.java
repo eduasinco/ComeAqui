@@ -37,7 +37,6 @@ public class EditProfileActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         selectFrom.setVisibility(View.GONE);
-        setProfile(MainActivity.initializeUser());
     }
 
     private void setProfile(User user){

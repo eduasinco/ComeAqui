@@ -166,13 +166,10 @@ public class MainActivity extends AppCompatActivity {
             setFragment(profileFragment);
             profile.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.profilefill));
         });
-
-        initializeUser();
         getFirebaseToken();
         setNotificationsBubbles();
         listenToOrdersChanges();
         listenToChatMessages();
-        getUserTimeZone();
     }
 
     void checkRatings(){
@@ -212,42 +209,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    void getUserTimeZone(){
-        MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
-            @Override
-            public void gotLocation(Location location){
-                //Got the location!
-                double lng = location.getLongitude();
-                double lat = location.getLatitude();
-
-                Server gAPI2 = new Server("GET", "https://maps.googleapis.com/maps/api/timezone/json?location=" +
-                        lat + "," + lng + "&timestamp=0&key=" + getResources().getString(R.string.google_key));
-                try {
-                    String response = gAPI2.execute().get();
-                    if (response != null) {
-                        String timeZone = new JsonParser().parse(response).getAsJsonObject().get("timeZoneId").getAsString();
-                        user.timeZone = timeZone;
-                        setUserTimeZone(timeZone);
-                    }
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        MyLocation myLocation = new MyLocation();
-        myLocation.getLocation(this, locationResult);
-    }
-
-
-    private void setUserTimeZone(String timeZone){
-        PatchAsyncTask putTask = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
-        try {
-            putTask.execute("time_zone", timeZone).get(5, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException | TimeoutException e) {
             e.printStackTrace();
         }
     }
@@ -303,19 +264,6 @@ public class MainActivity extends AppCompatActivity {
     private void setFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, fragment).commit();
         mainFrame.setVisibility(View.VISIBLE);
-    }
-
-    public static User initializeUser(){
-        GetAsyncTask process = new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/my_profile/");
-        try {
-            String response = process.execute().get();
-            if (response != null)
-                user = new User(new JsonParser().parse(response).getAsJsonArray().get(0).getAsJsonObject());
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        // initializeFirebaseUser();
-        return user;
     }
 
     public void listenToOrdersChanges(){

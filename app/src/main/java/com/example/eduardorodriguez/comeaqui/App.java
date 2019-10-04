@@ -5,7 +5,11 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 
+import com.example.eduardorodriguez.comeaqui.objects.User;
+
 public class App extends Application {
+
+    public static User USER;
 
     public static final String MESSAGES_CHANNEL_ID = "messages";
     public static final String NOTIFICATIONS_CHANNEL_ID = "notifications";

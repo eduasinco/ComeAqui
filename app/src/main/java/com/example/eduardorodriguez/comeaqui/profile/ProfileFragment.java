@@ -113,7 +113,6 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
             setProfile(user, false);
             messageImage.setOnClickListener(v -> goToConversationWithUser(user));
         } else {
-            user = MainActivity.initializeUser();
             editProfileView.setVisibility(View.VISIBLE);
             editProfileView.setOnClickListener(v -> {
                 Intent editProfile = new Intent(getContext(), EditProfileActivity.class);

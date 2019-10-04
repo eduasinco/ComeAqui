@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 
 import java.text.DateFormat;
@@ -17,6 +19,7 @@ import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 public class DateFragment extends Fragment {
@@ -72,11 +75,27 @@ public class DateFragment extends Fragment {
     }
 
     public static String getHourForMessage(String dateString){
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault());
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'");
+        format.setTimeZone(TimeZone.getTimeZone("UTC"));
         try {
             Date date = format.parse(dateString);
-            String pattern = "h:mm a";
-            DateFormat df = new SimpleDateFormat(pattern);
+            DateFormat df = new SimpleDateFormat("h:mm a");
+            df.setTimeZone(TimeZone.getTimeZone(MainActivity.user.timeZone));
+            String dateTextString = df.format(date);
+            return dateTextString;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String getHourForFoodPosts(String dateString){
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        try {
+            Date date = format.parse(dateString);
+            DateFormat df = new SimpleDateFormat("h:mm a");
+            df.setTimeZone(TimeZone.getTimeZone(MainActivity.user.timeZone));
             String dateTextString = df.format(date);
             return dateTextString;
         } catch (ParseException e) {

@@ -30,7 +30,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".review.GuestsReviewActivity"></activity>
+        <activity android:name=".PrepareActivity"></activity>
+        <activity android:name=".review.GuestsReviewActivity" />
         <activity android:name=".review.ReviewPostActivity" />
 
         <service

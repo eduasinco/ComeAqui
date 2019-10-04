@@ -1,5 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.objects;
 
+import com.example.eduardorodriguez.comeaqui.utilities.DateFragment;
 import com.google.gson.JsonObject;
 import java.io.Serializable;
 
@@ -25,7 +26,7 @@ public class FoodPost implements Serializable {
         type = jo.get("food_type").getAsString();
         description = jo.get("description").getAsString();
         food_photo = ImageStringProcessor.processString(jo.get("food_photo").getAsString());
-        time = jo.get("time").getAsString();
+        time = DateFragment.getHourForFoodPosts(jo.get("time").getAsString());
         lat = jo.get("lat").getAsFloat();
         lng = jo.get("lng").getAsFloat();
         address = jo.get("address").getAsString();
