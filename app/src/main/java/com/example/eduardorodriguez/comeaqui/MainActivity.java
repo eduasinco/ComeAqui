@@ -173,7 +173,6 @@ public class MainActivity extends AppCompatActivity {
         listenToOrdersChanges();
         listenToChatMessages();
         getUserTimeZone();
-        checkRatings();
     }
 
     void checkRatings(){
