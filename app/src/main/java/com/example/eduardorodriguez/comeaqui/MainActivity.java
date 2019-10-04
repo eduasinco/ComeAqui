@@ -15,6 +15,7 @@ import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.FirebaseUser;
+import com.example.eduardorodriguez.comeaqui.review.GuestsReviewActivity;
 import com.example.eduardorodriguez.comeaqui.review.ReviewPostActivity;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
@@ -179,20 +180,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void checkRatings(){
-        checkUnratedOrders();
-        checkUnratedFoodPosts();
+        checkUnratedOrdersAsDinner();
+        checkUnratedOrdersAsPoster();
     }
 
-    void checkUnratedFoodPosts(){
-        GetAsyncTask process = new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/my_unreviewed_foodposts/");
+    void checkUnratedOrdersAsPoster(){
+        GetAsyncTask process = new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/my_unreviewed_order_guest/");
         try {
             String response = process.execute().get();
             if (response != null){
                 JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
                 if (ja.size() > 0){
-                    FoodPost foodPost = new FoodPost(ja.get(0).getAsJsonObject());
-                    Intent k = new Intent(this, ReviewPostActivity.class);
-                    k.putExtra("order", foodPost);
+                    OrderObject orderObject = new OrderObject(ja.get(0).getAsJsonObject());
+                    Intent k = new Intent(this, GuestsReviewActivity.class);
+                    k.putExtra("order", orderObject);
                     startActivity(k);
                 }
             }
@@ -201,8 +202,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void checkUnratedOrders(){
-        GetAsyncTask process = new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/my_unreviewed_orders/");
+    void checkUnratedOrdersAsDinner(){
+        GetAsyncTask process = new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/my_unreviewed_order_post/");
         try {
             String response = process.execute().get();
             if (response != null){
