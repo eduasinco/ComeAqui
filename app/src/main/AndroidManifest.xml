@@ -30,7 +30,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".review.ReviewPostActivity"></activity>
+        <activity android:name=".review.GuestsReviewActivity"></activity>
+        <activity android:name=".review.ReviewPostActivity" />
 
         <service
             android:name=".MyFirebaseMessagingService"
@@ -40,15 +41,15 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".utilities.ImageLookActivity"></activity>
-        <activity android:name=".profile.edit_profile.edit_account_details.payment.AddPaymentMethodActivity"></activity>
-        <activity android:name=".profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity"></activity>
-        <activity android:name=".profile.edit_profile.edit_account_details.EditAcountDetailsActivity"></activity>
-        <activity android:name=".profile.edit_profile.AddBioActivity"></activity>
-        <activity android:name=".notification.NotificationLookActivity"></activity>
-        <activity android:name=".profile.ProfileViewActivity"></activity>
-        <activity android:name=".chat.conversation.ConversationActivity"></activity>
-        <activity android:name=".chat.ChatActivity"></activity>
+        <activity android:name=".utilities.ImageLookActivity" />
+        <activity android:name=".profile.edit_profile.edit_account_details.payment.AddPaymentMethodActivity" />
+        <activity android:name=".profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity" />
+        <activity android:name=".profile.edit_profile.edit_account_details.EditAcountDetailsActivity" />
+        <activity android:name=".profile.edit_profile.AddBioActivity" />
+        <activity android:name=".notification.NotificationLookActivity" />
+        <activity android:name=".profile.ProfileViewActivity" />
+        <activity android:name=".chat.conversation.ConversationActivity" />
+        <activity android:name=".chat.ChatActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -61,7 +62,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".SplashActivity"></activity>
+        <activity android:name=".SplashActivity" />
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login">
@@ -71,25 +72,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".FoodLookActivity"></activity>
-        <activity android:name=".map.AddFoodActivity"></activity>
+        <activity android:name=".FoodLookActivity" />
+        <activity android:name=".map.AddFoodActivity" />
         <activity
             android:name=".profile.edit_profile.EditProfileActivity"
             android:label="@string/title_activity_edit_profile"
-            android:theme="@style/AppTheme"></activity>
-        <activity android:name=".profile.edit_profile.edit_account_details.payment.CreditCardInformationActivity"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".profile.edit_profile.edit_account_details.payment.CreditCardInformationActivity" />
         <activity
             android:name=".profile.settings.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/AppTheme"></activity>
-        <activity android:name=".profile.settings.ChangePasswordActivity"></activity>
-        <activity android:name=".order.OrderLookActivity"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".profile.settings.ChangePasswordActivity" />
+        <activity android:name=".order.OrderLookActivity" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
