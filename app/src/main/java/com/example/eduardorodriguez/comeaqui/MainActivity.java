@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.*;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.MessageObject;
-import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.FirebaseUser;
 import com.example.eduardorodriguez.comeaqui.review.GuestsReviewActivity;
@@ -444,20 +443,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void setUnseenNotifications(){
-        ArrayList<NotificationObject> notificationObjects = new ArrayList<>();
+        ArrayList<OrderObject> orderObjects = new ArrayList<>();
         GetAsyncTask getPostLocations = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/unseen_notifications/");
         try {
             String response = getPostLocations.execute().get();
             if (response != null)
                 for (JsonElement pa : new JsonParser().parse(response).getAsJsonArray()) {
-                    notificationObjects.add(new NotificationObject(pa.getAsJsonObject()));
+                    orderObjects.add(new OrderObject(pa.getAsJsonObject()));
                 }
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-        if (notificationObjects.size() > 0){
+        if (orderObjects.size() > 0){
             notNotifications.setVisibility(View.VISIBLE);
-            notNotifications.setText("" + notificationObjects.size());
+            notNotifications.setText("" + orderObjects.size());
         }
     }
     private void setUnseenChatMessages(){

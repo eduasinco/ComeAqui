@@ -3,8 +3,7 @@ package com.example.eduardorodriguez.comeaqui.notification;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,7 +14,6 @@ import android.view.ViewGroup;
 import com.example.eduardorodriguez.comeaqui.WebSocketMessage;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.google.gson.JsonArray;
@@ -23,16 +21,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class NotificationsFragment extends Fragment {
 
-    ArrayList<NotificationObject> data;
+    ArrayList<OrderObject> data;
     static MyNotificationsRecyclerViewAdapter notificationAdapter;
 
     RecyclerView recyclerView;
@@ -50,7 +45,7 @@ public class NotificationsFragment extends Fragment {
             data = new ArrayList<>();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
-                data.add(new NotificationObject(jo));
+                data.add(new OrderObject(jo));
             }
             notificationAdapter.addNewRow(data);
         } catch (Exception e){
@@ -87,12 +82,12 @@ public class NotificationsFragment extends Fragment {
         swipeController = new SwipeController(new SwipeControllerActions() {
             @Override
             public void onRightClicked(int position) {
-                confirmOrder(notificationAdapter.mValues.get(position).order, false, getContext());
+                confirmOrder(notificationAdapter.mValues.get(position), false, getContext());
             }
 
             @Override
             public void onLeftClicked(int position) {
-                confirmOrder(notificationAdapter.mValues.get(position).order, true, getContext());
+                confirmOrder(notificationAdapter.mValues.get(position), true, getContext());
             }
         });
 

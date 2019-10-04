@@ -49,7 +49,7 @@ public class MyPendingOrdersRecyclerViewAdapter extends RecyclerView.Adapter<MyP
         holder.orderStatus.setText(holder.mItem.status);
         holder.orderStatus.setBackgroundColor(Color.TRANSPARENT);
 
-        if (!holder.mItem.seen){
+        if (!holder.mItem.seenOwner){
             holder.orderStatus.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_notification_status_changed));
             holder.orderStatus.setTypeface(null, Typeface.BOLD);
             holder.orderStatus.setTextColor(Color.WHITE);

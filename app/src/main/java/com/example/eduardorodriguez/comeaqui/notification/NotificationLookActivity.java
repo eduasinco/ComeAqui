@@ -10,10 +10,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.*;
-import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
@@ -41,7 +40,7 @@ public class NotificationLookActivity extends AppCompatActivity {
     ImageView backView;
     CardView postImageLayout;
 
-    NotificationObject notificationObject;
+    OrderObject orderObject;
 
     public static void goToOrder(JsonObject jsonObject){
         try{
@@ -79,19 +78,19 @@ public class NotificationLookActivity extends AppCompatActivity {
         Bundle b = intent.getExtras();
 
         if(b != null && b.get("object") != null){
-            notificationObject = (NotificationObject) b.get("object");
+            orderObject = (OrderObject) b.get("object");
             boolean delete = b.getBoolean("delete");
 
-            posterNameView.setText(notificationObject.sender.first_name + " " + notificationObject.sender.last_name);
-            usernameView.setText(notificationObject.owner.email);
-            plateNameView.setText(notificationObject.order.post.plate_name);
-            descriptionView.setText(notificationObject.order.post.description);
-            posterLocationView.setText(notificationObject.order.post.address);
-            priceView.setText(notificationObject.order.post.price);
-            timeView.setText(notificationObject.order.post.time);
+            posterNameView.setText(orderObject.owner.first_name + " " + orderObject.owner.last_name);
+            usernameView.setText(orderObject.owner.email);
+            plateNameView.setText(orderObject.post.plate_name);
+            descriptionView.setText(orderObject.post.description);
+            posterLocationView.setText(orderObject.post.address);
+            priceView.setText(orderObject.post.price);
+            timeView.setText(orderObject.post.time);
 
             Bundle bundle = new Bundle();
-            bundle.putSerializable("type", notificationObject.order.post.type);
+            bundle.putSerializable("type", orderObject.post.type);
             FoodTypeFragment fragment = new FoodTypeFragment();
             fragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction()
@@ -99,26 +98,26 @@ public class NotificationLookActivity extends AppCompatActivity {
                     .commit();
 
 
-            if(!notificationObject.sender.profile_photo.contains("no-image")) Glide.with(this).load(notificationObject.sender.profile_photo).into(dinnerImage);
-            if(!notificationObject.order.post.food_photo.contains("no-image")){
+            if(!orderObject.owner.profile_photo.contains("no-image")) Glide.with(this).load(orderObject.owner.profile_photo).into(dinnerImage);
+            if(!orderObject.post.food_photo.contains("no-image")){
                 postImageLayout.setVisibility(View.VISIBLE);
-                Glide.with(this).load(notificationObject.order.post.food_photo).into(postImage);
+                Glide.with(this).load(orderObject.post.food_photo).into(postImage);
                 postImageLayout.setOnClickListener((v) -> {
                     Intent imageLook = new Intent(this, ImageLookActivity.class);
-                    imageLook.putExtra("image_url", notificationObject.order.post.food_photo);
+                    imageLook.putExtra("image_url", orderObject.post.food_photo);
                     startActivity(imageLook);
                 });
             }
-            String url = "http://maps.google.com/maps/api/staticmap?center=" + notificationObject.order.post.lat + "," + notificationObject.order.post.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
+            String url = "http://maps.google.com/maps/api/staticmap?center=" + orderObject.post.lat + "," + orderObject.post.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
             Glide.with(this).load(url).into(staticMapView);
 
             setConfirmCancelButton();
 
             confirmCancelButton.setOnClickListener(v -> {
-                if (notificationObject.order.status.equals("CANCELED")){
-                    NotificationsFragment.confirmOrder(notificationObject.order, true, this);
-                } else if (notificationObject.order.status.equals("CONFIRMED")) {
-                    NotificationsFragment.confirmOrder(notificationObject.order,false, this);
+                if (orderObject.status.equals("CANCELED")){
+                    NotificationsFragment.confirmOrder(orderObject, true, this);
+                } else if (orderObject.status.equals("CONFIRMED")) {
+                    NotificationsFragment.confirmOrder(orderObject,false, this);
                 }
                 finish();
             });
@@ -135,14 +134,14 @@ public class NotificationLookActivity extends AppCompatActivity {
 
     void goToProfileView(){
         Intent k = new Intent(this, ProfileViewActivity.class);
-        k.putExtra("user_email", notificationObject.sender);
+        k.putExtra("user_email", orderObject.owner);
         startActivity(k);
     }
 
     void setConfirmCancelButton(){
-        if (notificationObject.order.status.equals("CANCELED")){
+        if (orderObject.status.equals("CANCELED")){
             confirmCancelButton.setBackgroundColor(getResources().getColor(R.color.success));
-        } else if (notificationObject.order.status.equals("CONFIRMED")) {
+        } else if (orderObject.status.equals("CONFIRMED")) {
             confirmCancelButton.setBackgroundColor(getResources().getColor(R.color.canceled));
             confirmCancelButton.setText("CANCEL");
         }

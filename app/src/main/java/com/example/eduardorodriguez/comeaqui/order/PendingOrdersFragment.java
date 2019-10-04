@@ -126,7 +126,7 @@ public class PendingOrdersFragment extends Fragment {
                 public void onMessage(String s) {
                     getActivity().runOnUiThread(() -> {
                         OrderObject orderChanged = new OrderObject(new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("order_changed").getAsJsonObject());
-                        data.get(orderChanged.id).seen = orderChanged.seen;
+                        data.get(orderChanged.id).seenOwner = orderChanged.seenOwner;
                         data.get(orderChanged.id).status = orderChanged.status;
                         orderAdapter.notifyDataSetChanged();
                     });
@@ -150,17 +150,6 @@ public class PendingOrdersFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    private void setAllOrdersAsSeen(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/set_my_orders_as_seen/");
-        try {
-            String response = process.execute().get();
-            if (response != null)
-                makeList(new JsonParser().parse(response).getAsJsonArray());
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     /**

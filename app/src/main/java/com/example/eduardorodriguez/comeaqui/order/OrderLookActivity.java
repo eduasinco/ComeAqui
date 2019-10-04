@@ -8,6 +8,7 @@ import androidx.cardview.widget.CardView;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
@@ -18,6 +19,7 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 import com.google.gson.JsonObject;
@@ -42,6 +44,7 @@ public class OrderLookActivity extends AppCompatActivity {
     ImageView posterImageView;
     ImageView postImageView;
     ImageView staticMapView;
+    Button cancelOrderButton;
 
     CardView imageCard;
 
@@ -69,6 +72,7 @@ public class OrderLookActivity extends AppCompatActivity {
         postImageView = findViewById(R.id.image_layout);
         imageCard = findViewById(R.id.image_card);
         staticMapView = findViewById(R.id.static_map);
+        cancelOrderButton = findViewById(R.id.cancelOrderButton);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -88,12 +92,26 @@ public class OrderLookActivity extends AppCompatActivity {
             );
         }
 
+        cancelOrderButton.setOnClickListener(v -> {cancelOrder();});
     }
 
     void goToProfileView(User user){
         Intent k = new Intent(getApplicationContext(), ProfileViewActivity.class);
         k.putExtra("user_email", user);
         startActivity(k);
+    }
+
+    void cancelOrder(){
+        PostAsyncTask orderStatus = new PostAsyncTask(context.getString(R.string.server) + "/set_order_status/");
+        order.status = "CANCELED";
+        try {
+            orderStatus.execute(
+                    new String[]{"order_id",  order.id + ""},
+                    new String[]{"order_status", order.status}
+            ).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     void createStringArray(JsonObject jo){

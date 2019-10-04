@@ -2,7 +2,6 @@ package com.example.eduardorodriguez.comeaqui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 
 import androidx.cardview.widget.CardView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,10 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
-import com.example.eduardorodriguez.comeaqui.chat.chat_objects.MessageObject;
-import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
-import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.NotificationFirebase;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
@@ -28,12 +24,9 @@ import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import okhttp3.*;
-import okio.ByteString;
 
 import java.util.concurrent.ExecutionException;
 
@@ -168,13 +161,13 @@ public class FoodLookActivity extends AppCompatActivity {
                     String response = createOrder.execute(
                             new String[]{"food_post_id", "" + foodPost.id}
                     ).get();
-                    JsonObject jo = new JsonParser().parse(response).getAsJsonObject().get("notification").getAsJsonObject();
-                    NotificationObject notificationObject = new NotificationObject(jo);
-                    FoodLookActivity.goToOrder(notificationObject.order);
+                    JsonObject jo = new JsonParser().parse(response).getAsJsonObject().get("order").getAsJsonObject();
+                    OrderObject orderObject = new OrderObject(jo);
+                    FoodLookActivity.goToOrder(orderObject);
 
                     WebSocketMessage.send(this,
-                        "/ws/notifications/" + foodPost.owner.id +  "/",
-                        "{\"notification_id\": \"" + notificationObject.id + "\", \"seen\": false}"
+                        "/ws/notifications/" + orderObject.poster.id +  "/",
+                        "{\"notification_id\": \"" + orderObject.id + "\", \"seen\": false}"
                     );
                 } catch (ExecutionException | InterruptedException e) {
                     e.printStackTrace();
@@ -182,54 +175,5 @@ public class FoodLookActivity extends AppCompatActivity {
                 finish();
             });
         }
-    }
-
-    private void createNotificationFirebase(){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("userNotifications");
-        NotificationFirebase notification = new NotificationFirebase();
-    }
-
-    private final class EchoWebSocketListener extends WebSocketListener {
-        private static final int NORMAL_CLOSURE_STATUS = 1000;
-
-        public FoodLookActivity activity;
-        public EchoWebSocketListener(FoodLookActivity activity) {
-            this.activity = activity;
-        }
-        @Override
-        public void onOpen(WebSocket webSocket, Response response) {
-            // activity.runOnUiThread(() -> Toast.makeText(activity, "Connection Established!", Toast.LENGTH_LONG).show());
-        }
-        @Override
-        public void onMessage(WebSocket webSocket, String text) {
-            output(text);
-        }
-        @Override
-        public void onMessage(WebSocket webSocket, ByteString bytes) {
-            output(bytes.hex());
-        }
-        @Override
-        public void onClosing(WebSocket webSocket, int code, String reason) {
-            webSocket.close(NORMAL_CLOSURE_STATUS, null);
-            output("Closing : " + code + " / " + reason);
-        }
-        @Override
-        public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            output("Error : " + t.getMessage());
-        }
-    }
-
-    private void start() {
-        Request request = new Request.Builder().url(getResources().getString(R.string.server) + "/ws/notification/" + foodPost.owner.id +  "/")
-                .build();
-        EchoWebSocketListener listener = new EchoWebSocketListener(this);
-        ws = client.newWebSocket(request, listener);
-        client.dispatcher().executorService().shutdown();
-    }
-
-    void output(final String txt) {
-        runOnUiThread(() -> {
-            MessageObject brandNewMessage = new MessageObject(new JsonParser().parse(txt).getAsJsonObject().get("message").getAsJsonObject());
-        });
     }
 }

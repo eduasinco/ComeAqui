@@ -2,8 +2,7 @@ package com.example.eduardorodriguez.comeaqui.notification;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,24 +11,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.utilities.DateFragment;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyNotificationsRecyclerViewAdapter.ViewHolder> {
 
-    public  List<NotificationObject> mValues;
+    public  List<OrderObject> mValues;
     Context context;
 
-    public MyNotificationsRecyclerViewAdapter(Context context, ArrayList<NotificationObject> data){
+    public MyNotificationsRecyclerViewAdapter(Context context, ArrayList<OrderObject> data){
         this.context = context;
         this.mValues = data;
     }
 
-    public void addNewRow(ArrayList<NotificationObject> data){
+    public void addNewRow(ArrayList<OrderObject> data){
         this.mValues = data;
         this.notifyDataSetChanged();
     }
@@ -46,15 +45,15 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.usernameView.setText(holder.mItem.sender.email);
-        holder.notificationView.setText(holder.mItem.sender.first_name + " " + holder.mItem.sender.last_name + " quiere probar tu plato!");
-        holder.status.setText(holder.mItem.order.status);
+        holder.usernameView.setText(holder.mItem.owner.email);
+        holder.notificationView.setText(holder.mItem.owner.first_name + " " + holder.mItem.owner.last_name + " quiere probar tu plato!");
+        holder.status.setText(holder.mItem.status);
         holder.date.setText(DateFragment.getDateInSimpleFormat(holder.mItem.createdAt));
-        Glide.with(holder.mView.getContext()).load(holder.mItem.sender.profile_photo).into(holder.senderImageView);
+        Glide.with(holder.mView.getContext()).load(holder.mItem.owner.profile_photo).into(holder.senderImageView);
 
-        if (holder.mItem.order.status.equals("CONFIRMED")){
+        if (holder.mItem.status.equals("CONFIRMED")){
             holder.status.setTextColor(holder.mView.getResources().getColor(R.color.confirm));
-        } else if (holder.mItem.order.status.equals("CANCELED")) {
+        } else if (holder.mItem.status.equals("CANCELED")) {
             holder.status.setTextColor(holder.mView.getResources().getColor(R.color.canceled));
         }
 
@@ -77,7 +76,7 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
         public final TextView status;
         public final TextView date;
         public final ImageView senderImageView;
-        public NotificationObject mItem;
+        public OrderObject mItem;
 
         public ViewHolder(View view) {
             super(view);
