@@ -44,7 +44,6 @@ public class UserPostFragment extends Fragment {
         for (JsonElement pa : jsonArray) {
             JsonObject jo = pa.getAsJsonObject();
             FoodPost foodPost = new FoodPost(jo);
-            foodPost.favourite_from_server = true;
             data.add(foodPost);
         }
         adapter.addNewRow(data);

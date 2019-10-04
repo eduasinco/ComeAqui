@@ -14,6 +14,7 @@ import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.ChatFireba
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.FirebaseUser;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.EditProfileActivity;
+import com.example.eduardorodriguez.comeaqui.profile.post_and_reviews.PostAndReviewsFragment;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.ProfileImageGalleryFragment;
@@ -330,7 +331,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         public Fragment getItem(int position) {
             Fragment[] tabFragment = {
                     UserPostFragment.newInstance((user != null && user.id != MainActivity.user.id) ? user : MainActivity.user),
-                    new OptionsFragment(),
+                    PostAndReviewsFragment.newInstance(user),
                     ProfileImageGalleryFragment.newInstance(user)
             };
             return tabFragment[position];

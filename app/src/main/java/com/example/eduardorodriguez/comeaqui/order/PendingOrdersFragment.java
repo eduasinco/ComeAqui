@@ -1,10 +1,8 @@
 package com.example.eduardorodriguez.comeaqui.order;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ListView;
-import android.widget.Toast;
+
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,9 +23,7 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import static com.example.eduardorodriguez.comeaqui.R.layout.fragment_pendingorders_list;
 
@@ -97,7 +93,7 @@ public class PendingOrdersFragment extends Fragment {
 
         view = inflater.inflate(fragment_pendingorders_list, container, false);
         pullToRefresh = view.findViewById(R.id.pullToRefresh);
-        recyclerView = view.findViewById(R.id.list);
+        recyclerView = view.findViewById(R.id.recycler);
 
         getDataAndSet();
         if(pending)

@@ -2,7 +2,7 @@ package com.example.eduardorodriguez.comeaqui.chat;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
-import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.ChatFirebaseObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.firebase.database.*;
@@ -82,7 +81,7 @@ public class ChatFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.list);
+        RecyclerView recyclerView = view.findViewById(R.id.recycler);
         adapter = new MyChatRecyclerViewAdapter(data, mListener);
         recyclerView.setAdapter(adapter);
         getChatsAndSet();
