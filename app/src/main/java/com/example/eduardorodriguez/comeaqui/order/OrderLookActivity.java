@@ -5,7 +5,9 @@ import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -90,9 +92,20 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
+            setCancelOrderButton();
         }
 
-        cancelOrderButton.setOnClickListener(v -> {checkIfUserWantsToCancel();});
+
+    }
+
+    void setCancelOrderButton(){
+        if (order.status.equals("CANCELED")){
+            cancelOrderButton.setText("CANCELED");
+            cancelOrderButton.setBackgroundColor(Color.WHITE);
+            cancelOrderButton.setTextColor(ContextCompat.getColor(this, R.color.canceled));
+        } else {
+            cancelOrderButton.setOnClickListener(v -> {checkIfUserWantsToCancel();});
+        }
     }
 
     void goToProfileView(User user){

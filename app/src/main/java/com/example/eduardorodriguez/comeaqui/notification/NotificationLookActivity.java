@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.*;
@@ -32,6 +33,7 @@ public class NotificationLookActivity extends AppCompatActivity {
     TextView usernameView;
     TextView posterNameView;
     TextView posterLocationView;
+    TextView statucMessage;
     Button confirmCancelButton;
 
     ImageView postImage;
@@ -67,6 +69,7 @@ public class NotificationLookActivity extends AppCompatActivity {
         usernameView = findViewById(R.id.username);
         posterNameView = findViewById(R.id.dinner_name);
         posterLocationView = findViewById(R.id.posterLocation);
+        statucMessage = findViewById(R.id.status_message);
 
         postImage = findViewById(R.id.image);
         dinnerImage = findViewById(R.id.dinner_image);
@@ -111,20 +114,11 @@ public class NotificationLookActivity extends AppCompatActivity {
             String url = "http://maps.google.com/maps/api/staticmap?center=" + orderObject.post.lat + "," + orderObject.post.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
             Glide.with(this).load(url).into(staticMapView);
 
-            setConfirmCancelButton();
-
-            confirmCancelButton.setOnClickListener(v -> {
-                if (orderObject.status.equals("CANCELED")){
-                    NotificationsFragment.confirmOrder(orderObject, true, this);
-                } else if (orderObject.status.equals("CONFIRMED")) {
-                    NotificationsFragment.confirmOrder(orderObject,false, this);
-                }
-                finish();
-            });
-
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.profile_rating, RatingFragment.newInstance(MainActivity.user.rating, MainActivity.user.ratingN))
                     .commit();
+
+            setcConfirmCancelButton();
         }
         backView.setOnClickListener(v -> finish());
         dinnerImage.setOnClickListener(v -> {
@@ -132,18 +126,28 @@ public class NotificationLookActivity extends AppCompatActivity {
         });
     }
 
+    void setcConfirmCancelButton(){
+        if (orderObject.status.equals("PENDING")){
+            confirmCancelButton.setOnClickListener(v -> {
+                NotificationsFragment.confirmOrder(orderObject, true, this);
+                finish();
+            });
+        } else {
+            confirmCancelButton.setVisibility(View.GONE);
+        }
+
+        if (orderObject.status.equals("CONFIRMED")){
+            statucMessage.setText("CONFIRMED");
+            statucMessage.setTextColor(ContextCompat.getColor(this, R.color.confirm));
+        } else if (orderObject.status.equals("CANCELED")){
+            statucMessage.setText("CANCELED");
+            statucMessage.setTextColor(ContextCompat.getColor(this, R.color.canceled));
+        }
+    }
+
     void goToProfileView(){
         Intent k = new Intent(this, ProfileViewActivity.class);
         k.putExtra("user_email", orderObject.owner);
         startActivity(k);
-    }
-
-    void setConfirmCancelButton(){
-        if (orderObject.status.equals("CANCELED")){
-            confirmCancelButton.setBackgroundColor(getResources().getColor(R.color.success));
-        } else if (orderObject.status.equals("CONFIRMED")) {
-            confirmCancelButton.setBackgroundColor(getResources().getColor(R.color.canceled));
-            confirmCancelButton.setText("CANCEL");
-        }
     }
 }
