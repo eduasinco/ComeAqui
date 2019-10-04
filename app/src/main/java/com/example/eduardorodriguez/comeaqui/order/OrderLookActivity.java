@@ -31,6 +31,8 @@ import com.google.gson.JsonParser;
 
 import java.util.concurrent.ExecutionException;
 
+import static com.example.eduardorodriguez.comeaqui.App.USER;
+
 public class OrderLookActivity extends AppCompatActivity implements ContinueCancelFragment.OnFragmentInteractionListener {
 
     TextView postNameView;
@@ -110,7 +112,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
 
     void goToProfileView(User user){
         Intent k = new Intent(getApplicationContext(), ProfileViewActivity.class);
-        k.putExtra("user_email", user);
+        k.putExtra("user", user);
         startActivity(k);
     }
 
@@ -178,7 +180,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
         }
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.profile_rating, RatingFragment.newInstance(MainActivity.user.rating, MainActivity.user.ratingN))
+                .replace(R.id.profile_rating, RatingFragment.newInstance(USER.rating, USER.ratingN))
                 .commit();
     }
 

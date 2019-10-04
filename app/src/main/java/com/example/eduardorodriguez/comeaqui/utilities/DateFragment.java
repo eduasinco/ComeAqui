@@ -22,6 +22,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import static com.example.eduardorodriguez.comeaqui.App.USER;
+
 public class DateFragment extends Fragment {
     private static final String DATE = "date";
     private String dateString;
@@ -80,7 +82,7 @@ public class DateFragment extends Fragment {
         try {
             Date date = format.parse(dateString);
             DateFormat df = new SimpleDateFormat("h:mm a");
-            df.setTimeZone(TimeZone.getTimeZone(MainActivity.user.timeZone));
+            df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
             String dateTextString = df.format(date);
             return dateTextString;
         } catch (ParseException e) {
@@ -95,7 +97,7 @@ public class DateFragment extends Fragment {
         try {
             Date date = format.parse(dateString);
             DateFormat df = new SimpleDateFormat("h:mm a");
-            df.setTimeZone(TimeZone.getTimeZone(MainActivity.user.timeZone));
+            df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
             String dateTextString = df.format(date);
             return dateTextString;
         } catch (ParseException e) {

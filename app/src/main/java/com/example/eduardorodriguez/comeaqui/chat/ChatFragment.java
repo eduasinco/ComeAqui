@@ -27,6 +27,8 @@ import java.net.URISyntaxException;
 import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutionException;
 
+import static com.example.eduardorodriguez.comeaqui.App.USER;
+
 /**
  * A fragment representing a list of Items.
  * <p/>
@@ -162,7 +164,7 @@ public class ChatFragment extends Fragment{
 
     private void start(){
         try {
-            URI uri = new URI(getActivity().getResources().getString(R.string.server) + "/ws/unread_messages/" + MainActivity.user.id +  "/");
+            URI uri = new URI(getActivity().getResources().getString(R.string.server) + "/ws/unread_messages/" + USER.id +  "/");
             WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {

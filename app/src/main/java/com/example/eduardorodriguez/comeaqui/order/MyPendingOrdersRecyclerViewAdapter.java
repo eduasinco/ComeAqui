@@ -19,6 +19,8 @@ import com.example.eduardorodriguez.comeaqui.utilities.DateFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.eduardorodriguez.comeaqui.App.USER;
+
 
 public class MyPendingOrdersRecyclerViewAdapter extends RecyclerView.Adapter<MyPendingOrdersRecyclerViewAdapter.ViewHolder> {
 
@@ -65,7 +67,7 @@ public class MyPendingOrdersRecyclerViewAdapter extends RecyclerView.Adapter<MyP
             Intent orderLook = new Intent(holder.mView.getContext(), OrderLookActivity.class);
             orderLook.putExtra("object", holder.mItem);
             boolean delete = false;
-            if (holder.mItem.owner.id == MainActivity.user.id){
+            if (holder.mItem.owner.id == USER.id){
                 delete = true;
             }
             orderLook.putExtra("delete", delete);

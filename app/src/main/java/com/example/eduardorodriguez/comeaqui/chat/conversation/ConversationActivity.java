@@ -32,6 +32,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.ExecutionException;
 
+import static com.example.eduardorodriguez.comeaqui.App.USER;
+
 public class ConversationActivity extends AppCompatActivity {
 
     ChatObject chat;
@@ -80,7 +82,7 @@ public class ConversationActivity extends AppCompatActivity {
         Bundle b = intent.getExtras();
         if(b != null) {
             chat = (ChatObject) b.get("chat");
-            chattingWith = MainActivity.user.id == (chat.users.get(0).id) ? chat.users.get(1) : chat.users.get(0);
+            chattingWith = USER.id == (chat.users.get(0).id) ? chat.users.get(1) : chat.users.get(0);
 
             nombre.setText(chattingWith.first_name + " " + chattingWith.last_name);
             Glide.with(this).load(chattingWith.profile_photo).into(fotoPerfil);
@@ -128,7 +130,7 @@ public class ConversationActivity extends AppCompatActivity {
             //createServerMessage();
             mWebSocketClient.send("{ \"message\": \"" + txtMensaje.getText().toString() + "\"," +
                     "\"command\": \"new_message\"," +
-                    "\"from\": \"" + MainActivity.user.id + "\"," +
+                    "\"from\": \"" + USER.id + "\"," +
                     "\"to\": \"" + chattingWith.id + "\"," +
                     "\"chatId\": \"" + chat.id + "\"}"
             );
@@ -136,7 +138,7 @@ public class ConversationActivity extends AppCompatActivity {
 //                    "/ws/unread_messages/" + chattingWith.id +  "/",
 //                    "{ \"message\": \"" + txtMensaje.getText().toString() + "\"," +
 //                            "\"command\": \"new_message\"," +
-//                            "\"from\": \"" + MainActivity.user.id + "\"," +
+//                            "\"from\": \"" + USER.id + "\"," +
 //                            "\"chatId\": \"" + chat.id + "\"}"
 //            );
             txtMensaje.setText("");
@@ -146,7 +148,7 @@ public class ConversationActivity extends AppCompatActivity {
 
     void goToProfileView(User user){
         Intent k = new Intent(this, ProfileViewActivity.class);
-        k.putExtra("user_email", user);
+        k.putExtra("user", user);
         startActivity(k);
     }
 
@@ -190,7 +192,7 @@ public class ConversationActivity extends AppCompatActivity {
             lastMessage.lastInGroup = true;
         }
 
-        if (MainActivity.user.id == currentMessage.sender.id){
+        if (USER.id == currentMessage.sender.id){
             currentMessage.isOwner = true;
         }
 
@@ -218,7 +220,7 @@ public class ConversationActivity extends AppCompatActivity {
                         MessageObject brandNewMessage = new MessageObject(new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("message").getAsJsonObject());
                         setMessageStatus(brandNewMessage);
                         adapter.addMensaje(brandNewMessage);
-                        if (brandNewMessage.sender.id != MainActivity.user.id){
+                        if (brandNewMessage.sender.id != USER.id){
                             setMessagAsSeen(brandNewMessage.id);
                         }
                     });

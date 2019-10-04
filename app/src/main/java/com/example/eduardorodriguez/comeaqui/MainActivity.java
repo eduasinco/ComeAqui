@@ -46,6 +46,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import static com.example.eduardorodriguez.comeaqui.App.USER;
 import static com.yalantis.ucrop.UCropFragment.TAG;
 
 public class MainActivity extends AppCompatActivity {
@@ -77,8 +78,6 @@ public class MainActivity extends AppCompatActivity {
     private OrderFragment getPastOderFragment;
     private NotificationsFragment notificationFragment;
     private ProfileFragment profileFragment;
-
-    public static User user;
     public static FirebaseUser firebaseUser;
 
     private static Context context;
@@ -134,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
 
         getPastOderFragment = new OrderFragment();
         mapFragment = new MapFragment();
-        profileFragment = ProfileFragment.newInstance(user);
+        profileFragment = ProfileFragment.newInstance(USER);
         notificationFragment = new NotificationsFragment();
 
         chatView.setOnClickListener(v -> {
@@ -252,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
         postToken.execute(
                 new String[]{"dev_id", androidID},
                 new String[]{"reg_id", token},
-                new String[]{"name", "" + user.id}
+                new String[]{"name", "" + USER.id}
         );
     }
 
@@ -268,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void listenToOrdersChanges(){
         try {
-            URI uri = new URI(getResources().getString(R.string.server) + "/ws/orders/" + user.id +  "/");
+            URI uri = new URI(getResources().getString(R.string.server) + "/ws/orders/" + USER.id +  "/");
             WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
@@ -307,7 +306,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void listenToChatMessages(){
         try {
-            URI uri = new URI(getResources().getString(R.string.server) + "/ws/unread_messages/" + user.id +  "/");
+            URI uri = new URI(getResources().getString(R.string.server) + "/ws/unread_messages/" + USER.id +  "/");
             WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {

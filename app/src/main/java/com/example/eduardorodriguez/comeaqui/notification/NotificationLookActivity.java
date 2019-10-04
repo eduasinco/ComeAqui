@@ -22,6 +22,8 @@ import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 import com.google.gson.JsonObject;
 
+import static com.example.eduardorodriguez.comeaqui.App.USER;
+
 public class NotificationLookActivity extends AppCompatActivity {
 
     static Context context;
@@ -115,7 +117,7 @@ public class NotificationLookActivity extends AppCompatActivity {
             Glide.with(this).load(url).into(staticMapView);
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.profile_rating, RatingFragment.newInstance(MainActivity.user.rating, MainActivity.user.ratingN))
+                    .replace(R.id.profile_rating, RatingFragment.newInstance(USER.rating, USER.ratingN))
                     .commit();
 
             setcConfirmCancelButton();
@@ -147,7 +149,7 @@ public class NotificationLookActivity extends AppCompatActivity {
 
     void goToProfileView(){
         Intent k = new Intent(this, ProfileViewActivity.class);
-        k.putExtra("user_email", orderObject.owner);
+        k.putExtra("user", orderObject.owner);
         startActivity(k);
     }
 }

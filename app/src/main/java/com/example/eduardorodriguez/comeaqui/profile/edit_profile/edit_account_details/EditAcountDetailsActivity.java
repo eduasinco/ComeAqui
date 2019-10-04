@@ -16,6 +16,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import static com.example.eduardorodriguez.comeaqui.App.USER;
+
 public class EditAcountDetailsActivity extends AppCompatActivity {
 
     private EditText firstName;
@@ -28,7 +30,7 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        user = MainActivity.user;
+        user = USER;
     }
 
     @Override
@@ -43,7 +45,7 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
         TextView save = findViewById(R.id.save);
         LinearLayout paymentMethod = findViewById(R.id.payment_method);
 
-        user = MainActivity.user;
+        user = USER;
 
         paymentMethod.setOnClickListener(v -> {
             Intent paymentMethodA = new Intent(this, PaymentMethodsActivity.class);

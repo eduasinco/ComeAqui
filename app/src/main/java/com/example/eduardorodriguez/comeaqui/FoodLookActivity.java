@@ -30,6 +30,8 @@ import okhttp3.*;
 
 import java.util.concurrent.ExecutionException;
 
+import static com.example.eduardorodriguez.comeaqui.App.USER;
+
 public class FoodLookActivity extends AppCompatActivity {
 
     static Context context;
@@ -140,12 +142,12 @@ public class FoodLookActivity extends AppCompatActivity {
 
     void goToProfileView(User user){
         Intent k = new Intent(this, ProfileViewActivity.class);
-        k.putExtra("user_email", user);
+        k.putExtra("user", user);
         startActivity(k);
     }
 
     void setPlaceButton(){
-        if (foodPost.owner.id == MainActivity.user.id){
+        if (foodPost.owner.id == USER.id){
             paymentMethod.setVisibility(View.GONE);
             placeOrderButton.setText("Delete Post");
             placeOrderButton.setBackgroundColor(ContextCompat.getColor(this, R.color.canceled));

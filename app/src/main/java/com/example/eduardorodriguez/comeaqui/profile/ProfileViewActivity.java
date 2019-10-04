@@ -3,6 +3,7 @@ package com.example.eduardorodriguez.comeaqui.profile;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.objects.User;
 
 public class ProfileViewActivity extends AppCompatActivity {
 
@@ -11,12 +12,8 @@ public class ProfileViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_view);
 
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("user_email", getIntent().getExtras().getSerializable("user_email"));
-        ProfileFragment fragment = new ProfileFragment();
-        fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.profile_container, fragment)
+                .replace(R.id.profile_container, ProfileFragment.newInstance((User) getIntent().getExtras().getSerializable("user")))
                 .commit();
     }
 }

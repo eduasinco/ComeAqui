@@ -25,6 +25,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutionException;
+
+import static com.example.eduardorodriguez.comeaqui.App.USER;
 import static com.example.eduardorodriguez.comeaqui.R.layout.fragment_pendingorders_list;
 
 /**
@@ -114,7 +116,7 @@ public class PendingOrdersFragment extends Fragment {
 
     private void start(){
         try {
-            URI uri = new URI(getActivity().getResources().getString(R.string.server) + "/ws/orders/" + MainActivity.user.id +  "/");
+            URI uri = new URI(getActivity().getResources().getString(R.string.server) + "/ws/orders/" + USER.id +  "/");
             WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {

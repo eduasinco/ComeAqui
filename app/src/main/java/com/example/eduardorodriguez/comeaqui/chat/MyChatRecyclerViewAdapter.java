@@ -22,6 +22,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.LinkedHashMap;
 
+import static com.example.eduardorodriguez.comeaqui.App.USER;
+
 public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecyclerViewAdapter.ViewHolder> {
 
     private LinkedHashMap<Integer, ChatObject> mValues;
@@ -54,7 +56,7 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = (ChatObject) mValuesValues[position];
 
-        User chattingWith = MainActivity.user.id == (holder.mItem.users.get(0).id) ? holder.mItem.users.get(1) : holder.mItem.users.get(0);
+        User chattingWith = USER.id == (holder.mItem.users.get(0).id) ? holder.mItem.users.get(1) : holder.mItem.users.get(0);
 
         holder.username.setText(chattingWith.first_name + ", " + chattingWith.last_name);
         holder.lastMessage.setText(holder.mItem.last_message.message);

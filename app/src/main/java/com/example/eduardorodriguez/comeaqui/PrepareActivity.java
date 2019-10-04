@@ -17,6 +17,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import static com.example.eduardorodriguez.comeaqui.App.USER;
+
 public class PrepareActivity extends AppCompatActivity {
 
     @Override
@@ -41,7 +43,7 @@ public class PrepareActivity extends AppCompatActivity {
                     String response = gAPI2.execute().get();
                     if (response != null) {
                         String timeZone = new JsonParser().parse(response).getAsJsonObject().get("timeZoneId").getAsString();
-                        MainActivity.user.timeZone = timeZone;
+                        USER.timeZone = timeZone;
                         setUserTimeZone(timeZone);
                     }
                 } catch (ExecutionException | InterruptedException e) {
@@ -58,12 +60,11 @@ public class PrepareActivity extends AppCompatActivity {
         try {
             String response = process.execute().get();
             if (response != null)
-                MainActivity.user = new User(new JsonParser().parse(response).getAsJsonArray().get(0).getAsJsonObject());
+                USER = new User(new JsonParser().parse(response).getAsJsonArray().get(0).getAsJsonObject());
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-        // initializeFirebaseUser();
-        return MainActivity.user;
+        return USER;
     }
 
 

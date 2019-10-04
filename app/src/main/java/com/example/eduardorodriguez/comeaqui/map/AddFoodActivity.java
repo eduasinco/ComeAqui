@@ -33,6 +33,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import static com.example.eduardorodriguez.comeaqui.App.USER;
+
 public class AddFoodActivity extends AppCompatActivity implements SelectImageFromFragment.OnFragmentInteractionListener{
     EditText foodName;
     TextView price;
@@ -154,7 +156,7 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
 
             Date now = Calendar.getInstance().getTime();
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-ddZ");
-            format.setTimeZone(TimeZone.getTimeZone(MainActivity.user.timeZone));
+            format.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
             String formattedDate = format.format(now);
             try {
                 Date todayDate = new SimpleDateFormat("yyyy-MM-ddZ", Locale.US).parse(formattedDate);
@@ -163,7 +165,7 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
                 if (now.getTime() + minutes*60*1000 > postTimeDate.getTime()){
                     Date date = new Date(now.getTime() + minutes*60*1000);
                     DateFormat formatter = new SimpleDateFormat("HH:mm");
-                    formatter.setTimeZone(TimeZone.getTimeZone(MainActivity.user.timeZone));
+                    formatter.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
                     String dateFormatted = formatter.format(date);
 
                     timeTextView.setText("Please pick a time greater than " + dateFormatted);
@@ -182,7 +184,7 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
 
             Date now = Calendar.getInstance().getTime();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mmZ");
-            sdf.setTimeZone(TimeZone.getTimeZone(MainActivity.user.timeZone));
+            sdf.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
             String nowString = sdf.format(now);
             try {
                 Date nowDate = new SimpleDateFormat("yyyy-MM-dd HH:mmZ", Locale.US).parse(nowString);
@@ -252,7 +254,7 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
                     new String[]{"lng", Double.toString(lng)},
                     new String[]{"diners", Integer.toString(diners)},
                     new String[]{"time", postTimeString},
-                    new String[]{"time_zone", MainActivity.user.timeZone},
+                    new String[]{"time_zone", USER.timeZone},
                     new String[]{"price", price_data.toString()},
                     new String[]{"food_type", setTypes()},
                     new String[]{"description", description.getText().toString()},

@@ -39,6 +39,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import static com.example.eduardorodriguez.comeaqui.App.USER;
 import static com.example.eduardorodriguez.comeaqui.MainActivity.firebaseUser;
 
 public class ProfileFragment extends Fragment implements SelectImageFromFragment.OnFragmentInteractionListener{
@@ -61,7 +62,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
 
     private ConstraintLayout outOfCard;
     FrameLayout fragmentView;
-    private static final String USER = "user";
+    private static final String USER_TO_DISPLAY = "user";
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -70,13 +71,13 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
     public static ProfileFragment newInstance(User user) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
-        args.putSerializable(USER, user);
+        args.putSerializable(USER_TO_DISPLAY, user);
         fragment.setArguments(args);
         return fragment;
     }
 
 
-    public void setProfile(User user, boolean isMyUser){
+    public void setProfile(User user){
         if(!user.profile_photo.contains("no-image")) {
             Glide.with(view.getContext()).load(user.profile_photo).into(profileImageView);
             profileImageView.setOnClickListener((v) -> {
@@ -107,30 +108,13 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
     @Override
     public void onResume() {
         super.onResume();
-        fragmentView.setVisibility(View.GONE);
-        if (user != null && user.id != MainActivity.user.id) {
-            messageImage.setVisibility(View.VISIBLE);
-            setProfile(user, false);
-            messageImage.setOnClickListener(v -> goToConversationWithUser(user));
-        } else {
-            editProfileView.setVisibility(View.VISIBLE);
-            editProfileView.setOnClickListener(v -> {
-                Intent editProfile = new Intent(getContext(), EditProfileActivity.class);
-                editProfile.putExtra("object", user);
-                getContext().startActivity(editProfile);
-            });
-            setProfile(user, true);
-            addProfilePhotoView.setVisibility(View.VISIBLE);
-            addBackGroundPhotoView.setVisibility(View.VISIBLE);
-        }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
-            user = (User) getArguments().getSerializable(USER);
+            user = (User) getArguments().getSerializable(USER_TO_DISPLAY);
         }
     }
 
@@ -180,6 +164,23 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
                     .replace(R.id.select_from, SelectImageFromFragment.newInstance(true))
                     .commit();
         });
+
+        fragmentView.setVisibility(View.GONE);
+        if (user != null && user.id != USER.id) {
+            messageImage.setVisibility(View.VISIBLE);
+            setProfile(user);
+            messageImage.setOnClickListener(v -> goToConversationWithUser(user));
+        } else {
+            editProfileView.setVisibility(View.VISIBLE);
+            editProfileView.setOnClickListener(v -> {
+                Intent editProfile = new Intent(getContext(), EditProfileActivity.class);
+                editProfile.putExtra("object", user);
+                getContext().startActivity(editProfile);
+            });
+            setProfile(user);
+            addProfilePhotoView.setVisibility(View.VISIBLE);
+            addBackGroundPhotoView.setVisibility(View.VISIBLE);
+        }
 
         return view;
     }

@@ -24,6 +24,8 @@ import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 
 import java.util.concurrent.ExecutionException;
 
+import static com.example.eduardorodriguez.comeaqui.App.USER;
+
 public class MapCardFragment extends Fragment {
 
     TextView posterNameView;
@@ -71,7 +73,7 @@ public class MapCardFragment extends Fragment {
                 .commit();
 
         getChildFragmentManager().beginTransaction()
-                .replace(R.id.profile_rating, RatingFragment.newInstance(MainActivity.user.rating, MainActivity.user.ratingN))
+                .replace(R.id.profile_rating, RatingFragment.newInstance(USER.rating, USER.ratingN))
                 .commit();
 
         favouriteId = foodPost.favouriteId;
@@ -99,7 +101,7 @@ public class MapCardFragment extends Fragment {
 
     void goToProfileView(){
         Intent k = new Intent(getContext(), ProfileViewActivity.class);
-        k.putExtra("user_email", foodPost.owner);
+        k.putExtra("user", foodPost.owner);
         startActivity(k);
     }
 
