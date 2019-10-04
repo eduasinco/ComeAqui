@@ -18,11 +18,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 
+import com.example.eduardorodriguez.comeaqui.FoodLookActivity;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
+import com.example.eduardorodriguez.comeaqui.WebSocketMessage;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
+import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.AutocompleteLocationFragment;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -32,6 +38,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.ExecutionException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -247,19 +254,29 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
             PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/foods/");
             post.bitmap = imageBitmap;
 
-            post.execute(
-                    new String[]{"plate_name", foodName.getText().toString()},
-                    new String[]{"address", address},
-                    new String[]{"lat", Double.toString(lat)},
-                    new String[]{"lng", Double.toString(lng)},
-                    new String[]{"diners", Integer.toString(diners)},
-                    new String[]{"time", postTimeString},
-                    new String[]{"time_zone", USER.timeZone},
-                    new String[]{"price", price_data.toString()},
-                    new String[]{"food_type", setTypes()},
-                    new String[]{"description", description.getText().toString()},
-                    new String[]{"food_photo", ""}
-            );
+            try {
+                String response = post.execute(
+                        new String[]{"plate_name", foodName.getText().toString()},
+                        new String[]{"address", address},
+                        new String[]{"lat", Double.toString(lat)},
+                        new String[]{"lng", Double.toString(lng)},
+                        new String[]{"diners", Integer.toString(diners)},
+                        new String[]{"time", postTimeString},
+                        new String[]{"time_zone", USER.timeZone},
+                        new String[]{"price", price_data.toString()},
+                        new String[]{"food_type", setTypes()},
+                        new String[]{"description", description.getText().toString()},
+                        new String[]{"food_photo", ""}
+                ).get();
+
+                FoodPost foodPost = new FoodPost(new JsonParser().parse(response).getAsJsonObject());
+                WebSocketMessage.send(this,
+                        "/ws/posts/",
+                        "{\"post_id\": " + foodPost.id + "}"
+                );
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
             finish();
         });
     }

@@ -34,7 +34,6 @@ public class PostAsyncTask extends AsyncTask<String[], Void, String>
 
         HttpClient httpclient = new DefaultHttpClient();
         String boundary = "-------------" + System.currentTimeMillis();
-        httpPost.setHeader("Content-type","multipart/form-data; boundary="+boundary);
 
         MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create()
                 .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)

@@ -38,7 +38,7 @@ public class PutAsyncTask extends AsyncTask<String[], Void, JSONObject> {
 
         HttpClient httpclient = new DefaultHttpClient();
         String boundary = "-------------" + System.currentTimeMillis();
-        httpPut.setHeader("Content-type","multipart/form-data; boundary="+boundary);
+        httpPut.setHeader("Content-type","multipart/form-foodPostHashMap; boundary="+boundary);
 
         MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create()
                 .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)

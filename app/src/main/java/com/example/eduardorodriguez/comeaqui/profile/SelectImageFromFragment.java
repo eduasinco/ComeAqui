@@ -148,7 +148,7 @@ public class SelectImageFromFragment extends Fragment {
                 try {
                     fout = new FileOutputStream(file);
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    ((Bitmap) data.getExtras().get("data")).compress(Bitmap.CompressFormat.PNG, 70, fout);
+                    ((Bitmap) data.getExtras().get("foodPostHashMap")).compress(Bitmap.CompressFormat.PNG, 70, fout);
                     fout.flush();
                 } catch (Exception e) {
                     e.printStackTrace();

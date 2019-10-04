@@ -41,7 +41,7 @@ public class PatchAsyncTask extends AsyncTask<String, Void, JSONObject> {
 
         HttpClient httpclient = new DefaultHttpClient();
         String boundary = "-------------" + System.currentTimeMillis();
-        httpPatch.setHeader("Content-type","multipart/form-data; boundary="+boundary);
+        httpPatch.setHeader("Content-type","multipart/form-foodPostHashMap; boundary="+boundary);
 
         StringBody value = new StringBody(params[1], ContentType.TEXT_PLAIN);
         HttpEntity entity;

@@ -20,7 +20,7 @@ public class Server extends AsyncTask<String[], Void, String>{
         conn.setReadTimeout(10000);
         conn.setConnectTimeout(15000);
         conn.setRequestMethod(this.method);
-        conn.setRequestProperty("Content-Type","multipart/form-data");
+        conn.setRequestProperty("Content-Type","multipart/form-foodPostHashMap");
         conn.setRequestProperty("Authorization", "Basic " + SplashActivity.getCredemtials());
         conn.setDoInput(true);
         conn.setDoOutput(true);

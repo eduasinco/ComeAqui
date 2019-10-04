@@ -10,16 +10,15 @@ import android.os.Bundle;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
-import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.MyLocation;
-import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.UpperNotificationFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,8 +34,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import org.json.JSONArray;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -53,7 +55,7 @@ public class MapFragment extends Fragment{
     MapView mMapView;
     static View rootView;
     private static GoogleMap googleMap;
-    public static HashMap<Integer, FoodPost> data = new HashMap<>();;
+    public static HashMap<Integer, FoodPost> foodPostHashMap = new HashMap<>();;
     int fabCount;
 
     ConstraintLayout mapPickerPanView;
@@ -68,12 +70,12 @@ public class MapFragment extends Fragment{
     double lng;
     double lat;
 
-    public static HashMap<Integer, Marker> markers = new HashMap<>();
+    public static HashMap<Integer, Marker> markerHashMap = new HashMap<>();
     LatLng latLng;
 
     void setMarkers(){
-        for (int key : data.keySet()) {
-            FoodPost fp = data.get(key);
+        for (int key : foodPostHashMap.keySet()) {
+            FoodPost fp = foodPostHashMap.get(key);
             lat = fp.lat;
             lng = fp.lng;
 
@@ -81,7 +83,7 @@ public class MapFragment extends Fragment{
                     .position(new LatLng(lat, lng)));
             marker.setTag(key);
             markerPutColor(marker, fp.favourite ? R.color.favourite : R.color.colorPrimary);
-            markers.put(fp.id, marker);
+            markerHashMap.put(fp.id, marker);
         }
     }
 
@@ -101,7 +103,7 @@ public class MapFragment extends Fragment{
                 FoodPost fp = new FoodPost(jo);
                 fp.favourite = favourite;
                 fp.favouriteId = pa.getAsJsonObject().get("id").getAsInt();
-                data.put(fp.id, fp);
+                foodPostHashMap.put(fp.id, fp);
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -156,8 +158,45 @@ public class MapFragment extends Fragment{
         });
 
         getConfirmedOrders();
-
+        listenToChatMessages();
         return rootView;
+    }
+
+    public void listenToChatMessages(){
+        try {
+            URI uri = new URI(getResources().getString(R.string.server) + "/ws/posts/");
+            WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
+                @Override
+                public void onOpen(ServerHandshake serverHandshake) {
+                    // runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Unread Messages!", Toast.LENGTH_LONG).show());
+                }
+                @Override
+                public void onMessage(String s) {
+                    getActivity().runOnUiThread(() -> {
+                        JsonObject jo = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("food_post").getAsJsonObject();;
+                        FoodPost fp = new FoodPost(jo);
+                        foodPostHashMap.put(fp.id, fp);
+
+                        Marker marker =  googleMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(fp.lat, fp.lng)));
+                        marker.setTag(fp.id);
+                        markerPutColor(marker, fp.favourite ? R.color.favourite : R.color.colorPrimary);
+                        markerHashMap.put(fp.id, marker);
+                    });
+                }
+                @Override
+                public void onClose(int i, String s, boolean b) {
+                    Log.i("Websocket", "Closed " + s);
+                }
+                @Override
+                public void onError(Exception e) {
+                    Log.i("Websocket", "Error " + e.getMessage());
+                }
+            };
+            mWebSocketClient.connect();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 
     void getConfirmedOrders(){
@@ -212,7 +251,7 @@ public class MapFragment extends Fragment{
             cancelPostView.setVisibility(View.VISIBLE);
 
             final int key = (int) (marker.getTag());
-            FoodPost foodPost = data.get(key);
+            FoodPost foodPost = foodPostHashMap.get(key);
             getChildFragmentManager().beginTransaction()
                     .replace(R.id.container1, MapCardFragment.newInstance(foodPost))
                     .commit();
@@ -248,7 +287,6 @@ public class MapFragment extends Fragment{
         }
 
         GetAsyncTask getFavouritePosts = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_favourites/");
-
         try {
             String response = getFavouritePosts.execute().get();
             if (response != null)
@@ -352,7 +390,7 @@ public class MapFragment extends Fragment{
     }
 
     void markersVisibility(boolean visible){
-        for (Marker marker: markers.values()){
+        for (Marker marker: markerHashMap.values()){
             marker.setVisible(visible);
         }
     }

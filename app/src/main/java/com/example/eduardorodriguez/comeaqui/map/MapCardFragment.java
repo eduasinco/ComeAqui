@@ -2,7 +2,7 @@ package com.example.eduardorodriguez.comeaqui.map;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.cardview.widget.CardView;
+
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,14 +12,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.FoodLookActivity;
-import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodElementFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
-import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 
 import java.util.concurrent.ExecutionException;
@@ -81,7 +79,7 @@ public class MapCardFragment extends Fragment {
         posterNameView.setText(foodPost.owner.first_name + " " + foodPost.owner.last_name);
         posterUserName.setText(foodPost.owner.email);
         starView.setImageResource(foodPost.favourite ? R.drawable.star_fill: R.drawable.star);
-        MapFragment.markerPutColor(MapFragment.markers.get(foodPost.id), !foodPost.favourite ? R.color.grey : R.color.favourite);
+        MapFragment.markerPutColor(MapFragment.markerHashMap.get(foodPost.id), !foodPost.favourite ? R.color.grey : R.color.favourite);
 
         if(!foodPost.owner.profile_photo.contains("no-image")) Glide.with(view.getContext()).load(foodPost.owner.profile_photo).into(posterImageView);
         if(!foodPost.food_photo.contains("no-image")){
@@ -111,10 +109,10 @@ public class MapCardFragment extends Fragment {
             foodPost.favourite = !foodPost.favourite;
             starView.setImageResource(foodPost.favourite ? R.drawable.star_fill: R.drawable.star);
             if (foodPost.favourite) {
-                MapFragment.markerPutColor(MapFragment.markers.get(foodPost.id), R.color.favourite);
-                PostAsyncTask createOrder = new PostAsyncTask(getResources().getString(R.string.server) + "/favourites/");
+                MapFragment.markerPutColor(MapFragment.markerHashMap.get(foodPost.id), R.color.favourite);
+                PostAsyncTask putFavourite = new PostAsyncTask(getResources().getString(R.string.server) + "/favourites/");
                 try {
-                    favouriteId = Integer.parseInt(createOrder.execute(new String[]{"food_post_id", "" + foodPost.id}).get());
+                    favouriteId = Integer.parseInt(putFavourite.execute(new String[]{"food_post_id", "" + foodPost.id}).get());
                 } catch (ExecutionException | InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -126,7 +124,7 @@ public class MapCardFragment extends Fragment {
                 } catch (ExecutionException | InterruptedException e) {
                     e.printStackTrace();
                 }
-                MapFragment.markerPutColor(MapFragment.markers.get(foodPost.id), !foodPost.favourite ? R.color.grey : R.color.favourite);
+                MapFragment.markerPutColor(MapFragment.markerHashMap.get(foodPost.id), !foodPost.favourite ? R.color.grey : R.color.favourite);
             }
         });
     }
