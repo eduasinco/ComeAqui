@@ -370,6 +370,7 @@ public class MapFragment extends Fragment{
         super.onResume();
         mMapView.onResume();
         cancelPost();
+        setMapMarkers();
     }
 
     @Override

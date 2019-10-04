@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.*;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.MessageObject;
-import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.FirebaseUser;
