@@ -137,7 +137,7 @@ public class NotificationsFragment extends Fragment {
         notificationAdapter.notifyDataSetChanged();
         WebSocketMessage.send(f.getActivity(),
                 "/ws/orders/" + order.owner.id +  "/",
-                "{\"order_id\": \"" + order.id + "\", \"seen_owner\": false, \"seen_poster\": true}"
+                "{\"order_id\": \"" + order.id + "\", \"seen_owner\": false}"
         );
     }
 

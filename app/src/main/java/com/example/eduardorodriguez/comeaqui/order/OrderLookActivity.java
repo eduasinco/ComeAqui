@@ -114,8 +114,7 @@ public class OrderLookActivity extends AppCompatActivity {
         }
         WebSocketMessage.send(this,
                 "/ws/orders/" + order.poster.id +  "/",
-                "{\"order_id\": \"" + order.id + "\", \"seen_owner\": true," +
-                        "\"seen_poster\": false}"
+                "{\"order_id\": \"" + order.id + "\", \"seen_poster\": false}"
         );
     }
 
