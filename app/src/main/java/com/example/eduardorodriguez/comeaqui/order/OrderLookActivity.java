@@ -77,8 +77,8 @@ public class OrderLookActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if (b != null){
-            OrderObject orderObject = (OrderObject) b.get("object");
-            GetAsyncTask getOrders = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/order_detail/" + orderObject.id + "/");
+            order = (OrderObject) b.get("object");
+            GetAsyncTask getOrders = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/order_detail/" + order.id + "/");
             try {
                 String response = getOrders.execute().get();
                 if (response != null)
@@ -87,8 +87,8 @@ public class OrderLookActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             WebSocketMessage.send(this,
-                    "/ws/orders/" + orderObject.owner.id +  "/",
-                    "{\"order_id\": \"" + orderObject.id + "\", \"seen\": true}"
+                    "/ws/orders/" + order.poster.id +  "/",
+                    "{\"order_id\": \"" + order.id + "\", \"seen_owner\": true}"
             );
         }
 
@@ -112,6 +112,11 @@ public class OrderLookActivity extends AppCompatActivity {
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
+        WebSocketMessage.send(this,
+                "/ws/orders/" + order.poster.id +  "/",
+                "{\"order_id\": \"" + order.id + "\", \"seen_owner\": true," +
+                        "\"seen_poster\": false}"
+        );
     }
 
     void createStringArray(JsonObject jo){

@@ -171,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
         getFirebaseToken();
         setNotificationsBubbles();
         listenToOrdersChanges();
-        listenToNotificationsChanges();
         listenToChatMessages();
         getUserTimeZone();
         checkRatings();
@@ -332,43 +331,16 @@ public class MainActivity extends AppCompatActivity {
                 public void onMessage(String s) {
                     final String message = s;
                     runOnUiThread(() -> {
-                        int ordersNotSeen = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("orders_not_seen").getAsInt();
+                        int ordersNotSeen = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("orders_not_seen_owner").getAsInt();
                         if (ordersNotSeen > 0 ){
                             notOrders.setVisibility(View.VISIBLE);
                             notOrders.setText("" + ordersNotSeen);
                         }
-                    });
-                }
-                @Override
-                public void onClose(int i, String s, boolean b) {
-                    Log.i("Websocket", "Closed " + s);
-                }
-                @Override
-                public void onError(Exception e) {
-                    Log.i("Websocket", "Error " + e.getMessage());
-                }
-            };
-            mWebSocketClient.connect();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-    }
-    public void listenToNotificationsChanges(){
-        try {
-            URI uri = new URI(getResources().getString(R.string.server) + "/ws/notifications/" + user.id +  "/");
-            WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
-                @Override
-                public void onOpen(ServerHandshake serverHandshake) {
-                    // runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Notifications!", Toast.LENGTH_LONG).show());
-                }
-                @Override
-                public void onMessage(String s) {
-                    final String message = s;
-                    runOnUiThread(() -> {
-                        int ordersNotSeen = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("notifications_not_seen").getAsInt();
-                        if (ordersNotSeen > 0 ){
+
+                        int notificationsNotSeen = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("orders_not_seen_poster").getAsInt();
+                        if (notificationsNotSeen > 0 ){
                             notNotifications.setVisibility(View.VISIBLE);
-                            notNotifications.setText("" + ordersNotSeen);
+                            notNotifications.setText("" + notificationsNotSeen);
                         }
                     });
                 }

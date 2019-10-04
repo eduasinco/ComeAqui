@@ -8,9 +8,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.WebSocketMessage;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
@@ -21,7 +25,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -69,7 +76,7 @@ public class NotificationsFragment extends Fragment {
 
         getData();
         setupRecyclerView();
-
+        start();
         return view;
     }
 
@@ -127,7 +134,41 @@ public class NotificationsFragment extends Fragment {
         notificationAdapter.notifyDataSetChanged();
         WebSocketMessage.send(f.getActivity(),
                 "/ws/orders/" + order.owner.id +  "/",
-                "{\"order_id\": \"" + order.id + "\", \"seen\": false}"
+                "{\"order_id\": \"" + order.id + "\", \"seen_owner\": false, \"seen_poster\": true}"
         );
+    }
+
+    private void start(){
+        try {
+            URI uri = new URI(getActivity().getResources().getString(R.string.server) + "/ws/orders/" + MainActivity.user.id +  "/");
+            WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
+                @Override
+                public void onOpen(ServerHandshake serverHandshake) {
+                    // getActivity().runOnUiThread(() -> {
+                    //    Toast.makeText(getActivity(), "Connection Established!", Toast.LENGTH_LONG).show();
+                    // });
+                }
+                @Override
+                public void onMessage(String s) {
+                    getActivity().runOnUiThread(() -> {
+                        OrderObject orderChanged = new OrderObject(new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("order_changed").getAsJsonObject());
+                        data.get(orderChanged.id).seenOwner = orderChanged.seenOwner;
+                        data.get(orderChanged.id).status = orderChanged.status;
+                        notificationAdapter.notifyDataSetChanged();
+                    });
+                }
+                @Override
+                public void onClose(int i, String s, boolean b) {
+                    Log.i("Websocket", "Closed " + s);
+                }
+                @Override
+                public void onError(Exception e) {
+                    Log.i("Websocket", "Error " + e.getMessage());
+                }
+            };
+            mWebSocketClient.connect();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 }
