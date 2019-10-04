@@ -27,8 +27,9 @@
     <color name="confirm">#FF4CAF50</color>
     <color name="swpe_list_element">#FFFFFF</color>
 
-
     <color name="green_soft">#D5FFDB</color>
+
+    <color name="white_transparent">#74FFFFFF</color>
 
 
 </resources>

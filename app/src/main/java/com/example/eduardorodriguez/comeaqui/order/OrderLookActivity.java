@@ -9,6 +9,7 @@ import androidx.cardview.widget.CardView;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
@@ -20,6 +21,7 @@ import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
+import com.example.eduardorodriguez.comeaqui.utilities.ContinueCancelFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 import com.google.gson.JsonObject;
@@ -27,7 +29,7 @@ import com.google.gson.JsonParser;
 
 import java.util.concurrent.ExecutionException;
 
-public class OrderLookActivity extends AppCompatActivity {
+public class OrderLookActivity extends AppCompatActivity implements ContinueCancelFragment.OnFragmentInteractionListener {
 
     TextView postNameView;
     TextView plateName;
@@ -45,6 +47,7 @@ public class OrderLookActivity extends AppCompatActivity {
     ImageView postImageView;
     ImageView staticMapView;
     Button cancelOrderButton;
+    FrameLayout cancelMessage;
 
     CardView imageCard;
 
@@ -73,6 +76,7 @@ public class OrderLookActivity extends AppCompatActivity {
         imageCard = findViewById(R.id.image_card);
         staticMapView = findViewById(R.id.static_map);
         cancelOrderButton = findViewById(R.id.cancelOrderButton);
+        cancelMessage = findViewById(R.id.cancel_message);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -92,13 +96,22 @@ public class OrderLookActivity extends AppCompatActivity {
             );
         }
 
-        cancelOrderButton.setOnClickListener(v -> {cancelOrder();});
+        cancelOrderButton.setOnClickListener(v -> {checkIfUserWantsToCancel();});
     }
 
     void goToProfileView(User user){
         Intent k = new Intent(getApplicationContext(), ProfileViewActivity.class);
         k.putExtra("user_email", user);
         startActivity(k);
+    }
+
+    void checkIfUserWantsToCancel(){
+        cancelMessage.setVisibility(View.VISIBLE);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.cancel_message, ContinueCancelFragment.newInstance(
+                        "Your are canceling the order",
+                        "Should you cancel after confirmation you would still owe the full fee"))
+                .commit();
     }
 
     void cancelOrder(){
@@ -116,6 +129,7 @@ public class OrderLookActivity extends AppCompatActivity {
                 "/ws/orders/" + order.poster.id +  "/",
                 "{\"order_id\": \"" + order.id + "\", \"seen_poster\": false}"
         );
+        finish();
     }
 
     void createStringArray(JsonObject jo){
@@ -157,5 +171,13 @@ public class OrderLookActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.profile_rating, RatingFragment.newInstance(MainActivity.user.rating, MainActivity.user.ratingN))
                 .commit();
+    }
+
+    @Override
+    public void onFragmentInteraction(boolean ok) {
+        if (ok){
+            cancelOrder();
+        }
+        cancelMessage.setVisibility(View.GONE);
     }
 }
