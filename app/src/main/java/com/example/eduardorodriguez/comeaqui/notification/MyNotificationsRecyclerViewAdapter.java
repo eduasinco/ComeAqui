@@ -3,7 +3,11 @@ package com.example.eduardorodriguez.comeaqui.notification;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,11 +55,18 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
         holder.date.setText(DateFragment.getDateInSimpleFormat(holder.mItem.createdAt));
         Glide.with(holder.mView.getContext()).load(holder.mItem.owner.profile_photo).into(holder.senderImageView);
 
-        if (holder.mItem.status.equals("CONFIRMED")){
-            holder.status.setTextColor(holder.mView.getResources().getColor(R.color.confirm));
-        } else if (holder.mItem.status.equals("CANCELED")) {
-            holder.status.setTextColor(holder.mView.getResources().getColor(R.color.canceled));
+        if (!holder.mItem.seenPoster){
+            holder.status.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_notification_status_changed));
+            holder.status.setTypeface(null, Typeface.BOLD);
+            holder.status.setTextColor(Color.WHITE);
+        } else if (holder.mItem.status.equals("CONFIRMED")){
+            holder.status.setTextColor(ContextCompat.getColor(holder.mView.getContext(), R.color.success));
+        } else if (holder.mItem.status.equals("CANCELED")){
+            holder.status.setTextColor(ContextCompat.getColor(holder.mView.getContext(), R.color.canceled));
+        } else {
+            holder.status.setTextColor(ContextCompat.getColor(holder.mView.getContext(), R.color.colorPrimary));
         }
+
 
         holder.mView.setOnClickListener(v -> {
             Intent notification = new Intent(context, NotificationLookActivity.class);

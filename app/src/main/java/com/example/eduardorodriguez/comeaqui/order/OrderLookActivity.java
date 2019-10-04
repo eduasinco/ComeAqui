@@ -87,7 +87,7 @@ public class OrderLookActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             WebSocketMessage.send(this,
-                    "/ws/orders/" + order.poster.id +  "/",
+                    "/ws/orders/" + MainActivity.user.id +  "/",
                     "{\"order_id\": \"" + order.id + "\", \"seen_owner\": true}"
             );
         }

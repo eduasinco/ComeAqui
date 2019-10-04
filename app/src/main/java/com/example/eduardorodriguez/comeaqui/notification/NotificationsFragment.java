@@ -18,6 +18,7 @@ import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.WebSocketMessage;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.order.MyPendingOrdersRecyclerViewAdapter;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.google.gson.JsonArray;
@@ -30,11 +31,12 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutionException;
 
 public class NotificationsFragment extends Fragment {
 
-    ArrayList<OrderObject> data;
+    LinkedHashMap<Integer, OrderObject> data;
     static MyNotificationsRecyclerViewAdapter notificationAdapter;
 
     RecyclerView recyclerView;
@@ -49,12 +51,14 @@ public class NotificationsFragment extends Fragment {
 
     public void makeList(JsonArray jsonArray){
         try {
-            data = new ArrayList<>();
+            data = new LinkedHashMap<>();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
-                data.add(new OrderObject(jo));
+                OrderObject oo = new OrderObject(jo);
+                data.put(oo.id, oo);
             }
-            notificationAdapter.addNewRow(data);
+            notificationAdapter = new MyNotificationsRecyclerViewAdapter(getContext(), new ArrayList<>(data.values()));
+            recyclerView.setAdapter(notificationAdapter);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -63,14 +67,13 @@ public class NotificationsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getData();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifications_list, container, false);
-        notificationAdapter = new MyNotificationsRecyclerViewAdapter(getContext(), data);
-
         recyclerView = (RecyclerView) view;
         f = this;
 
@@ -152,7 +155,7 @@ public class NotificationsFragment extends Fragment {
                 public void onMessage(String s) {
                     getActivity().runOnUiThread(() -> {
                         OrderObject orderChanged = new OrderObject(new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("order_changed").getAsJsonObject());
-                        data.get(orderChanged.id).seenOwner = orderChanged.seenOwner;
+                        data.get(orderChanged.id).seenPoster = orderChanged.seenPoster;
                         data.get(orderChanged.id).status = orderChanged.status;
                         notificationAdapter.notifyDataSetChanged();
                     });
