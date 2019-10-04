@@ -90,10 +90,6 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
-            WebSocketMessage.send(this,
-                    "/ws/orders/" + MainActivity.user.id +  "/",
-                    "{\"order_id\": \"" + order.id + "\", \"seen_owner\": true}"
-            );
         }
 
         cancelOrderButton.setOnClickListener(v -> {checkIfUserWantsToCancel();});
