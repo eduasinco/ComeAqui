@@ -115,7 +115,7 @@ public class StarReasonFragment extends Fragment {
     }
 
     void changeReasonText(boolean good, int i){
-        String[] rateMessage = {"AUFUL", "BAD", "INDIFFERENT", "COULD BE BETTER", "GREAT"};
+        String[] rateMessage = {"AWFUL", "BAD", "INDIFFERENT", "COULD BE BETTER", "GREAT"};
         if (good){
             rateMessage1.setText(rateMessage[i]);
             rateMessage2.setText("Great! What did you like the most?");
@@ -168,6 +168,7 @@ public class StarReasonFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mListener.onHasToScrollIfNeeded();
+                mListener.onFragmentInteraction(rating, reasonB, review.getText().toString());
             }
         });
     }
