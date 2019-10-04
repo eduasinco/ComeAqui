@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
 
         getPastOderFragment = new OrderFragment();
         mapFragment = new MapFragment();
-        profileFragment = new ProfileFragment();
+        profileFragment = ProfileFragment.newInstance(user);
         notificationFragment = new NotificationsFragment();
 
         chatView.setOnClickListener(v -> {

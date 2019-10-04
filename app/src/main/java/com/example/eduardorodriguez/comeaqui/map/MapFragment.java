@@ -108,6 +108,15 @@ public class MapFragment extends Fragment{
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMapView.onResume();
+        cancelPost();
+        try{setMapMarkers();}catch(Exception ignored){}
+        getConfirmedOrders();
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -363,14 +372,6 @@ public class MapFragment extends Fragment{
         super.onSaveInstanceState(outState);
 
         //Save the fragment's state here
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mMapView.onResume();
-        cancelPost();
-        setMapMarkers();
     }
 
     @Override

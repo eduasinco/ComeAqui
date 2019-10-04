@@ -72,8 +72,10 @@ public class PostAndReviewsFragment extends Fragment {
                 ArrayList<FoodPostReview> data = new ArrayList<>();
                 for (JsonElement pa : new JsonParser().parse(response).getAsJsonArray()) {
                     JsonObject jo = pa.getAsJsonObject();
-                    FoodPostReview foodPost = new FoodPostReview(jo);
-                    data.add(foodPost);
+                    try {
+                        FoodPostReview foodPost = new FoodPostReview(jo);
+                        data.add(foodPost);
+                    } catch (Exception ignore){}
                 }
                 adapter = new MyPostAndReviewsRecyclerViewAdapter(data);
                 recyclerView.setAdapter(adapter);

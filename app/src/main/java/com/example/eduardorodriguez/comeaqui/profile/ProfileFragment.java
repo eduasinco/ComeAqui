@@ -61,14 +61,22 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
 
     private ConstraintLayout outOfCard;
     FrameLayout fragmentView;
+    private static final String USER = "user";
 
     public ProfileFragment() {
         // Required empty public constructor
     }
 
+    public static ProfileFragment newInstance(User user) {
+        ProfileFragment fragment = new ProfileFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(USER, user);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 
     public void setProfile(User user, boolean isMyUser){
-
         if(!user.profile_photo.contains("no-image")) {
             Glide.with(view.getContext()).load(user.profile_photo).into(profileImageView);
             profileImageView.setOnClickListener((v) -> {
@@ -119,6 +127,15 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            user = (User) getArguments().getSerializable(USER);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view =  inflater.inflate(R.layout.fragment_profile, container, false);
@@ -135,22 +152,10 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         addBackGroundPhotoView = view.findViewById(R.id.add_background_photo);
         fragmentView = view.findViewById(R.id.select_from);
 
-        final CircularImageView circularImageView = view.findViewById(R.id.profile_image);
-        final ImageView mImage =  view.findViewById(R.id.profile_image);
-//        circularImageView.setBorderWidth(10);
-//        AppBarLayout mAppBar = view.findViewById(R.id.app_bar);
-//        mAppBar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
-//            mImage.setY(-verticalOffset / 2 + 100);
-//            circularImageView.setShadowRadius(0 - verticalOffset / 5);
-//            backGroundImageView.setY(-verticalOffset / 4);
-//        });
-
         ViewPager viewPager = view.findViewById(R.id.viewpager);
         viewPager.setAdapter(new TestPagerAdapter(getChildFragmentManager()));
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
-
-        user = getArguments() != null ? (User) getArguments().getSerializable("user_email") : null;
 
         int curveRadius = 40;
         view.findViewById(R.id.backGroundImage).setOutlineProvider(new ViewOutlineProvider() {
@@ -199,85 +204,6 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         startActivity(k);
     }
 
-    void goToConversationActivity(String email){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("chats");
-        reference
-            .orderByChild("signature")
-            .equalTo("(" + MainActivity.user.email + ", " + email + ")")
-            .addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    ChatFirebaseObject chat = null;
-                    if (dataSnapshot.getChildren().iterator().hasNext()){
-                         chat = dataSnapshot.getChildren().iterator().next().getValue(ChatFirebaseObject.class);
-                    }
-                    if (chat == null){
-                        reference
-                            .orderByChild("signature")
-                            .equalTo("(" + email + ", " + MainActivity.user.email  + ")")
-                                .addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        ChatFirebaseObject chat = null;
-                                        if (dataSnapshot.getChildren().iterator().hasNext()){
-                                            chat = dataSnapshot.getChildren().iterator().next().getValue(ChatFirebaseObject.class);
-                                        }
-                                        if (chat !=  null) {
-                                            goToConversationActivityFirebase(chat);
-                                        } else {
-                                            createNewChatAndGoToIt(email);
-                                        }
-                                    }
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
-                    } else {
-                        goToConversationActivityFirebase(chat);
-                    }
-                }
-                @Override
-                public void onCancelled(DatabaseError databaseError) { }
-            });
-    }
-
-    void goToConversationActivityFirebase(ChatFirebaseObject chat){
-        Intent k = new Intent(getContext(), ConversationActivity.class);
-        k.putExtra("chat", chat);
-        startActivity(k);
-    }
-
-
-    void createNewChatAndGoToIt(String email){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
-        reference.orderByChild("email")
-                .equalTo(email)
-                .addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    ChatFirebaseObject chat = new ChatFirebaseObject();
-                    chat.user1 = firebaseUser;
-                    chat.user2 = dataSnapshot.getChildren().iterator().next().getValue(FirebaseUser.class);
-                    chat.user2.id = dataSnapshot.getChildren().iterator().next().getKey();
-                    chat.signature = "(" + chat.user1.email + ", " + chat.user2.email + ")";
-
-                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("chats");
-                    chat.id = reference.push().getKey();
-                    reference.child(chat.id).setValue(chat);
-
-                    DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("userChats");
-                    reference2.child(chat.user1.id).push().setValue(chat.id);
-                    reference2.child(chat.user2.id).push().setValue(chat.id);
-
-                    goToConversationActivityFirebase(chat);
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {}
-            });
-    }
-
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -291,7 +217,6 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -330,7 +255,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         @Override
         public Fragment getItem(int position) {
             Fragment[] tabFragment = {
-                    UserPostFragment.newInstance((user != null && user.id != MainActivity.user.id) ? user : MainActivity.user),
+                    UserPostFragment.newInstance(user),
                     PostAndReviewsFragment.newInstance(user),
                     ProfileImageGalleryFragment.newInstance(user)
             };
