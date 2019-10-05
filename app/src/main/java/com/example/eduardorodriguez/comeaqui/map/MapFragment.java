@@ -40,6 +40,8 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -70,6 +72,7 @@ public class MapFragment extends Fragment{
     double lng;
     double lat;
 
+    Set<Integer> touchedMarkers = new HashSet<>();
     public static HashMap<Integer, Marker> markerHashMap = new HashMap<>();
     LatLng latLng;
 
@@ -82,7 +85,14 @@ public class MapFragment extends Fragment{
             Marker marker =  googleMap.addMarker(new MarkerOptions()
                     .position(new LatLng(lat, lng)));
             marker.setTag(key);
-            markerPutColor(marker, fp.favourite ? R.color.favourite : R.color.colorPrimary);
+
+            if (fp.favourite){
+                markerPutColor(marker, R.color.favourite);
+            } else if (touchedMarkers.contains(key)){
+                markerPutColor(marker, R.color.grey);
+            } else {
+                markerPutColor(marker, R.color.colorPrimary);
+            }
             markerHashMap.put(fp.id, marker);
         }
     }
@@ -251,6 +261,7 @@ public class MapFragment extends Fragment{
             cancelPostView.setVisibility(View.VISIBLE);
 
             final int key = (int) (marker.getTag());
+            touchedMarkers.add(key);
             FoodPost foodPost = foodPostHashMap.get(key);
             getChildFragmentManager().beginTransaction()
                     .replace(R.id.container1, MapCardFragment.newInstance(foodPost))
