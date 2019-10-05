@@ -166,11 +166,6 @@ public class FoodLookActivity extends AppCompatActivity {
                     JsonObject jo = new JsonParser().parse(response).getAsJsonObject().get("order").getAsJsonObject();
                     OrderObject orderObject = new OrderObject(jo);
                     FoodLookActivity.goToOrder(orderObject);
-
-                    WebSocketMessage.send(this,
-                        "/ws/notifications/" + orderObject.poster.id +  "/",
-                        "{\"notification_id\": \"" + orderObject.id + "\", \"seen\": false}"
-                    );
                 } catch (ExecutionException | InterruptedException e) {
                     e.printStackTrace();
                 }
