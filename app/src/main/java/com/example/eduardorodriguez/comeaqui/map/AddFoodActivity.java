@@ -27,6 +27,8 @@ import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.AutocompleteLocationFragment;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.utilities.ContinueCancelFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -39,10 +41,13 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
-public class AddFoodActivity extends AppCompatActivity implements SelectImageFromFragment.OnFragmentInteractionListener{
+public class AddFoodActivity extends AppCompatActivity implements
+        SelectImageFromFragment.OnFragmentInteractionListener,
+        ErrorMessageFragment.OnFragmentInteractionListener {
     EditText foodName;
     TextView price;
     ImageView image;
@@ -56,6 +61,8 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
     FrameLayout selectFromLayout;
     TextView timeTextView;
     ScrollView scrollView;
+    FrameLayout errorMessage;
+    private View mProgressView;
 
 
     Float price_data = 0f;
@@ -113,6 +120,8 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
         selectFromLayout = findViewById(R.id.select_image_from);
         timeTextView = findViewById(R.id.time_text);
         scrollView = findViewById(R.id.scrollview);
+        mProgressView = findViewById(R.id.post_progress);
+        errorMessage = findViewById(R.id.error_message_frame);
 
         context = getApplicationContext();
 
@@ -251,34 +260,58 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
 
     void setSubmit(){
         submit.setOnClickListener(v -> {
-            PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/foods/");
-            post.bitmap = imageBitmap;
-
-            try {
-                String response = post.execute(
-                        new String[]{"plate_name", foodName.getText().toString()},
-                        new String[]{"address", address},
-                        new String[]{"lat", Double.toString(lat)},
-                        new String[]{"lng", Double.toString(lng)},
-                        new String[]{"diners", Integer.toString(diners)},
-                        new String[]{"time", postTimeString},
-                        new String[]{"time_zone", USER.timeZone},
-                        new String[]{"price", price_data.toString()},
-                        new String[]{"food_type", setTypes()},
-                        new String[]{"description", description.getText().toString()},
-                        new String[]{"food_photo", ""}
-                ).get();
-
-                FoodPost foodPost = new FoodPost(new JsonParser().parse(response).getAsJsonObject());
-                WebSocketMessage.send(this,
-                        "/ws/posts/",
-                        "{\"post_id\": " + foodPost.id + "}"
-                );
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
-            finish();
+            showProgress(true);
+            postFood();
+            showProgress(false);
         });
+    }
+
+    void showProgress(boolean show){
+        if (show){
+            mProgressView.setVisibility(View.VISIBLE);
+            submit.setVisibility(View.GONE);
+        } else {
+            mProgressView.setVisibility(View.GONE);
+            submit.setVisibility(View.VISIBLE);
+        }
+    }
+
+    void postFood(){
+        PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/foods/");
+        post.bitmap = imageBitmap;
+
+        try {
+            String response = post.execute(
+                    new String[]{"plate_name", foodName.getText().toString()},
+                    new String[]{"address", address},
+                    new String[]{"lat", Double.toString(lat)},
+                    new String[]{"lng", Double.toString(lng)},
+                    new String[]{"diners", Integer.toString(diners)},
+                    new String[]{"time", postTimeString},
+                    new String[]{"time_zone", USER.timeZone},
+                    new String[]{"price", price_data.toString()},
+                    new String[]{"food_type", setTypes()},
+                    new String[]{"description", description.getText().toString()},
+                    new String[]{"food_photo", ""}
+            ).get();
+            FoodPost foodPost = new FoodPost(new JsonParser().parse(response).getAsJsonObject());
+            WebSocketMessage.send(this,
+                    "/ws/posts/",
+                    "{\"post_id\": " + foodPost.id + "}"
+            );
+            finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showErrorMessage();
+        }
+    }
+    void showErrorMessage(){
+        errorMessage.setVisibility(View.VISIBLE);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.error_message_frame, ErrorMessageFragment.newInstance(
+                        "Error during posting",
+                        "Please make sure that you have connection to the internet"))
+                .commit();
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -440,6 +473,11 @@ public class AddFoodActivity extends AppCompatActivity implements SelectImageFro
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onFragmentInteraction() {
+        errorMessage.setVisibility(View.GONE);
     }
 }
 
