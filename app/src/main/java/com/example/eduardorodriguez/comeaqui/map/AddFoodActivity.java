@@ -3,7 +3,6 @@ package com.example.eduardorodriguez.comeaqui.map;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -13,24 +12,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 
-import com.example.eduardorodriguez.comeaqui.FoodLookActivity;
-import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.WebSocketMessage;
+import com.example.eduardorodriguez.comeaqui.map.add_food.FoodTimePickerFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
-import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.AutocompleteLocationFragment;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.utilities.ContinueCancelFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
-import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeSelectorFragment;
-import com.google.gson.JsonObject;
+import com.example.eduardorodriguez.comeaqui.map.add_food.FoodTypeSelectorFragment;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
@@ -41,15 +35,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
 public class AddFoodActivity extends AppCompatActivity implements
         SelectImageFromFragment.OnFragmentInteractionListener,
         ErrorMessageFragment.OnFragmentInteractionListener,
-        FoodTypeSelectorFragment.OnFragmentInteractionListener {
+        FoodTypeSelectorFragment.OnFragmentInteractionListener,
+        FoodTimePickerFragment.OnFragmentInteractionListener {
     EditText foodName;
     TextView price;
     ImageView image;
@@ -59,9 +52,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     Button submit;
     ImageView doPhoto;
     ImageView backView;
-    TimePicker timePicker;
     FrameLayout selectFromLayout;
-    TextView timeTextView;
     ScrollView scrollView;
     FrameLayout errorMessage;
     private View mProgressView;
@@ -71,7 +62,6 @@ public class AddFoodActivity extends AppCompatActivity implements
     boolean[] pressed;
     Bitmap imageBitmap;
     int diners;
-    boolean isNow = false;
     String postTimeString;
     double lat;
     double lng;
@@ -116,11 +106,9 @@ public class AddFoodActivity extends AppCompatActivity implements
         descriptionLayout = findViewById(R.id.descriptionLayout);
         description = findViewById(R.id.bioText);
         submit = findViewById(R.id.submitButton);
-        timePicker = findViewById(R.id.timePicker);
         doPhoto = findViewById(R.id.photo);
         backView = findViewById(R.id.back_arrow);
         selectFromLayout = findViewById(R.id.select_image_from);
-        timeTextView = findViewById(R.id.time_text);
         scrollView = findViewById(R.id.scrollview);
         mProgressView = findViewById(R.id.post_progress);
         errorMessage = findViewById(R.id.error_message_frame);
@@ -148,6 +136,10 @@ public class AddFoodActivity extends AppCompatActivity implements
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.set_foot_types_frame, FoodTypeSelectorFragment.newInstance())
                     .commit();
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.food_time_picker_frame, FoodTimePickerFragment.newInstance())
+                    .commit();
         }
 
         doPhoto.setOnClickListener((v) -> {
@@ -162,84 +154,12 @@ public class AddFoodActivity extends AppCompatActivity implements
         setPriceSeekBar();
         setDinerButtons();
         setSubmit();
-        setTimeLogic();
-        setTimePickerLogic();
 
         scrollView.getViewTreeObserver().addOnScrollChangedListener(() -> {
             foodName.clearFocus();
         });
 
         backView.setOnClickListener(v -> finish());
-    }
-
-    void setTimePickerLogic(){
-        timePicker.setOnTimeChangedListener((arg0, arg1, arg2) -> {
-            timeTextView.setText("Today at: " + arg0.getHour() + ":" + arg0.getMinute());
-
-            Date now = Calendar.getInstance().getTime();
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-ddZ");
-            format.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
-            String formattedDate = format.format(now);
-            try {
-                Date todayDate = new SimpleDateFormat("yyyy-MM-ddZ", Locale.US).parse(formattedDate);
-                Date postTimeDate = new Date(todayDate.getTime() + (arg0.getHour()*60 + arg0.getMinute())*60*1000);
-                postTimeString = new SimpleDateFormat("yyyy-MM-dd HH:mmZ").format(postTimeDate);
-                if (now.getTime() + minutes*60*1000 > postTimeDate.getTime()){
-                    Date date = new Date(now.getTime() + minutes*60*1000);
-                    DateFormat formatter = new SimpleDateFormat("HH:mm");
-                    formatter.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
-                    String dateFormatted = formatter.format(date);
-
-                    timeTextView.setText("Please pick a time greater than " + dateFormatted);
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    void setTimeLogic(){
-        Button nowButton = findViewById(R.id.anytime_button);
-        Button scheduleButton = findViewById(R.id.schedule_button);
-
-        nowButton.setOnClickListener(v -> {
-
-            Date now = Calendar.getInstance().getTime();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mmZ");
-            sdf.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
-            String nowString = sdf.format(now);
-            try {
-                Date nowDate = new SimpleDateFormat("yyyy-MM-dd HH:mmZ", Locale.US).parse(nowString);
-                Date postTimeDate = new Date(nowDate.getTime() + minutes*60*1000);
-                postTimeString = new SimpleDateFormat("yyyy-MM-dd HH:mmZ").format(postTimeDate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            isNow = true;
-            timeTextView.setText("Now (the post will be visible for an hour)");
-            nowButton.setBackgroundColor(Color.TRANSPARENT);
-            scheduleButton.setBackground(ContextCompat.getDrawable(this, R.drawable.text_input_shape));
-            showTimePicker(false);
-        });
-
-        scheduleButton.setOnClickListener(v -> {
-            timeTextView.setText("-- --");
-            nowButton.setBackground(ContextCompat.getDrawable(this, R.drawable.text_input_shape));
-            scheduleButton.setBackgroundColor(Color.TRANSPARENT);
-            showTimePicker(true);
-        });
-    }
-
-    void showTimePicker(boolean show){
-        int duration = 200;
-        if (show){
-            timePicker.setScaleX(0);
-            timePicker.setVisibility(View.VISIBLE);
-            timePicker.animate().scaleX(1).setDuration(duration);
-        } else {
-            timePicker.animate().scaleX(0).setDuration(duration).withEndAction(() -> timePicker.setVisibility(View.GONE));
-        }
     }
 
     void setDinerButtons(){
@@ -378,6 +298,11 @@ public class AddFoodActivity extends AppCompatActivity implements
     @Override
     public void onFragmentInteraction(boolean[] pressed) {
         this.pressed = pressed;
+    }
+
+    @Override
+    public void onFragmentInteraction(String postTimeString) {
+        this.postTimeString = postTimeString;
     }
 }
 
