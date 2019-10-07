@@ -8,8 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,6 +24,7 @@ import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
+import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.google.gson.JsonObject;
@@ -29,6 +32,8 @@ import com.google.gson.JsonParser;
 import okhttp3.*;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -52,21 +57,13 @@ public class FoodLookActivity extends AppCompatActivity {
     View backView;
     LinearLayout paymentMethod;
     CardView postImageLayout;
+    View placeOrderProgress;
+    FrameLayout placeOrderErrorMessage;
 
     FoodPost foodPost;
 
     private OkHttpClient client;
     WebSocket ws;
-
-    public static void goToOrder(OrderObject orderObject){
-        try{
-            Intent goToOrders = new Intent(context, OrderLookActivity.class);
-            goToOrders.putExtra("object", orderObject);
-            context.startActivity(goToOrders);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +87,8 @@ public class FoodLookActivity extends AppCompatActivity {
         backView = findViewById(R.id.back);
         paymentMethod = findViewById(R.id.payment_method_layout);
         changePaymentMethod = findViewById(R.id.change_payment);
+        placeOrderProgress = findViewById(R.id.place_order_progress);
+        placeOrderErrorMessage = findViewById(R.id.place_order_error_message);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -146,31 +145,77 @@ public class FoodLookActivity extends AppCompatActivity {
         startActivity(k);
     }
 
+    void showProgress(boolean show){
+        if (show){
+            placeOrderButton.setVisibility(View.GONE);
+            placeOrderProgress.setVisibility(View.VISIBLE);
+        } else {
+            placeOrderButton.setVisibility(View.VISIBLE);
+            placeOrderProgress.setVisibility(View.GONE);
+        }
+    }
+
     void setPlaceButton(){
         if (foodPost.owner.id == USER.id){
             paymentMethod.setVisibility(View.GONE);
             placeOrderButton.setText("Delete Post");
             placeOrderButton.setBackgroundColor(ContextCompat.getColor(this, R.color.canceled));
             placeOrderButton.setOnClickListener(v -> {
-                Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/foods/" + foodPost.id + "/");
-                deleteFoodPost.execute();
-                finish();
+                showProgress(true);
+                deleteOrder();
             });
         }else{
             placeOrderButton.setOnClickListener(v -> {
-                PostAsyncTask createOrder = new PostAsyncTask(getResources().getString(R.string.server) + "/create_order_and_notification/");
-                try {
-                    String response = createOrder.execute(
-                            new String[]{"food_post_id", "" + foodPost.id}
-                    ).get();
-                    JsonObject jo = new JsonParser().parse(response).getAsJsonObject().get("order").getAsJsonObject();
-                    OrderObject orderObject = new OrderObject(jo);
-                    FoodLookActivity.goToOrder(orderObject);
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-                finish();
+                showProgress(true);
+                createOrder();
             });
         }
+    }
+
+    void deleteOrder(){
+        Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/foods/" + foodPost.id + "/");
+        try {
+            deleteFoodPost.execute().get();
+            finish();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            showErrorMessage();
+        }
+    }
+
+    void createOrder(){
+        PostAsyncTask createOrder = new PostAsyncTask(getResources().getString(R.string.server) + "/create_order_and_notification/");
+        try {
+            String response = createOrder.execute(
+                    new String[]{"food_post_id", "" + foodPost.id}
+            ).get(5, TimeUnit.SECONDS);
+            JsonObject jo = new JsonParser().parse(response).getAsJsonObject().get("order").getAsJsonObject();
+            OrderObject orderObject = new OrderObject(jo);
+            goToOrder(orderObject);
+            finish();
+        } catch (ExecutionException | InterruptedException | TimeoutException e) {
+            e.printStackTrace();
+            showErrorMessage();
+            showProgress(false);
+        }
+    }
+
+    void goToOrder(OrderObject orderObject){
+        try{
+            Intent goToOrders = new Intent(context, OrderLookActivity.class);
+            goToOrders.putExtra("object", orderObject);
+            context.startActivity(goToOrders);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    void showErrorMessage(){
+        placeOrderErrorMessage.setVisibility(View.VISIBLE);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.error_message_frame, ErrorMessageFragment.newInstance(
+                        "Error during posting",
+                        "Please make sure that you have connection to the internet"))
+                .commit();
     }
 }

@@ -262,7 +262,6 @@ public class AddFoodActivity extends AppCompatActivity implements
         submit.setOnClickListener(v -> {
             showProgress(true);
             postFood();
-            showProgress(false);
         });
     }
 
@@ -303,6 +302,7 @@ public class AddFoodActivity extends AppCompatActivity implements
         } catch (Exception e) {
             e.printStackTrace();
             showErrorMessage();
+            showProgress(false);
         }
     }
     void showErrorMessage(){
