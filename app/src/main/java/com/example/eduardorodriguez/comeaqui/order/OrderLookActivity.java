@@ -52,6 +52,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
     ImageView staticMapView;
     Button cancelOrderButton;
     FrameLayout cancelMessage;
+    View orderCancelProgress;
 
     CardView imageCard;
 
@@ -81,6 +82,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
         staticMapView = findViewById(R.id.static_map);
         cancelOrderButton = findViewById(R.id.cancelOrderButton);
         cancelMessage = findViewById(R.id.cancel_message);
+        orderCancelProgress = findViewById(R.id.order_cancel_progress);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -135,6 +137,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
             ).get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
+            showProgress(false);
         }
         WebSocketMessage.send(this,
                 "/ws/orders/" + order.poster.id +  "/",
@@ -184,11 +187,22 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
                 .commit();
     }
 
+    void showProgress(boolean show){
+        if (show){
+            orderCancelProgress.setVisibility(View.VISIBLE);
+            cancelOrderButton.setVisibility(View.GONE);
+        } else {
+            orderCancelProgress.setVisibility(View.GONE);
+            cancelOrderButton.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Override
     public void onFragmentInteraction(boolean ok) {
         if (ok){
             cancelOrder();
         }
         cancelMessage.setVisibility(View.GONE);
+        showProgress(true);
     }
 }

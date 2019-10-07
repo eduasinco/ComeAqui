@@ -362,6 +362,14 @@
                 android:background="@color/canceled"
                 android:text="@android:string/cancel"
                 android:textColor="@android:color/white" />
+
+            <ProgressBar
+                android:id="@+id/order_cancel_progress"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
 
