@@ -8,6 +8,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -82,8 +83,44 @@ public class UpperNotificationFragment extends Fragment {
             });
         }
 
+        cardView.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    dY = v.getY() - event.getRawY();
+                    initialY = v.getY();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    System.out.println(v.getY() + "," + event.getY() + "," + event.getRawY());
+                    if (event.getRawY() + dY < 0){
+                        v.animate()
+                                .y(event.getRawY() + dY)
+                                .setDuration(0)
+                                .start();
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    System.out.println(v.getHeight());
+                    if (initialY - v.getY() > v.getHeight() / 2){
+                        v.animate()
+                                .y(dY)
+                                .setDuration(100)
+                                .start();
+                    } else {
+                        v.animate()
+                                .y(initialY)
+                                .setDuration(100)
+                                .start();
+                    }
+                    break;
+                default:
+                    return false;
+            }
+            return true;
+        });
+
         return view;
     }
+    float initialY, dY;
 
     @Override
     public void onDetach() {
