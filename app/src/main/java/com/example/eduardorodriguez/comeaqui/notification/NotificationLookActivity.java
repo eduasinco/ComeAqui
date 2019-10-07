@@ -17,10 +17,13 @@ import com.example.eduardorodriguez.comeaqui.*;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
+import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 import com.google.gson.JsonObject;
+
+import java.util.concurrent.ExecutionException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -43,6 +46,7 @@ public class NotificationLookActivity extends AppCompatActivity {
     ImageView staticMapView;
     ImageView backView;
     CardView postImageLayout;
+    View confirmNotificationProgress;
 
     OrderObject orderObject;
 
@@ -78,6 +82,7 @@ public class NotificationLookActivity extends AppCompatActivity {
         staticMapView = findViewById(R.id.static_map);
         postImageLayout = findViewById(R.id.image_layout);
         backView = findViewById(R.id.back_arrow);
+        confirmNotificationProgress = findViewById(R.id.confirm_notification_progress);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -120,7 +125,7 @@ public class NotificationLookActivity extends AppCompatActivity {
                     .replace(R.id.profile_rating, RatingFragment.newInstance(USER.rating, USER.ratingN))
                     .commit();
 
-            setcConfirmCancelButton();
+            setConfirmCancelButton();
         }
         backView.setOnClickListener(v -> finish());
         dinnerImage.setOnClickListener(v -> {
@@ -128,14 +133,26 @@ public class NotificationLookActivity extends AppCompatActivity {
         });
     }
 
-    void setcConfirmCancelButton(){
+    void showProgress(boolean show){
+        if (show){
+            confirmNotificationProgress.setVisibility(View.VISIBLE);
+            confirmCancelButton.setVisibility(View.GONE);
+        } else {
+            confirmNotificationProgress.setVisibility(View.GONE);
+            confirmCancelButton.setVisibility(View.VISIBLE);
+        }
+    }
+
+    void setConfirmCancelButton(){
         if (orderObject.status.equals("PENDING")){
             confirmCancelButton.setOnClickListener(v -> {
-                NotificationsFragment.confirmOrder(orderObject, true, this);
+                showProgress(true);
+                confirmOrder(orderObject, true, this);
                 finish();
             });
         } else {
             confirmCancelButton.setVisibility(View.GONE);
+            statucMessage.setVisibility(View.VISIBLE);
         }
 
         if (orderObject.status.equals("CONFIRMED")){
@@ -145,6 +162,24 @@ public class NotificationLookActivity extends AppCompatActivity {
             statucMessage.setText("CANCELED");
             statucMessage.setTextColor(ContextCompat.getColor(this, R.color.canceled));
         }
+    }
+
+    void confirmOrder(OrderObject order, boolean confirm, Context context){
+        PostAsyncTask orderStatus = new PostAsyncTask(context.getString(R.string.server) + "/set_order_status/");
+        order.status = confirm ? "CONFIRMED" : "CANCELED";
+        try {
+            orderStatus.execute(
+                    new String[]{"order_id",  order.id + ""},
+                    new String[]{"order_status", order.status}
+            ).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            showProgress(false);
+        }
+        WebSocketMessage.send(this,
+                "/ws/orders/" + order.owner.id +  "/",
+                "{\"order_id\": \"" + order.id + "\", \"seen_owner\": false}"
+        );
     }
 
     void goToProfileView(){
