@@ -29,6 +29,7 @@ import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.utilities.ContinueCancelFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeSelectorFragment;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -47,7 +48,8 @@ import static com.example.eduardorodriguez.comeaqui.App.USER;
 
 public class AddFoodActivity extends AppCompatActivity implements
         SelectImageFromFragment.OnFragmentInteractionListener,
-        ErrorMessageFragment.OnFragmentInteractionListener {
+        ErrorMessageFragment.OnFragmentInteractionListener,
+        FoodTypeSelectorFragment.OnFragmentInteractionListener {
     EditText foodName;
     TextView price;
     ImageView image;
@@ -66,7 +68,7 @@ public class AddFoodActivity extends AppCompatActivity implements
 
 
     Float price_data = 0f;
-    boolean[] pressed = {false, false, false, false, false, false, false};
+    boolean[] pressed;
     Bitmap imageBitmap;
     int diners;
     boolean isNow = false;
@@ -123,8 +125,9 @@ public class AddFoodActivity extends AppCompatActivity implements
         mProgressView = findViewById(R.id.post_progress);
         errorMessage = findViewById(R.id.error_message_frame);
 
-        context = getApplicationContext();
 
+
+        context = getApplicationContext();
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -141,6 +144,10 @@ public class AddFoodActivity extends AppCompatActivity implements
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.locationAutocomplete, autocompleteLocationFragment)
                     .commit();
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.set_foot_types_frame, FoodTypeSelectorFragment.newInstance())
+                    .commit();
         }
 
         doPhoto.setOnClickListener((v) -> {
@@ -153,7 +160,6 @@ public class AddFoodActivity extends AppCompatActivity implements
 
         setFoodName();
         setPriceSeekBar();
-        setFoodTypes();
         setDinerButtons();
         setSubmit();
         setTimeLogic();
@@ -351,117 +357,6 @@ public class AddFoodActivity extends AppCompatActivity implements
         });
     }
 
-
-    void setFoodTypes(){
-        final ImageView vegetarian = findViewById(R.id.vegetarian);
-        vegetarian.setOnClickListener(v -> {
-            if(!pressed[4] && !pressed[5]){
-                pressed[0] = !pressed[0];
-            }
-            if(pressed[0])
-                vegetarian.setImageResource(R.drawable.vegetarianfill);
-            else
-                vegetarian.setImageResource(R.drawable.vegetarian);
-        });
-        final ImageView vegan = findViewById(R.id.vegan);
-        vegan.setOnClickListener(v -> {
-            if(!pressed[4] && !pressed[5] && !pressed[6]){
-                pressed[1] = !pressed[1];
-            }
-            if(pressed[1])
-                vegan.setImageResource(R.drawable.veganfill);
-            else
-                vegan.setImageResource(R.drawable.vegan);
-        });
-        final ImageView cereal = findViewById(R.id.cereal);
-        cereal.setOnClickListener(v -> {
-            pressed[2] = !pressed[2];
-            if(pressed[2])
-                cereal.setImageResource(R.drawable.cerealfill);
-            else
-                cereal.setImageResource(R.drawable.cereal);
-        });
-        final ImageView spicy = findViewById(R.id.spicy);
-        spicy.setOnClickListener(v -> {
-            pressed[3] = !pressed[3];
-            if(pressed[3])
-                spicy.setImageResource(R.drawable.spicyfill);
-            else
-                spicy.setImageResource(R.drawable.spicy);
-        });
-
-        final ImageView fish =  findViewById(R.id.fish);
-        fish.setOnClickListener(v -> {
-            if(!pressed[0] && !pressed[1]){
-                pressed[4] = !pressed[4];
-            }
-            if(pressed[4])
-                fish.setImageResource(R.drawable.fishfill);
-            else
-                fish.setImageResource(R.drawable.fish);
-        });
-        final ImageView meat = findViewById(R.id.meat);
-        meat.setOnClickListener(v -> {
-            if(!pressed[0] && !pressed[1]){
-                pressed[5] = !pressed[5];
-            }
-            if(pressed[5])
-                meat.setImageResource(R.drawable.meatfill);
-            else
-                meat.setImageResource(R.drawable.meat);
-        });
-        final ImageView dairy = findViewById(R.id.dairy);
-        dairy.setOnClickListener(v -> {
-            if(!pressed[1]){
-                pressed[6] = !pressed[6];
-            }
-            if(pressed[6])
-                dairy.setImageResource(R.drawable.dairyfill);
-            else
-                dairy.setImageResource(R.drawable.dairy);
-        });
-    }
-
-    private void initialAnimations(){
-        final int time = 100;
-        foodName.setTranslationY(-transfromToDP(50f));
-        seekbar.setTranslationY(transfromToDP(500f));
-        descriptionLayout.setTranslationY(transfromToDP(500f));
-        description.setTranslationY(transfromToDP(500f));
-        foodName.animate()
-                .translationYBy(transfromToDP(50f))
-                .setDuration(time*5)
-                .withEndAction(() -> seekbar.animate()
-                        .translationYBy(-transfromToDP(500f))
-                        .setDuration(150)
-                        .withEndAction(() -> {
-                            descriptionLayout.animate()
-                                    .translationYBy(-transfromToDP(500f))
-                                    .setDuration(200);
-                            description.animate()
-                                    .translationYBy(-transfromToDP(500f))
-                                    .setDuration(300)
-                                    .withEndAction(() -> {
-
-                                    })
-                                    .start();
-                        })
-                        .start())
-                .start();
-
-
-    }
-
-    public float transfromToDP(Float dip){
-        Resources r = getResources();
-        float px = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                dip,
-                r.getDisplayMetrics()
-        );
-        return px;
-    }
-
     @Override
     public void onFragmentInteraction(Uri uri) {
         try {
@@ -478,6 +373,11 @@ public class AddFoodActivity extends AppCompatActivity implements
     @Override
     public void onFragmentInteraction() {
         errorMessage.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onFragmentInteraction(boolean[] pressed) {
+        this.pressed = pressed;
     }
 }
 
