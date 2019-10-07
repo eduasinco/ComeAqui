@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
+import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.ChatFirebaseObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.firebase.database.*;
@@ -24,6 +25,7 @@ import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -39,6 +41,8 @@ public class ChatFragment extends Fragment{
 
     LinkedHashMap<Integer, ChatObject> data;
     MyChatRecyclerViewAdapter adapter;
+
+    RecyclerView recyclerView;
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -75,17 +79,13 @@ public class ChatFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-        getChatsAndSet();
-        adapter.notifyDataSetChanged();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.recycler);
-        adapter = new MyChatRecyclerViewAdapter(data, mListener);
-        recyclerView.setAdapter(adapter);
+        recyclerView = view.findViewById(R.id.recycler);
         getChatsAndSet();
         start();
         return view;
@@ -100,8 +100,9 @@ public class ChatFragment extends Fragment{
                 ChatObject chat = new ChatObject(jo);
                 chat.unread_count = getChatUnreadCount(chat.id);
                 data.put(chat.id, chat);
-                adapter.addChatObject(chat);
             }
+            adapter = new MyChatRecyclerViewAdapter(new ArrayList<>(data.values()), mListener);
+            recyclerView.setAdapter(adapter);
         } catch (Exception e){
             e.printStackTrace();
         }

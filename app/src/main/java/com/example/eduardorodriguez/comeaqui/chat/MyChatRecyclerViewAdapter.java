@@ -20,28 +20,20 @@ import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
 public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecyclerViewAdapter.ViewHolder> {
 
-    private LinkedHashMap<Integer, ChatObject> mValues;
-    private Object[] mValuesValues;
+    private ArrayList<ChatObject> mValues;
     private final OnListFragmentInteractionListener mListener;
     StorageReference firebaseStorage;
 
-    public MyChatRecyclerViewAdapter(LinkedHashMap<Integer, ChatObject> items, OnListFragmentInteractionListener listener) {
+    public MyChatRecyclerViewAdapter(ArrayList<ChatObject> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
-    }
-
-    public void addChatObject(ChatObject chat) {
-        if (mValues == null)
-            this.mValues = new LinkedHashMap<>();
-        this.mValues.put(chat.id, chat);
-        mValuesValues = mValues.values().toArray();
-        this.notifyDataSetChanged();
     }
 
     @Override
@@ -54,7 +46,7 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = (ChatObject) mValuesValues[position];
+        holder.mItem = mValues.get(position);
 
         User chattingWith = USER.id == (holder.mItem.users.get(0).id) ? holder.mItem.users.get(1) : holder.mItem.users.get(0);
 
