@@ -21,6 +21,7 @@ public class FoodElementFragment extends Fragment {
     TextView posterDescriptionView;
     TextView postNameView;
     View cardButtonView;
+    View cardButtonProgress;
 
     boolean annuleFoodLook = false;
 
@@ -52,6 +53,7 @@ public class FoodElementFragment extends Fragment {
         postPrice = view.findViewById(R.id.price);
         posterDescriptionView = view.findViewById(R.id.description);
         cardButtonView = view.findViewById(R.id.cardButton);
+        cardButtonProgress = view.findViewById(R.id.card_button_progress);
 
         FoodPost foodPost = (FoodPost) getArguments().getSerializable("object");
 
@@ -66,6 +68,7 @@ public class FoodElementFragment extends Fragment {
 
 
         cardButtonView.setOnClickListener(v -> {
+            showProgress(true);
             Intent foodLook = new Intent(getContext(), FoodLookActivity.class);
             foodLook.putExtra("object", foodPost);
             getContext().startActivity(foodLook);
@@ -87,5 +90,15 @@ public class FoodElementFragment extends Fragment {
         });
 
         return view;
+    }
+
+    void showProgress(boolean show){
+        if (show){
+            cardButtonProgress.setVisibility(View.VISIBLE);
+            cardButtonView.setVisibility(View.INVISIBLE);
+        } else {
+            cardButtonProgress.setVisibility(View.GONE);
+            cardButtonView.setVisibility(View.VISIBLE);
+        }
     }
 }
