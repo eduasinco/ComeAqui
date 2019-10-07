@@ -126,7 +126,6 @@ public class MapFragment extends Fragment{
         mMapView.onResume();
         cancelPost();
         try{setMapMarkers();}catch(Exception ignored){}
-        getConfirmedOrders();
     }
 
 
@@ -167,7 +166,11 @@ public class MapFragment extends Fragment{
             setMap(mMap);
         });
 
-        getConfirmedOrders();
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.upper_notification, UpperNotificationFragment.newInstance())
+                .commit();
+
         listenToChatMessages();
         return rootView;
     }
@@ -205,25 +208,6 @@ public class MapFragment extends Fragment{
             };
             mWebSocketClient.connect();
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-    }
-
-    void getConfirmedOrders(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) +  "/my_confirmed_orders/");
-        try {
-            String response = process.execute().get();
-            if (response != null){
-                JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
-                if (ja.size() > 0){
-                    OrderObject orderObject = new OrderObject(ja.get(0).getAsJsonObject());
-                    getFragmentManager().beginTransaction()
-                            .replace(R.id.upper_notification, UpperNotificationFragment.newInstance(orderObject))
-                            .commit();
-                }
-
-            }
-        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
     }

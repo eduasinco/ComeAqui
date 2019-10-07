@@ -1,7 +1,7 @@
 package com.example.eduardorodriguez.comeaqui.utilities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
@@ -11,46 +11,48 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
+import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
 
-import java.io.Serializable;
+import java.util.concurrent.ExecutionException;
 
 
 public class UpperNotificationFragment extends Fragment {
-    private static final String OBJECT = "type";
-    private Serializable object;
 
     TextView title;
     TextView username;
     TextView plateName;
     TextView time;
+    TextView time2;
     ImageView posterImage;
-    CardView cardView;
+    CardView orderCard;
+    CardView postCard;
+    LinearLayout allCards;
 
+    OrderObject orderObject;
+    OrderObject orderPost;
+    float initialY, dY;
 
     public UpperNotificationFragment() {}
-    public static UpperNotificationFragment newInstance(Serializable object) {
-        UpperNotificationFragment fragment = new UpperNotificationFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(OBJECT, object);
-        fragment.setArguments(args);
-        return fragment;
+    public static UpperNotificationFragment newInstance() {
+        return new UpperNotificationFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            object = getArguments().getSerializable(OBJECT);
-        }
+        orderObject = getConfirmedOrders();
+        orderPost = getConfirmedFoodPosts();
     }
 
     @Override
@@ -62,35 +64,47 @@ public class UpperNotificationFragment extends Fragment {
         username = view.findViewById(R.id.poster_username);
         plateName = view.findViewById(R.id.plate_name);
         time = view.findViewById(R.id.time);
+        time2 = view.findViewById(R.id.time2);
         posterImage = view.findViewById(R.id.poster_image);
-        cardView = view.findViewById(R.id.card_view);
+        orderCard = view.findViewById(R.id.order_card);
+        postCard = view.findViewById(R.id.post_card);
+        allCards = view.findViewById(R.id.all_cards);
 
-        if (object instanceof OrderObject){
-            title.setText("Meal with " + ((OrderObject) object).poster.first_name + ((OrderObject) object).poster.last_name);
-            username.setText(((OrderObject) object).poster.email);
-            plateName.setText(((OrderObject) object).post.plate_name);
-            time.setText(((OrderObject) object).post.time);
-
-            if(!((OrderObject) object).poster.profile_photo.contains("no-image")) {
-                Glide.with(getActivity()).load(((OrderObject) object).poster.profile_photo).into(posterImage);
+        if (orderObject != null){
+            orderCard.setVisibility(View.VISIBLE);
+            title.setText("Meal with " +  orderObject.poster.first_name + orderObject.poster.last_name);
+            username.setText(orderObject.poster.email);
+            plateName.setText( orderObject.post.plate_name);
+            time.setText(orderObject.post.time);
+            if(!orderObject.poster.profile_photo.contains("no-image")) {
+                Glide.with(getActivity()).load(orderObject.poster.profile_photo).into(posterImage);
             }
-
-            cardView.setOnClickListener(v -> {
-                Intent orderLook = new Intent(getContext(), OrderLookActivity.class);
-                orderLook.putExtra("object", (OrderObject) object);
-                orderLook.putExtra("delete", false);
-                getContext().startActivity(orderLook);
-            });
         }
 
-        cardView.setOnTouchListener((v, event) -> {
+        if (orderPost != null){
+            postCard.setVisibility(View.VISIBLE);
+            time2.setText(orderPost.post.time);
+        }
+        orderCard.setOnClickListener(v -> {
+            Intent orderLook = new Intent(getContext(), OrderLookActivity.class);
+            orderLook.putExtra("object", orderObject);
+            orderLook.putExtra("delete", false);
+            getContext().startActivity(orderLook);
+        });
+
+        setCardView(orderCard);
+        setCardView(postCard);
+        return view;
+    }
+    
+    void setCardView(View view){
+        view.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     dY = v.getY() - event.getRawY();
                     initialY = v.getY();
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    System.out.println(v.getY() + "," + event.getY() + "," + event.getRawY());
                     if (event.getRawY() + dY < 0){
                         v.animate()
                                 .y(event.getRawY() + dY)
@@ -99,11 +113,12 @@ public class UpperNotificationFragment extends Fragment {
                     }
                     break;
                 case MotionEvent.ACTION_UP:
-                    System.out.println(v.getHeight());
                     if (initialY - v.getY() > v.getHeight() / 2){
                         v.animate()
                                 .y(dY)
-                                .setDuration(100)
+                                .setDuration(100).withEndAction(() -> {
+                                    v.setVisibility(View.GONE);
+                                })
                                 .start();
                     } else {
                         v.animate()
@@ -117,10 +132,38 @@ public class UpperNotificationFragment extends Fragment {
             }
             return true;
         });
-
-        return view;
     }
-    float initialY, dY;
+
+    OrderObject getConfirmedOrders(){
+        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) +  "/my_confirmed_orders/");
+        try {
+            String response = process.execute().get();
+            if (response != null){
+                JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
+                if (ja.size() > 0){
+                    return new OrderObject(ja.get(0).getAsJsonObject());
+                }
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    OrderObject getConfirmedFoodPosts(){
+        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) +  "/my_confirmed_posts/");
+        try {
+            String response = process.execute().get();
+            if (response != null){
+                JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
+                if (ja.size() > 0){
+                    return new OrderObject(ja.get(0).getAsJsonObject());
+                }
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     @Override
     public void onDetach() {
