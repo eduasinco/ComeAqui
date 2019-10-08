@@ -9,13 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/text_input_shape"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="8dp">
 
         <EditText
             android:id="@+id/address"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_margin="8dp"
             android:background="@color/white_transparent"
             android:ems="10"
             android:hint="Address"
@@ -24,8 +24,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/places_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp">
+            android:layout_height="wrap_content">
 
         </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>

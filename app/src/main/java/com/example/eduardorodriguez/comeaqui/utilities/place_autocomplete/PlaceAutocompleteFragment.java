@@ -67,6 +67,9 @@ public class PlaceAutocompleteFragment extends Fragment {
         addressView = view.findViewById(R.id.address);
         recyclerView = view.findViewById(R.id.places_list);
 
+
+        addressView.setText(address);
+
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);

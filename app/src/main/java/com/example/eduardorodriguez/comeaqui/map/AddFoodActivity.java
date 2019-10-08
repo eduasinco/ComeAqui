@@ -53,14 +53,14 @@ public class AddFoodActivity extends AppCompatActivity implements
 
 
     Float price_data = 0f;
-    boolean[] pressed;
+    boolean[] pressed = {false, false, false, false, false, false, false};
     Bitmap imageBitmap;
     int diners;
     String postTimeString;
     double lat;
     double lng;
     String address;
-    String description;
+    String description = "";
 
     int minutes = 30;
     Context context;
