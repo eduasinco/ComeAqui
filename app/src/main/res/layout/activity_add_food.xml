@@ -34,19 +34,20 @@
                         android:gravity="center"
                         app:layout_constraintBottom_toTopOf="@+id/plateName" app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"/>
-                <EditText
-                        android:background="@drawable/text_input_shape"
-                        android:textAlignment="center"
-                        android:textColorHint="#a9000000"
-                        android:hint="What are you making?"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:inputType="textPersonName"
-                        android:ems="10"
-                        android:id="@+id/plateName"
-                        app:layout_constraintTop_toBottomOf="@+id/title"
 
-                />
+                <EditText
+                    android:id="@+id/plateName"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/text_input_shape"
+                    android:ems="10"
+                    android:hint="What are you making?"
+                    android:inputType="textPersonName"
+                    android:maxLength="101"
+                    android:textAlignment="center"
+                    android:textColorHint="#a9000000"
+
+                    app:layout_constraintTop_toBottomOf="@+id/title" />
                 <TextView
                         android:text="Location"
                         android:focusableInTouchMode="true"

@@ -11,7 +11,6 @@ import com.example.eduardorodriguez.comeaqui.*;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
-import com.example.eduardorodriguez.comeaqui.utilities.AutocompleteLocationFragment;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -72,39 +71,12 @@ public class SettingsActivity extends AppCompatActivity {
 
         editAccountView();
         getData();
-        saveSettings();
     }
 
     void editAccountView(){
         editAccountView.setOnClickListener(v -> {
         });
     }
-
-    void saveSettings(){
-        saveButtonView.setOnClickListener(v -> {
-            PatchAsyncTask putTast = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
-            putTast.execute("location", AutocompleteLocationFragment.addressView.getText().toString());
-            PatchAsyncTask putTast2 = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
-            putTast2.execute("deliver_radius", Integer.toString(delivery_radious));
-
-            String place_id = AutocompleteLocationFragment.place_id;
-            if (place_id != null) {
-                Server gAPI2 = new Server("GET", "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + place_id +
-                        "&fields=geometry&key=" + getResources().getString(R.string.google_key));
-
-                gAPI2.execute();
-            } else {
-                Server gAPI2 = new Server("GET", "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" +
-                        AutocompleteLocationFragment.addressView.getText().toString() +
-                        "&key=" + getResources().getString(R.string.google_key));
-                gAPI2.execute();
-            }
-            Intent k = new Intent(SettingsActivity.this, MainActivity.class);
-            k.putExtra("profile", true);
-            startActivity(k);
-        });
-    }
-
 
     private void signOut(){
         SharedPreferences pref = getSharedPreferences("Login", Context.MODE_PRIVATE);

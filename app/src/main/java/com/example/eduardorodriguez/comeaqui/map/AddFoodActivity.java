@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import android.os.Bundle;
 import android.view.View;
@@ -21,25 +20,19 @@ import com.example.eduardorodriguez.comeaqui.map.add_food.FoodTimePickerFragment
 import com.example.eduardorodriguez.comeaqui.map.add_food.WordLimitEditTextFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
-import com.example.eduardorodriguez.comeaqui.utilities.AutocompleteLocationFragment;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodTypeSelectorFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.place_autocomplete.PlaceAutocompleteFragment;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
 public class AddFoodActivity extends AppCompatActivity implements
+        PlaceAutocompleteFragment.OnFragmentInteractionListener,
         SelectImageFromFragment.OnFragmentInteractionListener,
         ErrorMessageFragment.OnFragmentInteractionListener,
         FoodTypeSelectorFragment.OnFragmentInteractionListener,
@@ -124,13 +117,10 @@ public class AddFoodActivity extends AppCompatActivity implements
             lat = b.getDouble("lat");
             lng = b.getDouble("lng");
 
-            Bundle bundle = new Bundle();
-            bundle.putString("address", address);
-            AutocompleteLocationFragment autocompleteLocationFragment = new AutocompleteLocationFragment();
-            autocompleteLocationFragment.setArguments(bundle);
+
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.locationAutocomplete, autocompleteLocationFragment)
+                    .replace(R.id.locationAutocomplete, PlaceAutocompleteFragment.newInstance(address))
                     .commit();
 
             getSupportFragmentManager().beginTransaction()
@@ -203,6 +193,16 @@ public class AddFoodActivity extends AppCompatActivity implements
             mProgressView.setVisibility(View.GONE);
             submit.setVisibility(View.VISIBLE);
         }
+    }
+
+    boolean validateFrom(){
+        if (foodName.getText().toString().trim().equals("")){
+            return false;
+        }
+        if (address.trim().equals("")){
+            return false;
+        }
+        return true;
     }
 
     void postFood(){
@@ -292,6 +292,13 @@ public class AddFoodActivity extends AppCompatActivity implements
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onPlacesAutocomplete(String address, double lat, double lng) {
+        this.address = address;
+        this.lat = lat;
+        this.lng = lng;
     }
 
     @Override
