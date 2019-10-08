@@ -18,6 +18,7 @@ import android.widget.*;
 
 import com.example.eduardorodriguez.comeaqui.WebSocketMessage;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodTimePickerFragment;
+import com.example.eduardorodriguez.comeaqui.map.add_food.WordLimitEditTextFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.AutocompleteLocationFragment;
@@ -42,13 +43,13 @@ public class AddFoodActivity extends AppCompatActivity implements
         SelectImageFromFragment.OnFragmentInteractionListener,
         ErrorMessageFragment.OnFragmentInteractionListener,
         FoodTypeSelectorFragment.OnFragmentInteractionListener,
-        FoodTimePickerFragment.OnFragmentInteractionListener {
+        FoodTimePickerFragment.OnFragmentInteractionListener,
+        WordLimitEditTextFragment.OnFragmentInteractionListener {
     EditText foodName;
     TextView price;
     ImageView image;
     SeekBar seekbar;
     ConstraintLayout descriptionLayout;
-    EditText description;
     Button submit;
     ImageView doPhoto;
     ImageView backView;
@@ -66,7 +67,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     double lat;
     double lng;
     String address;
-
+    String description;
 
     int minutes = 30;
     Context context;
@@ -104,7 +105,6 @@ public class AddFoodActivity extends AppCompatActivity implements
         image = findViewById(R.id.image);
         seekbar = findViewById(R.id.seekBar);
         descriptionLayout = findViewById(R.id.descriptionLayout);
-        description = findViewById(R.id.bioText);
         submit = findViewById(R.id.submitButton);
         doPhoto = findViewById(R.id.photo);
         backView = findViewById(R.id.back_arrow);
@@ -139,6 +139,10 @@ public class AddFoodActivity extends AppCompatActivity implements
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.food_time_picker_frame, FoodTimePickerFragment.newInstance())
+                    .commit();
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.post_limit_text_edit, WordLimitEditTextFragment.newInstance())
                     .commit();
         }
 
@@ -216,7 +220,7 @@ public class AddFoodActivity extends AppCompatActivity implements
                     new String[]{"time_zone", USER.timeZone},
                     new String[]{"price", price_data.toString()},
                     new String[]{"food_type", setTypes()},
-                    new String[]{"description", description.getText().toString()},
+                    new String[]{"description", description},
                     new String[]{"food_photo", ""}
             ).get();
             FoodPost foodPost = new FoodPost(new JsonParser().parse(response).getAsJsonObject());
@@ -298,6 +302,11 @@ public class AddFoodActivity extends AppCompatActivity implements
     @Override
     public void onFragmentInteraction(boolean[] pressed) {
         this.pressed = pressed;
+    }
+
+    @Override
+    public void onTextChanged(String description) {
+        this.description = description;
     }
 
     @Override

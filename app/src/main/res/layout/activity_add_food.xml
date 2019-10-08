@@ -168,29 +168,26 @@
 
                 </FrameLayout>
 
-                <EditText
-                        android:id="@+id/bioText"
-                        android:gravity="top|left"
-                        android:maxLines="5"
-                        android:background="@drawable/text_input_shape"
-                        android:inputType="textMultiLine"
-                        android:layout_height="100dp"
-                        android:layout_width="match_parent"
-                        android:lines="20"
-                        android:scrollHorizontally="false"
-                        android:hint="Description"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintTop_toBottomOf="@+id/descriptionLayout"
-                        android:focusable="auto" android:layout_marginTop="8dp"/>
+                <FrameLayout
+                    android:id="@+id/post_limit_text_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp">
+
+                </FrameLayout>
+
                 <ImageView
-                        android:background="@drawable/text_input_shape"
-                        android:layout_width="match_parent"
-                        app:srcCompat="@drawable/get_image_from_camera"
-                        android:id="@+id/photo"
-                        app:layout_constraintHorizontal_bias="1.0"
-                        app:layout_constraintTop_toBottomOf="@+id/bioText"
-                        android:layout_height="50dp" android:layout_weight="1" android:padding="9dp"
-                        android:layout_marginTop="8dp"/>
+                    android:id="@+id/photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/text_input_shape"
+                    android:padding="9dp"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintTop_toBottomOf="@+id/bioText"
+                    app:srcCompat="@drawable/get_image_from_camera" />
+
                 <Button
                         android:text="Submit"
                         android:layout_width="match_parent"
