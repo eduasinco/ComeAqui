@@ -3,6 +3,7 @@ package com.example.eduardorodriguez.comeaqui.map.add_food;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
@@ -21,6 +22,7 @@ public class WordLimitEditTextFragment extends Fragment {
 
     EditText editText;
     TextView leterCount;
+    View wholeView;
 
     int MAX_NUMBER_OF_LETTER = 202;
     String str;
@@ -29,6 +31,14 @@ public class WordLimitEditTextFragment extends Fragment {
 
     public static WordLimitEditTextFragment newInstance() {
         return  new WordLimitEditTextFragment();
+    }
+
+    public void setErrorBackground(boolean error){
+        if (error){
+            wholeView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.text_input_shape_error));
+        } else {
+            wholeView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.text_input_shape));
+        }
     }
 
     @Override
@@ -42,6 +52,8 @@ public class WordLimitEditTextFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_word_limit_edit_text, container, false);
         editText = view.findViewById(R.id.text);
         leterCount = view.findViewById(R.id.leter_count);
+        wholeView = view.findViewById(R.id.whole_word_limit_view);
+
         setEditText();
         return view;
     }
@@ -57,6 +69,8 @@ public class WordLimitEditTextFragment extends Fragment {
                 str = editText.getText().toString().trim();
                 int letters = str.length();
                 leterCount.setText(letters + "/" + MAX_NUMBER_OF_LETTER);
+                mListener.onTextChanged(str);
+                setErrorBackground(false);
             }
 
             @Override

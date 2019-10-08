@@ -35,6 +35,7 @@ public class FoodTimePickerFragment extends Fragment {
     Button scheduleButton;
     TimePicker timePicker;
     TextView timeTextView;
+    View buttonTimeArray;
 
     boolean isNow = false;
     String postTimeString;
@@ -50,6 +51,11 @@ public class FoodTimePickerFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    public void setErrorBackground(){
+        nowButton.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.text_input_shape_error));
+        scheduleButton.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.text_input_shape_error));
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -58,6 +64,7 @@ public class FoodTimePickerFragment extends Fragment {
         scheduleButton = view.findViewById(R.id.schedule_button);
         timePicker = view.findViewById(R.id.timePicker);
         timeTextView = view.findViewById(R.id.time_text);
+        buttonTimeArray = view.findViewById(R.id.button_array_time);
 
         setTimeLogic();
         setTimePickerLogic();

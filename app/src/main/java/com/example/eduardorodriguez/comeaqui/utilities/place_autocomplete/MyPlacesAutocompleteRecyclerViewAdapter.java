@@ -51,6 +51,7 @@ public class MyPlacesAutocompleteRecyclerViewAdapter extends RecyclerView.Adapte
             JsonObject jsonLocation = getPlacesDetailFromGoogle(holder.mItem[1]);
             if (jsonLocation != null){
                 mListener.onPlacesAutocomplete(holder.mItem[0], jsonLocation.get("lat").getAsDouble(), jsonLocation.get("lng").getAsDouble());
+                f.setErrorBackground(false);
             }
         });
     }

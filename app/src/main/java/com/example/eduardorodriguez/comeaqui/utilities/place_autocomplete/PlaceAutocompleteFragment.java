@@ -3,6 +3,7 @@ package com.example.eduardorodriguez.comeaqui.utilities.place_autocomplete;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,7 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-
+import android.widget.TextView;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.google.gson.JsonArray;
@@ -23,9 +24,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+
 
 
 public class PlaceAutocompleteFragment extends Fragment {
@@ -35,7 +35,9 @@ public class PlaceAutocompleteFragment extends Fragment {
 
 
     EditText addressView;
+    TextView loadingView;
     RecyclerView recyclerView;
+    View wholePlaceACView;
 
     MyPlacesAutocompleteRecyclerViewAdapter adapter;
     private static ArrayList<String[]> data;
@@ -60,14 +62,24 @@ public class PlaceAutocompleteFragment extends Fragment {
         }
     }
 
+    public void setErrorBackground(boolean error){
+        if (error){
+            wholePlaceACView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.text_input_shape_error));
+        } else {
+            wholePlaceACView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.text_input_shape));
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_place_autocomplete, container, false);
         addressView = view.findViewById(R.id.address);
+        loadingView = view.findViewById(R.id.loading_places);
         recyclerView = view.findViewById(R.id.places_list);
+        wholePlaceACView = view.findViewById(R.id.wholePlaceACView);
 
-
+        loadingView.setVisibility(View.GONE);
         addressView.setText(address);
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -106,28 +118,43 @@ public class PlaceAutocompleteFragment extends Fragment {
         }
     }
 
+    void showLoading(boolean show){
+        if (show){
+            loadingView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            loadingView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
     void getPlacesListFromGoogle(){
         String uri = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + addressView.getText().toString() +
                 "&types=geocode&language=en&key=" + getResources().getString(R.string.google_key);
-        Server gAPI = new Server("GET", uri);
         try {
-            String jsonString = gAPI.execute().get(15, TimeUnit.SECONDS);
-            if (jsonString != null)
+            String jsonString = new Server("GET", uri){
+                @Override
+                protected void onPostExecute(String s) {
+                    super.onPostExecute(s);
+                    showLoading(false);
+                }
+            }.execute().get(15, TimeUnit.SECONDS);
+            if (jsonString != null) {
                 makeList(jsonString);
-        } catch (ExecutionException | InterruptedException | TimeoutException e) {
+            }
+        } catch (Exception e) {
             e.printStackTrace();
+            showLoading(false);
         }
     }
 
     private void detectTypingAndSetLocationPrediction(){
 
-        final long delay = 1000; // 1 seconds after user stops typing
+        final long delay = 1000;
         final Handler handler = new Handler();
-        final Runnable input_finish_checker = new Runnable() {
-            public void run() {
-                if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
-                    getPlacesListFromGoogle();
-                }
+        final Runnable input_finish_checker = () -> {
+            if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
+                getPlacesListFromGoogle();
             }
         };
 
@@ -140,8 +167,9 @@ public class PlaceAutocompleteFragment extends Fragment {
             public void onTextChanged ( final CharSequence s, int start, int before,
                                         int count){
                 //You need to remove this to run only once
+                mListener.onPlacesAutocompleteChangeText();
                 handler.removeCallbacks(input_finish_checker);
-
+                showLoading(true);
             }
             @Override
             public void afterTextChanged ( final Editable s){
@@ -169,7 +197,6 @@ public class PlaceAutocompleteFragment extends Fragment {
 
     public void setAddress(String text, String id){
         addressView.setText(text);
-        addressView.setFocusable(false);
     }
 
     @Override
@@ -180,6 +207,7 @@ public class PlaceAutocompleteFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void onPlacesAutocomplete(String address, double lat, double lng);
+        void onPlacesAutocompleteChangeText();
     }
 
 }

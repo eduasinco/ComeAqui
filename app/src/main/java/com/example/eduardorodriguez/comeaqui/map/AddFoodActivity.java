@@ -9,8 +9,11 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -49,21 +52,28 @@ public class AddFoodActivity extends AppCompatActivity implements
     FrameLayout selectFromLayout;
     ScrollView scrollView;
     FrameLayout errorMessage;
+    TextView validationError;
+    LinearLayout dinnerArray;
     private View mProgressView;
 
 
-    Float price_data = 0f;
+    Float price_data;
     boolean[] pressed = {false, false, false, false, false, false, false};
     Bitmap imageBitmap;
-    int diners;
+    int dinners = 0;
     String postTimeString;
     double lat;
     double lng;
     String address;
     String description = "";
 
-    int minutes = 30;
+    boolean isAddressValid = true;
     Context context;
+
+    PlaceAutocompleteFragment placeAutocompleteFragment;
+    FoodTypeSelectorFragment foodTypeSelectorFragment;
+    FoodTimePickerFragment foodTimePickerFragment;
+    WordLimitEditTextFragment wordLimitEditTextFragment;
 
     private String setTypes(){
         StringBuilder types = new StringBuilder();
@@ -105,8 +115,8 @@ public class AddFoodActivity extends AppCompatActivity implements
         scrollView = findViewById(R.id.scrollview);
         mProgressView = findViewById(R.id.post_progress);
         errorMessage = findViewById(R.id.error_message_frame);
-
-
+        validationError = findViewById(R.id.validation_error);
+        dinnerArray = findViewById(R.id.dinner_array);
 
         context = getApplicationContext();
 
@@ -117,22 +127,25 @@ public class AddFoodActivity extends AppCompatActivity implements
             lat = b.getDouble("lat");
             lng = b.getDouble("lng");
 
-
+            placeAutocompleteFragment = PlaceAutocompleteFragment.newInstance(address);
+            foodTypeSelectorFragment = FoodTypeSelectorFragment.newInstance();
+            foodTimePickerFragment = FoodTimePickerFragment.newInstance();
+            wordLimitEditTextFragment = WordLimitEditTextFragment.newInstance();
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.locationAutocomplete, PlaceAutocompleteFragment.newInstance(address))
+                    .replace(R.id.locationAutocomplete, placeAutocompleteFragment)
                     .commit();
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.set_foot_types_frame, FoodTypeSelectorFragment.newInstance())
+                    .replace(R.id.set_foot_types_frame, foodTypeSelectorFragment)
                     .commit();
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.food_time_picker_frame, FoodTimePickerFragment.newInstance())
+                    .replace(R.id.food_time_picker_frame, foodTimePickerFragment)
                     .commit();
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.post_limit_text_edit, WordLimitEditTextFragment.newInstance())
+                    .replace(R.id.post_limit_text_edit, wordLimitEditTextFragment)
                     .commit();
         }
 
@@ -143,7 +156,7 @@ public class AddFoodActivity extends AppCompatActivity implements
                     .commit();
         });
 
-
+        setPlateName();
         setFoodName();
         setPriceSeekBar();
         setDinerButtons();
@@ -154,6 +167,19 @@ public class AddFoodActivity extends AppCompatActivity implements
         });
 
         backView.setOnClickListener(v -> finish());
+    }
+
+    void setPlateName(){
+        foodName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged (CharSequence s,int start, int count, int after){ }
+            @Override
+            public void onTextChanged ( final CharSequence s, int start, int before, int count){
+                foodName.setBackground(ContextCompat.getDrawable(getApplication(), R.drawable.text_input_shape));
+            }
+            @Override
+            public void afterTextChanged ( final Editable s){}
+        });
     }
 
     void setDinerButtons(){
@@ -167,11 +193,12 @@ public class AddFoodActivity extends AppCompatActivity implements
             int finalI = i;
             Button button = dinersViews[i];
             button.setOnClickListener(v -> {
-                diners = finalI + 1;
-                button.setBackgroundColor(Color.TRANSPARENT);
+                dinnerArray.setBackground(ContextCompat.getDrawable(getApplication(), R.drawable.text_input_shape));
+                dinners = finalI + 1;
+                button.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryLighter));
                 for (Button button2: dinersViews){
                     if (button2 != button){
-                        button2.setBackgroundColor(Color.WHITE);
+                        button2.setBackgroundColor(Color.TRANSPARENT);
                     }
                 }
             });
@@ -181,7 +208,11 @@ public class AddFoodActivity extends AppCompatActivity implements
     void setSubmit(){
         submit.setOnClickListener(v -> {
             showProgress(true);
-            postFood();
+            if (validateFrom()){
+                postFood();
+            } else {
+                showProgress(false);
+            }
         });
     }
 
@@ -196,26 +227,62 @@ public class AddFoodActivity extends AppCompatActivity implements
     }
 
     boolean validateFrom(){
+        boolean isValid = true;
+        String errorText = "";
         if (foodName.getText().toString().trim().equals("")){
-            return false;
+            foodName.setBackground(ContextCompat.getDrawable(getApplication(), R.drawable.text_input_shape_error));
+            errorText = errorText + "You have to set a plate name \n";
+            isValid = false;
         }
-        if (address.trim().equals("")){
-            return false;
+        if (!isAddressValid){
+            placeAutocompleteFragment.setErrorBackground(true);
+            errorText = errorText + "Pleas choose a valid address \n";
+            isValid = false;
         }
-        return true;
+        if (dinners == 0){
+            dinnerArray.setBackground(ContextCompat.getDrawable(getApplication(), R.drawable.text_input_shape_error));
+            errorText = errorText + "You have to set a dinners number \n";
+            isValid = false;
+        }
+        if (postTimeString == null || postTimeString.equals("")){
+            foodTimePickerFragment.setErrorBackground();
+            errorText = errorText + "Please choose a valid meal time \n";
+            isValid = false;
+        }
+        if (USER.timeZone == null || USER.timeZone.equals("")){
+            errorText = errorText + "Problem with you timezone \n";
+            System.out.println("THERE IS A PROBLEM WITH THE TIMEZONE");
+            isValid = false;
+        }
+        if (price_data == null){
+            seekbar.setBackground(ContextCompat.getDrawable(getApplication(), R.drawable.text_input_shape_error));
+            errorText = errorText + "You have to set a meal price \n";
+            isValid = false;
+        }
+        if (description.trim().equals("")){
+            wordLimitEditTextFragment.setErrorBackground(true);
+            errorText = errorText + "You have to set a meal description \n";
+            isValid = false;
+        }
+        if (!isValid){
+            validationError.setVisibility(View.VISIBLE);
+            validationError.setText(errorText);
+        } else {
+            validationError.setVisibility(View.GONE);
+        }
+        return isValid;
     }
 
     void postFood(){
         PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/foods/");
         post.bitmap = imageBitmap;
-
         try {
             String response = post.execute(
                     new String[]{"plate_name", foodName.getText().toString()},
                     new String[]{"address", address},
                     new String[]{"lat", Double.toString(lat)},
                     new String[]{"lng", Double.toString(lng)},
-                    new String[]{"diners", Integer.toString(diners)},
+                    new String[]{"diners", Integer.toString(dinners)},
                     new String[]{"time", postTimeString},
                     new String[]{"time_zone", USER.timeZone},
                     new String[]{"price", price_data.toString()},
@@ -277,6 +344,7 @@ public class AddFoodActivity extends AppCompatActivity implements
                 price_data = (float) progress/100;
                 String priceText = String.format("%.02f", price_data) + "€";
                 price.setText(priceText);
+                seekBar.setBackground(ContextCompat.getDrawable(getApplication(), R.drawable.text_input_shape));
             }
         });
     }
@@ -299,6 +367,11 @@ public class AddFoodActivity extends AppCompatActivity implements
         this.address = address;
         this.lat = lat;
         this.lng = lng;
+        this.isAddressValid = true;
+    }
+    @Override
+    public void onPlacesAutocompleteChangeText() {
+        this.isAddressValid = false;
     }
 
     @Override

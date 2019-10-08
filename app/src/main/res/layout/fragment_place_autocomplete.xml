@@ -6,6 +6,7 @@
     tools:context=".utilities.place_autocomplete.PlaceAutocompleteFragment">
 
     <LinearLayout
+        android:id="@+id/wholePlaceACView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/text_input_shape"
@@ -20,6 +21,13 @@
             android:ems="10"
             android:hint="Address"
             android:inputType="textPersonName" />
+
+        <TextView
+            android:id="@+id/loading_places"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Loading..."
+            tools:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/places_list"

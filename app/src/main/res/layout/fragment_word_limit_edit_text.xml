@@ -7,10 +7,10 @@
     tools:context=".map.add_food.WordLimitEditTextFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/whole_word_limit_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/text_input_shape"
-        >
+        android:background="@drawable/text_input_shape">
 
         <EditText
             android:id="@+id/text"
