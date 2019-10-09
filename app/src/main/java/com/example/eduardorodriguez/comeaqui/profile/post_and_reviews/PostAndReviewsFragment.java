@@ -65,23 +65,23 @@ public class PostAndReviewsFragment extends Fragment {
     }
 
     void getPostFromUser(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_food_posts_reviews/" + user.id + "/");
-        try {
-            String response = process.execute().get();
-            if (response != null){
-                ArrayList<FoodPostReview> data = new ArrayList<>();
-                for (JsonElement pa : new JsonParser().parse(response).getAsJsonArray()) {
-                    JsonObject jo = pa.getAsJsonObject();
-                    try {
-                        FoodPostReview foodPost = new FoodPostReview(jo);
-                        data.add(foodPost);
-                    } catch (Exception ignore){}
+        new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_food_posts_reviews/" + user.id + "/"){
+            @Override
+            protected void onPostExecute(String response) {
+                if (response != null){
+                    ArrayList<FoodPostReview> data = new ArrayList<>();
+                    for (JsonElement pa : new JsonParser().parse(response).getAsJsonArray()) {
+                        JsonObject jo = pa.getAsJsonObject();
+                        try {
+                            FoodPostReview foodPost = new FoodPostReview(jo);
+                            data.add(foodPost);
+                        } catch (Exception ignore){}
+                    }
+                    adapter = new MyPostAndReviewsRecyclerViewAdapter(data);
+                    recyclerView.setAdapter(adapter);
                 }
-                adapter = new MyPostAndReviewsRecyclerViewAdapter(data);
-                recyclerView.setAdapter(adapter);
+                super.onPostExecute(response);
             }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        }.execute();
     }
 }

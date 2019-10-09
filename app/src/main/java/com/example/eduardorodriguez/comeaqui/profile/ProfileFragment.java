@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Outline;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import androidx.annotation.NonNull;
@@ -85,6 +86,31 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
 
 
     public void setProfile(User user){
+        fragmentView.setVisibility(View.GONE);
+        settingsButton.setVisibility(View.GONE);
+        if (user.id == USER.id){
+            settingsButton.setVisibility(View.VISIBLE);
+            setSettingsButton();
+            editProfileView.setVisibility(View.VISIBLE);
+            editProfileView.setOnClickListener(v -> {
+                Intent editProfile = new Intent(getContext(), EditProfileActivity.class);
+                editProfile.putExtra("object", user);
+                getContext().startActivity(editProfile);
+            });
+            addProfilePhotoView.setVisibility(View.VISIBLE);
+            addBackGroundPhotoView.setVisibility(View.VISIBLE);
+        } else {
+            messageImage.setVisibility(View.VISIBLE);
+            messageImage.setOnClickListener(v -> goToConversationWithUser(user));
+        }
+
+        nameView.setText(user.first_name + " " + user.last_name);
+        emailView.setText(user.email);
+        if (user.bio != null && !user.bio.equals("")) {
+            bioView.setVisibility(View.VISIBLE);
+            bioView.setText(user.bio);
+        }
+
         if(!user.profile_photo.contains("no-image")) {
             Glide.with(view.getContext()).load(user.profile_photo).into(profileImageView);
             profileImageView.setOnClickListener((v) -> {
@@ -101,12 +127,16 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
                 getContext().startActivity(imageLook);
             });
         }
-        nameView.setText(user.first_name + " " + user.last_name);
-        emailView.setText(user.email);
-        if (user.bio != null && !user.bio.equals(""))
-            bioView.setVisibility(View.VISIBLE);
-            bioView.setText(user.bio);
 
+        int curveRadius = 40;
+        backGroundImage.setClipToOutline(true);
+        backGroundImage.setOutlineProvider(new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                outline.setRoundRect(0, 0, view.getWidth(), (view.getHeight() + curveRadius), curveRadius);
+            }
+        });
+        
         getFragmentManager().beginTransaction()
                 .replace(R.id.profile_rating, RatingFragment.newInstance(user.rating, user.ratingN))
                 .commit();
@@ -148,15 +178,6 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
 
-        int curveRadius = 40;
-        view.findViewById(R.id.backGroundImage).setOutlineProvider(new ViewOutlineProvider() {
-            @Override
-            public void getOutline(View view, Outline outline) {
-                outline.setRoundRect(0, 0, view.getWidth(), (view.getHeight() + curveRadius), curveRadius);
-            }
-        });
-        view.findViewById(R.id.backGroundImage).setClipToOutline(true);
-
         addProfilePhotoView.setOnClickListener(v -> {
             isBackGound = false;
             fragmentView.setVisibility(View.VISIBLE);
@@ -173,25 +194,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
                     .commit();
         });
 
-        fragmentView.setVisibility(View.GONE);
-        settingsButton.setVisibility(View.GONE);
-        if (user != null && user.id != USER.id) {
-            messageImage.setVisibility(View.VISIBLE);
-            setProfile(user);
-            messageImage.setOnClickListener(v -> goToConversationWithUser(user));
-        } else {
-            settingsButton.setVisibility(View.VISIBLE);
-            setSettingsButton();
-            editProfileView.setVisibility(View.VISIBLE);
-            editProfileView.setOnClickListener(v -> {
-                Intent editProfile = new Intent(getContext(), EditProfileActivity.class);
-                editProfile.putExtra("object", user);
-                getContext().startActivity(editProfile);
-            });
-            setProfile(user);
-            addProfilePhotoView.setVisibility(View.VISIBLE);
-            addBackGroundPhotoView.setVisibility(View.VISIBLE);
-        }
+        setProfile(user);
 
         return view;
     }

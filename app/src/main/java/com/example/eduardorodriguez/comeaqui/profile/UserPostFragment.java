@@ -31,10 +31,9 @@ public class UserPostFragment extends Fragment {
     private static ArrayList<FoodPost> data;
     private static MyUserPostRecyclerViewAdapter adapter;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
+
+    RecyclerView recyclerView;
+
     public UserPostFragment() {
     }
 
@@ -46,6 +45,7 @@ public class UserPostFragment extends Fragment {
             FoodPost foodPost = new FoodPost(jo);
             data.add(foodPost);
         }
+        recyclerView.setAdapter(this.adapter);
         adapter.addNewRow(data);
     }
 
@@ -82,24 +82,21 @@ public class UserPostFragment extends Fragment {
         this.adapter = new MyUserPostRecyclerViewAdapter(data);
 
         Context context = view.getContext();
-        RecyclerView recyclerView = (RecyclerView) view;
+        recyclerView = (RecyclerView) view;
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         getPostFromUser(user);
-        recyclerView.setAdapter(this.adapter);
-
         return view;
     }
 
 
     void getPostFromUser(User user){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_food_posts/" + user.id + "/");
-        try {
-            String response = process.execute().get();
-            if (response != null)
+        new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_food_posts/" + user.id + "/"){
+            @Override
+            protected void onPostExecute(String response) {
                 makeList(new JsonParser().parse(response).getAsJsonArray());
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
+                super.onPostExecute(response);
+            }
+        }.execute();
     }
 
 
