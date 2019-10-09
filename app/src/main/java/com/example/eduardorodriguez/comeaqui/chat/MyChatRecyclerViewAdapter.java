@@ -51,7 +51,9 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
         User chattingWith = USER.id == (holder.mItem.users.get(0).id) ? holder.mItem.users.get(1) : holder.mItem.users.get(0);
 
         holder.username.setText(chattingWith.first_name + ", " + chattingWith.last_name);
-        holder.lastMessage.setText(holder.mItem.last_message.message);
+        if (holder.mItem.last_message != null){
+            holder.lastMessage.setText(holder.mItem.last_message.message);
+        }
         holder.notChat.setVisibility(View.INVISIBLE);
 
         holder.mView.setOnClickListener(v -> {
@@ -60,15 +62,17 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
             holder.mView.getContext().startActivity(conversation);
         });
 
-        if (holder.mItem.unread_count > 0 ){
+        if (holder.mItem.userUnseenCount.get(USER.id) > 0 ){
             holder.notChat.setVisibility(View.VISIBLE);
-            holder.notChat.setText("" + holder.mItem.unread_count);
+            holder.notChat.setText("" + holder.mItem.userUnseenCount.get(USER.id));
         }
         Glide.with(holder.mView.getContext()).load(chattingWith.profile_photo).into(holder.chattererImage);
 
-        ((AppCompatActivity)holder.mView.getContext()).getSupportFragmentManager().beginTransaction()
-                .replace(R.id.date, DateFragment.newInstance(holder.mItem.last_message.createdAt))
-                .commit();
+        if (holder.mItem.last_message != null) {
+            ((AppCompatActivity) holder.mView.getContext()).getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.date, DateFragment.newInstance(holder.mItem.last_message.createdAt))
+                    .commit();
+        }
     }
 
     @Override

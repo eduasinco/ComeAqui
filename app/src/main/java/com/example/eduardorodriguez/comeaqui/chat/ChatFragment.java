@@ -44,36 +44,16 @@ public class ChatFragment extends Fragment{
 
     RecyclerView recyclerView;
 
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public ChatFragment() {
-    }
-
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static ChatFragment newInstance(int columnCount) {
-        ChatFragment fragment = new ChatFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
+    public ChatFragment() {}
+    public static ChatFragment newInstance() {
+        return new ChatFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
     }
 
     @Override
@@ -98,7 +78,6 @@ public class ChatFragment extends Fragment{
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
                 ChatObject chat = new ChatObject(jo);
-                chat.unread_count = getChatUnreadCount(chat.id);
                 data.put(chat.id, chat);
             }
             adapter = new MyChatRecyclerViewAdapter(new ArrayList<>(data.values()), mListener);
@@ -107,38 +86,6 @@ public class ChatFragment extends Fragment{
             e.printStackTrace();
         }
     }
-
-    void getMyChatsFromFirebase(){
-        DatabaseReference userChats = FirebaseDatabase.getInstance().getReference("userChats");
-        userChats
-            .child(MainActivity.firebaseUser.id)
-            .addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                        DatabaseReference chats = FirebaseDatabase.getInstance().getReference("chats");
-                        chats.child(postSnapshot.getValue().toString()).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                ChatFirebaseObject chat = dataSnapshot.getValue(ChatFirebaseObject.class);
-                                if (chat != null) {
-                                    chat.id = postSnapshot.getValue().toString();
-                                    //adapter.addChatObject(chat);
-                                }
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                            }
-                        });
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                }
-            });
-
-    }
-
 
     void getChatsAndSet(){
         GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_chats/");
@@ -149,18 +96,6 @@ public class ChatFragment extends Fragment{
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    int getChatUnreadCount(int chatId){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/chat_unread_count/" + chatId + "/");
-        try {
-            String response = process.execute().get();
-            if (response != null)
-                return new JsonParser().parse(response).getAsJsonObject().get("count").getAsInt();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        return 0;
     }
 
     private void start(){
@@ -178,8 +113,6 @@ public class ChatFragment extends Fragment{
                     getActivity().runOnUiThread(() -> {
                         JsonObject jo = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject();
                         ChatObject chatObject = new ChatObject(jo.get("chat").getAsJsonObject());
-                        int count = jo.get("chat_unread_messages").getAsInt();
-                        data.get(chatObject.id).unread_count = count;
                         data.get(chatObject.id).last_message = chatObject.last_message;
                         adapter.notifyDataSetChanged();
                     });
@@ -205,18 +138,7 @@ public class ChatFragment extends Fragment{
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onListFragmentInteraction(ChatObject item);
     }
 }

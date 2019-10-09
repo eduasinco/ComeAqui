@@ -346,20 +346,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void setUnseenChatMessages(){
-        ArrayList<MessageObject> messageObjects = new ArrayList<>();
         GetAsyncTask getPostLocations = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/unseen_chat_messages/");
         try {
             String response = getPostLocations.execute().get();
-            if (response != null)
-                for (JsonElement pa : new JsonParser().parse(response).getAsJsonArray()) {
-                    messageObjects.add(new MessageObject(pa.getAsJsonObject()));
+            if (response != null){
+                Integer count = new JsonParser().parse(response).getAsJsonObject().get("count").getAsInt();
+                if (count > 0){
+                    notChat.setVisibility(View.VISIBLE);
+                    notChat.setText("" + count);
                 }
+            }
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-        if (messageObjects.size() > 0){
-            notChat.setVisibility(View.VISIBLE);
-            notChat.setText("" + messageObjects.size());
-        }
+
     }
 }
