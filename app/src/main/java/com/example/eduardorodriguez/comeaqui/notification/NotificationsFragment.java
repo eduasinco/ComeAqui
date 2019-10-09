@@ -1,5 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.notification;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.os.Bundle;
@@ -114,28 +115,30 @@ public class NotificationsFragment extends Fragment {
         });
     }
 
+    @SuppressLint("StaticFieldLeak")
     void getData(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_notifications/");
-        try {
-            String response = process.execute().get();
-            if (response != null)
-                makeList(new JsonParser().parse(response).getAsJsonArray());
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_notifications/"){
+            @Override
+            protected void onPostExecute(String s) {
+                if (s != null)
+                    makeList(new JsonParser().parse(s).getAsJsonArray());
+                super.onPostExecute(s);
+            }
+        }.execute();
     }
 
     static void confirmOrder(OrderObject order, boolean confirm, Context context){
-        PostAsyncTask orderStatus = new PostAsyncTask(context.getString(R.string.server) + "/set_order_status/");
+        new PostAsyncTask(context.getString(R.string.server) + "/set_order_status/"){
+            @Override
+            protected void onPostExecute(String response) {
+                super.onPostExecute(response);
+            }
+        }.execute(
+                new String[]{"order_id",  order.id + ""},
+                new String[]{"order_status", order.status}
+                );
+
         order.status = confirm ? "CONFIRMED" : "CANCELED";
-        try {
-            orderStatus.execute(
-                    new String[]{"order_id",  order.id + ""},
-                    new String[]{"order_status", order.status}
-            ).get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
         notificationAdapter.notifyDataSetChanged();
         WebSocketMessage.send(f.getActivity(),
                 "/ws/orders/" + order.owner.id +  "/",
