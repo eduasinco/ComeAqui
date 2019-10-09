@@ -135,7 +135,7 @@ public class UpperNotificationFragment extends Fragment {
     }
 
     OrderObject getConfirmedOrders(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) +  "/my_confirmed_orders/");
+        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) +  "/r/");
         try {
             String response = process.execute().get();
             if (response != null){
