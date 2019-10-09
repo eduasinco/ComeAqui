@@ -5,12 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.utilities.MyLocation;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.JsonParser;
 
 import java.util.concurrent.ExecutionException;
@@ -18,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
+import static com.yalantis.ucrop.UCropFragment.TAG;
 
 public class PrepareActivity extends AppCompatActivity {
 
@@ -26,7 +31,40 @@ public class PrepareActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prepare);
         initializeUser();
+        getFirebaseToken();
         getUserTimeZone();
+    }
+
+    private void getFirebaseToken(){
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.w(TAG, "getInstanceId failed", task.getException());
+                        return;
+                    }
+
+                    // Get new Instance ID token
+                    String token = task.getResult().getToken();
+                    System.out.println("TOKEEEEEEEEN " + token);
+
+                    postTokenToServer(token);
+                });
+    }
+    private void postUserDeviceId(String id){
+        PatchAsyncTask putTask = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
+        putTask.execute("dev_id", id);
+    }
+
+    private void postTokenToServer(String token){
+        String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        postUserDeviceId(androidID);
+        PostAsyncTask postToken = new PostAsyncTask(getResources().getString(R.string.server) + "/fcm/v1/devices/");
+        postToken.execute(
+                new String[]{"dev_id", androidID},
+                new String[]{"reg_id", token},
+                new String[]{"name", "" + USER.id}
+        );
     }
 
     void getUserTimeZone(){

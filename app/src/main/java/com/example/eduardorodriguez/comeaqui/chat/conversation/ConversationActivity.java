@@ -127,20 +127,12 @@ public class ConversationActivity extends AppCompatActivity {
         backView.setOnClickListener(v -> finish());
         start();
         btnEnviar.setOnClickListener(view -> {
-            //createServerMessage();
             mWebSocketClient.send("{ \"message\": \"" + txtMensaje.getText().toString() + "\"," +
                     "\"command\": \"new_message\"," +
                     "\"from\": \"" + USER.id + "\"," +
                     "\"to\": \"" + chattingWith.id + "\"," +
                     "\"chatId\": \"" + chat.id + "\"}"
             );
-//            WebSocketMessage.send(this,
-//                    "/ws/unread_messages/" + chattingWith.id +  "/",
-//                    "{ \"message\": \"" + txtMensaje.getText().toString() + "\"," +
-//                            "\"command\": \"new_message\"," +
-//                            "\"from\": \"" + USER.id + "\"," +
-//                            "\"chatId\": \"" + chat.id + "\"}"
-//            );
             txtMensaje.setText("");
         });
 

@@ -165,7 +165,6 @@ public class MainActivity extends AppCompatActivity {
             setFragment(profileFragment);
             profile.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.profilefill));
         });
-        getFirebaseToken();
         setNotificationsBubbles();
         listenToOrdersChanges();
         listenToChatMessages();
@@ -223,37 +222,6 @@ public class MainActivity extends AppCompatActivity {
         profile.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.profile));
     }
 
-    private void getFirebaseToken(){
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        Log.w(TAG, "getInstanceId failed", task.getException());
-                        return;
-                    }
-
-                    // Get new Instance ID token
-                    String token = task.getResult().getToken();
-                    System.out.println("TOKEEEEEEEEN " + token);
-
-                    postTokenToServer(token);
-                });
-    }
-    private void postUserDeviceId(String id){
-        PatchAsyncTask putTask = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
-        putTask.execute("dev_id", id);
-    }
-
-    private void postTokenToServer(String token){
-        String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-
-        postUserDeviceId(androidID);
-        PostAsyncTask postToken = new PostAsyncTask(getResources().getString(R.string.server) + "/fcm/v1/devices/");
-        postToken.execute(
-                new String[]{"dev_id", androidID},
-                new String[]{"reg_id", token},
-                new String[]{"name", "" + USER.id}
-        );
-    }
 
     private void setMapFragment(Fragment fragment) {
         mainFrame.setVisibility(View.INVISIBLE);

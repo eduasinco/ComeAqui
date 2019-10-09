@@ -1,6 +1,8 @@
 package com.example.eduardorodriguez.comeaqui.profile;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Outline;
 import android.net.Uri;
@@ -8,6 +10,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.example.eduardorodriguez.comeaqui.LoginActivity;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
 import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.ChatFirebaseObject;
@@ -15,6 +19,7 @@ import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.FirebaseUs
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.EditProfileActivity;
 import com.example.eduardorodriguez.comeaqui.profile.post_and_reviews.PostAndReviewsFragment;
+import com.example.eduardorodriguez.comeaqui.profile.settings.SettingsActivity;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.ProfileImageGalleryFragment;
@@ -59,6 +64,8 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
     private TextView emailView;
     private TextView bioView;
     private TextView nameView;
+
+    private Button settingsButton;
 
     private ConstraintLayout outOfCard;
     FrameLayout fragmentView;
@@ -134,6 +141,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         addProfilePhotoView = view.findViewById(R.id.add_profile_photo);
         addBackGroundPhotoView = view.findViewById(R.id.add_background_photo);
         fragmentView = view.findViewById(R.id.select_from);
+        settingsButton = view.findViewById(R.id.settings_profile_button);
 
         ViewPager viewPager = view.findViewById(R.id.viewpager);
         viewPager.setAdapter(new TestPagerAdapter(getChildFragmentManager()));
@@ -166,11 +174,14 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         });
 
         fragmentView.setVisibility(View.GONE);
+        settingsButton.setVisibility(View.GONE);
         if (user != null && user.id != USER.id) {
             messageImage.setVisibility(View.VISIBLE);
             setProfile(user);
             messageImage.setOnClickListener(v -> goToConversationWithUser(user));
         } else {
+            settingsButton.setVisibility(View.VISIBLE);
+            setSettingsButton();
             editProfileView.setVisibility(View.VISIBLE);
             editProfileView.setOnClickListener(v -> {
                 Intent editProfile = new Intent(getContext(), EditProfileActivity.class);
@@ -183,6 +194,24 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         }
 
         return view;
+    }
+
+    void setSettingsButton(){
+        settingsButton.setOnClickListener(v -> {
+            signOut();
+        });
+    }
+
+    private void signOut(){
+        SharedPreferences pref = getActivity().getSharedPreferences("Login", Context.MODE_PRIVATE);
+        SharedPreferences.Editor edt = pref.edit();
+        edt.putBoolean("signed_in", false);
+        edt.remove("email");
+        edt.remove("password");
+        edt.apply();
+
+        Intent bactToLogin = new Intent(getActivity(), LoginActivity.class);
+        startActivity(bactToLogin);
     }
 
     void goToConversationWithUser(User user){
