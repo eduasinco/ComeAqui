@@ -272,24 +272,27 @@ public class MapFragment extends Fragment{
     }
 
     void setMapMarkers(){
-        GetAsyncTask getPostLocations = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/foods/");
-        try {
-            String response = getPostLocations.execute().get();
-            if (response != null)
-                makeList(new JsonParser().parse(response).getAsJsonArray(), false);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        new GetAsyncTask("GET", getResources().getString(R.string.server) + "/foods/"){
+            @Override
+            protected void onPostExecute(String s) {
+                if (s != null)
+                    makeList(new JsonParser().parse(s).getAsJsonArray(), false);
+                setMapFavouriteMarkers();
+                super.onPostExecute(s);
+            }
+        }.execute();
+    }
 
-        GetAsyncTask getFavouritePosts = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_favourites/");
-        try {
-            String response = getFavouritePosts.execute().get();
-            if (response != null)
-                makeList(new JsonParser().parse(response).getAsJsonArray(), true);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        setMarkers();
+    void setMapFavouriteMarkers(){
+        new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_favourites/"){
+            @Override
+            protected void onPostExecute(String s) {
+                if (s != null)
+                    makeList(new JsonParser().parse(s).getAsJsonArray(), true);
+                setMarkers();
+                super.onPostExecute(s);
+            }
+        }.execute();
     }
 
     void setLocationPicker(){

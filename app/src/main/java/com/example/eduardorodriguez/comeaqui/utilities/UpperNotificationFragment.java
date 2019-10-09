@@ -51,8 +51,8 @@ public class UpperNotificationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        orderObject = getConfirmedOrders();
-        orderPost = getConfirmedFoodPosts();
+        getConfirmedOrders();
+        getConfirmedFoodPosts();
     }
 
     @Override
@@ -70,6 +70,13 @@ public class UpperNotificationFragment extends Fragment {
         postCard = view.findViewById(R.id.post_card);
         allCards = view.findViewById(R.id.all_cards);
 
+
+        setCardView(orderCard);
+        setCardView(postCard);
+        return view;
+    }
+
+    void setOrderCard(){
         if (orderObject != null){
             orderCard.setVisibility(View.VISIBLE);
             title.setText("Meal with " +  orderObject.poster.first_name + orderObject.poster.last_name);
@@ -80,24 +87,22 @@ public class UpperNotificationFragment extends Fragment {
                 Glide.with(getActivity()).load(orderObject.poster.profile_photo).into(posterImage);
             }
         }
+    }
 
+    void setOrderPost(){
         if (orderPost != null){
             postCard.setVisibility(View.VISIBLE);
             time2.setText(orderPost.post.time);
         }
+    }
+    
+    void setCardView(View view){
         orderCard.setOnClickListener(v -> {
             Intent orderLook = new Intent(getContext(), OrderLookActivity.class);
             orderLook.putExtra("object", orderObject);
             orderLook.putExtra("delete", false);
             getContext().startActivity(orderLook);
         });
-
-        setCardView(orderCard);
-        setCardView(postCard);
-        return view;
-    }
-    
-    void setCardView(View view){
         view.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -134,35 +139,35 @@ public class UpperNotificationFragment extends Fragment {
         });
     }
 
-    OrderObject getConfirmedOrders(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) +  "/r/");
-        try {
-            String response = process.execute().get();
-            if (response != null){
-                JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
-                if (ja.size() > 0){
-                    return new OrderObject(ja.get(0).getAsJsonObject());
+    void getConfirmedOrders(){
+        new GetAsyncTask("GET", getResources().getString(R.string.server) +  "/r/"){
+            @Override
+            protected void onPostExecute(String response) {
+                if (response != null){
+                    JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
+                    if (ja.size() > 0){
+                        orderObject = new OrderObject(ja.get(0).getAsJsonObject());
+                        setOrderCard();
+                    }
                 }
+                super.onPostExecute(response);
             }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        return null;
+        }.execute();
     }
-    OrderObject getConfirmedFoodPosts(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) +  "/my_confirmed_posts/");
-        try {
-            String response = process.execute().get();
-            if (response != null){
-                JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
-                if (ja.size() > 0){
-                    return new OrderObject(ja.get(0).getAsJsonObject());
+    void getConfirmedFoodPosts(){
+        new GetAsyncTask("GET", getResources().getString(R.string.server) +  "/my_confirmed_posts/"){
+            @Override
+            protected void onPostExecute(String response) {
+                if (response != null){
+                    JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
+                    if (ja.size() > 0){
+                        orderPost = new OrderObject(ja.get(0).getAsJsonObject());
+                        setOrderPost();
+                    }
                 }
+                super.onPostExecute(response);
             }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        return null;
+        };
     }
 
     @Override
