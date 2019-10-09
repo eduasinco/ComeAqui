@@ -103,10 +103,14 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
     }
 
     void setCancelOrderButton(){
-        if (order.status.equals("CANCELED")){
+        if (order.status.equals("CANCELED")) {
             cancelOrderButton.setText("CANCELED");
             cancelOrderButton.setBackgroundColor(Color.WHITE);
             cancelOrderButton.setTextColor(ContextCompat.getColor(this, R.color.canceled));
+        }else if (order.status.equals("FINISHED")){
+            cancelOrderButton.setText("FINISHED");
+            cancelOrderButton.setBackgroundColor(Color.WHITE);
+            cancelOrderButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
         } else {
             cancelOrderButton.setOnClickListener(v -> {checkIfUserWantsToCancel();});
         }
