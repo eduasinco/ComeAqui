@@ -65,7 +65,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
     private TextView bioView;
     private TextView nameView;
 
-    private Button settingsButton;
+    private ImageButton settingsButton;
 
     private ConstraintLayout outOfCard;
     FrameLayout fragmentView;

@@ -50,15 +50,9 @@ public class PrepareActivity extends AppCompatActivity {
                     postTokenToServer(token);
                 });
     }
-    private void postUserDeviceId(String id){
-        PatchAsyncTask putTask = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
-        putTask.execute("dev_id", id);
-    }
 
     private void postTokenToServer(String token){
         String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-
-        postUserDeviceId(androidID);
         PostAsyncTask postToken = new PostAsyncTask(getResources().getString(R.string.server) + "/fcm/v1/devices/");
         postToken.execute(
                 new String[]{"dev_id", androidID},
