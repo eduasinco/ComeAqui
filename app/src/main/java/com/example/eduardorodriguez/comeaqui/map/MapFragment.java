@@ -68,7 +68,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
 
     double lng;
     double lat;
-    String pickedAdress;
+    String pickedAdress = "";
 
     Set<Integer> touchedMarkers = new HashSet<>();
     public static HashMap<Integer, Marker> markerHashMap = new HashMap<>();

@@ -129,19 +129,22 @@ public class PlaceAutocompleteFragment extends Fragment {
     }
 
     void getPlacesListFromGoogle(){
+        loadingView.setText("Loading...");
         String uri = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + addressView.getText().toString() +
                 "&types=geocode&language=en&key=" + getResources().getString(R.string.google_key);
         try {
-            String jsonString = new Server("GET", uri){
+            new Server("GET", uri){
                 @Override
-                protected void onPostExecute(String s) {
-                    super.onPostExecute(s);
-                    showLoading(false);
+                protected void onPostExecute(String response) {
+                    super.onPostExecute(response);
+                    if (response != null) {
+                        makeList(response);
+                        showLoading(false);
+                    } else {
+                        loadingView.setText("No results");
+                    }
                 }
             }.execute().get(15, TimeUnit.SECONDS);
-            if (jsonString != null) {
-                makeList(jsonString);
-            }
         } catch (Exception e) {
             e.printStackTrace();
             showLoading(false);

@@ -30,6 +30,7 @@ public class MapPickerFragment extends Fragment {
     public TextView pickedAdress;
     ConstraintLayout mapPickerPanView;
 
+    String LOADING = "Loading...";
 
     public MapPickerFragment() {}
     public static MapPickerFragment newInstance() {
@@ -65,7 +66,7 @@ public class MapPickerFragment extends Fragment {
         String latLngString = latLng.latitude + "," + latLng.longitude;
         String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLngString + "&key=" + getResources().getString(R.string.google_key);
         pickedAdress.setVisibility(View.VISIBLE);
-        pickedAdress.setText("Loading...");
+        pickedAdress.setText(LOADING);
         new Server("GET", uri){
             @Override
             protected void onPostExecute(String response) {
@@ -75,7 +76,9 @@ public class MapPickerFragment extends Fragment {
                     if (jsonArray.size() > 0) {
                         String address = jsonArray.get(0).getAsJsonObject().get("formatted_address").getAsString();
                         pickedAdress.setText(address);
-                        mListener.onFragmentInteraction(address);
+                        if (!address.equals(LOADING)){
+                            mListener.onFragmentInteraction(address);
+                        }
                     }
                 }
                 super.onPostExecute(response);
