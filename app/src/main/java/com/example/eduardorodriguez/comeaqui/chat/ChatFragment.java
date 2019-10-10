@@ -113,7 +113,7 @@ public class ChatFragment extends Fragment{
                     getActivity().runOnUiThread(() -> {
                         JsonObject jo = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject();
                         ChatObject chatObject = new ChatObject(jo.get("chat").getAsJsonObject());
-                        data.get(chatObject.id).last_message = chatObject.last_message;
+                        data.get(chatObject.id).userUnseenCount = chatObject.userUnseenCount;
                         adapter.notifyDataSetChanged();
                     });
                 }

@@ -4,19 +4,16 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import com.example.eduardorodriguez.comeaqui.chat.chat_objects.MessageObject;
+
+import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.FirebaseUser;
 import com.example.eduardorodriguez.comeaqui.review.GuestsReviewActivity;
 import com.example.eduardorodriguez.comeaqui.review.ReviewPostActivity;
-import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
-import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
@@ -28,13 +25,10 @@ import com.example.eduardorodriguez.comeaqui.notification.NotificationsFragment;
 import com.example.eduardorodriguez.comeaqui.order.OrderFragment;
 import com.example.eduardorodriguez.comeaqui.map.MapFragment;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileFragment;
-import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
-import com.example.eduardorodriguez.comeaqui.server.Server;
-import com.example.eduardorodriguez.comeaqui.utilities.MyLocation;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -43,16 +37,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
-import static com.yalantis.ucrop.UCropFragment.TAG;
 
 public class MainActivity extends AppCompatActivity {
 
     static public String data;
-    private Toolbar toolbar;
     private ImageView chatView;
 
     private ImageView map;
@@ -284,7 +274,8 @@ public class MainActivity extends AppCompatActivity {
                 public void onMessage(String s) {
                     final String message = s;
                     runOnUiThread(() -> {
-                        int ordersNotSeen = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("unread_messages").getAsInt();
+                        JsonObject jsonMessage = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject();
+                        int ordersNotSeen = jsonMessage.get("unread_messages").getAsInt();
                         if (ordersNotSeen > 0 ){
                             notChat.setVisibility(View.VISIBLE);
                             notChat.setText("" + ordersNotSeen);

@@ -62,7 +62,7 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
             holder.mView.getContext().startActivity(conversation);
         });
 
-        if (holder.mItem.userUnseenCount.get(USER.id) > 0 ){
+        if (holder.mItem.userUnseenCount.getOrDefault(USER.id, 0) > 0 ){
             holder.notChat.setVisibility(View.VISIBLE);
             holder.notChat.setText("" + holder.mItem.userUnseenCount.get(USER.id));
         }
