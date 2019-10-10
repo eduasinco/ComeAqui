@@ -345,6 +345,8 @@ public class MainActivity extends AppCompatActivity {
                 if (count > 0){
                     notChat.setVisibility(View.VISIBLE);
                     notChat.setText("" + count);
+                } else {
+                    notChat.setVisibility(View.GONE);
                 }
             }
         } catch (ExecutionException | InterruptedException e) {

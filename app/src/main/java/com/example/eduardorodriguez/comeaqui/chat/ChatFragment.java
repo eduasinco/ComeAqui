@@ -59,6 +59,7 @@ public class ChatFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+        getChatsAndSet();
     }
 
     @Override
@@ -66,7 +67,6 @@ public class ChatFragment extends Fragment{
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
         recyclerView = view.findViewById(R.id.recycler);
-        getChatsAndSet();
         start();
         return view;
     }
