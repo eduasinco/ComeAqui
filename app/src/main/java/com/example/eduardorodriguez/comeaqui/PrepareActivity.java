@@ -112,5 +112,6 @@ public class PrepareActivity extends AppCompatActivity {
     void goToMain(){
         Intent k = new Intent(this, MainActivity.class);
         startActivity(k);
+        overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
     }
 }
