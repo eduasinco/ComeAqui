@@ -9,12 +9,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.ChatFirebaseObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.firebase.database.*;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -37,6 +40,7 @@ public class ChatFragment extends Fragment{
     MyChatRecyclerViewAdapter adapter;
 
     RecyclerView recyclerView;
+    FrameLayout waitFrame;
 
     private OnListFragmentInteractionListener mListener;
 
@@ -60,7 +64,13 @@ public class ChatFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
-        recyclerView = view.findViewById(R.id.recycler);
+        recyclerView = view.findViewById(R.id.recycler_chat);
+        waitFrame = view.findViewById(R.id.wait_frame);
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.wait_frame, WaitFragment.newInstance())
+                .commit();
+
         start();
         return view;
     }
@@ -85,6 +95,7 @@ public class ChatFragment extends Fragment{
         new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_chats/"){
             @Override
             protected void onPostExecute(String response) {
+                waitFrame.setVisibility(View.GONE);
                 if (response != null)
                     makeList(new JsonParser().parse(response).getAsJsonArray());
                 super.onPostExecute(response);
