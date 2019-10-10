@@ -153,20 +153,20 @@ public class ConversationActivity extends AppCompatActivity {
     }
 
     private void getChatMessages(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/chat_detail/" + chat.id + "/");
-        try {
-            String response = process.execute().get();
-            if (response != null) {
-                for (JsonElement je: new JsonParser().parse(response).getAsJsonObject().get("message_set").getAsJsonArray()){
-                    MessageObject currentMessage = new MessageObject(je.getAsJsonObject());
+        new GetAsyncTask("GET", getResources().getString(R.string.server) + "/chat_detail/" + chat.id + "/"){
+            @Override
+            protected void onPostExecute(String response) {
+                if (response != null) {
+                    for (JsonElement je: new JsonParser().parse(response).getAsJsonObject().get("message_set").getAsJsonArray()){
+                        MessageObject currentMessage = new MessageObject(je.getAsJsonObject());
 
-                    setMessageStatus(currentMessage);
-                    adapter.addMensaje(currentMessage);
+                        setMessageStatus(currentMessage);
+                        adapter.addMensaje(currentMessage);
+                    }
                 }
+                super.onPostExecute(response);
             }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        }.execute();
     }
 
     public void setMessageStatus(MessageObject currentMessage){

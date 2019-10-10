@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        context = getApplicationContext();
         setNotificationsBubbles();
         checkRatings();
     }
@@ -97,8 +98,6 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.CAMERA},
                     0);
         }
-        context = getApplicationContext();
-
         chatView = findViewById(R.id.chat);
 
         map = findViewById(R.id.map);
@@ -166,39 +165,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void checkUnratedOrdersAsPoster(){
-        GetAsyncTask process = new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/my_unreviewed_order_guest/");
-        try {
-            String response = process.execute().get();
-            if (response != null){
-                JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
-                if (ja.size() > 0){
-                    OrderObject orderObject = new OrderObject(ja.get(0).getAsJsonObject());
-                    Intent k = new Intent(this, GuestsReviewActivity.class);
-                    k.putExtra("order", orderObject);
-                    startActivity(k);
+        new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/my_unreviewed_order_guest/"){
+            @Override
+            protected void onPostExecute(String response) {
+                if (response != null){
+                    JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
+                    if (ja.size() > 0){
+                        OrderObject orderObject = new OrderObject(ja.get(0).getAsJsonObject());
+                        Intent k = new Intent(context, GuestsReviewActivity.class);
+                        k.putExtra("order", orderObject);
+                        startActivity(k);
+                    }
                 }
+                super.onPostExecute(response);
             }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        }.execute();
     }
 
     void checkUnratedOrdersAsDinner(){
-        GetAsyncTask process = new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/my_unreviewed_order_post/");
-        try {
-            String response = process.execute().get();
-            if (response != null){
-                JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
-                if (ja.size() > 0){
-                    OrderObject orderObject = new OrderObject(ja.get(0).getAsJsonObject());
-                    Intent k = new Intent(this, ReviewPostActivity.class);
-                    k.putExtra("order", orderObject);
-                    startActivity(k);
+        new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/my_unreviewed_order_post/"){
+            @Override
+            protected void onPostExecute(String response) {
+                if (response != null){
+                    JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
+                    if (ja.size() > 0){
+                        OrderObject orderObject = new OrderObject(ja.get(0).getAsJsonObject());
+                        Intent k = new Intent(context, ReviewPostActivity.class);
+                        k.putExtra("order", orderObject);
+                        startActivity(k);
+                    }
                 }
+                super.onPostExecute(response);
             }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        }.execute();
     }
 
 
@@ -304,54 +303,55 @@ public class MainActivity extends AppCompatActivity {
     }
     private void setUnseenOrders(){
         ArrayList<OrderObject> orderObjects = new ArrayList<>();
-        GetAsyncTask getPostLocations = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/unseen_orders/");
-        try {
-            String response = getPostLocations.execute().get();
-            if (response != null)
-                for (JsonElement pa : new JsonParser().parse(response).getAsJsonArray()) {
-                    orderObjects.add(new OrderObject(pa.getAsJsonObject()));
+        new GetAsyncTask("GET", getResources().getString(R.string.server) + "/unseen_orders/"){
+            @Override
+            protected void onPostExecute(String response) {
+                if (response != null){
+                    for (JsonElement pa : new JsonParser().parse(response).getAsJsonArray()) {
+                        orderObjects.add(new OrderObject(pa.getAsJsonObject()));
+                    }
                 }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        if (orderObjects.size() > 0){
-            notOrders.setVisibility(View.VISIBLE);
-            notOrders.setText("" + orderObjects.size());
-        }
+                if (orderObjects.size() > 0){
+                    notOrders.setVisibility(View.VISIBLE);
+                    notOrders.setText("" + orderObjects.size());
+                }
+                super.onPostExecute(response);
+            }
+        }.execute();
     }
     private void setUnseenNotifications(){
         ArrayList<OrderObject> orderObjects = new ArrayList<>();
-        GetAsyncTask getPostLocations = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/unseen_notifications/");
-        try {
-            String response = getPostLocations.execute().get();
-            if (response != null)
-                for (JsonElement pa : new JsonParser().parse(response).getAsJsonArray()) {
-                    orderObjects.add(new OrderObject(pa.getAsJsonObject()));
+        new GetAsyncTask("GET", getResources().getString(R.string.server) + "/unseen_notifications/"){
+            @Override
+            protected void onPostExecute(String response) {
+                if (response != null){
+                    for (JsonElement pa : new JsonParser().parse(response).getAsJsonArray()) {
+                        orderObjects.add(new OrderObject(pa.getAsJsonObject()));
+                    }
                 }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        if (orderObjects.size() > 0){
-            notNotifications.setVisibility(View.VISIBLE);
-            notNotifications.setText("" + orderObjects.size());
-        }
+                if (orderObjects.size() > 0){
+                    notNotifications.setVisibility(View.VISIBLE);
+                    notNotifications.setText("" + orderObjects.size());
+                }
+                super.onPostExecute(response);
+            }
+        }.execute();
     }
     private void setUnseenChatMessages(){
-        GetAsyncTask getPostLocations = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/unseen_chat_messages/");
-        try {
-            String response = getPostLocations.execute().get();
-            if (response != null){
-                Integer count = new JsonParser().parse(response).getAsJsonObject().get("count").getAsInt();
-                if (count > 0){
-                    notChat.setVisibility(View.VISIBLE);
-                    notChat.setText("" + count);
-                } else {
-                    notChat.setVisibility(View.GONE);
+        new GetAsyncTask("GET", getResources().getString(R.string.server) + "/unseen_chat_messages/"){
+            @Override
+            protected void onPostExecute(String response) {
+                if (response != null){
+                    Integer count = new JsonParser().parse(response).getAsJsonObject().get("count").getAsInt();
+                    if (count > 0){
+                        notChat.setVisibility(View.VISIBLE);
+                        notChat.setText("" + count);
+                    } else {
+                        notChat.setVisibility(View.GONE);
+                    }
                 }
+                super.onPostExecute(response);
             }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-
+        }.execute();
     }
 }

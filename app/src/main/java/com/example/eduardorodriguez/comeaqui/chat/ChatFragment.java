@@ -31,12 +31,6 @@ import java.util.concurrent.ExecutionException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
 public class ChatFragment extends Fragment{
 
     LinkedHashMap<Integer, ChatObject> data;
@@ -88,14 +82,14 @@ public class ChatFragment extends Fragment{
     }
 
     void getChatsAndSet(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_chats/");
-        try {
-            String response = process.execute().get();
-            if (response != null)
-                makeList(new JsonParser().parse(response).getAsJsonArray());
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_chats/"){
+            @Override
+            protected void onPostExecute(String response) {
+                if (response != null)
+                    makeList(new JsonParser().parse(response).getAsJsonArray());
+                super.onPostExecute(response);
+            }
+        }.execute();
     }
 
     private void start(){
