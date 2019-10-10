@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.WebSocketMessage;
@@ -22,6 +23,7 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.order.MyPendingOrdersRecyclerViewAdapter;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
+import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -44,6 +46,8 @@ public class NotificationsFragment extends Fragment {
 
     RecyclerView recyclerView;
     SwipeController swipeController = null;
+    static FrameLayout waitFrame;
+
 
     static WebSocketClient mWebSocketClient;
     static NotificationsFragment f;
@@ -77,8 +81,14 @@ public class NotificationsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifications_list, container, false);
-        recyclerView = (RecyclerView) view;
         f = this;
+
+        recyclerView = view.findViewById(R.id.recycler);
+        waitFrame = view.findViewById(R.id.wait_frame);
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.wait_frame, WaitFragment.newInstance())
+                .commit();
 
         getData();
         setupRecyclerView();
@@ -122,6 +132,7 @@ public class NotificationsFragment extends Fragment {
             protected void onPostExecute(String s) {
                 if (s != null)
                     makeList(new JsonParser().parse(s).getAsJsonArray());
+                waitFrame.setVisibility(View.GONE);
                 super.onPostExecute(s);
             }
         }.execute();
