@@ -8,12 +8,15 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.utilities.UpperNotificationFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -25,7 +28,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.concurrent.ExecutionException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 import static com.example.eduardorodriguez.comeaqui.R.layout.fragment_pendingorders_list;
@@ -43,6 +45,8 @@ public class PendingOrdersFragment extends Fragment {
     SwipeRefreshLayout pullToRefresh;
     LinkedHashMap<Integer, OrderObject> data;
     MyPendingOrdersRecyclerViewAdapter orderAdapter;
+
+    FrameLayout waitFrame;
     View view;
 
     boolean pending;
@@ -77,7 +81,6 @@ public class PendingOrdersFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getDataAndSet();
     }
 
     @Override
@@ -97,6 +100,11 @@ public class PendingOrdersFragment extends Fragment {
         view = inflater.inflate(fragment_pendingorders_list, container, false);
         pullToRefresh = view.findViewById(R.id.pullToRefresh);
         recyclerView = view.findViewById(R.id.recycler);
+        waitFrame = view.findViewById(R.id.wait_frame);
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.wait_frame, WaitFragment.newInstance())
+                .commit();
 
         getDataAndSet();
         if(pending)
@@ -111,6 +119,7 @@ public class PendingOrdersFragment extends Fragment {
             protected void onPostExecute(String s) {
                 if (s != null)
                     makeList(new JsonParser().parse(s).getAsJsonArray());
+                waitFrame.setVisibility(View.GONE);
                 super.onPostExecute(s);
             }
         }.execute();
@@ -156,16 +165,6 @@ public class PendingOrdersFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(OrderObject order);
