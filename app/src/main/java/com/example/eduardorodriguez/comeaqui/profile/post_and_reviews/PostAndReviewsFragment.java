@@ -8,12 +8,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostReview;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -28,6 +30,8 @@ public class PostAndReviewsFragment extends Fragment {
     private static MyPostAndReviewsRecyclerViewAdapter adapter;
 
     RecyclerView recyclerView;
+    FrameLayout waitFrame;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -59,7 +63,13 @@ public class PostAndReviewsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_postandreviews_list, container, false);
-        recyclerView = view.findViewById(R.id.recycler);
+        recyclerView = view.findViewById(R.id.recycler_user_postandreviews);
+        waitFrame = view.findViewById(R.id.wait_frame);
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.wait_frame, WaitFragment.newInstance())
+                .commit();
+
         getPostFromUser();
         return view;
     }
@@ -68,6 +78,7 @@ public class PostAndReviewsFragment extends Fragment {
         new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_food_posts_reviews/" + user.id + "/"){
             @Override
             protected void onPostExecute(String response) {
+                waitFrame.setVisibility(View.GONE);
                 if (response != null){
                     ArrayList<FoodPostReview> data = new ArrayList<>();
                     for (JsonElement pa : new JsonParser().parse(response).getAsJsonArray()) {

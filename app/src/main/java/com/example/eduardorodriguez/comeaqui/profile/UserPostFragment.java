@@ -9,10 +9,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -33,6 +36,8 @@ public class UserPostFragment extends Fragment {
 
 
     RecyclerView recyclerView;
+    FrameLayout waitFrame;
+
 
     public UserPostFragment() {
     }
@@ -49,16 +54,6 @@ public class UserPostFragment extends Fragment {
         adapter.addNewRow(data);
     }
 
-    public static void appendToList(String jsonString){
-        JsonParser parser = new JsonParser();
-        JsonArray jsonArray = parser.parse(jsonString).getAsJsonArray();
-        JsonObject jo = jsonArray.get(0).getAsJsonObject();
-        data.add(0, new FoodPost(jo));
-        adapter.addNewRow(data);
-    }
-
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static UserPostFragment newInstance(User user) {
         UserPostFragment fragment = new UserPostFragment();
         Bundle args = new Bundle();
@@ -82,7 +77,14 @@ public class UserPostFragment extends Fragment {
         this.adapter = new MyUserPostRecyclerViewAdapter(data);
 
         Context context = view.getContext();
-        recyclerView = (RecyclerView) view;
+        recyclerView = view.findViewById(R.id.recycler_user_post);
+
+        waitFrame = view.findViewById(R.id.wait_frame);
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.wait_frame, WaitFragment.newInstance())
+                .commit();
+
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         getPostFromUser(user);
         return view;
@@ -93,6 +95,7 @@ public class UserPostFragment extends Fragment {
         new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_food_posts/" + user.id + "/"){
             @Override
             protected void onPostExecute(String response) {
+                waitFrame.setVisibility(View.GONE);
                 makeList(new JsonParser().parse(response).getAsJsonArray());
                 super.onPostExecute(response);
             }
