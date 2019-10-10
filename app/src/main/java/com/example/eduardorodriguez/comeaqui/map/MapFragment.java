@@ -52,7 +52,7 @@ import java.util.concurrent.TimeoutException;
  * to handle interaction events.
  * create an instance of this fragment.
  */
-public class MapFragment extends Fragment{
+public class MapFragment extends Fragment implements MapPickerFragment.OnFragmentInteractionListener {
 
     MapView mMapView;
     static View rootView;
@@ -60,17 +60,15 @@ public class MapFragment extends Fragment{
     public static HashMap<Integer, FoodPost> foodPostHashMap = new HashMap<>();;
     int fabCount;
 
-    ConstraintLayout mapPickerPanView;
+    MapPickerFragment mapPickerFragment;
+
     CardView cardView;
-    ImageView shadow;
-    ImageView hande;
-    ImageView shadowPoint;
-    TextView pickedAdress;
     FloatingActionButton myFab;
     ImageView cancelPostView;
 
     double lng;
     double lat;
+    String pickedAdress;
 
     Set<Integer> touchedMarkers = new HashSet<>();
     public static HashMap<Integer, Marker> markerHashMap = new HashMap<>();
@@ -137,16 +135,16 @@ public class MapFragment extends Fragment{
 
         mMapView = rootView.findViewById(R.id.mapView);
         myFab =  rootView.findViewById(R.id.fab);
-        mapPickerPanView = rootView.findViewById(R.id.map_picker_pan);
-        shadow = rootView.findViewById(R.id.shadow);
-        hande = rootView.findViewById(R.id.handle);
-        shadowPoint = rootView.findViewById(R.id.shadow_point);
-        pickedAdress = rootView.findViewById(R.id.pickedAdress);
         cancelPostView = rootView.findViewById(R.id.cancel_post);
         cardView = rootView.findViewById(R.id.card);
 
         mMapView.onCreate(savedInstanceState);
-        mMapView.onResume(); // needed to get the map to display immediately
+        mMapView.onResume();
+
+        mapPickerFragment = MapPickerFragment.newInstance();
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.map_picker_frame, mapPickerFragment)
+                .commit();
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -297,38 +295,18 @@ public class MapFragment extends Fragment{
 
     void setLocationPicker(){
         googleMap.setOnCameraMoveStartedListener(i -> {
-            pickedAdress.setVisibility(View.GONE);
-            moveMapPicker(true);
+            mapPickerFragment.setAddressTextVisible(false);
+            mapPickerFragment.moveMapPicker(true);
         });
         googleMap.setOnCameraIdleListener(() -> {
-            moveMapPicker(false);
+            mapPickerFragment.moveMapPicker(false);
             latLng = googleMap.getCameraPosition().target;
-            getLocationFromGoogle();
+            mapPickerFragment.getLocationFromGoogle(latLng);
         });
-    }
-
-    void getLocationFromGoogle(){
-        String latLngString = latLng.latitude + "," + latLng.longitude;
-        String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLngString + "&key=" + getResources().getString(R.string.google_key);
-        pickedAdress.setVisibility(View.VISIBLE);
-        pickedAdress.setText("Loading...");
-        new Server("GET", uri){
-            @Override
-            protected void onPostExecute(String response) {
-                if (response != null){
-                    JsonObject joo = new JsonParser().parse(response).getAsJsonObject();
-                    JsonArray jsonArray = joo.get("results").getAsJsonArray();
-                    if (jsonArray.size() > 0) {
-                        pickedAdress.setText(jsonArray.get(0).getAsJsonObject().get("formatted_address").getAsString());
-                    }
-                }
-                super.onPostExecute(response);
-            }
-        }.execute();
     }
 
     void fabFunctionality(){
-        apearMapPicker(true);
+        mapPickerFragment.apearMapPicker(true);
         if (fabCount == 0){
             markersVisibility(false);
             fabCount = 1;
@@ -336,7 +314,7 @@ public class MapFragment extends Fragment{
             switchFabImage(true);
         } else if (fabCount == 1) {
             Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
-            addFood.putExtra("address" , pickedAdress.getText().toString());
+            addFood.putExtra("address" , pickedAdress);
             addFood.putExtra("lat" , latLng.latitude);
             addFood.putExtra("lng" , latLng.longitude);
             getActivity().startActivity(addFood);
@@ -353,7 +331,7 @@ public class MapFragment extends Fragment{
         fabCount = 0;
         cancelPostView.setVisibility(View.GONE);
         myFab.setVisibility(View.VISIBLE);
-        apearMapPicker(false);
+        mapPickerFragment.apearMapPicker(false);
         moveCardDown();
     }
 
@@ -362,32 +340,6 @@ public class MapFragment extends Fragment{
             myFab.setImageDrawable(ContextCompat.getDrawable(getActivity(), toPlus ? R.drawable.plus_sign : R.drawable.add_food));
             myFab.animate().scaleY(1).setDuration(200);
         }).start();
-    }
-
-    void apearMapPicker(boolean apear){
-        shadowPoint.setVisibility(apear ? View.VISIBLE: View.INVISIBLE);
-        mapPickerPanView.setVisibility(apear ? View.VISIBLE: View.GONE);
-        hande.setVisibility(apear ? View.VISIBLE: View.GONE);
-        shadow.setVisibility(apear ? View.VISIBLE: View.GONE);
-        shadow.setVisibility(apear ? View.VISIBLE: View.GONE);
-    }
-
-    void moveMapPicker(boolean up){
-        int move = 50;
-        int secs = move * 2;
-        if (up) {
-            shadowPoint.animate().alpha(0.5f).setDuration(secs);
-            mapPickerPanView.animate().translationY(-move).setDuration(secs);
-            hande.animate().translationY(-move).setDuration(secs);
-            shadow.animate().translationY(-move * 2 / 3).setDuration(secs);
-            shadow.animate().translationX(move * 1 / 3).setDuration(secs);
-        } else {
-            shadowPoint.animate().alpha(0).setDuration(secs);
-            mapPickerPanView.animate().translationY(0).setDuration(secs);
-            hande.animate().translationY(0).setDuration(secs);
-            shadow.animate().translationY(0).setDuration(secs);
-            shadow.animate().translationX(0).setDuration(secs);
-        }
     }
 
     void markersVisibility(boolean visible){
@@ -429,5 +381,10 @@ public class MapFragment extends Fragment{
     public void onLowMemory() {
         super.onLowMemory();
         mMapView.onLowMemory();
+    }
+
+    @Override
+    public void onFragmentInteraction(String address) {
+        this.pickedAdress = address;
     }
 }
