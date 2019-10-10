@@ -15,7 +15,6 @@ public class ChatActivity extends AppCompatActivity implements SearchFragment.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        overridePendingTransition(R.anim.enter, R.anim.exit);
 
         setFragment(new ChatFragment(), R.id.chat_frame);
 
