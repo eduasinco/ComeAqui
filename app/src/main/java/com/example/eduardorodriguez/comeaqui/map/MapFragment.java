@@ -303,25 +303,28 @@ public class MapFragment extends Fragment{
         googleMap.setOnCameraIdleListener(() -> {
             moveMapPicker(false);
             latLng = googleMap.getCameraPosition().target;
-            String latLngString = latLng.latitude + "," + latLng.longitude;
-            String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLngString + "&key=" + getResources().getString(R.string.google_key);
-            Server gAPI = new Server("GET", uri);
-            try {
-                String jsonString = gAPI.execute().get(5, TimeUnit.SECONDS);
-                if (jsonString != null){
-                    JsonObject joo = new JsonParser().parse(jsonString).getAsJsonObject();
+            getLocationFromGoogle();
+        });
+    }
+
+    void getLocationFromGoogle(){
+        String latLngString = latLng.latitude + "," + latLng.longitude;
+        String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLngString + "&key=" + getResources().getString(R.string.google_key);
+        pickedAdress.setVisibility(View.VISIBLE);
+        pickedAdress.setText("Loading...");
+        new Server("GET", uri){
+            @Override
+            protected void onPostExecute(String response) {
+                if (response != null){
+                    JsonObject joo = new JsonParser().parse(response).getAsJsonObject();
                     JsonArray jsonArray = joo.get("results").getAsJsonArray();
                     if (jsonArray.size() > 0) {
-                        pickedAdress.setVisibility(View.VISIBLE);
                         pickedAdress.setText(jsonArray.get(0).getAsJsonObject().get("formatted_address").getAsString());
                     }
                 }
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            } catch (TimeoutException e) {
-                e.printStackTrace();
+                super.onPostExecute(response);
             }
-        });
+        }.execute();
     }
 
     void fabFunctionality(){
