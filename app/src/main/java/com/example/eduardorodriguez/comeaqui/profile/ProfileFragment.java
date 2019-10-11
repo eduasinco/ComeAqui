@@ -6,21 +6,17 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Outline;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import androidx.annotation.NonNull;
+
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.example.eduardorodriguez.comeaqui.LoginActivity;
+import com.example.eduardorodriguez.comeaqui.login_and_register.LoginActivity;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
 import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
-import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.ChatFirebaseObject;
-import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.FirebaseUser;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.EditProfileActivity;
 import com.example.eduardorodriguez.comeaqui.profile.post_and_reviews.PostAndReviewsFragment;
-import com.example.eduardorodriguez.comeaqui.profile.settings.SettingsActivity;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.ProfileImageGalleryFragment;
@@ -33,12 +29,9 @@ import androidx.viewpager.widget.ViewPager;
 import android.view.*;
 import android.widget.*;
 import com.bumptech.glide.Glide;
-import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
-import com.google.firebase.database.*;
 import com.google.gson.JsonParser;
-import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -46,7 +39,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
-import static com.example.eduardorodriguez.comeaqui.MainActivity.firebaseUser;
 
 public class ProfileFragment extends Fragment implements SelectImageFromFragment.OnFragmentInteractionListener{
 

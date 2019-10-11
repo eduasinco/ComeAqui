@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import com.example.eduardorodriguez.comeaqui.LoginActivity;
+import com.example.eduardorodriguez.comeaqui.login_and_register.LoginActivity;
 import com.example.eduardorodriguez.comeaqui.server.PutAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
 

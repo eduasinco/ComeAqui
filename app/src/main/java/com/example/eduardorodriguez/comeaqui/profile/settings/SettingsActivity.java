@@ -8,8 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.widget.*;
 import com.example.eduardorodriguez.comeaqui.*;
-import com.example.eduardorodriguez.comeaqui.server.Server;
-import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
+import com.example.eduardorodriguez.comeaqui.login_and_register.LoginActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

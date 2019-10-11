@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui;
+package com.example.eduardorodriguez.comeaqui.login_and_register;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -6,6 +6,10 @@ import android.annotation.TargetApi;
 import android.content.*;
 import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
+
+import com.example.eduardorodriguez.comeaqui.PrepareActivity;
+import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.SplashActivity;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
@@ -19,13 +23,10 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
-import com.google.firebase.auth.EmailAuthProvider;
-import com.google.firebase.auth.FirebaseAuth;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;

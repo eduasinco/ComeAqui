@@ -3,9 +3,11 @@ package com.example.eduardorodriguez.comeaqui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.eduardorodriguez.comeaqui.login_and_register.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SplashActivity extends AppCompatActivity {
