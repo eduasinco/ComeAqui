@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.User;
+import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.rilixtech.widget.countrycodepicker.CountryCodePicker;
@@ -142,7 +144,10 @@ public class RegisterActivity extends AppCompatActivity {
             ).get();
             JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
             try{
-                new User(jo);
+                User newUser = new User(jo);
+                Intent imageLook = new Intent(this, VerifyEmailActivity.class);
+                imageLook.putExtra("user", newUser);
+                startActivity(imageLook);
             } catch (Exception e){
                 if (jo != null && jo.get("username") != null){
                     showValtext(usernameValtext, jo.get("username").getAsJsonArray().get(0).getAsString(), username);

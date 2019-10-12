@@ -30,6 +30,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".login_and_register.phone_code_verification.VerifyPhoneActivity" />
+        <activity android:name=".login_and_register.register.VerifyEmailActivity" />
         <activity android:name=".login_and_register.register.RegisterActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -73,8 +75,7 @@
         <activity android:name=".SplashActivity" />
         <activity
             android:name=".login_and_register.LoginActivity"
-            android:label="@string/title_activity_login">
-        </activity>
+            android:label="@string/title_activity_login" />
         <activity android:name=".MainActivity" />
 
         <meta-data
