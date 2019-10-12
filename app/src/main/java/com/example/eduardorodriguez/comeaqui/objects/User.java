@@ -5,10 +5,10 @@ import java.io.Serializable;
 
 public class User implements Serializable {
     public int id;
+    public String username;
     public String email;
     public String first_name;
     public String last_name;
-    public String username;
     public String bio;
     public String phone_number;
     public String phone_code;
@@ -23,6 +23,7 @@ public class User implements Serializable {
     public User(JsonObject jo){
         id = jo.get("id").getAsInt();
         email = jo.get("email").getAsString();
+        username = jo.get("username").getAsString();
         first_name = jo.get("first_name").getAsString();
         last_name = jo.get("last_name").getAsString();
         bio = jo.get("bio").getAsString();

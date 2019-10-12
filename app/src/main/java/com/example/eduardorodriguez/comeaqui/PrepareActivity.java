@@ -26,6 +26,8 @@ import static com.yalantis.ucrop.UCropFragment.TAG;
 
 public class PrepareActivity extends AppCompatActivity {
 
+    boolean gotTimezone = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,17 +71,20 @@ public class PrepareActivity extends AppCompatActivity {
                 double lng = location.getLongitude();
                 double lat = location.getLatitude();
 
-                Server gAPI2 = new Server("GET", "https://maps.googleapis.com/maps/api/timezone/json?location=" +
-                        lat + "," + lng + "&timestamp=0&key=" + getResources().getString(R.string.google_key));
-                try {
-                    String response = gAPI2.execute().get();
-                    if (response != null) {
-                        String timeZone = new JsonParser().parse(response).getAsJsonObject().get("timeZoneId").getAsString();
-                        USER.timeZone = timeZone;
-                        setUserTimeZone(timeZone);
+                if (!gotTimezone){
+                    Server gAPI2 = new Server("GET", "https://maps.googleapis.com/maps/api/timezone/json?location=" +
+                            lat + "," + lng + "&timestamp=0&key=" + getResources().getString(R.string.google_key));
+                    try {
+                        String response = gAPI2.execute().get();
+                        if (response != null) {
+                            String timeZone = new JsonParser().parse(response).getAsJsonObject().get("timeZoneId").getAsString();
+                            USER.timeZone = timeZone;
+                            setUserTimeZone(timeZone);
+                            gotTimezone = true;
+                        }
+                    } catch (ExecutionException | InterruptedException e) {
+                        e.printStackTrace();
                     }
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
                 }
             }
         };

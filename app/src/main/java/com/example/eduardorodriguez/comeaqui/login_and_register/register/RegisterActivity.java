@@ -210,7 +210,7 @@ public class RegisterActivity extends AppCompatActivity {
             showValtext(phoneValtext,  "Please, insert a phone number", phone);
             valid = false;
         }
-        Pattern p = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!?@#$%^&+=])(?=\\S+$).{8,}$");
+        Pattern p = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$");
         Matcher m = p.matcher(password.getText().toString());
         if (!m.find()){
             String text = "A digit must occur at least once \n" +

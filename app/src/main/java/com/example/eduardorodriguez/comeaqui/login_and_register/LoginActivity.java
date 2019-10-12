@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import com.example.eduardorodriguez.comeaqui.PrepareActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.SplashActivity;
+import com.example.eduardorodriguez.comeaqui.login_and_register.forgot_password.ForgotPasswordActivity;
+import com.example.eduardorodriguez.comeaqui.login_and_register.register.RegisterActivity;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
@@ -91,6 +93,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        findViewById(R.id.forgot_password).setOnClickListener((v) -> {
+            Intent a = new Intent(this, ForgotPasswordActivity.class);
+            startActivity(a);
+        });
+        findViewById(R.id.register_button).setOnClickListener((v) -> {
+            Intent a = new Intent(this, RegisterActivity.class);
+            startActivity(a);
+        });
         attemptAutoLogin();
     }
 
@@ -170,16 +180,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             cancel = true;
         }
 
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
-        }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -358,7 +358,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     SharedPreferences.Editor editor = sp.edit();
                     editor.putString("cred", authorization);
                     editor.putBoolean("signed_in", true);
-                    editor.putString("email", mEmail);
+                    editor.putString("username", mEmail);
                     editor.putString("password", mPassword);
 
                     SplashActivity.setCredenditals(authorization);

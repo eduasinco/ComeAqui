@@ -19,8 +19,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class  GetAsyncTask extends AsyncTask<String[], Void, String>
-{
+public class  GetAsyncTask extends AsyncTask<String[], Void, String> {
 
 
     private String uri;

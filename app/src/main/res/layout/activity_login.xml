@@ -89,6 +89,12 @@
                 android:text="@string/action_sign_in"
                 android:textStyle="bold" />
 
+            <Button
+                android:id="@+id/register_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="sign in" />
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
