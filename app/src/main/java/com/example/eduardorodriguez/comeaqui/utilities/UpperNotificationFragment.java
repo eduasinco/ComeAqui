@@ -140,7 +140,7 @@ public class UpperNotificationFragment extends Fragment {
     }
 
     void getConfirmedOrders(){
-        new GetAsyncTask("GET", getResources().getString(R.string.server) +  "/r/"){
+        new GetAsyncTask("GET", getResources().getString(R.string.server) +  "/my_confirmed_orders/"){
             @Override
             protected void onPostExecute(String response) {
                 if (response != null){

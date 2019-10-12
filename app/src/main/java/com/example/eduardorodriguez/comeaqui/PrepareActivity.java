@@ -17,6 +17,8 @@ import com.example.eduardorodriguez.comeaqui.utilities.MyLocation;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.JsonParser;
 
+import org.json.JSONObject;
+
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -106,17 +108,20 @@ public class PrepareActivity extends AppCompatActivity {
 
 
     private void setUserTimeZone(String timeZone){
-        PatchAsyncTask putTask = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
         try {
-            putTask.execute("time_zone", timeZone).get(5, TimeUnit.SECONDS);
+            new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/"){
+                @Override
+                protected void onPostExecute(JSONObject response) {
+                    goToMain();
+                    super.onPostExecute(response);
+                }
+            }.execute("time_zone", timeZone).get(5, TimeUnit.SECONDS);
         } catch (ExecutionException | InterruptedException | TimeoutException e) {
-            e.printStackTrace();
         }
-        goToMain();
     }
     void goToMain(){
         Intent k = new Intent(this, MainActivity.class);
         startActivity(k);
-        overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
+       overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
     }
 }

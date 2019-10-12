@@ -40,8 +40,6 @@ public class PatchAsyncTask extends AsyncTask<String, Void, JSONObject> {
         httpPatch.addHeader("Authorization", "Basic " + SplashActivity.getCredemtials());
 
         HttpClient httpclient = new DefaultHttpClient();
-        String boundary = "-------------" + System.currentTimeMillis();
-        httpPatch.setHeader("Content-type","multipart/form-foodPostHashMap; boundary="+boundary);
 
         StringBody value = new StringBody(params[1], ContentType.TEXT_PLAIN);
         HttpEntity entity;
@@ -53,13 +51,11 @@ public class PatchAsyncTask extends AsyncTask<String, Void, JSONObject> {
             ByteArrayBody bab = new ByteArrayBody(imageBytes, "ANDROID.png");
             entity = MultipartEntityBuilder.create()
                     .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
-                    .setBoundary(boundary)
                     .addPart(params[0], bab)
                     .build();
         } else {
             entity = MultipartEntityBuilder.create()
                     .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
-                    .setBoundary(boundary)
                     .addPart(params[0], value)
                     .build();
         }
