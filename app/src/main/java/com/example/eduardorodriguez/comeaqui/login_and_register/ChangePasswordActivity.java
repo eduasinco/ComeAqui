@@ -20,11 +20,15 @@ import com.example.eduardorodriguez.comeaqui.login_and_register.register.VerifyE
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.json.JSONObject;
+
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -107,24 +111,17 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
     void submit(){
         try {
-            new PostAsyncTask( getResources().getString(R.string.server) + "/password_change/"){
+            new PatchAsyncTask(getResources().getString(R.string.server) + "/password_change/"){
                 @Override
-                protected void onPostExecute(String response) {
-                    if (response != null){
-                        JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
-                        if (jo != null && jo.get("old_password") != null){
-                            showValtext(oldPasswordValtext, jo.get("old_password").getAsJsonArray().get(0).getAsString(), oldPassword);
-                        } else {
-                            passwordSetText.setVisibility(View.VISIBLE);
-                            goToLogin.setVisibility(View.VISIBLE);
-                        }
-                    }
-                    super.onPostExecute(response);
+                protected void onPostExecute(JSONObject jo) {
+                    passwordSetText.setVisibility(View.VISIBLE);
+                    goToLogin.setVisibility(View.VISIBLE);
+                    super.onPostExecute(jo);
                 }
             }.execute(
-                    new String[]{"old_password", oldPassword.getText().toString()},
-                    new String[]{"new_password", newPassword.getText().toString()}
-            ).get();
+                    new String[]{"old_password", oldPassword.getText().toString(), ""},
+                    new String[]{"new_password", newPassword.getText().toString(), ""}
+                    ).get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }

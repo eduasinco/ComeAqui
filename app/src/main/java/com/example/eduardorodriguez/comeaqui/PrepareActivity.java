@@ -115,7 +115,9 @@ public class PrepareActivity extends AppCompatActivity {
                     goToMain();
                     super.onPostExecute(response);
                 }
-            }.execute("time_zone", timeZone).get(5, TimeUnit.SECONDS);
+            }.execute(
+                    new String[]{"time_zone", timeZone, ""}
+            ).get(5, TimeUnit.SECONDS);
         } catch (ExecutionException | InterruptedException | TimeoutException e) {
         }
     }

@@ -66,11 +66,11 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
     private void saveData(){
         PatchAsyncTask putTast = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
         try {
-            putTast.execute("first_name", firstName.getText().toString()).get(5, TimeUnit.SECONDS);
-            PatchAsyncTask putTast2 = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
-            putTast2.execute("last_name", lastName.getText().toString()).get(5, TimeUnit.SECONDS);
-            PatchAsyncTask putTast3 = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
-            putTast3.execute("phone_number", phoneNumber.getText().toString()).get(5, TimeUnit.SECONDS);
+            putTast.execute(
+                    new String[]{"first_name", firstName.getText().toString(), ""},
+                    new String[]{"last_name", lastName.getText().toString(), ""},
+                    new String[]{"phone_number", phoneNumber.getText().toString(), ""}
+                    ).get(5, TimeUnit.SECONDS);
         } catch (ExecutionException | InterruptedException | TimeoutException e) {
             e.printStackTrace();
         }

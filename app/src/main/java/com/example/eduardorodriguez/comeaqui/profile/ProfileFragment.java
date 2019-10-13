@@ -17,6 +17,7 @@ import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActiv
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.EditProfileActivity;
 import com.example.eduardorodriguez.comeaqui.profile.post_and_reviews.PostAndReviewsFragment;
+import com.example.eduardorodriguez.comeaqui.profile.settings.SettingsActivity;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.ProfileImageGalleryFragment;
@@ -193,20 +194,8 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
 
     void setSettingsButton(){
         settingsButton.setOnClickListener(v -> {
-            signOut();
+            startActivity(new Intent(getActivity(), SettingsActivity.class));
         });
-    }
-
-    private void signOut(){
-        SharedPreferences pref = getActivity().getSharedPreferences("Login", Context.MODE_PRIVATE);
-        SharedPreferences.Editor edt = pref.edit();
-        edt.putBoolean("signed_in", false);
-        edt.remove("email");
-        edt.remove("password");
-        edt.apply();
-
-        Intent bactToLogin = new Intent(getActivity(), LoginActivity.class);
-        startActivity(bactToLogin);
     }
 
     void goToConversationWithUser(User user){
@@ -254,20 +243,20 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
 
 
     private void saveProfileImage(Uri imageUri){
-        try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(view.getContext().getContentResolver(), imageUri);
-            if (bitmap != null){
-                PatchAsyncTask putTask = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
-                putTask.imageBitmap = bitmap;
-                if (isBackGound){
-                    putTask.execute("background_photo", "", "true").get(15, TimeUnit.SECONDS);
-                }else {
-                    putTask.execute("profile_photo", "", "true").get(15, TimeUnit.SECONDS);
-                }
-            }
-        } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Bitmap bitmap = MediaStore.Images.Media.getBitmap(view.getContext().getContentResolver(), imageUri);
+//            if (bitmap != null){
+//                PatchAsyncTask putTask = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
+//                putTask.bitmap = bitmap;
+//                if (isBackGound){
+//                    putTask.execute("background_photo", "", "true").get(15, TimeUnit.SECONDS);
+//                }else {
+//                    putTask.execute("profile_photo", "", "true").get(15, TimeUnit.SECONDS);
+//                }
+//            }
+//        } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {
+//            e.printStackTrace();
+//        }
     }
 
     class TestPagerAdapter extends FragmentPagerAdapter {

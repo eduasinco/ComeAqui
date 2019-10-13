@@ -13,6 +13,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPatch;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
@@ -24,43 +25,39 @@ import org.json.JSONObject;
 
 import java.io.*;
 
-public class PatchAsyncTask extends AsyncTask<String, Void, JSONObject> {
+public class PatchAsyncTask extends AsyncTask<String[], Void, JSONObject> {
 
-    public Bitmap imageBitmap;
+    public Bitmap bitmap;
     String uri;
     public PatchAsyncTask(String uri){
         this.uri = uri;
     }
 
     @Override
-    protected JSONObject doInBackground(String... params)
+    protected JSONObject doInBackground(String[]... params)
     {
 
-        HttpPatch httpPatch = new HttpPatch( this.uri);
+        HttpPatch httpPatch = new HttpPatch(uri);
         httpPatch.addHeader("Authorization", "Basic " + SplashActivity.getCredemtials());
 
         HttpClient httpclient = new DefaultHttpClient();
+        String boundary = "-------------" + System.currentTimeMillis();
 
-        StringBody value = new StringBody(params[1], ContentType.TEXT_PLAIN);
-        HttpEntity entity;
+        MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create()
+                .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
+                .setBoundary(boundary);
 
-        if (imageBitmap != null) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            byte[] imageBytes = baos.toByteArray();
-            ByteArrayBody bab = new ByteArrayBody(imageBytes, "ANDROID.png");
-            entity = MultipartEntityBuilder.create()
-                    .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
-                    .addPart(params[0], bab)
-                    .build();
-        } else {
-            entity = MultipartEntityBuilder.create()
-                    .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
-                    .addPart(params[0], value)
-                    .build();
+        for(String[] ss: params){
+            if (ss[0].equals("food_photo") && bitmap != null) {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                byte[] imageBytes = baos.toByteArray();
+                entityBuilder.addPart(ss[0], new ByteArrayBody(imageBytes, "ANDROID.png"));
+            } else {
+                entityBuilder.addPart(ss[0], new StringBody(ss[1], ContentType.TEXT_PLAIN));
+            }
         }
-
-        httpPatch.setEntity(entity);
+        httpPatch.setEntity(entityBuilder.build());
         try {
             HttpResponse response = httpclient.execute(httpPatch);
             InputStream instream = response.getEntity().getContent();
