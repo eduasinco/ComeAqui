@@ -85,7 +85,9 @@ public class ConversationActivity extends AppCompatActivity {
             chattingWith = USER.id == (chat.users.get(0).id) ? chat.users.get(1) : chat.users.get(0);
 
             nombre.setText(chattingWith.first_name + " " + chattingWith.last_name);
-            Glide.with(this).load(chattingWith.profile_photo).into(fotoPerfil);
+
+            if (!chattingWith.profile_photo.contains("no-image"))
+                Glide.with(this).load(chattingWith.profile_photo).into(fotoPerfil);
             fotoPerfil.setOnClickListener(v -> goToProfileView(chattingWith));
 
             getChatMessages();

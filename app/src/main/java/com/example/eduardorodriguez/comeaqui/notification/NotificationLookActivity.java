@@ -92,7 +92,7 @@ public class NotificationLookActivity extends AppCompatActivity {
             boolean delete = b.getBoolean("delete");
 
             posterNameView.setText(orderObject.owner.first_name + " " + orderObject.owner.last_name);
-            usernameView.setText(orderObject.owner.email);
+            usernameView.setText(orderObject.owner.username);
             plateNameView.setText(orderObject.post.plate_name);
             descriptionView.setText(orderObject.post.description);
             posterLocationView.setText(orderObject.post.address);

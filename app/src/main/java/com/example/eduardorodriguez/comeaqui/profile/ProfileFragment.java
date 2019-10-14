@@ -98,7 +98,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         }
 
         nameView.setText(user.first_name + " " + user.last_name);
-        emailView.setText(user.email);
+        emailView.setText(user.username);
         if (user.bio != null && !user.bio.equals("")) {
             bioView.setVisibility(View.VISIBLE);
             bioView.setText(user.bio);

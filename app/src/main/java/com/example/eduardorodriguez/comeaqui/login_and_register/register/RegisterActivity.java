@@ -212,7 +212,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
         Pattern p = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$");
         Matcher m = p.matcher(password.getText().toString());
-        if (!m.find()){
+        if (false && !m.find()){
             String text = "A digit must occur at least once \n" +
                     "A lower case letter must occur at least once \n" +
                     "An upper case letter must occur at least once \n" +

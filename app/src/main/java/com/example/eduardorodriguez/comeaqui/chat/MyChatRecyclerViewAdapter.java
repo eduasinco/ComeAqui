@@ -66,7 +66,8 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
             holder.notChat.setVisibility(View.VISIBLE);
             holder.notChat.setText("" + holder.mItem.userUnseenCount.get(USER.id));
         }
-        Glide.with(holder.mView.getContext()).load(chattingWith.profile_photo).into(holder.chattererImage);
+        if (!chattingWith.profile_photo.contains("no-image"))
+            Glide.with(holder.mView.getContext()).load(chattingWith.profile_photo).into(holder.chattererImage);
 
         if (holder.mItem.last_message != null) {
             ((AppCompatActivity) holder.mView.getContext()).getSupportFragmentManager().beginTransaction()

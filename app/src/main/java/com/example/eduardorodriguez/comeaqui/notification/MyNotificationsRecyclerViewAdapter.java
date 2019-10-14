@@ -49,11 +49,12 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.usernameView.setText(holder.mItem.owner.email);
+        holder.usernameView.setText(holder.mItem.owner.username);
         holder.notificationView.setText(holder.mItem.owner.first_name + " " + holder.mItem.owner.last_name + " quiere probar tu plato!");
         holder.status.setText(holder.mItem.status);
         holder.date.setText(DateFragment.getDateInSimpleFormat(holder.mItem.createdAt));
-        Glide.with(holder.mView.getContext()).load(holder.mItem.owner.profile_photo).into(holder.senderImageView);
+        if (!holder.mItem.owner.profile_photo.contains("no-image"))
+            Glide.with(holder.mView.getContext()).load(holder.mItem.owner.profile_photo).into(holder.senderImageView);
 
         if (!holder.mItem.seenPoster){
             holder.status.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_notification_status_changed));

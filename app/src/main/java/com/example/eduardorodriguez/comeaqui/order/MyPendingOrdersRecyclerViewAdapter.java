@@ -44,7 +44,7 @@ public class MyPendingOrdersRecyclerViewAdapter extends RecyclerView.Adapter<MyP
         holder.mItem = mValues.get(position);
 
         holder.posterName.setText(holder.mItem.poster.first_name + " " + holder.mItem.owner.last_name);
-        holder.posterUsername.setText(holder.mItem.poster.email);
+        holder.posterUsername.setText(holder.mItem.poster.username);
         holder.postAddress.setText(holder.mItem.post.address);
         String priceTextE = "€" + holder.mItem.post.price + " - ";
         holder.price.setText(priceTextE);

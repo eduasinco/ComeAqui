@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.login_and_register.ChangePasswordActivity;
 import com.example.eduardorodriguez.comeaqui.login_and_register.LoginActivity;
+import com.example.eduardorodriguez.comeaqui.login_and_register.LoginOrRegisterActivity;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -37,7 +38,7 @@ public class SettingsActivity extends AppCompatActivity {
         edt.remove("password");
         edt.apply();
 
-        Intent bactToLogin = new Intent(this, LoginActivity.class);
+        Intent bactToLogin = new Intent(this, LoginOrRegisterActivity.class);
         startActivity(bactToLogin);
     }
 }

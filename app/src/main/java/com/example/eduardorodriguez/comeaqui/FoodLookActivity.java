@@ -97,7 +97,7 @@ public class FoodLookActivity extends AppCompatActivity {
             foodPost = (FoodPost) b.get("object");
 
             posterNameView.setText(foodPost.owner.first_name + " " + foodPost.owner.last_name);
-            usernameView.setText(foodPost.owner.email);
+            usernameView.setText(foodPost.owner.username);
             plateNameView.setText(foodPost.plate_name);
             descriptionView.setText(foodPost.description);
             posterLocationView.setText(foodPost.address);

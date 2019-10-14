@@ -77,7 +77,7 @@ public class MapCardFragment extends Fragment {
         favouriteId = foodPost.favouriteId;
 
         posterNameView.setText(foodPost.owner.first_name + " " + foodPost.owner.last_name);
-        posterUserName.setText(foodPost.owner.email);
+        posterUserName.setText(foodPost.owner.username);
         starView.setImageResource(foodPost.favourite ? R.drawable.star_fill: R.drawable.star);
         MapFragment.markerPutColor(MapFragment.markerHashMap.get(foodPost.id), !foodPost.favourite ? R.color.grey : R.color.favourite);
 

@@ -80,7 +80,7 @@ public class UpperNotificationFragment extends Fragment {
         if (orderObject != null){
             orderCard.setVisibility(View.VISIBLE);
             title.setText("Meal with " +  orderObject.poster.first_name + orderObject.poster.last_name);
-            username.setText(orderObject.poster.email);
+            username.setText(orderObject.poster.username);
             plateName.setText( orderObject.post.plate_name);
             time.setText(orderObject.post.time);
             if(!orderObject.poster.profile_photo.contains("no-image")) {
