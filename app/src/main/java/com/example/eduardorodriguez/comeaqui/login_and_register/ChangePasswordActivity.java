@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.WebSocketMessage;
+import com.example.eduardorodriguez.comeaqui.login_and_register.forgot_password.ForgotPasswordActivity;
 import com.example.eduardorodriguez.comeaqui.login_and_register.register.VerifyEmailActivity;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.User;
@@ -62,6 +63,10 @@ public class ChangePasswordActivity extends AppCompatActivity {
         setPasswordButton.setOnClickListener((v) -> sendEmail());
         goToLogin.setOnClickListener((v) -> {
             Intent a = new Intent(this, LoginActivity.class);
+            startActivity(a);
+        });
+        findViewById(R.id.forgot_pw).setOnClickListener((v) -> {
+            Intent a = new Intent(this, ForgotPasswordActivity.class);
             startActivity(a);
         });
     }

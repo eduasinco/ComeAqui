@@ -97,10 +97,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             Intent a = new Intent(this, ForgotPasswordActivity.class);
             startActivity(a);
         });
-        findViewById(R.id.register_button).setOnClickListener((v) -> {
-            Intent a = new Intent(this, RegisterActivity.class);
-            startActivity(a);
-        });
         attemptAutoLogin();
     }
 
