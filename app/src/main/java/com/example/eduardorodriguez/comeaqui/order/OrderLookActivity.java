@@ -132,10 +132,16 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
     }
 
     void cancelOrder(){
-        PostAsyncTask orderStatus = new PostAsyncTask(context.getString(R.string.server) + "/set_order_status/");
+        showProgress(true);
         order.status = "CANCELED";
         try {
-            orderStatus.execute(
+            new PostAsyncTask(context.getString(R.string.server) + "/set_order_status/"){
+                @Override
+                protected void onPostExecute(String response) {
+                    showProgress(false);
+                    super.onPostExecute(response);
+                }
+            }.execute(
                     new String[]{"order_id",  order.id + ""},
                     new String[]{"order_status", order.status}
             ).get();
@@ -207,6 +213,5 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
             cancelOrder();
         }
         cancelMessage.setVisibility(View.GONE);
-        showProgress(true);
     }
 }

@@ -168,7 +168,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/box_soft_outline"
                 android:orientation="horizontal">
 
                 <TextView
@@ -189,7 +188,8 @@
                     android:text="-.--€"
                     android:textAlignment="textEnd"
                     android:textColor="@android:color/black"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout

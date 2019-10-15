@@ -27,11 +27,11 @@ import static com.example.eduardorodriguez.comeaqui.App.USER;
 
 public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecyclerViewAdapter.ViewHolder> {
 
-    private ArrayList<ChatObject> mValues;
+    LinkedHashMap<Integer, ChatObject> mValues;
     private final OnListFragmentInteractionListener mListener;
     StorageReference firebaseStorage;
 
-    public MyChatRecyclerViewAdapter(ArrayList<ChatObject> items, OnListFragmentInteractionListener listener) {
+    public MyChatRecyclerViewAdapter(LinkedHashMap<Integer, ChatObject> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -46,7 +46,7 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
+        holder.mItem = new ArrayList<>(mValues.values()).get(position);
 
         User chattingWith = USER.id == (holder.mItem.users.get(0).id) ? holder.mItem.users.get(1) : holder.mItem.users.get(0);
 

@@ -84,7 +84,7 @@ public class ChatFragment extends Fragment{
                 ChatObject chat = new ChatObject(jo);
                 data.put(chat.id, chat);
             }
-            adapter = new MyChatRecyclerViewAdapter(new ArrayList<>(data.values()), mListener);
+            adapter = new MyChatRecyclerViewAdapter(data, mListener);
             recyclerView.setAdapter(adapter);
         } catch (Exception e){
             e.printStackTrace();
@@ -118,7 +118,13 @@ public class ChatFragment extends Fragment{
                     getActivity().runOnUiThread(() -> {
                         JsonObject jo = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject();
                         ChatObject chatObject = new ChatObject(jo.get("chat").getAsJsonObject());
-                        data.get(chatObject.id).userUnseenCount = chatObject.userUnseenCount;
+                        if (data.containsKey(chatObject.id)){
+                            data.get(chatObject.id).userUnseenCount = chatObject.userUnseenCount;
+                        }
+                        LinkedHashMap<Integer, ChatObject> newmap=(LinkedHashMap<Integer, ChatObject>) data.clone();
+                        data.clear();
+                        data.put(chatObject.id, chatObject);
+                        data.putAll(newmap);
                         adapter.notifyDataSetChanged();
                     });
                 }
