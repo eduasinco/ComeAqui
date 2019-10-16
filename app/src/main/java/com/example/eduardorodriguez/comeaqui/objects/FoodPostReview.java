@@ -9,6 +9,8 @@ public class FoodPostReview extends FoodPost implements Serializable {
 
     public FoodPostReview(JsonObject jo){
         super(jo);
-        review = new ReviewObject(jo.get("review").getAsJsonObject());
+        try {
+            review = new ReviewObject(jo.get("review").getAsJsonObject());
+        } catch (Exception e){}
     }
 }

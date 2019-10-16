@@ -54,7 +54,7 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         holder.posterDescriptionView.setText(foodPost.description);
 
         if (!foodPost.food_photo.contains("no-image")) {
-            holder.imageLayout.setVisibility(View.VISIBLE);
+            holder.imageView.setVisibility(View.VISIBLE);
             Glide.with(holder.mView.getContext()).load(foodPost.food_photo).into(holder.imageView);
             holder.imageView.setOnClickListener((v) -> {
                 Intent imageLook = new Intent(holder.mView.getContext(), ImageLookActivity.class);
@@ -126,7 +126,6 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         public TextView postNameView;
         public View cardButtonView;
         public ImageView imageView;
-        public CardView imageLayout;
 
         ImageView vegetarian;
         ImageView vegan;
@@ -147,7 +146,6 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
             posterDescriptionView = view.findViewById(R.id.description);
             cardButtonView = view.findViewById(R.id.cardButton);
             imageView = view.findViewById(R.id.image);
-            imageLayout = view.findViewById(R.id.image_layout);
 
             vegetarian = view.findViewById(R.id.vegetarian);
             vegan = view.findViewById(R.id.vegan);
