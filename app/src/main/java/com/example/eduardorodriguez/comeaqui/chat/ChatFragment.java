@@ -29,15 +29,18 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
 public class ChatFragment extends Fragment{
 
-    LinkedHashMap<Integer, ChatObject> data;
+    ArrayList<ChatObject> data;
     MyChatRecyclerViewAdapter adapter;
+    HashMap<Integer, ChatObject> chatObjectHashMap;
 
     RecyclerView recyclerView;
     FrameLayout waitFrame;
@@ -78,11 +81,13 @@ public class ChatFragment extends Fragment{
 
     public void makeList(JsonArray jsonArray){
         try {
-            data = new LinkedHashMap<>();
+            data = new ArrayList<>();
+            chatObjectHashMap = new HashMap<>();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
                 ChatObject chat = new ChatObject(jo);
-                data.put(chat.id, chat);
+                data.add(chat);
+                chatObjectHashMap.put(chat.id, chat);
             }
             adapter = new MyChatRecyclerViewAdapter(data, mListener);
             recyclerView.setAdapter(adapter);
@@ -118,13 +123,15 @@ public class ChatFragment extends Fragment{
                     getActivity().runOnUiThread(() -> {
                         JsonObject jo = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject();
                         ChatObject chatObject = new ChatObject(jo.get("chat").getAsJsonObject());
-                        if (data.containsKey(chatObject.id)){
-                            data.get(chatObject.id).userUnseenCount = chatObject.userUnseenCount;
+                        if (chatObjectHashMap.containsKey(chatObject.id)){
+                            int index = data.indexOf(chatObjectHashMap.get(chatObject.id));
+                            data.remove(index);
+                            data.add(0, chatObject);
+                            chatObjectHashMap.put(chatObject.id, chatObject);
+                        } else {
+                            data.add(0, chatObject);
+                            chatObjectHashMap.put(chatObject.id , chatObject);
                         }
-                        LinkedHashMap<Integer, ChatObject> newmap=(LinkedHashMap<Integer, ChatObject>) data.clone();
-                        data.clear();
-                        data.put(chatObject.id, chatObject);
-                        data.putAll(newmap);
                         adapter.notifyDataSetChanged();
                     });
                 }
