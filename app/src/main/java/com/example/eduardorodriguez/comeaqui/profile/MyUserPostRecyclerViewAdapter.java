@@ -40,13 +40,12 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.my_post_element, parent, false);
+
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        FrameLayout postButton = holder.mView.findViewById(R.id.post_button);
-
         final FoodPost foodPost = mValues.get(position);
 
         holder.postNameView.setText(foodPost.plate_name);
@@ -76,9 +75,40 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
             holder.mView.getContext().startActivity(foodLook);
         });
 
-        ((AppCompatActivity) holder.mView.getContext()).getSupportFragmentManager().beginTransaction()
-                .replace(R.id.food_types, FoodTypeFragment.newInstance(foodPost.type))
-                .commit();
+        setTypes(foodPost.type, holder);
+
+    }
+
+    void setTypes(String types, ViewHolder holder){
+        ImageView[] imageViews = new ImageView[]{
+                holder.vegetarian,
+                holder.vegan,
+                holder.cereal,
+                holder.spicy,
+                holder.fish,
+                holder.meat,
+                holder.dairy
+        };
+        ArrayList<ImageView> imageViewArrayList = new ArrayList<>();
+        for (ImageView imageView: imageViews){
+            imageView.setVisibility(View.GONE);
+            imageViewArrayList.add(imageView);
+        }
+        int[] resources = new int[]{
+                R.drawable.vegetarianfill,
+                R.drawable.veganfill,
+                R.drawable.cerealfill,
+                R.drawable.spicyfill,
+                R.drawable.fishfill,
+                R.drawable.meatfill,
+                R.drawable.dairyfill,
+        };
+        for (int i = 0; i < types.length(); i++){
+            if (types.charAt(i) == '1'){
+                imageViewArrayList.get(i).setImageResource(resources[i]);
+                imageViewArrayList.get(i).setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     @Override
@@ -98,6 +128,14 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         public ImageView imageView;
         public CardView imageLayout;
 
+        ImageView vegetarian;
+        ImageView vegan;
+        ImageView cereal;
+        ImageView spicy;
+        ImageView fish;
+        ImageView meat;
+        ImageView dairy;
+
 
         public ViewHolder(View view) {
             super(view);
@@ -110,6 +148,14 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
             cardButtonView = view.findViewById(R.id.cardButton);
             imageView = view.findViewById(R.id.image);
             imageLayout = view.findViewById(R.id.image_layout);
+
+            vegetarian = view.findViewById(R.id.vegetarian);
+            vegan = view.findViewById(R.id.vegan);
+            cereal = view.findViewById(R.id.cereal);
+            spicy = view.findViewById(R.id.spicy);
+            fish = view.findViewById(R.id.fish);
+            meat = view.findViewById(R.id.meat);
+            dairy = view.findViewById(R.id.dairy);
         }
     }
 }
