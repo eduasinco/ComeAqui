@@ -10,6 +10,7 @@ public class ReviewObject implements Serializable {
     public FoodPost post;
     public String review;
     public String reason;
+    public float rating;
     public String createdAt;
 
     public ReviewObject(JsonObject jo){
@@ -18,6 +19,7 @@ public class ReviewObject implements Serializable {
         post = new FoodPost(jo.get("post").getAsJsonObject());
         review = jo.get("review").getAsString();
         reason = jo.get("star_reason").getAsString();
+        rating = jo.get("rating").getAsFloat();
 
         createdAt = jo.get("created_at").getAsString();
     }

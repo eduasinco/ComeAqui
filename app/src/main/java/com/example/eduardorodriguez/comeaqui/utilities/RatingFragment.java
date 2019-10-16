@@ -67,7 +67,7 @@ public class RatingFragment extends Fragment {
             starArray[i].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.star_empty));
         }
 
-        for (int i = 0; i < rating - 1; i++){
+        for (int i = 0; i < rating; i++){
             starArray[i].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.star_filled));
         }
 

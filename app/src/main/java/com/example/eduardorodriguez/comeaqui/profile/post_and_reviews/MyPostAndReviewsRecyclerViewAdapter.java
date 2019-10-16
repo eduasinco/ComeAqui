@@ -2,6 +2,7 @@ package com.example.eduardorodriguez.comeaqui.profile.post_and_reviews;
 
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -67,8 +68,6 @@ public class MyPostAndReviewsRecyclerViewAdapter extends RecyclerView.Adapter<My
             foodLook.putExtra("object", foodPost);
             holder.mView.getContext().startActivity(foodLook);
         });
-        setTypes(foodPost.type, holder);
-
         if (foodPost.review != null){
             holder.wholeReview.setVisibility(View.VISIBLE);
             if (!foodPost.review.owner.profile_photo.contains("no-image")) {
@@ -77,6 +76,8 @@ public class MyPostAndReviewsRecyclerViewAdapter extends RecyclerView.Adapter<My
             holder.reviewerName.setText(foodPost.review.owner.username);
             holder.review.setText(foodPost.review.review);
         }
+        setTypes(foodPost.type, holder);
+        setStars(holder, foodPost.review.rating);
     }
 
     void setTypes(String types, ViewHolder holder){
@@ -110,6 +111,31 @@ public class MyPostAndReviewsRecyclerViewAdapter extends RecyclerView.Adapter<My
             }
         }
     }
+    void setStars(ViewHolder holder, float rating){
+        ImageView[] starArray = new ImageView[]{
+                holder.star0,
+                holder.star1,
+                holder.star2,
+                holder.star3,
+                holder.star4
+        };
+
+        for (int i = 0; i < starArray.length; i++){
+            starArray[i].setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.star_empty));
+        }
+
+        for (int i = 0; i < rating; i++){
+            starArray[i].setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.star_filled));
+        }
+
+        double decimal = rating - Math.floor(rating);
+        if(decimal < 0.75 && decimal >= 0.25){
+            starArray[(int) rating].setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.star_half_filled));
+        } else if (decimal >= 0.75){
+            starArray[(int) rating].setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.star_filled));
+        }
+
+    }
 
     @Override
     public int getItemCount() {
@@ -140,6 +166,12 @@ public class MyPostAndReviewsRecyclerViewAdapter extends RecyclerView.Adapter<My
         TextView reviewerName;
         TextView review;
 
+        ImageView star0;
+        ImageView star1;
+        ImageView star2;
+        ImageView star3;
+        ImageView star4;
+
         public ViewHolder(View view) {
             super(view);
             mView = view;
@@ -163,6 +195,12 @@ public class MyPostAndReviewsRecyclerViewAdapter extends RecyclerView.Adapter<My
             reviewerImage = view.findViewById(R.id.reviewer_image);
             reviewerName = view.findViewById(R.id.reviewer_name);
             review = view.findViewById(R.id.review);
+
+            star0 = view.findViewById(R.id.star0);
+            star1 = view.findViewById(R.id.star1);
+            star2 = view.findViewById(R.id.star2);
+            star3 = view.findViewById(R.id.star3);
+            star4 = view.findViewById(R.id.star4);
         }
     }
 }
