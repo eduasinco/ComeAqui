@@ -161,6 +161,9 @@ public class NotificationLookActivity extends AppCompatActivity {
         } else if (orderObject.status.equals("CANCELED")){
             statucMessage.setText("CANCELED");
             statucMessage.setTextColor(ContextCompat.getColor(this, R.color.canceled));
+        } else if (orderObject.status.equals("FINISHED")){
+            statucMessage.setText("FINISHED");
+            statucMessage.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
         }
     }
 

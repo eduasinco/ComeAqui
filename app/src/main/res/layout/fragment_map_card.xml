@@ -14,7 +14,7 @@
         <ImageView
             android:id="@+id/image_layout"
             android:layout_width="match_parent"
-            android:layout_height="130dp"
+            android:layout_height="100dp"
             android:background="@color/colorPrimaryLight"
             android:scaleType="centerCrop"
             android:src="@drawable/no_food"
