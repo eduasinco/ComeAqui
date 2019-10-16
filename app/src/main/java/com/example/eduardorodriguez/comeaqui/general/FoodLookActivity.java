@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui;
+package com.example.eduardorodriguez.comeaqui.general;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
@@ -31,7 +32,6 @@ import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import okhttp3.*;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -61,7 +61,7 @@ public class FoodLookActivity extends AppCompatActivity {
     CardView postImageLayout;
     View placeOrderProgress;
     FrameLayout placeOrderErrorMessage;
-
+    LinearLayout dinnersListView;
     ImageView[] dinnerArray;
 
     FoodPostDetail foodPostDetail;
@@ -90,6 +90,7 @@ public class FoodLookActivity extends AppCompatActivity {
         changePaymentMethod = findViewById(R.id.change_payment);
         placeOrderProgress = findViewById(R.id.place_order_progress);
         placeOrderErrorMessage = findViewById(R.id.place_order_error_message);
+        dinnersListView = findViewById(R.id.dinners_list_view);
 
 
         Intent intent = getIntent();
@@ -141,10 +142,13 @@ public class FoodLookActivity extends AppCompatActivity {
         Glide.with(this).load(url).into(staticMapView);
 
         setPlaceButton();
-        setDinnerImages();
+        setDinners();
     }
 
-    void setDinnerImages(){
+    void setDinners(){
+        dinnersListView.setOnClickListener((v) -> {
+            startActivity(new Intent(this, DinnersListActivity.class).putExtra("foodPostId", foodPostDetail.id));
+        });
         dinnerArray = new ImageView[]{
                 findViewById(R.id.dinner0),
                 findViewById(R.id.dinner1),

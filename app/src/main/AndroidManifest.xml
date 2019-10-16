@@ -30,6 +30,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".general.DinnersListActivity"></activity>
         <activity android:name=".login_and_register.LoginOrRegisterActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -79,15 +80,14 @@
         <activity android:name=".SplashActivity" />
         <activity
             android:name=".login_and_register.LoginActivity"
-            android:label="@string/title_activity_login">
-        </activity>
+            android:label="@string/title_activity_login"></activity>
         <activity android:name=".MainActivity" />
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".FoodLookActivity" />
+        <activity android:name=".general.FoodLookActivity" />
         <activity android:name=".map.AddFoodActivity" />
         <activity
             android:name=".profile.edit_profile.EditProfileActivity"

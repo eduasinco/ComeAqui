@@ -1,6 +1,5 @@
 package com.example.eduardorodriguez.comeaqui.profile.post_and_reviews;
 
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,11 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.eduardorodriguez.comeaqui.FoodLookActivity;
+import com.example.eduardorodriguez.comeaqui.general.FoodLookActivity;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostReview;
-import com.example.eduardorodriguez.comeaqui.profile.MyUserPostRecyclerViewAdapter;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 
 import java.util.ArrayList;
@@ -77,7 +74,8 @@ public class MyPostAndReviewsRecyclerViewAdapter extends RecyclerView.Adapter<My
             holder.review.setText(foodPost.review.review);
         }
         setTypes(foodPost.type, holder);
-        setStars(holder, foodPost.review.rating);
+        if (null != foodPost.review)
+            setStars(holder, foodPost.review.rating);
     }
 
     void setTypes(String types, ViewHolder holder){
