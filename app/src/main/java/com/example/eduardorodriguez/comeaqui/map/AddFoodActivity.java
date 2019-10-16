@@ -282,7 +282,7 @@ public class AddFoodActivity extends AppCompatActivity implements
                     new String[]{"address", address},
                     new String[]{"lat", Double.toString(lat)},
                     new String[]{"lng", Double.toString(lng)},
-                    new String[]{"diners", Integer.toString(dinners)},
+                    new String[]{"max_dinners", Integer.toString(dinners)},
                     new String[]{"time", postTimeString},
                     new String[]{"time_zone", USER.timeZone},
                     new String[]{"price", price_data.toString()},

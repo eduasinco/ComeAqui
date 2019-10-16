@@ -7,8 +7,8 @@ import androidx.cardview.widget.CardView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -16,12 +16,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
+import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
@@ -60,10 +62,9 @@ public class FoodLookActivity extends AppCompatActivity {
     View placeOrderProgress;
     FrameLayout placeOrderErrorMessage;
 
-    FoodPost foodPost;
+    ImageView[] dinnerArray;
 
-    private OkHttpClient client;
-    WebSocket ws;
+    FoodPostDetail foodPostDetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,53 +91,93 @@ public class FoodLookActivity extends AppCompatActivity {
         placeOrderProgress = findViewById(R.id.place_order_progress);
         placeOrderErrorMessage = findViewById(R.id.place_order_error_message);
 
+
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
-
         if(b != null && b.get("object") != null){
-            foodPost = (FoodPost) b.get("object");
+            FoodPost fp = (FoodPost) b.get("object");
 
-            posterNameView.setText(foodPost.owner.first_name + " " + foodPost.owner.last_name);
-            usernameView.setText(foodPost.owner.username);
-            plateNameView.setText(foodPost.plate_name);
-            descriptionView.setText(foodPost.description);
-            posterLocationView.setText(foodPost.address);
-            priceView.setText(foodPost.price + "$");
-            timeView.setText(foodPost.time);
-
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("type", foodPost.type);
-            FoodTypeFragment fragment = new FoodTypeFragment();
-            fragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.types, fragment)
-                    .commit();
-
-
-            if(!foodPost.owner.profile_photo.contains("no-image")) {
-                Glide.with(this).load(foodPost.owner.profile_photo).into(posterImage);
-                posterImage.setOnClickListener(v -> goToProfileView(foodPost.owner));
-            }
-            if(!foodPost.food_photo.contains("no-image")){
-                postImageLayout.setVisibility(View.VISIBLE);
-                Glide.with(this).load(foodPost.food_photo).into(postImage);
-                postImageLayout.setOnClickListener((v) -> {
-                    Intent imageLook = new Intent(this, ImageLookActivity.class);
-                    imageLook.putExtra("image_url", foodPost.food_photo);
-                    startActivity(imageLook);
-                });
-            }
-            String url = "http://maps.google.com/maps/api/staticmap?center=" + foodPost.lat + "," + foodPost.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
-            Glide.with(this).load(url).into(staticMapView);
-
-            setPlaceButton();
+            getFoodPostDetailsAndSet(fp.id);
         }
-
         changePaymentMethod.setOnClickListener(v -> {
             Intent paymentMethod = new Intent(this, PaymentMethodsActivity.class);
             startActivity(paymentMethod);
         });
         backView.setOnClickListener(v -> finish());
+    }
+
+    void setDetails(){
+        posterNameView.setText(foodPostDetail.owner.first_name + " " + foodPostDetail.owner.last_name);
+        usernameView.setText(foodPostDetail.owner.username);
+        plateNameView.setText(foodPostDetail.plate_name);
+        descriptionView.setText(foodPostDetail.description);
+        posterLocationView.setText(foodPostDetail.address);
+        priceView.setText(foodPostDetail.price + "$");
+        timeView.setText(foodPostDetail.time);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("type", foodPostDetail.type);
+        FoodTypeFragment fragment = new FoodTypeFragment();
+        fragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.types, fragment)
+                .commit();
+
+
+        if(!foodPostDetail.owner.profile_photo.contains("no-image")) {
+            Glide.with(this).load(foodPostDetail.owner.profile_photo).into(posterImage);
+            posterImage.setOnClickListener(v -> goToProfileView(foodPostDetail.owner));
+        }
+        if(!foodPostDetail.food_photo.contains("no-image")){
+            postImageLayout.setVisibility(View.VISIBLE);
+            Glide.with(this).load(foodPostDetail.food_photo).into(postImage);
+            postImageLayout.setOnClickListener((v) -> {
+                Intent imageLook = new Intent(this, ImageLookActivity.class);
+                imageLook.putExtra("image_url", foodPostDetail.food_photo);
+                startActivity(imageLook);
+            });
+        }
+        String url = "http://maps.google.com/maps/api/staticmap?center=" + foodPostDetail.lat + "," + foodPostDetail.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
+        Glide.with(this).load(url).into(staticMapView);
+
+        setPlaceButton();
+        setDinnerImages();
+    }
+
+    void setDinnerImages(){
+        dinnerArray = new ImageView[]{
+                findViewById(R.id.dinner0),
+                findViewById(R.id.dinner1),
+                findViewById(R.id.dinner2),
+                findViewById(R.id.dinner3),
+                findViewById(R.id.dinner4),
+                findViewById(R.id.dinner5),
+                findViewById(R.id.dinner6),
+                findViewById(R.id.dinner7)
+        };
+        TextView dinnersNumber = findViewById(R.id.dinners_number);
+        dinnersNumber.setText(foodPostDetail.confirmedOrdersList.size() + "/" + foodPostDetail.max_dinners + " dinners for this meal");
+        int i = 0;
+        while (i < dinnerArray.length && i < foodPostDetail.confirmedOrdersList.size()){
+            if(!foodPostDetail.confirmedOrdersList.get(i).owner.profile_photo.contains("no-image")) {
+                Glide.with(this).load(foodPostDetail.confirmedOrdersList.get(i).owner.profile_photo).into(dinnerArray[i]);
+            }
+            dinnerArray[i].setVisibility(View.VISIBLE);
+            i++;
+        }
+    }
+
+    void getFoodPostDetailsAndSet(int foodPostId){
+        new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/foods/" + foodPostId + "/"){
+            @Override
+            protected void onPostExecute(String response) {
+                if (response != null){
+                    foodPostDetail = new FoodPostDetail(new JsonParser().parse(response).getAsJsonObject());
+                    setDetails();
+                }
+                super.onPostExecute(response);
+            }
+        }.execute();
     }
 
     void goToProfileView(User user){
@@ -156,14 +197,20 @@ public class FoodLookActivity extends AppCompatActivity {
     }
 
     void setPlaceButton(){
-        if (foodPost.owner.id == USER.id){
+        if (foodPostDetail.owner.id == USER.id){
+            if (foodPostDetail.confirmedOrdersList.size() > 0){
+                placeOrderButton.setText("Post confirmed");
+                placeOrderButton.setBackgroundColor(Color.TRANSPARENT);
+                placeOrderButton.setTextColor(ContextCompat.getColor(this, R.color.success));
+            } else {
+                placeOrderButton.setText("Delete Post");
+                placeOrderButton.setBackgroundColor(ContextCompat.getColor(this, R.color.canceled));
+                placeOrderButton.setOnClickListener(v -> {
+                    showProgress(true);
+                    deleteOrder();
+                });
+            }
             paymentMethod.setVisibility(View.GONE);
-            placeOrderButton.setText("Delete Post");
-            placeOrderButton.setBackgroundColor(ContextCompat.getColor(this, R.color.canceled));
-            placeOrderButton.setOnClickListener(v -> {
-                showProgress(true);
-                deleteOrder();
-            });
         }else{
             placeOrderButton.setOnClickListener(v -> {
                 showProgress(true);
@@ -173,7 +220,7 @@ public class FoodLookActivity extends AppCompatActivity {
     }
 
     void deleteOrder(){
-        Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/foods/" + foodPost.id + "/");
+        Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/foods/" + foodPostDetail.id + "/");
         try {
             deleteFoodPost.execute().get();
             finish();
@@ -187,7 +234,7 @@ public class FoodLookActivity extends AppCompatActivity {
         PostAsyncTask createOrder = new PostAsyncTask(getResources().getString(R.string.server) + "/create_order_and_notification/");
         try {
             String response = createOrder.execute(
-                    new String[]{"food_post_id", "" + foodPost.id}
+                    new String[]{"food_post_id", "" + foodPostDetail.id}
             ).get(5, TimeUnit.SECONDS);
             JsonObject jo = new JsonParser().parse(response).getAsJsonObject().get("order").getAsJsonObject();
             OrderObject orderObject = new OrderObject(jo);

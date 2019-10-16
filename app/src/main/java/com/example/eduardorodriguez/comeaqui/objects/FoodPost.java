@@ -8,6 +8,7 @@ public class FoodPost implements Serializable {
     public int id;
     public User owner;
     public String plate_name;
+    public int max_dinners;
     public String price;
     public String type;
     public String description;
@@ -22,6 +23,7 @@ public class FoodPost implements Serializable {
     public FoodPost(JsonObject jo){
         id = jo.get("id").getAsInt();
         plate_name = jo.get("plate_name").getAsString();
+        max_dinners = jo.get("max_dinners").getAsInt();
         price = jo.get("price").getAsString();
         type = jo.get("food_type").getAsString();
         description = jo.get("description").getAsString();
