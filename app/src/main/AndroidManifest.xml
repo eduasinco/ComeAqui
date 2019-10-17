@@ -30,7 +30,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".general.DinnersListActivity"></activity>
+        <activity android:name=".review.food_review_look.FoodPostReviewLookActivity"></activity>
+        <activity android:name=".general.DinnersListActivity" />
         <activity android:name=".login_and_register.LoginOrRegisterActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -80,7 +81,7 @@
         <activity android:name=".SplashActivity" />
         <activity
             android:name=".login_and_register.LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+            android:label="@string/title_activity_login" />
         <activity android:name=".MainActivity" />
 
         <meta-data

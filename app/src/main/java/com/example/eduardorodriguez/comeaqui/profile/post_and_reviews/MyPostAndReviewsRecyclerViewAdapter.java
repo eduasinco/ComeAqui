@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.general.FoodLookActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostReview;
+import com.example.eduardorodriguez.comeaqui.review.food_review_look.FoodPostReviewLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 
 import java.util.ArrayList;
@@ -54,28 +55,24 @@ public class MyPostAndReviewsRecyclerViewAdapter extends RecyclerView.Adapter<My
             });
         }
 
-        holder.cardButtonView.setOnClickListener(v -> {
-            Intent foodLook = new Intent(holder.mView.getContext(), FoodLookActivity.class);
-            foodLook.putExtra("object", foodPost);
+        holder.mView.setOnClickListener(v -> {
+            Intent foodLook = new Intent(holder.mView.getContext(), FoodPostReviewLookActivity.class);
+            foodLook.putExtra("foodPost", foodPost);
             holder.mView.getContext().startActivity(foodLook);
         });
 
-        holder.cardButtonView.setOnClickListener(v -> {
-            Intent foodLook = new Intent(holder.mView.getContext(), FoodLookActivity.class);
-            foodLook.putExtra("object", foodPost);
-            holder.mView.getContext().startActivity(foodLook);
-        });
-        if (foodPost.review != null){
+        if (foodPost.reviews != null && foodPost.reviews.size() > 0){
             holder.wholeReview.setVisibility(View.VISIBLE);
-            if (!foodPost.review.owner.profile_photo.contains("no-image")) {
-                Glide.with(holder.mView.getContext()).load(foodPost.review.owner.profile_photo).into(holder.reviewerImage);
+            if (!foodPost.reviews.get(0).owner.profile_photo.contains("no-image")) {
+                Glide.with(holder.mView.getContext()).load(foodPost.reviews.get(0).owner.profile_photo).into(holder.reviewerImage);
             }
-            holder.reviewerName.setText(foodPost.review.owner.username);
-            holder.review.setText(foodPost.review.review);
+            holder.reviewerName.setText(foodPost.reviews.get(0).owner.username);
+            holder.review.setText(foodPost.reviews.get(0).review);
         }
+
         setTypes(foodPost.type, holder);
-        if (null != foodPost.review)
-            setStars(holder, foodPost.review.rating);
+        if (foodPost.reviews != null && foodPost.reviews.size() > 0)
+            setStars(holder, foodPost.reviews.get(0).rating);
     }
 
     void setTypes(String types, ViewHolder holder){
