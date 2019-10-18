@@ -9,18 +9,15 @@ import android.widget.TextView;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.ReviewObject;
-import com.example.eduardorodriguez.comeaqui.review.food_review_look.FoodReviewFragment.OnListFragmentInteractionListener;
 
 import java.util.List;
 
 public class MyFoodReviewRecyclerViewAdapter extends RecyclerView.Adapter<MyFoodReviewRecyclerViewAdapter.ViewHolder> {
 
     private final List<ReviewObject> mValues;
-    private final OnListFragmentInteractionListener mListener;
 
-    public MyFoodReviewRecyclerViewAdapter(List<ReviewObject> items, OnListFragmentInteractionListener listener) {
+    public MyFoodReviewRecyclerViewAdapter(List<ReviewObject> items) {
         mValues = items;
-        mListener = listener;
     }
 
     @Override
@@ -35,11 +32,7 @@ public class MyFoodReviewRecyclerViewAdapter extends RecyclerView.Adapter<MyFood
         holder.mItem = mValues.get(position);
         holder.mContentView.setText(holder.mItem.review);
 
-        holder.mView.setOnClickListener(v -> {
-            if (null != mListener) {
-                mListener.onListFragmentInteraction(holder.mItem);
-            }
-        });
+        holder.mView.setOnClickListener(v -> {});
     }
 
     @Override

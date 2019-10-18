@@ -10,4 +10,5 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context=".review.food_review_look.FoodReviewFragment"
-    tools:listitem="@layout/fragment_foodreview" />
+    tools:listitem="@layout/fragment_foodreview"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"/>

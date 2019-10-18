@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.eduardorodriguez.comeaqui.general.FoodLookActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostReview;
 import com.example.eduardorodriguez.comeaqui.review.food_review_look.FoodPostReviewLookActivity;

@@ -67,10 +67,10 @@ public class FoodReviewFragment extends Fragment {
                 if (response != null){
                     foodPostReview = new FoodPostReview(new JsonParser().parse(response).getAsJsonObject());
                     reviews = foodPostReview.reviews;
-                    for (int i = 0; i < 10; i++){
+                    for (int i = 0; i < 3; i++){
                         reviews.addAll(reviews);
                     }
-                    adapter = new MyFoodReviewRecyclerViewAdapter(reviews, mListener);
+                    adapter = new MyFoodReviewRecyclerViewAdapter(reviews);
                     recyclerView.setAdapter(adapter);
                 }
                 super.onPostExecute(response);

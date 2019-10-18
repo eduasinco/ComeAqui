@@ -40,6 +40,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".profile.settings.SettingsActivity" />
+        <activity android:name=".delete.MainActivity2" >
+
+        </activity>
         <activity android:name=".login_and_register.ChangePasswordActivity" />
         <activity android:name=".login_and_register.forgot_password.ForgotPasswordActivity" />
         <activity android:name=".login_and_register.phone_code_verification.VerifyPhoneActivity" />
