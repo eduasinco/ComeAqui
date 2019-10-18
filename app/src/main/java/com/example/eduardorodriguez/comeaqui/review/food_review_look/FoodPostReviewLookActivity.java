@@ -2,6 +2,7 @@ package com.example.eduardorodriguez.comeaqui.review.food_review_look;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -64,26 +65,12 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements Foo
         }
 
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.landscape);
-        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-
-            @SuppressWarnings("ResourceType")
-            @Override
-            public void onGenerated(Palette palette) {
-                int vibrantColor = palette.getVibrantColor(R.color.primary_500);
-                collapsingToolbar.setContentScrimColor(vibrantColor);
-                collapsingToolbar.setStatusBarScrimColor(R.color.black_trans80);
-            }
-        });
-
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if(Math.abs(verticalOffset) > 200){
-                    appBarExpanded = false;
-                }else{
-                    appBarExpanded = true;
-                }
-                invalidateOptionsMenu();
+        Palette.from(bitmap).generate(palette -> {
+            Palette.Swatch vibrant = palette.getVibrantSwatch();
+            if (vibrant != null) {
+                collapsingToolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
+                collapsingToolbar.setStatusBarScrimColor(ContextCompat.getColor(this, R.color.colorPrimary));
+                collapsingToolbar.setContentScrimColor(ContextCompat.getColor(this, R.color.colorPrimary));
             }
         });
 
