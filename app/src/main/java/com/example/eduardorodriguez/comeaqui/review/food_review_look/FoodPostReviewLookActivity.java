@@ -13,13 +13,19 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostReview;
 import com.example.eduardorodriguez.comeaqui.objects.ReviewObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
+import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.gson.JsonParser;
@@ -38,6 +44,23 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements Foo
     private MyFoodReviewRecyclerViewAdapter adapter;
     FoodPostReview foodPostReview;
 
+
+    public TextView foodNameView;
+    public TextView postPrice;
+    public TextView posterDescriptionView;
+    public TextView postNameView;
+    public TextView postRating;
+    public View cardButtonView;
+    public ImageView header1;
+
+    ImageView vegetarian;
+    ImageView vegan;
+    ImageView cereal;
+    ImageView spicy;
+    ImageView fish;
+    ImageView meat;
+    ImageView dairy;
+
     private boolean appBarExpanded = true;
 
 
@@ -45,10 +68,26 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements Foo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_post_review_look);
-        toolbar = (Toolbar) findViewById(R.id.anim_toolbar);
-        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
-        recList = (RecyclerView) findViewById(R.id.scrollableview);
+        toolbar = findViewById(R.id.anim_toolbar);
+        collapsingToolbar = findViewById(R.id.collapsing_toolbar);
+        appBarLayout = findViewById(R.id.appbar);
+        recList = findViewById(R.id.scrollableview);
+
+        foodNameView = findViewById(R.id.plateName);
+        postNameView = findViewById(R.id.plate_name);
+        postPrice = findViewById(R.id.price);
+        posterDescriptionView = findViewById(R.id.description_post_review);
+        cardButtonView = findViewById(R.id.cardButton);
+        postRating = findViewById(R.id.food_post_review_rating);
+        header1 = findViewById(R.id.header1);
+
+        vegetarian = findViewById(R.id.vegetarian);
+        vegan = findViewById(R.id.vegan);
+        cereal = findViewById(R.id.cereal);
+        spicy = findViewById(R.id.spicy);
+        fish = findViewById(R.id.fish);
+        meat = findViewById(R.id.meat);
+        dairy = findViewById(R.id.dairy);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -88,10 +127,68 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements Foo
                     }
                     adapter = new MyFoodReviewRecyclerViewAdapter(reviews);
                     recList.setAdapter(adapter);
+                    setViewFoodPost();
                 }
                 super.onPostExecute(response);
             }
         }.execute();
+    }
+
+    void setViewFoodPost(){
+        postNameView.setText(foodPostReview.plate_name);
+        posterDescriptionView.setText(foodPostReview.description);
+        posterDescriptionView.setVisibility(View.VISIBLE);
+        postPrice.setText(foodPostReview.price + "€");
+
+        String rating = "-.-";
+        if (foodPostReview.rating != 0){
+            rating = String.format("%.01f", foodPostReview.rating);
+        }
+        postRating.setText(rating);
+
+
+        if (!foodPostReview.food_photo.contains("no-image")) {
+            header1.setVisibility(View.VISIBLE);
+            Glide.with(this).load(foodPostReview.food_photo).into(header1);
+            header1.setOnClickListener((v) -> {
+                Intent imageLook = new Intent(this, ImageLookActivity.class);
+                imageLook.putExtra("image_url", foodPostReview.food_photo);
+                startActivity(imageLook);
+            });
+        }
+        setTypes(foodPostReview.type);
+    }
+
+    void setTypes(String types){
+        ImageView[] imageViews = new ImageView[]{
+                vegetarian,
+                vegan,
+                cereal,
+                spicy,
+                fish,
+                meat,
+                dairy
+        };
+        ArrayList<ImageView> imageViewArrayList = new ArrayList<>();
+        for (ImageView imageView: imageViews){
+            imageView.setVisibility(View.GONE);
+            imageViewArrayList.add(imageView);
+        }
+        int[] resources = new int[]{
+                R.drawable.vegetarianfill,
+                R.drawable.veganfill,
+                R.drawable.cerealfill,
+                R.drawable.spicyfill,
+                R.drawable.fishfill,
+                R.drawable.meatfill,
+                R.drawable.dairyfill,
+        };
+        for (int i = 0; i < types.length(); i++){
+            if (types.charAt(i) == '1'){
+                imageViewArrayList.get(i).setImageResource(resources[i]);
+                imageViewArrayList.get(i).setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     @Override

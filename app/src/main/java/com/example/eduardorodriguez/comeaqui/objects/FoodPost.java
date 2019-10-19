@@ -19,6 +19,7 @@ public class FoodPost implements Serializable {
     public float lng;
     public boolean favourite = false;
     public int favouriteId;
+    public float rating;
 
     public FoodPost(JsonObject jo){
         id = jo.get("id").getAsInt();
@@ -32,6 +33,7 @@ public class FoodPost implements Serializable {
         lat = jo.get("lat").getAsFloat();
         lng = jo.get("lng").getAsFloat();
         address = jo.get("address").getAsString();
+        rating = jo.get("rating").getAsInt();
         owner = new User(jo.get("owner").getAsJsonObject());
     }
 }
