@@ -19,16 +19,17 @@ public class ReviewObject implements Serializable {
     public ReviewObject(JsonObject jo){
         id = jo.get("id").getAsInt();
         owner = new User(jo.get("owner").getAsJsonObject());
-        post = new FoodPost(jo.get("post").getAsJsonObject());
         review = jo.get("review").getAsString();
         reason = jo.get("star_reason").getAsString();
         rating = jo.get("rating").getAsFloat();
 
         answers = new ArrayList<>();
-        for (JsonElement je: jo.get("answers").getAsJsonArray()){
-            try{
-                answers.add(new ReviewAnswer(je.getAsJsonObject()));
-            }catch (Exception ignore){}
+        if (jo.get("answers") != null){
+            for (JsonElement je: jo.get("answers").getAsJsonArray()){
+                try{
+                    answers.add(new ReviewAnswer(je.getAsJsonObject()));
+                }catch (Exception ignore){}
+            }
         }
         createdAt = jo.get("created_at").getAsString();
     }

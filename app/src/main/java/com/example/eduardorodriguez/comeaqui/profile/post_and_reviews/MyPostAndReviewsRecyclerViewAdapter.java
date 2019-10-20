@@ -60,7 +60,7 @@ public class MyPostAndReviewsRecyclerViewAdapter extends RecyclerView.Adapter<My
             holder.mView.getContext().startActivity(foodLook);
         });
 
-        if (foodPost.reviews != null && foodPost.reviews.size() > 0){
+        if (foodPost.reviews.size() > 0){
             holder.wholeReview.setVisibility(View.VISIBLE);
             if (!foodPost.reviews.get(0).owner.profile_photo.contains("no-image")) {
                 Glide.with(holder.mView.getContext()).load(foodPost.reviews.get(0).owner.profile_photo).into(holder.reviewerImage);
@@ -70,7 +70,7 @@ public class MyPostAndReviewsRecyclerViewAdapter extends RecyclerView.Adapter<My
         }
 
         setTypes(foodPost.type, holder);
-        if (foodPost.reviews != null && foodPost.reviews.size() > 0)
+        if (foodPost.reviews.size() > 0)
             setStars(holder, foodPost.reviews.get(0).rating);
     }
 
