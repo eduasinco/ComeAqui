@@ -11,12 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostReview;
 import com.example.eduardorodriguez.comeaqui.objects.ReviewObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
@@ -56,11 +53,11 @@ public class FoodReviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_foodreview_list, container, false);
         recyclerView = view.findViewById(R.id.list);
-        getReviewsFrompFoodPost(foodPostId);
+        getReviewsFromFoodPost(foodPostId);
         return view;
     }
 
-    void getReviewsFrompFoodPost(int foodPostId){
+    void getReviewsFromFoodPost(int foodPostId){
         new GetAsyncTask("GET", getResources().getString(R.string.server) + "/food_reviews/" + foodPostId + "/"){
             @Override
             protected void onPostExecute(String response) {
