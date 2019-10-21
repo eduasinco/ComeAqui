@@ -3,25 +3,44 @@ package com.example.eduardorodriguez.comeaqui.review.food_review_look;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.objects.ReviewReplyObject;
 import com.example.eduardorodriguez.comeaqui.objects.ReviewObject;
+import com.example.eduardorodriguez.comeaqui.objects.User;
 
 import java.util.List;
+
+import static com.example.eduardorodriguez.comeaqui.App.USER;
 
 public class MyFoodReviewRecyclerViewAdapter extends RecyclerView.Adapter<MyFoodReviewRecyclerViewAdapter.ViewHolder> {
 
     private final List<ReviewObject> mValues;
+    private User poster;
 
-    public MyFoodReviewRecyclerViewAdapter(List<ReviewObject> items) {
+    private OnListFragmentInteractionListener mListener;
+
+
+    public MyFoodReviewRecyclerViewAdapter(List<ReviewObject> items, Context context, User poster) {
         mValues = items;
+        this.poster = poster;
+
+        if (context instanceof OnListFragmentInteractionListener) {
+            mListener = (OnListFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnListFragmentInteractionListener");
+        }
     }
 
     @Override
@@ -30,6 +49,8 @@ public class MyFoodReviewRecyclerViewAdapter extends RecyclerView.Adapter<MyFood
                 .inflate(R.layout.fragment_foodreview, parent, false);
         return new ViewHolder(view);
     }
+
+
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
@@ -42,20 +63,75 @@ public class MyFoodReviewRecyclerViewAdapter extends RecyclerView.Adapter<MyFood
             Glide.with(holder.mView.getContext()).load(holder.mItem.owner.profile_photo).into(holder.reviewerImage);
         }
 
-        if (holder.mItem.answers.size() > 0){
-            holder.answerWhole.setVisibility(View.VISIBLE);
-            holder.answererName.setText(holder.mItem.answers.get(0).owner.first_name + ", " + holder.mItem.answers.get(0).owner.last_name);
-            holder.answererUsername.setText(holder.mItem.answers.get(0).owner.username);
-            holder.answer.setText(holder.mItem.answers.get(0).answer);
+        if (holder.mItem.replies.size() > 0){
+            setOptionsReplyMenu(holder);
+            holder.replyWhole.setVisibility(View.VISIBLE);
+            holder.replyerName.setText(holder.mItem.replies.get(0).owner.first_name + ", " + holder.mItem.replies.get(0).owner.last_name);
+            holder.replyerUsername.setText(holder.mItem.replies.get(0).owner.username);
+            holder.reply.setText(holder.mItem.replies.get(0).reply);
 
-            if(!holder.mItem.answers.get(0).owner.profile_photo.contains("no-image")) {
-                Glide.with(holder.mView.getContext()).load(holder.mItem.answers.get(0).owner.profile_photo).into(holder.answererImage);
+            if(!holder.mItem.replies.get(0).owner.profile_photo.contains("no-image")) {
+                Glide.with(holder.mView.getContext()).load(holder.mItem.replies.get(0).owner.profile_photo).into(holder.replyerImage);
             }
         }
-
+        setOptionsMenu(holder);
         setStars(holder, holder.mItem.rating);
 
         holder.mView.setOnClickListener(v -> {});
+    }
+
+    void setOptionsMenu(ViewHolder holder){
+        holder.optionsReview.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(holder.mView.getContext(), holder.optionsReview);
+            if (poster.id == USER.id){
+                popupMenu.getMenu().add("Reply");
+                popupMenu.getMenu().add("Report");
+            } else if (USER.id == holder.mItem.owner.id){
+                popupMenu.getMenu().add("Delete");
+            } else {
+                popupMenu.getMenu().add("Report");
+            }
+
+            popupMenu.setOnMenuItemClickListener(item -> {
+                setOptionsActions(holder, item.getTitle().toString(), true);
+                return true;
+            });
+            popupMenu.show();
+        });
+    }
+
+    void setOptionsReplyMenu(ViewHolder holder){
+        holder.optionsReply.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(holder.mView.getContext(), holder.optionsReview);
+            if (USER.id == holder.mItem.replies.get(0).owner.id){
+                popupMenu.getMenu().add("Delete");
+            } else {
+                popupMenu.getMenu().add("Report");
+            }
+
+            popupMenu.setOnMenuItemClickListener(item -> {
+                setOptionsActions(holder, item.getTitle().toString(), false);
+                return true;
+            });
+            popupMenu.show();
+        });
+    }
+
+    void setOptionsActions(ViewHolder holder, String title, boolean review){
+        switch (title){
+            case "Reply":
+                mListener.onReplyCreate(holder.mItem);
+                break;
+            case "Delete":
+                if (review){
+                    mListener.onReviewDelete(holder.mItem);
+                } else {
+                    mListener.onReplyDelete(holder.mItem.replies.get(0));
+                }
+                break;
+            case "Report":
+                break;
+        }
     }
 
     void setStars(ViewHolder holder, float rating){
@@ -93,14 +169,17 @@ public class MyFoodReviewRecyclerViewAdapter extends RecyclerView.Adapter<MyFood
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final ImageView reviewerImage;
-        public final ImageView answererImage;
+        public final ImageView replyerImage;
         public final TextView reviewerName;
         public final TextView reviewerUsername;
         public final TextView review;
-        public final TextView answererName;
-        public final TextView answererUsername;
-        public final TextView answer;
-        public final LinearLayout answerWhole;
+        public final ImageButton optionsReview;
+
+        public final TextView replyerName;
+        public final TextView replyerUsername;
+        public final TextView reply;
+        public final ImageButton optionsReply;
+        public final LinearLayout replyWhole;
         public ReviewObject mItem;
 
         public ImageView star0;
@@ -113,14 +192,16 @@ public class MyFoodReviewRecyclerViewAdapter extends RecyclerView.Adapter<MyFood
             super(view);
             mView = view;
             reviewerImage = view.findViewById(R.id.reviewer_image);
-            answererImage = view.findViewById(R.id.reviewer_image_ans);
+            replyerImage = view.findViewById(R.id.reviewer_image_ans);
             reviewerName = view.findViewById(R.id.reviewer_name);
             reviewerUsername = view.findViewById(R.id.reviewer_username);
             review = view.findViewById(R.id.review);
-            answererName = view.findViewById(R.id.reviewer_name_ans);
-            answererUsername = view.findViewById(R.id.reviewer_username_ans);
-            answer = view.findViewById(R.id.answer);
-            answerWhole = view.findViewById(R.id.review_answer);
+            optionsReview = view.findViewById(R.id.options_review);
+            replyerName = view.findViewById(R.id.reviewer_name_ans);
+            replyerUsername = view.findViewById(R.id.reviewer_username_ans);
+            reply = view.findViewById(R.id.reply);
+            optionsReply = view.findViewById(R.id.options_review_reply);
+            replyWhole = view.findViewById(R.id.review_reply);
 
             star0 = view.findViewById(R.id.star0);
             star1 = view.findViewById(R.id.star1);
@@ -128,5 +209,11 @@ public class MyFoodReviewRecyclerViewAdapter extends RecyclerView.Adapter<MyFood
             star3 = view.findViewById(R.id.star3);
             star4 = view.findViewById(R.id.star4);
         }
+    }
+
+    public interface OnListFragmentInteractionListener {
+        void onReviewDelete(ReviewObject review);
+        void onReplyDelete(ReviewReplyObject reply);
+        void onReplyCreate(ReviewObject review);
     }
 }

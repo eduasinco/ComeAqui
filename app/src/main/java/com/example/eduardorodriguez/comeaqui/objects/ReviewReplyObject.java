@@ -4,18 +4,18 @@ import com.google.gson.JsonObject;
 
 import java.io.Serializable;
 
-public class ReviewAnswer implements Serializable {
+public class ReviewReplyObject implements Serializable {
     public int id;
     public User owner;
     public ReviewObject review;
-    public String answer;
+    public String reply;
     public String createdAt;
 
-    public ReviewAnswer(JsonObject jo){
+    public ReviewReplyObject(JsonObject jo){
         id = jo.get("id").getAsInt();
         owner = new User(jo.get("owner").getAsJsonObject());
         review = new ReviewObject(jo.get("review").getAsJsonObject());
-        answer = jo.get("answer").getAsString();
+        reply = jo.get("reply").getAsString();
         createdAt = jo.get("created_at").getAsString();
     }
 }

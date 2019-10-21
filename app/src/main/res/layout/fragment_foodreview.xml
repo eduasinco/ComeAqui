@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,6 +39,15 @@
                 android:layout_height="wrap_content"
                 android:text="TextView" />
         </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/options_review"
+            style="@android:style/Widget.DeviceDefault.ImageButton"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0"
+            android:background="@android:color/white"
+            app:srcCompat="@drawable/ic_three_dots" />
 
     </LinearLayout>
 
@@ -97,7 +106,7 @@
         android:text="@string/common_google_play_services_enable_text" />
 
     <LinearLayout
-        android:id="@+id/review_answer"
+        android:id="@+id/review_reply"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="32dp"
@@ -139,10 +148,19 @@
                     android:text="TextView" />
             </LinearLayout>
 
+            <ImageButton
+                android:id="@+id/options_review_reply"
+                style="@android:style/Widget.DeviceDefault.ImageButton"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:background="@android:color/white"
+                app:srcCompat="@drawable/ic_three_dots" />
+
         </LinearLayout>
 
         <TextView
-            android:id="@+id/answer"
+            android:id="@+id/reply"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/common_google_play_services_enable_text" />

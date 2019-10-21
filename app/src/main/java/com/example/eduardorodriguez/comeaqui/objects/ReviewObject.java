@@ -13,7 +13,7 @@ public class ReviewObject implements Serializable {
     public String review;
     public String reason;
     public float rating;
-    public ArrayList<ReviewAnswer> answers;
+    public ArrayList<ReviewReplyObject> replies;
     public String createdAt;
 
     public ReviewObject(JsonObject jo){
@@ -23,11 +23,11 @@ public class ReviewObject implements Serializable {
         reason = jo.get("star_reason").getAsString();
         rating = jo.get("rating").getAsFloat();
 
-        answers = new ArrayList<>();
-        if (jo.get("answers") != null){
-            for (JsonElement je: jo.get("answers").getAsJsonArray()){
+        replies = new ArrayList<>();
+        if (jo.get("replies") != null){
+            for (JsonElement je: jo.get("replies").getAsJsonArray()){
                 try{
-                    answers.add(new ReviewAnswer(je.getAsJsonObject()));
+                    replies.add(new ReviewReplyObject(je.getAsJsonObject()));
                 }catch (Exception ignore){}
             }
         }

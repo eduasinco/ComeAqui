@@ -7,6 +7,7 @@ import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,17 +23,20 @@ import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostReview;
+import com.example.eduardorodriguez.comeaqui.objects.ReviewReplyObject;
 import com.example.eduardorodriguez.comeaqui.objects.ReviewObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.Server;
+import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
-import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
-public class FoodPostReviewLookActivity extends AppCompatActivity implements FoodReviewFragment.OnListFragmentInteractionListener {
+public class FoodPostReviewLookActivity extends AppCompatActivity implements MyFoodReviewRecyclerViewAdapter.OnListFragmentInteractionListener {
 
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbar;
@@ -62,8 +66,7 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements Foo
     ImageView dairy;
 
     private boolean appBarExpanded = true;
-
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,13 +119,14 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements Foo
     }
 
     void getReviewsFrompFoodPost(int foodPostId){
+        Context activity = this;
         new GetAsyncTask("GET", getResources().getString(R.string.server) + "/food_reviews/" + foodPostId + "/"){
             @Override
             protected void onPostExecute(String response) {
                 if (response != null){
                     foodPostReview = new FoodPostReview(new JsonParser().parse(response).getAsJsonObject());
                     reviews = foodPostReview.reviews;
-                    adapter = new MyFoodReviewRecyclerViewAdapter(reviews);
+                    adapter = new MyFoodReviewRecyclerViewAdapter(reviews, activity, foodPostReview.owner);
                     recList.setAdapter(adapter);
                     setViewFoodPost();
                 }
@@ -212,8 +216,49 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements Foo
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onListFragmentInteraction(ReviewObject item) {
 
+    void showErrorMessage(String message){
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.error_message_frame, ErrorMessageFragment.newInstance(
+                        "Error during posting",
+                        "Please make sure that you have connection to the internet"))
+                .commit();
+    }
+    void deleteReview(int reviewId){
+        Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/reviews/" + reviewId + "/");
+        try {
+            deleteFoodPost.execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            showErrorMessage("Error deleting review");
+        }
+    }
+
+    void deleteReply(int replyId){
+        Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/reviews/" + replyId + "/");
+        try {
+            deleteFoodPost.execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            showErrorMessage("Error deleting reply");
+        }
+    }
+
+
+    @Override
+    public void onReviewDelete(ReviewObject review) {
+        deleteReview(review.id);
+    }
+
+    @Override
+    public void onReplyDelete(ReviewReplyObject reply) {
+        deleteReply(reply.id);
+    }
+
+    @Override
+    public void onReplyCreate(ReviewObject review) {
+        Intent paymentMethod = new Intent(this, ReplyReviewActivity.class);
+        paymentMethod.putExtra("review", review);
+        startActivity(paymentMethod);
     }
 }
