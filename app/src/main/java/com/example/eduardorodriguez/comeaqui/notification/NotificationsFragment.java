@@ -18,6 +18,7 @@ import android.widget.FrameLayout;
 
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.WebSocketMessage;
+import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.order.MyPendingOrdersRecyclerViewAdapter;
@@ -41,15 +42,13 @@ import static com.example.eduardorodriguez.comeaqui.App.USER;
 
 public class NotificationsFragment extends Fragment {
 
-    LinkedHashMap<Integer, OrderObject> data;
+    LinkedHashMap<Integer, NotificationObject> data;
     static MyNotificationsRecyclerViewAdapter notificationAdapter;
 
     RecyclerView recyclerView;
     SwipeController swipeController = null;
     static FrameLayout waitFrame;
 
-
-    static WebSocketClient mWebSocketClient;
     static NotificationsFragment f;
 
 
@@ -61,7 +60,7 @@ public class NotificationsFragment extends Fragment {
             data = new LinkedHashMap<>();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
-                OrderObject oo = new OrderObject(jo);
+                NotificationObject oo = new NotificationObject(jo);
                 data.put(oo.id, oo);
             }
             notificationAdapter = new MyNotificationsRecyclerViewAdapter(getContext(), new ArrayList<>(data.values()));
@@ -105,12 +104,12 @@ public class NotificationsFragment extends Fragment {
         swipeController = new SwipeController(new SwipeControllerActions() {
             @Override
             public void onRightClicked(int position) {
-                confirmOrder(notificationAdapter.mValues.get(position), false, getContext());
+                //confirmOrder(notificationAdapter.mValues.get(position), false, getContext());
             }
 
             @Override
             public void onLeftClicked(int position) {
-                confirmOrder(notificationAdapter.mValues.get(position), true, getContext());
+                //confirmOrder(notificationAdapter.mValues.get(position), true, getContext());
             }
         });
 
@@ -138,24 +137,6 @@ public class NotificationsFragment extends Fragment {
         }.execute();
     }
 
-    static void confirmOrder(OrderObject order, boolean confirm, Context context){
-        new PostAsyncTask(context.getString(R.string.server) + "/set_order_status/"){
-            @Override
-            protected void onPostExecute(String response) {
-                super.onPostExecute(response);
-            }
-        }.execute(
-                new String[]{"order_id",  order.id + ""},
-                new String[]{"order_status", order.status}
-                );
-
-        order.status = confirm ? "CONFIRMED" : "CANCELED";
-        notificationAdapter.notifyDataSetChanged();
-        WebSocketMessage.send(f.getActivity(),
-                "/ws/orders/" + order.owner.id +  "/",
-                "{\"order_id\": \"" + order.id + "\", \"seen_owner\": false}"
-        );
-    }
 
     private void start(){
         try {
@@ -170,10 +151,10 @@ public class NotificationsFragment extends Fragment {
                 @Override
                 public void onMessage(String s) {
                     getActivity().runOnUiThread(() -> {
-                        OrderObject orderChanged = new OrderObject(new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("order_changed").getAsJsonObject());
-                        data.get(orderChanged.id).seenPoster = orderChanged.seenPoster;
-                        data.get(orderChanged.id).status = orderChanged.status;
-                        notificationAdapter.notifyDataSetChanged();
+//                        OrderObject orderChanged = new OrderObject(new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("order_changed").getAsJsonObject());
+//                        data.get(orderChanged.id).seenPoster = orderChanged.seenPoster;
+//                        data.get(orderChanged.id).status = orderChanged.status;
+//                        notificationAdapter.notifyDataSetChanged();
                     });
                 }
                 @Override

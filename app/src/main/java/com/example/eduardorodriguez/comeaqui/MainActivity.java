@@ -325,13 +325,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(String response) {
                 if (response != null){
-                    for (JsonElement pa : new JsonParser().parse(response).getAsJsonArray()) {
-                        orderObjects.add(new OrderObject(pa.getAsJsonObject()));
+                    int count = new JsonParser().parse(response).getAsJsonObject().get("count").getAsInt();
+                    if (count > 0){
+                        notNotifications.setVisibility(View.VISIBLE);
+                        notNotifications.setText("" + orderObjects.size());
                     }
-                }
-                if (orderObjects.size() > 0){
-                    notNotifications.setVisibility(View.VISIBLE);
-                    notNotifications.setText("" + orderObjects.size());
                 }
                 super.onPostExecute(response);
             }

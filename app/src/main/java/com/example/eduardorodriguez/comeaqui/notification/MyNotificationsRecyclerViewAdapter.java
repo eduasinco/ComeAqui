@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.utilities.DateFragment;
 import com.example.eduardorodriguez.comeaqui.R;
@@ -24,15 +25,15 @@ import java.util.List;
 
 public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyNotificationsRecyclerViewAdapter.ViewHolder> {
 
-    public  List<OrderObject> mValues;
+    public  List<NotificationObject> mValues;
     Context context;
 
-    public MyNotificationsRecyclerViewAdapter(Context context, ArrayList<OrderObject> data){
+    public MyNotificationsRecyclerViewAdapter(Context context, ArrayList<NotificationObject> data){
         this.context = context;
         this.mValues = data;
     }
 
-    public void addNewRow(ArrayList<OrderObject> data){
+    public void addNewRow(ArrayList<NotificationObject> data){
         this.mValues = data;
         this.notifyDataSetChanged();
     }
@@ -49,29 +50,26 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.usernameView.setText(holder.mItem.owner.username);
-        holder.notificationView.setText(holder.mItem.owner.first_name + " " + holder.mItem.owner.last_name + " quiere probar tu plato!");
-        holder.status.setText(holder.mItem.status);
+        holder.usernameView.setText(holder.mItem.from_user.username);
+        holder.notificationView.setText(holder.mItem.title);
         holder.date.setText(DateFragment.getDateInSimpleFormat(holder.mItem.createdAt));
-        if (!holder.mItem.owner.profile_photo.contains("no-image"))
-            Glide.with(holder.mView.getContext()).load(holder.mItem.owner.profile_photo).into(holder.senderImageView);
+        if (!holder.mItem.from_user.profile_photo.contains("no-image"))
+            Glide.with(holder.mView.getContext()).load(holder.mItem.from_user.profile_photo).into(holder.senderImageView);
 
-        if (!holder.mItem.seenPoster){
-            holder.status.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_notification_status_changed));
-            holder.status.setTypeface(null, Typeface.BOLD);
-            holder.status.setTextColor(Color.WHITE);
-        } else if (holder.mItem.status.equals("CONFIRMED")){
-            holder.status.setTextColor(ContextCompat.getColor(holder.mView.getContext(), R.color.success));
-        } else if (holder.mItem.status.equals("CANCELED")){
-            holder.status.setTextColor(ContextCompat.getColor(holder.mView.getContext(), R.color.canceled));
-        } else {
-            holder.status.setTextColor(ContextCompat.getColor(holder.mView.getContext(), R.color.colorPrimary));
+        switch (holder.mItem.type){
+            case "ORDER":
+                holder.typeImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.orderfill));
+                break;
+            case "SOCIAL":
+                holder.typeImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.profilefill));
+                break;
+            case "INFO":
+                break;
         }
-
 
         holder.mView.setOnClickListener(v -> {
             Intent notification = new Intent(context, NotificationLookActivity.class);
-            notification.putExtra("object", holder.mItem);
+            notification.putExtra("orderId", holder.mItem.type_id);
             context.startActivity(notification);
         });
     }
@@ -85,10 +83,10 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
         public final View mView;
         public final TextView usernameView;
         public final TextView notificationView;
-        public final TextView status;
+        public final ImageView typeImage;
         public final TextView date;
         public final ImageView senderImageView;
-        public OrderObject mItem;
+        public NotificationObject mItem;
 
         public ViewHolder(View view) {
             super(view);
@@ -96,7 +94,7 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
             usernameView = view.findViewById(R.id.username);
             notificationView = view.findViewById(R.id.notification);
             senderImageView = view.findViewById(R.id.dinner_image);
-            status = view.findViewById(R.id.status);
+            typeImage = view.findViewById(R.id.type_image);
             date = view.findViewById(R.id.date);
         }
 

@@ -14,14 +14,17 @@ import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.*;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
+import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.concurrent.ExecutionException;
 
@@ -87,50 +90,66 @@ public class NotificationLookActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
 
-        if(b != null && b.get("object") != null){
-            orderObject = (OrderObject) b.get("object");
+        if(b != null && b.get("orderId") != null){
+            int orderId = b.getInt("orderId");
             boolean delete = b.getBoolean("delete");
-
-            posterNameView.setText(orderObject.owner.first_name + " " + orderObject.owner.last_name);
-            usernameView.setText(orderObject.owner.username);
-            plateNameView.setText(orderObject.post.plate_name);
-            descriptionView.setText(orderObject.post.description);
-            posterLocationView.setText(orderObject.post.address);
-            priceView.setText(orderObject.post.price);
-            timeView.setText(orderObject.post.time);
-
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("type", orderObject.post.type);
-            FoodTypeFragment fragment = new FoodTypeFragment();
-            fragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.types, fragment)
-                    .commit();
-
-
-            if(!orderObject.owner.profile_photo.contains("no-image")) Glide.with(this).load(orderObject.owner.profile_photo).into(dinnerImage);
-            if(!orderObject.post.food_photo.contains("no-image")){
-                postImageLayout.setVisibility(View.VISIBLE);
-                Glide.with(this).load(orderObject.post.food_photo).into(postImage);
-                postImageLayout.setOnClickListener((v) -> {
-                    Intent imageLook = new Intent(this, ImageLookActivity.class);
-                    imageLook.putExtra("image_url", orderObject.post.food_photo);
-                    startActivity(imageLook);
-                });
-            }
-            String url = "http://maps.google.com/maps/api/staticmap?center=" + orderObject.post.lat + "," + orderObject.post.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
-            Glide.with(this).load(url).into(staticMapView);
-
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.profile_rating, RatingFragment.newInstance(USER.rating, USER.ratingN))
-                    .commit();
-
-            setConfirmCancelButton();
+            getOrderObject(orderId);
         }
         backView.setOnClickListener(v -> finish());
         dinnerImage.setOnClickListener(v -> {
             goToProfileView();
         });
+    }
+
+    void getOrderObject(int orderId){
+        new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/order_detail/" + orderId + "/"){
+            @Override
+            protected void onPostExecute(String response) {
+                if (response != null){
+                    orderObject = new OrderObject(new JsonParser().parse(response).getAsJsonObject());
+                    setDetails();
+                }
+                super.onPostExecute(response);
+            }
+        }.execute();
+    }
+
+    void setDetails(){
+        posterNameView.setText(orderObject.owner.first_name + " " + orderObject.owner.last_name);
+        usernameView.setText(orderObject.owner.username);
+        plateNameView.setText(orderObject.post.plate_name);
+        descriptionView.setText(orderObject.post.description);
+        posterLocationView.setText(orderObject.post.address);
+        priceView.setText(orderObject.post.price);
+        timeView.setText(orderObject.post.time);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("type", orderObject.post.type);
+        FoodTypeFragment fragment = new FoodTypeFragment();
+        fragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.types, fragment)
+                .commit();
+
+
+        if(!orderObject.owner.profile_photo.contains("no-image")) Glide.with(this).load(orderObject.owner.profile_photo).into(dinnerImage);
+        if(!orderObject.post.food_photo.contains("no-image")){
+            postImageLayout.setVisibility(View.VISIBLE);
+            Glide.with(this).load(orderObject.post.food_photo).into(postImage);
+            postImageLayout.setOnClickListener((v) -> {
+                Intent imageLook = new Intent(this, ImageLookActivity.class);
+                imageLook.putExtra("image_url", orderObject.post.food_photo);
+                startActivity(imageLook);
+            });
+        }
+        String url = "http://maps.google.com/maps/api/staticmap?center=" + orderObject.post.lat + "," + orderObject.post.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
+        Glide.with(this).load(url).into(staticMapView);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.profile_rating, RatingFragment.newInstance(USER.rating, USER.ratingN))
+                .commit();
+
+        setConfirmCancelButton();
     }
 
     void showProgress(boolean show){
