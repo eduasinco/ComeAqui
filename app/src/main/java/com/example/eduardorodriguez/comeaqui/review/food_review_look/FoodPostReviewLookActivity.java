@@ -66,7 +66,15 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
     ImageView dairy;
 
     private boolean appBarExpanded = true;
-    
+
+    FoodPost fp;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getReviewsFrompFoodPost(fp.id);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,11 +110,11 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if(b != null){
-            FoodPost fp = (FoodPost) b.getSerializable("foodPost");
+            fp = (FoodPost) b.getSerializable("foodPost");
             getReviewsFrompFoodPost(fp.id);
         }
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.landscape);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.no_food);
         Palette.from(bitmap).generate(palette -> {
             Palette.Swatch vibrant = palette.getVibrantSwatch();
             if (vibrant != null) {
@@ -225,7 +233,7 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
                 .commit();
     }
     void deleteReview(int reviewId){
-        Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/reviews/" + reviewId + "/");
+        Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/delete_review/" + reviewId + "/");
         try {
             deleteFoodPost.execute().get();
         } catch (ExecutionException | InterruptedException e) {
@@ -235,7 +243,7 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
     }
 
     void deleteReply(int replyId){
-        Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/reviews/" + replyId + "/");
+        Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/delete_reply/" + replyId + "/");
         try {
             deleteFoodPost.execute().get();
         } catch (ExecutionException | InterruptedException e) {

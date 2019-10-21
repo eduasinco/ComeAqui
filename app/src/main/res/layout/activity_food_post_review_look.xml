@@ -52,7 +52,8 @@
                         android:fitsSystemWindows="true"
                         android:scaleType="centerCrop"
                         android:src="@drawable/landscape"
-                        app:srcCompat="@drawable/no_profile_photo" />
+                        android:visibility="visible"
+                        app:srcCompat="@drawable/no_food" />
 
                     <ImageView
                         android:id="@+id/header3"
@@ -62,6 +63,7 @@
                         android:fitsSystemWindows="true"
                         android:scaleType="centerCrop"
                         android:src="@drawable/landscape"
+                        android:visibility="gone"
                         app:srcCompat="@drawable/no_profile_photo" />
                 </LinearLayout>
             </HorizontalScrollView>

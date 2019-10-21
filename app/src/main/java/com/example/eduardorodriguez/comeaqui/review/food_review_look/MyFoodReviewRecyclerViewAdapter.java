@@ -84,7 +84,9 @@ public class MyFoodReviewRecyclerViewAdapter extends RecyclerView.Adapter<MyFood
         holder.optionsReview.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(holder.mView.getContext(), holder.optionsReview);
             if (poster.id == USER.id){
-                popupMenu.getMenu().add("Reply");
+                if (holder.mItem.replies.size() == 0){
+                    popupMenu.getMenu().add("Reply");
+                }
                 popupMenu.getMenu().add("Report");
             } else if (USER.id == holder.mItem.owner.id){
                 popupMenu.getMenu().add("Delete");
@@ -125,8 +127,10 @@ public class MyFoodReviewRecyclerViewAdapter extends RecyclerView.Adapter<MyFood
             case "Delete":
                 if (review){
                     mListener.onReviewDelete(holder.mItem);
+                    holder.mView.setVisibility(View.GONE);
                 } else {
                     mListener.onReplyDelete(holder.mItem.replies.get(0));
+                    holder.replyWhole.setVisibility(View.GONE);
                 }
                 break;
             case "Report":
