@@ -67,12 +67,12 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
 
     private boolean appBarExpanded = true;
 
-    FoodPost fp;
+    int fpId;
 
     @Override
     protected void onResume() {
         super.onResume();
-        getReviewsFrompFoodPost(fp.id);
+        getReviewsFrompFoodPost(fpId);
     }
 
     @Override
@@ -110,8 +110,8 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if(b != null){
-            fp = (FoodPost) b.getSerializable("foodPost");
-            getReviewsFrompFoodPost(fp.id);
+            fpId = b.getInt("foodPostId");
+            getReviewsFrompFoodPost(fpId);
         }
 
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.no_food);

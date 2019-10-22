@@ -17,6 +17,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
+import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
+import com.example.eduardorodriguez.comeaqui.review.food_review_look.FoodPostReviewLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.DateFragment;
 import com.example.eduardorodriguez.comeaqui.R;
 
@@ -59,19 +61,31 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
         switch (holder.mItem.type){
             case "ORDER":
                 holder.typeImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.orderfill));
+                holder.mView.setOnClickListener(v -> {
+                    Intent notification = new Intent(context, NotificationLookActivity.class);
+                    notification.putExtra("orderId", holder.mItem.type_id);
+                    context.startActivity(notification);
+                });
                 break;
-            case "SOCIAL":
+            case "REVIEW":
                 holder.typeImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.profilefill));
+                holder.mView.setOnClickListener(v -> {
+                    Intent notification = new Intent(context, FoodPostReviewLookActivity.class);
+                    notification.putExtra("foodPostId", holder.mItem.type_id);
+                    context.startActivity(notification);
+                });
+                break;
+            case "REVIEW_REPLY":
+                holder.typeImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.profilefill));
+                holder.mView.setOnClickListener(v -> {
+                    Intent notification = new Intent(context, FoodPostReviewLookActivity.class);
+                    notification.putExtra("foodPostId", holder.mItem.type_id);
+                    context.startActivity(notification);
+                });
                 break;
             case "INFO":
                 break;
         }
-
-        holder.mView.setOnClickListener(v -> {
-            Intent notification = new Intent(context, NotificationLookActivity.class);
-            notification.putExtra("orderId", holder.mItem.type_id);
-            context.startActivity(notification);
-        });
     }
 
     @Override

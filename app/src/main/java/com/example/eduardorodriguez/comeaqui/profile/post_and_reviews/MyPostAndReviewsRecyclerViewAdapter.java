@@ -56,7 +56,7 @@ public class MyPostAndReviewsRecyclerViewAdapter extends RecyclerView.Adapter<My
 
         holder.mView.setOnClickListener(v -> {
             Intent foodLook = new Intent(holder.mView.getContext(), FoodPostReviewLookActivity.class);
-            foodLook.putExtra("foodPost", foodPost);
+            foodLook.putExtra("foodPostId", foodPost.id);
             holder.mView.getContext().startActivity(foodLook);
         });
 
