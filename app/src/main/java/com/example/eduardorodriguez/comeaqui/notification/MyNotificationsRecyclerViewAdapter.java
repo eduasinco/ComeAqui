@@ -35,17 +35,10 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
         this.mValues = data;
     }
 
-    public void addNewRow(ArrayList<NotificationObject> data){
-        this.mValues = data;
-        this.notifyDataSetChanged();
-    }
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_notifications_element, parent, false);
-
-
         return new ViewHolder(view);
     }
 
@@ -69,25 +62,22 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
                 break;
             case "REVIEW":
                 holder.typeImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.profilefill));
-                holder.mView.setOnClickListener(v -> {
-                    Intent notification = new Intent(context, FoodPostReviewLookActivity.class);
-                    notification.putExtra("foodPostId", holder.mItem.type_id);
-                    context.startActivity(notification);
-                });
+                holder.mView.setOnClickListener(v -> goToFoodPostReview(holder.mItem.type_id));
                 break;
             case "REVIEW_REPLY":
                 holder.typeImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.profilefill));
-                holder.mView.setOnClickListener(v -> {
-                    Intent notification = new Intent(context, FoodPostReviewLookActivity.class);
-                    notification.putExtra("foodPostId", holder.mItem.type_id);
-                    context.startActivity(notification);
-                });
+                holder.mView.setOnClickListener(v -> goToFoodPostReview(holder.mItem.type_id));
                 break;
             case "INFO":
                 break;
         }
     }
 
+    void goToFoodPostReview(int foodPostId){
+        Intent notification = new Intent(context, FoodPostReviewLookActivity.class);
+        notification.putExtra("foodPostId", foodPostId);
+        context.startActivity(notification);
+    }
     @Override
     public int getItemCount() {
         return mValues.size();
@@ -110,11 +100,6 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
             senderImageView = view.findViewById(R.id.dinner_image);
             typeImage = view.findViewById(R.id.type_image);
             date = view.findViewById(R.id.date);
-        }
-
-        @Override
-        public String toString() {
-            return super.toString() + " '" + usernameView.getText() + "'";
         }
     }
 }

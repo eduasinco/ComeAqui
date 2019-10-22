@@ -4,6 +4,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.ReviewReplyObject;
 import com.example.eduardorodriguez.comeaqui.objects.ReviewObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
+import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
+import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
 
 import java.util.List;
 
@@ -62,6 +65,7 @@ public class MyFoodReviewRecyclerViewAdapter extends RecyclerView.Adapter<MyFood
         if(!holder.mItem.owner.profile_photo.contains("no-image")) {
             Glide.with(holder.mView.getContext()).load(holder.mItem.owner.profile_photo).into(holder.reviewerImage);
         }
+        holder.reviewerImage.setOnClickListener(v -> mListener.onGoToProfile(holder.mItem.owner));
 
         if (holder.mItem.replies.size() > 0){
             setOptionsReplyMenu(holder);
@@ -73,11 +77,10 @@ public class MyFoodReviewRecyclerViewAdapter extends RecyclerView.Adapter<MyFood
             if(!holder.mItem.replies.get(0).owner.profile_photo.contains("no-image")) {
                 Glide.with(holder.mView.getContext()).load(holder.mItem.replies.get(0).owner.profile_photo).into(holder.replyerImage);
             }
+            holder.replyerImage.setOnClickListener(v -> mListener.onGoToProfile(holder.mItem.replies.get(0).owner));
         }
         setOptionsMenu(holder);
         setStars(holder, holder.mItem.rating);
-
-        holder.mView.setOnClickListener(v -> {});
     }
 
     void setOptionsMenu(ViewHolder holder){
@@ -219,5 +222,6 @@ public class MyFoodReviewRecyclerViewAdapter extends RecyclerView.Adapter<MyFood
         void onReviewDelete(ReviewObject review);
         void onReplyDelete(ReviewReplyObject reply);
         void onReplyCreate(ReviewObject review);
+        void onGoToProfile(User user);
     }
 }

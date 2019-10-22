@@ -25,6 +25,8 @@ import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostReview;
 import com.example.eduardorodriguez.comeaqui.objects.ReviewReplyObject;
 import com.example.eduardorodriguez.comeaqui.objects.ReviewObject;
+import com.example.eduardorodriguez.comeaqui.objects.User;
+import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
@@ -268,5 +270,11 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
         Intent paymentMethod = new Intent(this, ReplyReviewActivity.class);
         paymentMethod.putExtra("review", review);
         startActivity(paymentMethod);
+    }
+    @Override
+    public void onGoToProfile(User user){
+        Intent profile = new Intent(this, ProfileViewActivity.class);
+        profile.putExtra("user", user);
+        startActivity(profile);
     }
 }
