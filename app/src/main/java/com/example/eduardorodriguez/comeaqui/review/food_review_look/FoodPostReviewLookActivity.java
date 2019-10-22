@@ -303,7 +303,7 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
     @Override
     public void onGoToProfile(User user){
         Intent profile = new Intent(this, ProfileViewActivity.class);
-        profile.putExtra("user", user);
+        profile.putExtra("userId", user.id);
         startActivity(profile);
     }
 }

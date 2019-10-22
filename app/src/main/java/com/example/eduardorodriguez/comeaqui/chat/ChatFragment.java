@@ -48,7 +48,6 @@ public class ChatFragment extends Fragment{
 
     RecyclerView recyclerView;
     FrameLayout waitFrame;
-    FrameLayout errorFrame;
 
     View view;
 
@@ -77,7 +76,6 @@ public class ChatFragment extends Fragment{
         recyclerView = view.findViewById(R.id.recycler_chat);
 
         waitFrame = view.findViewById(R.id.wait_frame);
-        errorFrame = view.findViewById(R.id.error_message_frame);
         start();
         return view;
     }
@@ -131,14 +129,6 @@ public class ChatFragment extends Fragment{
         } else {
             waitFrame.setVisibility(View.GONE);
         }
-    }
-    void showErrorMessage(String title, String message){
-        errorFrame.setVisibility(View.VISIBLE);
-        getFragmentManager().beginTransaction()
-                .replace(R.id.error_message_frame, ErrorMessageFragment.newInstance(
-                        "Error during posting",
-                        "Please make sure that you have connection to the internet"))
-                .commit();
     }
 
     private void start(){

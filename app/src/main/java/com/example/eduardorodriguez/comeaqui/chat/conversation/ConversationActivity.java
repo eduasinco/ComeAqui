@@ -142,7 +142,7 @@ public class ConversationActivity extends AppCompatActivity {
 
     void goToProfileView(User user){
         Intent k = new Intent(this, ProfileViewActivity.class);
-        k.putExtra("user", user);
+        k.putExtra("userId", user.id);
         startActivity(k);
     }
 

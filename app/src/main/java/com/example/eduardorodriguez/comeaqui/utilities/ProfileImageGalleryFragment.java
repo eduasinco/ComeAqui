@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
-import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.User;
@@ -27,21 +26,13 @@ import com.google.gson.JsonParser;
 
 import java.util.concurrent.ExecutionException;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ProfileImageGalleryFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ProfileImageGalleryFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ProfileImageGalleryFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "user";
+    private static final String USER_ID = "userId";
 
     // TODO: Rename and change types of parameters
-    private User user;
+    private int userId;
 
     private OnFragmentInteractionListener mListener;
     int count;
@@ -58,10 +49,10 @@ public class ProfileImageGalleryFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static ProfileImageGalleryFragment newInstance(User user) {
+    public static ProfileImageGalleryFragment newInstance(int userId) {
         ProfileImageGalleryFragment fragment = new ProfileImageGalleryFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_PARAM1, user);
+        args.putInt(USER_ID, userId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -76,8 +67,7 @@ public class ProfileImageGalleryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            user = (User) getArguments().getSerializable(ARG_PARAM1);
-
+            userId = getArguments().getInt(USER_ID);
         }
     }
 
@@ -109,7 +99,7 @@ public class ProfileImageGalleryFragment extends Fragment {
 
 
     void getPostFromUser(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_food_posts/" + user.id + "/");
+        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_food_posts/" + userId + "/");
         try {
             String response = process.execute().get();
             if (response != null) {

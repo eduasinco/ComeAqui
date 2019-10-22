@@ -70,7 +70,7 @@ public class FoodElementFragment extends Fragment {
         cardButtonView.setOnClickListener(v -> {
             showProgress(true);
             Intent foodLook = new Intent(getContext(), FoodLookActivity.class);
-            foodLook.putExtra("object", foodPost);
+            foodLook.putExtra("foodPostId", foodPost.id);
             getContext().startActivity(foodLook);
         });
         cardButtonView.setOnTouchListener((v, event) -> {

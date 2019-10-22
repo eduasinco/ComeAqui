@@ -40,12 +40,10 @@ import static com.example.eduardorodriguez.comeaqui.App.USER;
 
 public class OrderLookActivity extends AppCompatActivity implements ContinueCancelFragment.OnFragmentInteractionListener {
 
-    TextView postNameView;
     TextView plateName;
     TextView price;
     TextView posterDescription;
     TextView posterLocationView;
-    TextView postPriceView;
     TextView subtotalView;
     TextView totalPriceView;
     TextView mealTimeView;
@@ -94,19 +92,21 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if (b != null){
-            order = (OrderObject) b.get("object");
-            getOrderDetails();
-            setCancelOrderButton();
+            int orderId = b.getInt("orderId");
+            getOrderDetails(orderId);
         }
     }
 
-    void getOrderDetails(){
+    void getOrderDetails(int orderId){
         try {
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/order_detail/" + order.id + "/"){
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/order_detail/" + orderId + "/"){
                 @Override
                 protected void onPostExecute(String response) {
-                    if (response != null)
-                        createStringArray(new JsonParser().parse(response).getAsJsonObject());
+                    if (response != null) {
+                        order = new OrderObject(new JsonParser().parse(response).getAsJsonObject());
+                        setView();
+                        setCancelOrderButton();
+                    }
                     super.onPostExecute(response);
                 }
             }.execute().get(10, TimeUnit.SECONDS);
@@ -147,7 +147,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
 
     void goToProfileView(User user){
         Intent k = new Intent(getApplicationContext(), ProfileViewActivity.class);
-        k.putExtra("user", user);
+        k.putExtra("userId", user.id);
         startActivity(k);
     }
 
@@ -185,8 +185,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
         finish();
     }
 
-    void createStringArray(JsonObject jo){
-        order = new OrderObject(jo);
+    void setView(){
         plateName.setText(order.post.plate_name);
         posterNameView.setText(order.poster.first_name + " " + order.poster.last_name);
         posterDescription.setText(order.post.description);

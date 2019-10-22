@@ -87,7 +87,7 @@ public class MapCardFragment extends Fragment {
             Glide.with(view.getContext()).load(foodPost.food_photo).into(postImageView);
             postImageView.setOnClickListener((v) -> {
                 Intent foodLook = new Intent(getContext(), FoodLookActivity.class);
-                foodLook.putExtra("object", foodPost);
+                foodLook.putExtra("foodPostId", foodPost.id);
                 startActivity(foodLook);
             });
         }
@@ -99,7 +99,7 @@ public class MapCardFragment extends Fragment {
 
     void goToProfileView(){
         Intent k = new Intent(getContext(), ProfileViewActivity.class);
-        k.putExtra("user", foodPost.owner);
+        k.putExtra("userId", foodPost.owner.id);
         startActivity(k);
     }
 

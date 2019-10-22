@@ -55,7 +55,7 @@ public class DinnersListActivity extends AppCompatActivity implements DinnerFrag
 
     void goToProfileView(User user){
         Intent k = new Intent(this, ProfileViewActivity.class);
-        k.putExtra("user", user);
+        k.putExtra("userId", user.id);
         startActivity(k);
     }
 

@@ -65,12 +65,7 @@ public class MyPendingOrdersRecyclerViewAdapter extends RecyclerView.Adapter<MyP
 
         holder.mView.setOnClickListener(v -> {
             Intent orderLook = new Intent(holder.mView.getContext(), OrderLookActivity.class);
-            orderLook.putExtra("object", holder.mItem);
-            boolean delete = false;
-            if (holder.mItem.owner.id == USER.id){
-                delete = true;
-            }
-            orderLook.putExtra("delete", delete);
+            orderLook.putExtra("orderId", holder.mItem.id);
             holder.mView.getContext().startActivity(orderLook);
         });
         holder.dateView.setText(DateFragment.getDateInSimpleFormat(holder.mItem.createdAt));

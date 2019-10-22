@@ -13,7 +13,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile_view);
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.profile_container, ProfileFragment.newInstance((User) getIntent().getExtras().getSerializable("user")))
+                .replace(R.id.profile_container, ProfileFragment.newInstance(getIntent().getExtras().getInt("userId")))
                 .commit();
     }
 }

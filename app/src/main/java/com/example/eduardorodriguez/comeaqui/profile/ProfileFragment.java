@@ -61,18 +61,15 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
 
     private ImageButton settingsButton;
 
-    private ConstraintLayout outOfCard;
     FrameLayout fragmentView;
     private static final String USER_TO_DISPLAY = "user";
 
-    public ProfileFragment() {
-        // Required empty public constructor
-    }
+    public ProfileFragment() {}
 
-    public static ProfileFragment newInstance(User user) {
+    public static ProfileFragment newInstance(int userId) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
-        args.putSerializable(USER_TO_DISPLAY, user);
+        args.putInt(USER_TO_DISPLAY, userId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -144,8 +141,24 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            user = (User) getArguments().getSerializable(USER_TO_DISPLAY);
+            user = getUser(getArguments().getInt(USER_TO_DISPLAY));
         }
+    }
+
+    public User getUser(int userId) {
+        try {
+            String response = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/profile_detail/" + userId + "/").execute().get(10, TimeUnit.SECONDS);
+            if (response != null){
+                return new User(new JsonParser().parse(response).getAsJsonObject());
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "A problem has occurred", Toast.LENGTH_LONG).show();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Not internet connection", Toast.LENGTH_LONG).show();
+        }
+        return null;
     }
 
     @Override
@@ -188,7 +201,6 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         });
 
         setProfile(user);
-
         return view;
     }
 
@@ -276,9 +288,9 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         @Override
         public Fragment getItem(int position) {
             Fragment[] tabFragment = {
-                    UserPostFragment.newInstance(user),
-                    PostAndReviewsFragment.newInstance(user),
-                    ProfileImageGalleryFragment.newInstance(user)
+                    UserPostFragment.newInstance(user.id),
+                    PostAndReviewsFragment.newInstance(user.id),
+                    ProfileImageGalleryFragment.newInstance(user.id)
             };
             return tabFragment[position];
         }

@@ -99,7 +99,7 @@ public class UpperNotificationFragment extends Fragment {
     void setCardView(View view){
         orderCard.setOnClickListener(v -> {
             Intent orderLook = new Intent(getContext(), OrderLookActivity.class);
-            orderLook.putExtra("object", orderObject);
+            orderLook.putExtra("orderId", orderObject.id);
             orderLook.putExtra("delete", false);
             getContext().startActivity(orderLook);
         });

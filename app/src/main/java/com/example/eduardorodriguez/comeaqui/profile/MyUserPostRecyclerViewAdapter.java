@@ -61,13 +61,13 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
 
         holder.cardButtonView.setOnClickListener(v -> {
                 Intent foodLook = new Intent(holder.mView.getContext(), FoodLookActivity.class);
-                foodLook.putExtra("object", foodPost);
+                foodLook.putExtra("foodPostId", foodPost.id);
                 holder.mView.getContext().startActivity(foodLook);
             });
 
         holder.cardButtonView.setOnClickListener(v -> {
             Intent foodLook = new Intent(holder.mView.getContext(), FoodLookActivity.class);
-            foodLook.putExtra("object", foodPost);
+            foodLook.putExtra("foodPostId", foodPost.id);
             holder.mView.getContext().startActivity(foodLook);
         });
 

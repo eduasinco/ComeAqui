@@ -12,9 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostReview;
-import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonElement;
@@ -22,14 +20,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class PostAndReviewsFragment extends Fragment {
-    private static final String USER = "user";
-    private User user;
+    private static final String USER_ID = "userId";
+    private int userId;
     private static MyPostAndReviewsRecyclerViewAdapter adapter;
 
     RecyclerView recyclerView;
@@ -45,10 +42,10 @@ public class PostAndReviewsFragment extends Fragment {
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static PostAndReviewsFragment newInstance(User user) {
+    public static PostAndReviewsFragment newInstance(int user) {
         PostAndReviewsFragment fragment = new PostAndReviewsFragment();
         Bundle args = new Bundle();
-        args.putSerializable(USER, user);
+        args.putInt(USER_ID, user);
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,7 +55,7 @@ public class PostAndReviewsFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            user = (User) getArguments().getSerializable(USER);
+            userId = getArguments().getInt(USER_ID);
         }
     }
 
@@ -76,7 +73,7 @@ public class PostAndReviewsFragment extends Fragment {
     void getPostFromUser(){
         try {
             startWaitingFrame(true);
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_food_posts_reviews/" + user.id + "/"){
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_food_posts_reviews/" + userId + "/"){
                 @Override
                 protected void onPostExecute(String response) {
                     startWaitingFrame(false);

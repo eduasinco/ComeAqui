@@ -3,7 +3,6 @@ package com.example.eduardorodriguez.comeaqui.profile;
 import android.content.Context;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -30,9 +29,9 @@ import java.util.concurrent.TimeoutException;
 public class UserPostFragment extends Fragment {
 
     // TODO: Customize parameter argument names
-    private static final String USER = "user";
+    private static final String USER_ID = "userId";
     // TODO: Customize parameters
-    private User user;
+    private int userId;
 
     private static ArrayList<FoodPost> data;
     private static MyUserPostRecyclerViewAdapter adapter;
@@ -57,10 +56,10 @@ public class UserPostFragment extends Fragment {
         adapter.addNewRow(data);
     }
 
-    public static UserPostFragment newInstance(User user) {
+    public static UserPostFragment newInstance(int userId) {
         UserPostFragment fragment = new UserPostFragment();
         Bundle args = new Bundle();
-        args.putSerializable(USER, user);
+        args.putInt(USER_ID, userId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,7 +68,7 @@ public class UserPostFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            user = (User) getArguments().getSerializable(USER);
+            userId = getArguments().getInt(USER_ID);
         }
     }
 
@@ -85,15 +84,15 @@ public class UserPostFragment extends Fragment {
         waitFrame = view.findViewById(R.id.wait_frame);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        getPostFromUser(user);
+        getPostFromUser(userId);
         return view;
     }
 
 
-    void getPostFromUser(User user){
+    void getPostFromUser(int userId){
         try {
             startWaitingFrame(true);
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_food_posts/" + user.id + "/"){
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_food_posts/" + userId + "/"){
                 @Override
                 protected void onPostExecute(String response) {
                     startWaitingFrame(false);

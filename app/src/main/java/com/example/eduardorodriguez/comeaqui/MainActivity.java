@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
         getPastOderFragment = new OrderFragment();
         mapFragment = new MapFragment();
-        profileFragment = ProfileFragment.newInstance(USER);
+        profileFragment = ProfileFragment.newInstance(USER.id);
         notificationFragment = new NotificationsFragment();
 
         chatView.setOnClickListener(v -> {
@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
                     if (ja.size() > 0){
                         OrderObject orderObject = new OrderObject(ja.get(0).getAsJsonObject());
                         Intent k = new Intent(context, GuestsReviewActivity.class);
-                        k.putExtra("order", orderObject);
+                        k.putExtra("orderId", orderObject);
                         startActivity(k);
                     }
                 }

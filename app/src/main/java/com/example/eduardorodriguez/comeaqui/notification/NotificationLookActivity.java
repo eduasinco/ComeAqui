@@ -59,16 +59,6 @@ public class NotificationLookActivity extends AppCompatActivity {
 
     OrderObject orderObject;
 
-    public static void goToOrder(JsonObject jsonObject){
-        try{
-            OrderObject orderObject = new OrderObject(jsonObject);
-            Intent goToOrders = new Intent(context, OrderLookActivity.class);
-            goToOrders.putExtra("object", orderObject);
-            context.startActivity(goToOrders);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +89,6 @@ public class NotificationLookActivity extends AppCompatActivity {
 
         if(b != null && b.get("orderId") != null){
             int orderId = b.getInt("orderId");
-            boolean delete = b.getBoolean("delete");
             getOrderObject(orderId);
         }
         backView.setOnClickListener(v -> finish());
@@ -234,7 +223,7 @@ public class NotificationLookActivity extends AppCompatActivity {
 
     void goToProfileView(){
         Intent k = new Intent(this, ProfileViewActivity.class);
-        k.putExtra("user", orderObject.owner);
+        k.putExtra("userId", orderObject.owner.id);
         startActivity(k);
     }
 }

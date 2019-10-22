@@ -101,10 +101,10 @@ public class FoodLookActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
-        if(b != null && b.get("object") != null){
-            FoodPost fp = (FoodPost) b.get("object");
+        if(b != null && b.get("foodPostId") != null){
+            int fpId = b.getInt("foodPostId");
 
-            getFoodPostDetailsAndSet(fp.id);
+            getFoodPostDetailsAndSet(fpId);
         }
         changePaymentMethod.setOnClickListener(v -> {
             Intent paymentMethod = new Intent(this, PaymentMethodsActivity.class);
@@ -213,7 +213,7 @@ public class FoodLookActivity extends AppCompatActivity {
 
     void goToProfileView(User user){
         Intent k = new Intent(this, ProfileViewActivity.class);
-        k.putExtra("user", user);
+        k.putExtra("userId", user.id);
         startActivity(k);
     }
 
@@ -281,7 +281,7 @@ public class FoodLookActivity extends AppCompatActivity {
     void goToOrder(OrderObject orderObject){
         try{
             Intent goToOrders = new Intent(context, OrderLookActivity.class);
-            goToOrders.putExtra("object", orderObject);
+            goToOrders.putExtra("orderId", orderObject.id);
             context.startActivity(goToOrders);
         }catch (Exception e){
             e.printStackTrace();
