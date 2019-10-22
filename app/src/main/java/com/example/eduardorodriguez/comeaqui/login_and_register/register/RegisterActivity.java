@@ -114,7 +114,10 @@ public class RegisterActivity extends AppCompatActivity {
         setEditText(password, passwordValtext);
         setEmailOrPhone();
 
-        registerButton.setOnClickListener((v) -> register());
+        registerButton.setOnClickListener((v) -> {
+            showProgress(true);
+            register();
+        });
     }
 
     void register(){
@@ -318,7 +321,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String response) {
-            showProgress(false);
             if(response != null) {}
         }
     }

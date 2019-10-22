@@ -210,11 +210,8 @@ public class AddFoodActivity extends AppCompatActivity implements
 
     void setSubmit(){
         submit.setOnClickListener(v -> {
-            showProgress(true);
             if (validateFrom()){
                 postFood();
-            } else {
-                showProgress(false);
             }
         });
     }
@@ -278,6 +275,7 @@ public class AddFoodActivity extends AppCompatActivity implements
 
     void postFood(){
         try {
+            showProgress(true);
             PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/foods/"){
                 @Override
                 protected void onPostExecute(String response) {
