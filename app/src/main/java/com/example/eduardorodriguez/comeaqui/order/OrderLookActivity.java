@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.WebSocketMessage;
@@ -26,10 +28,13 @@ import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.ContinueCancelFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -52,6 +57,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
     ImageView staticMapView;
     Button cancelOrderButton;
     FrameLayout cancelMessage;
+    FrameLayout waitingFrame;
     View orderCancelProgress;
 
     CardView imageCard;
@@ -83,23 +89,46 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
         cancelOrderButton = findViewById(R.id.cancelOrderButton);
         cancelMessage = findViewById(R.id.cancel_message);
         orderCancelProgress = findViewById(R.id.order_cancel_progress);
+        waitingFrame = findViewById(R.id.waiting_frame);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if (b != null){
             order = (OrderObject) b.get("object");
-            GetAsyncTask getOrders = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/order_detail/" + order.id + "/");
-            try {
-                String response = getOrders.execute().get();
-                if (response != null)
-                createStringArray(new JsonParser().parse(response).getAsJsonObject());
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
+            getOrderDetails();
             setCancelOrderButton();
         }
+    }
 
+    void getOrderDetails(){
+        try {
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/order_detail/" + order.id + "/"){
+                @Override
+                protected void onPostExecute(String response) {
+                    if (response != null)
+                        createStringArray(new JsonParser().parse(response).getAsJsonObject());
+                    super.onPostExecute(response);
+                }
+            }.execute().get(10, TimeUnit.SECONDS);
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            startWaitingFrame(false);
+            Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
+        }
+    }
 
+    void startWaitingFrame(boolean start){
+        if (start) {
+            waitingFrame.setVisibility(View.VISIBLE);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.wait_frame, WaitFragment.newInstance())
+                    .commit();
+        } else {
+            waitingFrame.setVisibility(View.GONE);
+        }
     }
 
     void setCancelOrderButton(){

@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,12 +32,15 @@ import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
+import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class FoodPostReviewLookActivity extends AppCompatActivity implements MyFoodReviewRecyclerViewAdapter.OnListFragmentInteractionListener {
 
@@ -58,6 +62,7 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
     public TextView postRating;
     public View cardButtonView;
     public ImageView header1;
+    FrameLayout waitingFrame;
 
     ImageView vegetarian;
     ImageView vegan;
@@ -93,6 +98,7 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
         cardButtonView = findViewById(R.id.cardButton);
         postRating = findViewById(R.id.food_post_review_rating);
         header1 = findViewById(R.id.header1);
+        waitingFrame = findViewById(R.id.waiting_frame);
 
         vegetarian = findViewById(R.id.vegetarian);
         vegan = findViewById(R.id.vegan);
@@ -130,19 +136,42 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
 
     void getReviewsFrompFoodPost(int foodPostId){
         Context activity = this;
-        new GetAsyncTask("GET", getResources().getString(R.string.server) + "/food_reviews/" + foodPostId + "/"){
-            @Override
-            protected void onPostExecute(String response) {
-                if (response != null){
-                    foodPostReview = new FoodPostReview(new JsonParser().parse(response).getAsJsonObject());
-                    reviews = foodPostReview.reviews;
-                    adapter = new MyFoodReviewRecyclerViewAdapter(reviews, activity, foodPostReview.owner);
-                    recList.setAdapter(adapter);
-                    setViewFoodPost();
+        try {
+            startWaitingFrame(true);
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/food_reviews/" + foodPostId + "/"){
+                @Override
+                protected void onPostExecute(String response) {
+                    if (response != null){
+                        foodPostReview = new FoodPostReview(new JsonParser().parse(response).getAsJsonObject());
+                        reviews = foodPostReview.reviews;
+                        adapter = new MyFoodReviewRecyclerViewAdapter(reviews, activity, foodPostReview.owner);
+                        recList.setAdapter(adapter);
+                        setViewFoodPost();
+                        startWaitingFrame(false);
+                    }
+                    super.onPostExecute(response);
                 }
-                super.onPostExecute(response);
-            }
-        }.execute();
+            }.execute().get(10, TimeUnit.SECONDS);
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            startWaitingFrame(false);
+            Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            startWaitingFrame(false);
+            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    void startWaitingFrame(boolean start){
+        if (start) {
+            waitingFrame.setVisibility(View.VISIBLE);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.wait_frame, WaitFragment.newInstance())
+                    .commit();
+        } else {
+            waitingFrame.setVisibility(View.GONE);
+        }
     }
 
     void setViewFoodPost(){

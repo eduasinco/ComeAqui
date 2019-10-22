@@ -6,19 +6,33 @@
     android:layout_height="match_parent"
     tools:context=".review.ReviewPostActivity">
 
-    <Button
-        android:id="@+id/submitButton"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
-        android:background="@color/colorPrimary"
-        android:text="Next"
-        android:textColor="@android:color/white"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/submitButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            android:text="Next"
+            android:textColor="@android:color/white"
+            tools:layout_editor_absoluteX="24dp" />
+        <ProgressBar
+            android:id="@+id/review_progress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
+    </LinearLayout>
 
     <ScrollView
         android:id="@+id/scrollView"

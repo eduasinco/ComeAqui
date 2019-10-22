@@ -7,6 +7,13 @@
         android:layout_height="match_parent"
         tools:context=".notification.NotificationLookActivity">
 
+    <FrameLayout
+        android:id="@+id/waiting_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
     <ScrollView
         android:id="@+id/scrollView4"
         android:layout_width="match_parent"

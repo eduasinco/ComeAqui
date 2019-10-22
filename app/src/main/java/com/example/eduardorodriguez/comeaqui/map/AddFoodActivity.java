@@ -31,6 +31,9 @@ import com.example.eduardorodriguez.comeaqui.utilities.place_autocomplete.PlaceA
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -274,10 +277,18 @@ public class AddFoodActivity extends AppCompatActivity implements
     }
 
     void postFood(){
-        PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/foods/");
-        post.bitmap = imageBitmap;
         try {
-            String response = post.execute(
+            PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/foods/"){
+                @Override
+                protected void onPostExecute(String response) {
+                    FoodPost foodPost = new FoodPost(new JsonParser().parse(response).getAsJsonObject());
+                    sendPostMessage(foodPost);
+                    finish();
+                    super.onPostExecute(response);
+                }
+            };
+            post.bitmap = imageBitmap;
+            post.execute(
                     new String[]{"plate_name", foodName.getText().toString()},
                     new String[]{"address", address},
                     new String[]{"lat", Double.toString(lat)},
@@ -289,18 +300,23 @@ public class AddFoodActivity extends AppCompatActivity implements
                     new String[]{"food_type", setTypes()},
                     new String[]{"description", description},
                     new String[]{"food_photo", ""}
-            ).get();
-            FoodPost foodPost = new FoodPost(new JsonParser().parse(response).getAsJsonObject());
-            WebSocketMessage.send(this,
-                    "/ws/posts/",
-                    "{\"post_id\": " + foodPost.id + "}"
-            );
-            finish();
-        } catch (Exception e) {
+            ).get(10, TimeUnit.SECONDS);
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
             showErrorMessage();
             showProgress(false);
+            Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            showProgress(false);
+            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
         }
+    }
+    void sendPostMessage(FoodPost foodPost){
+        WebSocketMessage.send(this,
+                "/ws/posts/",
+                "{\"post_id\": " + foodPost.id + "}"
+        );
     }
     void showErrorMessage(){
         errorMessage.setVisibility(View.VISIBLE);

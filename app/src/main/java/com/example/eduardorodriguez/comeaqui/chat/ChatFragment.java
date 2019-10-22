@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
@@ -17,6 +18,7 @@ import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.ChatFirebaseObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.firebase.database.*;
 import com.google.gson.JsonArray;
@@ -33,6 +35,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -44,6 +48,9 @@ public class ChatFragment extends Fragment{
 
     RecyclerView recyclerView;
     FrameLayout waitFrame;
+    FrameLayout errorFrame;
+
+    View view;
 
     private OnListFragmentInteractionListener mListener;
 
@@ -66,14 +73,11 @@ public class ChatFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
+        view  = inflater.inflate(R.layout.fragment_chat_list, container, false);
         recyclerView = view.findViewById(R.id.recycler_chat);
+
         waitFrame = view.findViewById(R.id.wait_frame);
-
-        getFragmentManager().beginTransaction()
-                .replace(R.id.wait_frame, WaitFragment.newInstance())
-                .commit();
-
+        errorFrame = view.findViewById(R.id.error_message_frame);
         start();
         return view;
     }
@@ -97,15 +101,44 @@ public class ChatFragment extends Fragment{
     }
 
     void getChatsAndSet(){
-        new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_chats/"){
-            @Override
-            protected void onPostExecute(String response) {
-                waitFrame.setVisibility(View.GONE);
-                if (response != null)
-                    makeList(new JsonParser().parse(response).getAsJsonArray());
-                super.onPostExecute(response);
-            }
-        }.execute();
+        startWaitingFrame(true);
+        try {
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_chats/"){
+                @Override
+                protected void onPostExecute(String response) {
+                    if (response != null)
+                        makeList(new JsonParser().parse(response).getAsJsonArray());
+                    startWaitingFrame(false);
+                    super.onPostExecute(response);
+                }
+            }.execute().get(10, TimeUnit.SECONDS);
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            startWaitingFrame(false);
+            Toast.makeText(getContext(), "A problem has occurred", Toast.LENGTH_LONG).show();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Not internet connection", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    void startWaitingFrame(boolean start){
+        if (start) {
+            waitFrame.setVisibility(View.VISIBLE);
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.wait_frame, WaitFragment.newInstance())
+                    .commit();
+        } else {
+            waitFrame.setVisibility(View.GONE);
+        }
+    }
+    void showErrorMessage(String title, String message){
+        errorFrame.setVisibility(View.VISIBLE);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.error_message_frame, ErrorMessageFragment.newInstance(
+                        "Error during posting",
+                        "Please make sure that you have connection to the internet"))
+                .commit();
     }
 
     private void start(){

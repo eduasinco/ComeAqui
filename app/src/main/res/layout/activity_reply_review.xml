@@ -7,6 +7,13 @@
     android:layout_height="match_parent">
 
     <FrameLayout
+        android:id="@+id/waiting_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
+    <FrameLayout
         android:id="@+id/error_message"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

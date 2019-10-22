@@ -155,20 +155,25 @@ public class ConversationActivity extends AppCompatActivity {
     }
 
     private void getChatMessages(){
-        new GetAsyncTask("GET", getResources().getString(R.string.server) + "/chat_detail/" + chat.id + "/"){
-            @Override
-            protected void onPostExecute(String response) {
-                if (response != null) {
-                    for (JsonElement je: new JsonParser().parse(response).getAsJsonObject().get("message_set").getAsJsonArray()){
-                        MessageObject currentMessage = new MessageObject(je.getAsJsonObject());
+        try {
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/chat_detail/" + chat.id + "/"){
+                @Override
+                protected void onPostExecute(String response) {
+                    if (response != null) {
+                        for (JsonElement je: new JsonParser().parse(response).getAsJsonObject().get("message_set").getAsJsonArray()){
+                            MessageObject currentMessage = new MessageObject(je.getAsJsonObject());
 
-                        setMessageStatus(currentMessage);
-                        adapter.addMensaje(currentMessage);
+                            setMessageStatus(currentMessage);
+                            adapter.addMensaje(currentMessage);
+                        }
                     }
+                    super.onPostExecute(response);
                 }
-                super.onPostExecute(response);
-            }
-        }.execute();
+            }.execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void setMessageStatus(MessageObject currentMessage){

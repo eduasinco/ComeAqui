@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.WebSocketMessage;
@@ -23,6 +24,7 @@ import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
+import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -30,6 +32,7 @@ import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,6 +47,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     Button setPasswordButton;
     TextView passwordSetText;
     Button goToLogin;
+    View progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         setPasswordButton = findViewById(R.id.set_password);
         passwordSetText = findViewById(R.id.password_set_text);
         goToLogin = findViewById(R.id.go_to_login);
+        progress = findViewById(R.id.set_password_progress);
 
         setEditText(newPassword, newPasswordValtext);
         setEditText(oldPassword, oldPasswordValtext);
@@ -116,19 +121,30 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
     void submit(){
         try {
+            passwordSetText.setVisibility(View.GONE);
+            progress.setVisibility(View.VISIBLE);
             new PatchAsyncTask(getResources().getString(R.string.server) + "/password_change/"){
                 @Override
                 protected void onPostExecute(JSONObject jo) {
                     passwordSetText.setVisibility(View.VISIBLE);
                     goToLogin.setVisibility(View.VISIBLE);
+                    progress.setVisibility(View.GONE);
                     super.onPostExecute(jo);
                 }
             }.execute(
                     new String[]{"old_password", oldPassword.getText().toString(), ""},
                     new String[]{"new_password", newPassword.getText().toString(), ""}
-                    ).get();
+                    ).get(10, TimeUnit.SECONDS);
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
+            passwordSetText.setVisibility(View.VISIBLE);
+            progress.setVisibility(View.GONE);
+            Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            passwordSetText.setVisibility(View.VISIBLE);
+            progress.setVisibility(View.GONE);
+            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
         }
     }
 }

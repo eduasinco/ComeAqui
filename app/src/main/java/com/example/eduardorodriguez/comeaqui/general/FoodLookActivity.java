@@ -15,6 +15,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
@@ -30,6 +32,7 @@ import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
+import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -63,6 +66,7 @@ public class FoodLookActivity extends AppCompatActivity {
     FrameLayout placeOrderErrorMessage;
     LinearLayout dinnersListView;
     ImageView[] dinnerArray;
+    FrameLayout waitingFrame;
 
     FoodPostDetail foodPostDetail;
 
@@ -92,6 +96,8 @@ public class FoodLookActivity extends AppCompatActivity {
         placeOrderErrorMessage = findViewById(R.id.place_order_error_message);
         dinnersListView = findViewById(R.id.dinners_list_view);
 
+
+        waitingFrame = findViewById(R.id.waiting_frame);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -172,16 +178,37 @@ public class FoodLookActivity extends AppCompatActivity {
     }
 
     void getFoodPostDetailsAndSet(int foodPostId){
-        new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/foods/" + foodPostId + "/"){
-            @Override
-            protected void onPostExecute(String response) {
-                if (response != null){
-                    foodPostDetail = new FoodPostDetail(new JsonParser().parse(response).getAsJsonObject());
-                    setDetails();
+        try{
+            new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/foods/" + foodPostId + "/"){
+                @Override
+                protected void onPostExecute(String response) {
+                    if (response != null){
+                        foodPostDetail = new FoodPostDetail(new JsonParser().parse(response).getAsJsonObject());
+                        setDetails();
+                    }
+                    super.onPostExecute(response);
                 }
-                super.onPostExecute(response);
-            }
-        }.execute();
+            }.execute().get(10, TimeUnit.SECONDS);
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            startWaitingFrame(false);
+            Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            startWaitingFrame(false);
+            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    void startWaitingFrame(boolean start){
+        if (start) {
+            waitingFrame.setVisibility(View.VISIBLE);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.waiting_frame, WaitFragment.newInstance())
+                    .commit();
+        } else {
+            waitingFrame.setVisibility(View.GONE);
+        }
     }
 
     void goToProfileView(User user){

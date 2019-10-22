@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -28,6 +29,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 import static com.example.eduardorodriguez.comeaqui.R.layout.fragment_pendingorders_list;
@@ -102,27 +106,42 @@ public class PendingOrdersFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recycler);
         waitFrame = view.findViewById(R.id.wait_frame);
 
-        getFragmentManager().beginTransaction()
-                .replace(R.id.wait_frame, WaitFragment.newInstance())
-                .commit();
-
         getDataAndSet();
         if(pending)
             start();
         return view;
     }
 
-    @SuppressLint("StaticFieldLeak")
     void getDataAndSet(){
-        new GetAsyncTask("GET", getResources().getString(R.string.server) + (pending ? "/my_pending_orders/" : "/my_past_orders/")){
-            @Override
-            protected void onPostExecute(String s) {
-                if (s != null)
-                    makeList(new JsonParser().parse(s).getAsJsonArray());
-                waitFrame.setVisibility(View.GONE);
-                super.onPostExecute(s);
-            }
-        }.execute();
+        try {
+            startWaitingFrame(true);
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + (pending ? "/my_pending_orders/" : "/my_past_orders/")){
+                @Override
+                protected void onPostExecute(String s) {
+                    if (s != null)
+                        makeList(new JsonParser().parse(s).getAsJsonArray());
+                    startWaitingFrame(false);
+                    super.onPostExecute(s);
+                }
+            }.execute().get(10, TimeUnit.SECONDS);
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            startWaitingFrame(false);
+            Toast.makeText(getContext(), "A problem has occurred", Toast.LENGTH_LONG).show();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Not internet connection", Toast.LENGTH_LONG).show();
+        }
+    }
+    void startWaitingFrame(boolean start){
+        if (start) {
+            waitFrame.setVisibility(View.VISIBLE);
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.wait_frame, WaitFragment.newInstance())
+                    .commit();
+        } else {
+            waitFrame.setVisibility(View.GONE);
+        }
     }
 
     private void start(){

@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
@@ -23,10 +25,13 @@ import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -50,6 +55,7 @@ public class NotificationLookActivity extends AppCompatActivity {
     ImageView backView;
     CardView postImageLayout;
     View confirmNotificationProgress;
+    FrameLayout waitingFrame;
 
     OrderObject orderObject;
 
@@ -86,6 +92,7 @@ public class NotificationLookActivity extends AppCompatActivity {
         postImageLayout = findViewById(R.id.image_layout);
         backView = findViewById(R.id.back_arrow);
         confirmNotificationProgress = findViewById(R.id.confirm_notification_progress);
+        waitingFrame = findViewById(R.id.waiting_frame);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -102,16 +109,37 @@ public class NotificationLookActivity extends AppCompatActivity {
     }
 
     void getOrderObject(int orderId){
-        new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/order_detail/" + orderId + "/"){
-            @Override
-            protected void onPostExecute(String response) {
-                if (response != null){
-                    orderObject = new OrderObject(new JsonParser().parse(response).getAsJsonObject());
-                    setDetails();
+        try {
+            new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/order_detail/" + orderId + "/"){
+                @Override
+                protected void onPostExecute(String response) {
+                    if (response != null){
+                        orderObject = new OrderObject(new JsonParser().parse(response).getAsJsonObject());
+                        startWaitingFrame(false);
+                        setDetails();
+                    }
+                    super.onPostExecute(response);
                 }
-                super.onPostExecute(response);
-            }
-        }.execute();
+            }.execute().get(10, TimeUnit.SECONDS);
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            startWaitingFrame(false);
+            Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    void startWaitingFrame(boolean start){
+        if (start) {
+            waitingFrame.setVisibility(View.VISIBLE);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.wait_frame, WaitFragment.newInstance())
+                    .commit();
+        } else {
+            waitingFrame.setVisibility(View.GONE);
+        }
     }
 
     void setDetails(){

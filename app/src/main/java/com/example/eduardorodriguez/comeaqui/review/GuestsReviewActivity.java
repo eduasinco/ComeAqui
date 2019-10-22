@@ -25,6 +25,7 @@ public class GuestsReviewActivity extends AppCompatActivity implements StarReaso
 
     Button submitButton;
     ScrollView scrollView;
+    View progress;
 
     OrderObject orderObject;
 
@@ -42,6 +43,7 @@ public class GuestsReviewActivity extends AppCompatActivity implements StarReaso
         TextView rating = findViewById(R.id.rating);
         submitButton = findViewById(R.id.submitButton);
         scrollView = findViewById(R.id.scrollv);
+        progress = findViewById(R.id.review_submit_progress);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -63,20 +65,32 @@ public class GuestsReviewActivity extends AppCompatActivity implements StarReaso
     }
 
     void submit(){
-        PostAsyncTask createOrder = new PostAsyncTask(getResources().getString(R.string.server) + "/rate_user/");
         try {
-            String response = createOrder.execute(
+            submitButton.setVisibility(View.GONE);
+            progress.setVisibility(View.VISIBLE);
+            new PostAsyncTask(getResources().getString(R.string.server) + "/rate_user/"){
+                @Override
+                protected void onPostExecute(String response) {
+                    JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                    OrderObject orderObject = new OrderObject(jo);
+                    finish();
+                    super.onPostExecute(response);
+                }
+            }.execute(
                     new String[]{"order_id", "" + orderObject.id},
                     new String[]{"review", review},
                     new String[]{"rating", "" + rating},
                     new String[]{"star_reason", ""}
             ).get();
-            JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
-            OrderObject orderObject = new OrderObject(jo);
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (ExecutionException e) {
+            submitButton.setVisibility(View.VISIBLE);
+            progress.setVisibility(View.GONE);
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            submitButton.setVisibility(View.VISIBLE);
+            progress.setVisibility(View.GONE);
             e.printStackTrace();
         }
-        finish();
     }
 
 

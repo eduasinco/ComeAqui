@@ -12,12 +12,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.gson.JsonParser;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class VerifyPhoneActivity extends AppCompatActivity {
 
@@ -27,6 +30,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
     TextView verificationValtext;
     TextView codeDidNotArrive;
     Button sendCodeButton;
+    View progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
         verificationValtext = findViewById(R.id.code_vtext);
         sendCodeButton = findViewById(R.id.send_code_button);
         codeDidNotArrive = findViewById(R.id.send_again);
+        progress = findViewById(R.id.send_code_progress);
 
         setEditText(emailAdress, emailValtext);
         setEditText(verificationCode, verificationValtext);
@@ -85,17 +90,26 @@ public class VerifyPhoneActivity extends AppCompatActivity {
 
     void submit(){
         try {
+            sendCodeButton.setVisibility(View.GONE);
+            progress.setVisibility(View.VISIBLE);
             String response = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/send_code_to_email/" + emailAdress.getText() + "/"){
                 @Override
                 protected void onPostExecute(String response) {
+                    sendCodeButton.setVisibility(View.VISIBLE);
+                    progress.setVisibility(View.GONE);
                     super.onPostExecute(response);
                 }
-            }.execute().get();
-            if (response != null){
-
-            }
+            }.execute().get(10, TimeUnit.SECONDS);
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
+            sendCodeButton.setVisibility(View.VISIBLE);
+            progress.setVisibility(View.GONE);
+            Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            sendCodeButton.setVisibility(View.VISIBLE);
+            progress.setVisibility(View.GONE);
+            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
         }
     }
 

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
@@ -22,6 +23,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static com.example.eduardorodriguez.comeaqui.R.color.colorPrimaryLight;
 import static com.example.eduardorodriguez.comeaqui.R.color.grey_light;
@@ -36,6 +39,7 @@ public class ReviewPostActivity extends AppCompatActivity implements StarReasonF
     LinearLayout rateMealView;
     Button submitButton;
     ScrollView scrollView;
+    View progress;
 
     OrderObject orderObject;
     int rating = 5;
@@ -55,6 +59,7 @@ public class ReviewPostActivity extends AppCompatActivity implements StarReasonF
         rateMealView = findViewById(R.id.rate_meal_view);
         submitButton = findViewById(R.id.submitButton);
         scrollView = findViewById(R.id.scrollView);
+        progress = findViewById(R.id.review_progress);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -80,20 +85,34 @@ public class ReviewPostActivity extends AppCompatActivity implements StarReasonF
 
 
     void submit(){
-        PostAsyncTask createOrder = new PostAsyncTask(getResources().getString(R.string.server) + "/create_review/");
         try {
-            String response = createOrder.execute(
+            submitButton.setVisibility(View.GONE);
+            progress.setVisibility(View.VISIBLE);
+            new PostAsyncTask(getResources().getString(R.string.server) + "/create_review/"){
+                @Override
+                protected void onPostExecute(String response) {
+                    JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                    ReviewObject reviewObject = new ReviewObject(jo);
+                    finish();
+                    super.onPostExecute(response);
+                }
+            }.execute(
                     new String[]{"order_id", "" + orderObject.id},
                     new String[]{"review", review},
                     new String[]{"rating", "" + rating},
                     new String[]{"star_reason", ""}
-            ).get();
-            JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
-            ReviewObject reviewObject = new ReviewObject(jo);
+            ).get(10, TimeUnit.SECONDS);
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
+            submitButton.setVisibility(View.VISIBLE);
+            progress.setVisibility(View.GONE);
+            Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            submitButton.setVisibility(View.VISIBLE);
+            progress.setVisibility(View.GONE);
+            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
         }
-        finish();
     }
 
     void setSubmitButton(){

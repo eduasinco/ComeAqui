@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.R;
@@ -23,6 +24,8 @@ import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class UserPostFragment extends Fragment {
 
@@ -81,10 +84,6 @@ public class UserPostFragment extends Fragment {
 
         waitFrame = view.findViewById(R.id.wait_frame);
 
-        getFragmentManager().beginTransaction()
-                .replace(R.id.wait_frame, WaitFragment.newInstance())
-                .commit();
-
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         getPostFromUser(user);
         return view;
@@ -92,16 +91,37 @@ public class UserPostFragment extends Fragment {
 
 
     void getPostFromUser(User user){
-        new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_food_posts/" + user.id + "/"){
-            @Override
-            protected void onPostExecute(String response) {
-                waitFrame.setVisibility(View.GONE);
-                makeList(new JsonParser().parse(response).getAsJsonArray());
-                super.onPostExecute(response);
-            }
-        }.execute();
+        try {
+            startWaitingFrame(true);
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_food_posts/" + user.id + "/"){
+                @Override
+                protected void onPostExecute(String response) {
+                    startWaitingFrame(false);
+                    makeList(new JsonParser().parse(response).getAsJsonArray());
+                    super.onPostExecute(response);
+                }
+            }.execute().get(10, TimeUnit.SECONDS);
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            startWaitingFrame(false);
+            Toast.makeText(getContext(), "A problem has occurred", Toast.LENGTH_LONG).show();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            startWaitingFrame(false);
+            Toast.makeText(getContext(), "Not internet connection", Toast.LENGTH_LONG).show();
+        }
     }
 
+    void startWaitingFrame(boolean start){
+        if (start) {
+            waitFrame.setVisibility(View.VISIBLE);
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.wait_frame, WaitFragment.newInstance())
+                    .commit();
+        } else {
+            waitFrame.setVisibility(View.GONE);
+        }
+    }
 
     @Override
     public void onDetach() {

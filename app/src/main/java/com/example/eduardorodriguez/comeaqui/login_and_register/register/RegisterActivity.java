@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.User;
@@ -42,6 +43,9 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -130,10 +134,27 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     void submit(){
-        RegisterAsyncTask post = new RegisterAsyncTask(getResources().getString(R.string.server) + "/register/");
-        showProgress(true);
-        try {
-            String response = post.execute(
+        try{
+            showProgress(true);
+            new RegisterAsyncTask(getResources().getString(R.string.server) + "/register/"){
+                @Override
+                protected void onPostExecute(String response) {
+                    JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                    try{
+                        User newUser = new User(jo);
+                        goToVerifyEmailActivity(newUser);
+                    } catch (Exception e){
+                        if (jo != null && jo.get("username") != null){
+                            showValtext(usernameValtext, jo.get("username").getAsJsonArray().get(0).getAsString(), username);
+                        }
+                        if (jo != null && jo.get("email") != null){
+                            showValtext(emailValtext, jo.get("email").getAsJsonArray().get(0).getAsString(), email);
+                        }
+                        validationText.setVisibility(View.VISIBLE);
+                    }
+                    super.onPostExecute(response);
+                }
+            }.execute(
                     new String[]{"username", username.getText().toString()},
                     new String[]{"first_name", name.getText().toString()},
                     new String[]{"last_name", surname.getText().toString()},
@@ -141,25 +162,23 @@ public class RegisterActivity extends AppCompatActivity {
                     new String[]{"phone_code", ccp.getFullNumber()},
                     new String[]{"phone_number", phone.getText().toString()},
                     new String[]{"password", password.getText().toString()}
-            ).get();
-            JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
-            try{
-                User newUser = new User(jo);
-                Intent imageLook = new Intent(this, VerifyEmailActivity.class);
-                imageLook.putExtra("user", newUser);
-                startActivity(imageLook);
-            } catch (Exception e){
-                if (jo != null && jo.get("username") != null){
-                    showValtext(usernameValtext, jo.get("username").getAsJsonArray().get(0).getAsString(), username);
-                }
-                if (jo != null && jo.get("email") != null){
-                    showValtext(emailValtext, jo.get("email").getAsJsonArray().get(0).getAsString(), email);
-                }
-                validationText.setVisibility(View.VISIBLE);
-            }
-        } catch (Exception e) {
+            ).get(10, TimeUnit.SECONDS);
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
+            showProgress(false);
+            Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
+        } catch (
+        TimeoutException e) {
+            e.printStackTrace();
+            showProgress(false);
+            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
         }
+    }
+
+    void goToVerifyEmailActivity(User newUser){
+        Intent imageLook = new Intent(this, VerifyEmailActivity.class);
+        imageLook.putExtra("user", newUser);
+        startActivity(imageLook);
     }
 
     void setEmailOrPhone(){

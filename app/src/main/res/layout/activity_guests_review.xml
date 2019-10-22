@@ -104,19 +104,32 @@
         </LinearLayout>
     </ScrollView>
 
-    <Button
-        android:id="@+id/submitButton"
-        style="@style/Widget.AppCompat.Button.Borderless"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:background="@color/colorPrimary"
-        android:text="Submit"
-        android:textColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/scrollv"
+        app:layout_constraintEnd_toEndOf="@+id/scrollv"
+        app:layout_constraintStart_toStartOf="@+id/scrollv">
+
+        <Button
+            android:id="@+id/submitButton"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            android:text="Submit"
+            android:textColor="@android:color/white"
+            tools:layout_editor_absoluteX="16dp" />
+        <ProgressBar
+            android:id="@+id/review_submit_progress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

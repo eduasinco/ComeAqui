@@ -86,6 +86,13 @@
             android:background="@color/colorPrimary"
             android:text="send"
             android:textColor="@android:color/white" />
+        <ProgressBar
+            android:id="@+id/send_code_progress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/textView41"

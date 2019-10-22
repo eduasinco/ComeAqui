@@ -199,15 +199,23 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
     }
 
     void goToConversationWithUser(User user){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/get_or_create_chat/" + user.id + "/");
         try {
-            String response = process.execute().get();
-            if (response != null) {
-                ChatObject chat = new ChatObject(new JsonParser().parse(response).getAsJsonObject());
-                goToConversationActivity(chat);
-            }
-         } catch (ExecutionException | InterruptedException e) {
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/get_or_create_chat/" + user.id + "/"){
+                @Override
+                protected void onPostExecute(String response) {
+                    super.onPostExecute(response);
+                    if (response != null) {
+                        ChatObject chat = new ChatObject(new JsonParser().parse(response).getAsJsonObject());
+                        goToConversationActivity(chat);
+                    }
+                }
+            }.execute().get(10, TimeUnit.SECONDS);
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
+            Toast.makeText(getContext(), "A problem has occurred", Toast.LENGTH_LONG).show();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Not internet connection", Toast.LENGTH_LONG).show();
         }
     }
 

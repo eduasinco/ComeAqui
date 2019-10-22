@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.SplashActivity;
@@ -41,6 +42,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
 
@@ -48,6 +51,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     EditText emailAdress;
     TextView resendPassword;
     Button sendPassword;
+    View progress;
     Button goToLogin;
 
     @Override
@@ -60,6 +64,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         sendPassword = findViewById(R.id.send_code_button);
         resendPassword = findViewById(R.id.send_again);
         goToLogin = findViewById(R.id.go_to_login);
+        progress = findViewById(R.id.forgot_password_progress);
 
         setEditText(emailAdress, emailValtext);
         sendPassword.setOnClickListener((v) -> sendEmail());
@@ -109,13 +114,28 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     void submit(){
         try {
-            String response = new SendNewPassword("GET", getResources().getString(R.string.server) + "/send_new_password/" + emailAdress.getText() + "/").execute().get();
-            if (response != null){
-                sendPassword.setVisibility(View.GONE);
-                goToLogin.setVisibility(View.VISIBLE);
-            }
+            sendPassword.setVisibility(View.GONE);
+            progress.setVisibility(View.VISIBLE);
+            new SendNewPassword("GET", getResources().getString(R.string.server) + "/send_new_password/" + emailAdress.getText() + "/"){
+                @Override
+                protected void onPostExecute(String response) {
+                    if (response != null){
+                        progress.setVisibility(View.GONE);
+                        goToLogin.setVisibility(View.VISIBLE);
+                    }
+                    super.onPostExecute(response);
+                }
+            }.execute().get(10, TimeUnit.SECONDS);
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
+            sendPassword.setVisibility(View.VISIBLE);
+            progress.setVisibility(View.GONE);
+            Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            sendPassword.setVisibility(View.VISIBLE);
+            progress.setVisibility(View.GONE);
+            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
         }
     }
 
