@@ -48,7 +48,7 @@ public class PatchAsyncTask extends AsyncTask<String[], Void, JSONObject> {
                 .setBoundary(boundary);
 
         for(String[] ss: params){
-            if (ss[0].equals("food_photo") && bitmap != null) {
+            if (ss[1].equals("image") && bitmap != null) {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
                 byte[] imageBytes = baos.toByteArray();

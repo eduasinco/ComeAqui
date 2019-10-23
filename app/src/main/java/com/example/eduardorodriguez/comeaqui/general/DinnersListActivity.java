@@ -68,6 +68,7 @@ public class DinnersListActivity extends AppCompatActivity implements DinnerFrag
                     if (response != null) {
                         ChatObject chat = new ChatObject(new JsonParser().parse(response).getAsJsonObject());
                         goToConversationActivity(chat);
+                        fragment.startWaitingFrame(false);
                     }
                     super.onPostExecute(response);
                 }

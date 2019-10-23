@@ -75,6 +75,7 @@ public class DinnerFragment extends Fragment {
                         foodPostDetail = new FoodPostDetail(new JsonParser().parse(response).getAsJsonObject());
                         dinnerAdapter = new MyDinnerRecyclerViewAdapter(foodPostDetail.confirmedOrdersList, mListener);
                         recyclerView.setAdapter(dinnerAdapter);
+                        startWaitingFrame(false);
                     }
                     super.onPostExecute(response);
                 }
@@ -93,7 +94,7 @@ public class DinnerFragment extends Fragment {
         if (start) {
             waitingFrame.setVisibility(View.VISIBLE);
             getFragmentManager().beginTransaction()
-                    .replace(R.id.wait_frame, WaitFragment.newInstance())
+                    .replace(R.id.waiting_frame, WaitFragment.newInstance())
                     .commit();
         } else {
             waitingFrame.setVisibility(View.GONE);

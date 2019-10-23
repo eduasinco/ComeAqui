@@ -263,20 +263,20 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
 
 
     private void saveProfileImage(Uri imageUri){
-//        try {
-//            Bitmap bitmap = MediaStore.Images.Media.getBitmap(view.getContext().getContentResolver(), imageUri);
-//            if (bitmap != null){
-//                PatchAsyncTask putTask = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
-//                putTask.bitmap = bitmap;
-//                if (isBackGound){
-//                    putTask.execute("background_photo", "", "true").get(15, TimeUnit.SECONDS);
-//                }else {
-//                    putTask.execute("profile_photo", "", "true").get(15, TimeUnit.SECONDS);
-//                }
-//            }
-//        } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(view.getContext().getContentResolver(), imageUri);
+            if (bitmap != null){
+                PatchAsyncTask putTask = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
+                putTask.bitmap = bitmap;
+                if (isBackGound){
+                    putTask.execute(new String[]{"background_photo", "image"}).get(15, TimeUnit.SECONDS);
+                }else {
+                    putTask.execute(new String[]{"profile_photo", "image"}).get(15, TimeUnit.SECONDS);
+                }
+            }
+        } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {
+            e.printStackTrace();
+        }
     }
 
     class TestPagerAdapter extends FragmentPagerAdapter {
