@@ -61,6 +61,8 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
 
     private ImageButton settingsButton;
 
+    int userId;
+
     FrameLayout fragmentView;
     private static final String USER_TO_DISPLAY = "user";
 
@@ -84,7 +86,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
             editProfileView.setVisibility(View.VISIBLE);
             editProfileView.setOnClickListener(v -> {
                 Intent editProfile = new Intent(getContext(), EditProfileActivity.class);
-                editProfile.putExtra("object", user);
+                editProfile.putExtra("userId", user.id);
                 getContext().startActivity(editProfile);
             });
             addProfilePhotoView.setVisibility(View.VISIBLE);
@@ -135,13 +137,16 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
     @Override
     public void onResume() {
         super.onResume();
+        user = getUser(userId);
+        setProfile(user);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            user = getUser(getArguments().getInt(USER_TO_DISPLAY));
+            userId = getArguments().getInt(USER_TO_DISPLAY);
+            user = getUser(userId);
         }
     }
 
@@ -199,8 +204,6 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
                     .replace(R.id.select_from, SelectImageFromFragment.newInstance(true))
                     .commit();
         });
-
-        setProfile(user);
         return view;
     }
 

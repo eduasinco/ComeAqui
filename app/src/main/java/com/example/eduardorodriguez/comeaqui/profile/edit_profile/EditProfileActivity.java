@@ -11,17 +11,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.EditAcountDetailsActivity;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.JsonParser;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -41,11 +45,13 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
     private ImageView backgroundImageView;
 
     boolean isBackGound;
+    int userId;
 
     @Override
     protected void onResume() {
         super.onResume();
         selectFrom.setVisibility(View.GONE);
+        setProfile(getUser(userId));
     }
 
     private void setProfile(User user){
@@ -82,7 +88,8 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if(b != null){
-            User user = (User) b.get("object");
+            userId = b.getInt("userId");
+            User user = getUser(userId);
             setProfile(user);
         }
 
@@ -118,6 +125,22 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
         });
 
         backView.setOnClickListener(v -> finish());
+    }
+
+    public User getUser(int userId) {
+        try {
+            String response = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/profile_detail/" + userId + "/").execute().get(10, TimeUnit.SECONDS);
+            if (response != null){
+                return new User(new JsonParser().parse(response).getAsJsonObject());
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
+        }
+        return null;
     }
 
     @Override
