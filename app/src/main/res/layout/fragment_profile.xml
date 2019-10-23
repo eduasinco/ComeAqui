@@ -190,11 +190,14 @@
 
             <ImageButton
                 android:id="@+id/settings_profile_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@android:color/transparent"
                 app:layout_constraintEnd_toEndOf="@+id/backGroundImage"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/settings_icon" />
+                app:layout_constraintTop_toTopOf="@+id/backGroundImage"
+                app:srcCompat="@drawable/ic_three_dots" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.tabs.TabLayout
