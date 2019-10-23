@@ -9,6 +9,7 @@ import android.os.Bundle;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.User;
+import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.confirm_email.ConfirmEmailActivity;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 
@@ -53,7 +54,15 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
         });
 
         setData();
+
+        emailAddress.setOnClickListener(v -> goToChangeEmail());
         save.setOnClickListener(v -> saveData());
+    }
+
+    void goToChangeEmail(){
+        Intent confirmEmail = new Intent(this, ConfirmEmailActivity.class);
+        confirmEmail.putExtra("email", emailAddress.getText().toString());
+        startActivity(confirmEmail);
     }
 
     void setData(){

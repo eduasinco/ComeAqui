@@ -30,7 +30,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".review.food_review_look.ReplyReviewActivity"></activity>
+        <activity android:name=".profile.edit_profile.edit_account_details.confirm_email.ConfirmEmailActivity"></activity>
+        <activity android:name=".review.food_review_look.ReplyReviewActivity" />
         <activity android:name=".review.food_review_look.FoodPostReviewLookActivity" />
         <activity android:name=".general.DinnersListActivity" />
         <activity android:name=".login_and_register.LoginOrRegisterActivity">
@@ -41,7 +42,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".profile.settings.SettingsActivity" />
-        <activity android:name=".delete.MainActivity2"></activity>
+        <activity android:name=".delete.MainActivity2" />
         <activity android:name=".login_and_register.ChangePasswordActivity" />
         <activity android:name=".login_and_register.forgot_password.ForgotPasswordActivity" />
         <activity android:name=".login_and_register.phone_code_verification.VerifyPhoneActivity" />
