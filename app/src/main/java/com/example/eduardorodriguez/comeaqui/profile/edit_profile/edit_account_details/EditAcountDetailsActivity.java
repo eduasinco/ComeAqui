@@ -11,7 +11,9 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.confirm_email.ConfirmEmailActivity;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
+import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
+import com.google.gson.JsonParser;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -23,15 +25,13 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
 
     private EditText firstName;
     private EditText lastName;
-    private EditText phoneNumber;
-    private EditText emailAddress;
-
-    private User user;
+    private TextView phoneNumber;
+    private TextView emailAddress;
 
     @Override
     protected void onResume() {
         super.onResume();
-        user = USER;
+        initializeUser();
     }
 
     @Override
@@ -46,17 +46,28 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
         TextView save = findViewById(R.id.save);
         LinearLayout paymentMethod = findViewById(R.id.payment_method);
 
-        user = USER;
+        initializeUser();
 
         paymentMethod.setOnClickListener(v -> {
             Intent paymentMethodA = new Intent(this, PaymentMethodsActivity.class);
             startActivity(paymentMethodA);
         });
 
-        setData();
-
         emailAddress.setOnClickListener(v -> goToChangeEmail());
         save.setOnClickListener(v -> saveData());
+    }
+
+    public void initializeUser(){
+        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_profile/");
+        try {
+            String response = process.execute().get();
+            if (response != null){
+                USER = new User(new JsonParser().parse(response).getAsJsonArray().get(0).getAsJsonObject());
+                setData();
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     void goToChangeEmail(){
@@ -66,10 +77,10 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
     }
 
     void setData(){
-        firstName.setText(user.first_name);
-        lastName.setText(user.last_name);
-        phoneNumber.setText(user.phone_number);
-        emailAddress.setText(user.email);
+        firstName.setText(USER.first_name);
+        lastName.setText(USER.last_name);
+        phoneNumber.setText(USER.phone_number);
+        emailAddress.setText(USER.email);
     }
 
     private void saveData(){

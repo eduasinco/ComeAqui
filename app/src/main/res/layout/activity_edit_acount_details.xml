@@ -40,22 +40,28 @@
                     android:text="Phone number"
                     android:layout_width="match_parent"
                     android:layout_height="50dp" android:id="@+id/textView10" android:gravity="bottom"/>
-            <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="phone"
-                    android:ems="10"
-                    android:id="@+id/phone_number"/>
+
+            <TextView
+                android:id="@+id/phone_number"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:text="Phone"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
             <TextView
                     android:text="Email address"
                     android:layout_width="match_parent"
                     android:layout_height="50dp" android:id="@+id/textView28" android:gravity="bottom"/>
-            <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:ems="10"
-                    android:id="@+id/email_address"/>
+
+            <TextView
+                android:id="@+id/email_address"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:text="Email"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
             <TextView
                     android:text="Payment method"
                     android:layout_width="match_parent"
