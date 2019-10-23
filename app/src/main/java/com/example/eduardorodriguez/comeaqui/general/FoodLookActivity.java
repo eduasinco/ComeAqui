@@ -12,8 +12,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +28,7 @@ import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
+import com.example.eduardorodriguez.comeaqui.review.food_review_look.MyFoodReviewRecyclerViewAdapter;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
@@ -67,6 +70,7 @@ public class FoodLookActivity extends AppCompatActivity {
     LinearLayout dinnersListView;
     ImageView[] dinnerArray;
     FrameLayout waitingFrame;
+    ImageButton editFoodOptions;
 
     FoodPostDetail foodPostDetail;
 
@@ -95,7 +99,7 @@ public class FoodLookActivity extends AppCompatActivity {
         placeOrderProgress = findViewById(R.id.place_order_progress);
         placeOrderErrorMessage = findViewById(R.id.place_order_error_message);
         dinnersListView = findViewById(R.id.dinners_list_view);
-
+        editFoodOptions = findViewById(R.id.edit_food_options);
 
         waitingFrame = findViewById(R.id.waiting_frame);
 
@@ -149,7 +153,38 @@ public class FoodLookActivity extends AppCompatActivity {
 
         setPlaceButton();
         setDinners();
+        setEditOptionsMenu();
     }
+
+    void setEditOptionsMenu(){
+        editFoodOptions.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(this, editFoodOptions);
+            if (foodPostDetail.owner.id == USER.id){
+                popupMenu.getMenu().add("Edit");
+                popupMenu.getMenu().add("Delete");
+            } else {
+                popupMenu.getMenu().add("Report");
+            }
+
+            popupMenu.setOnMenuItemClickListener(item -> {
+                String title = item.getTitle().toString();
+                switch (title){
+                    case "Edit":
+                        editFoodPost();
+                        break;
+                    case "Delete":
+                        deleteOrder();
+                        break;
+                    case "Report":
+                        break;
+                }
+                return true;
+            });
+            popupMenu.show();
+        });
+    }
+
+    void editFoodPost(){}
 
     void setDinners(){
         dinnersListView.setOnClickListener((v) -> {
@@ -251,6 +286,7 @@ public class FoodLookActivity extends AppCompatActivity {
     }
 
     void deleteOrder(){
+        showProgress(true);
         Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/foods/" + foodPostDetail.id + "/");
         try {
             deleteFoodPost.execute().get();
