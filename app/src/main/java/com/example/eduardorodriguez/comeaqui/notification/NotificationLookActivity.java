@@ -163,7 +163,7 @@ public class NotificationLookActivity extends AppCompatActivity {
         Glide.with(this).load(url).into(staticMapView);
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.profile_rating, RatingFragment.newInstance(USER.rating, USER.ratingN))
+                .replace(R.id.profile_rating, RatingFragment.newInstance(orderObject.owner.rating, orderObject.owner.ratingN))
                 .commit();
 
         setConfirmCancelButton();

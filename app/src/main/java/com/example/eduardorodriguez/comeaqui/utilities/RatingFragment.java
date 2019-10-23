@@ -78,8 +78,13 @@ public class RatingFragment extends Fragment {
             starArray[(int) rating].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.star_filled));
         }
 
-        ratingTextView.setText(String.format("%.02f", rating) + "");
-        ratingNTextView.setText("(" + ratingN + ")");
+        if (rating == 0){
+            ratingTextView.setText("--");
+            ratingNTextView.setText("(-)");
+        } else {
+            ratingTextView.setText(String.format("%.01f", rating) + "");
+            ratingNTextView.setText("(" + ratingN + ")");
+        }
     }
 
     @Override

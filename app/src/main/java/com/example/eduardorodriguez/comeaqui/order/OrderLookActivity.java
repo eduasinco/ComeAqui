@@ -48,6 +48,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
     TextView totalPriceView;
     TextView mealTimeView;
     TextView posterNameView;
+    TextView posterUsername;
     TextView orderStatus;
 
     ImageView posterImageView;
@@ -72,6 +73,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
         context = getApplicationContext();
         plateName = findViewById(R.id.plate_name);
         posterNameView = findViewById(R.id.poster_name);
+        posterUsername = findViewById(R.id.poster_username);
         posterDescription = findViewById(R.id.description);
         posterLocationView = findViewById(R.id.posterLocation);
         price = findViewById(R.id.price);
@@ -187,6 +189,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
 
     void setView(){
         plateName.setText(order.post.plate_name);
+        posterUsername.setText(order.poster.username);
         posterNameView.setText(order.poster.first_name + " " + order.poster.last_name);
         posterDescription.setText(order.post.description);
         posterLocationView.setText(order.post.address);
@@ -221,7 +224,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
         }
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.profile_rating, RatingFragment.newInstance(USER.rating, USER.ratingN))
+                .replace(R.id.profile_rating, RatingFragment.newInstance(order.poster.rating, order.poster.ratingN))
                 .commit();
     }
 
