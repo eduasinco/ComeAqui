@@ -51,6 +51,12 @@ public class PostAndReviewsFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getPostFromUser();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
