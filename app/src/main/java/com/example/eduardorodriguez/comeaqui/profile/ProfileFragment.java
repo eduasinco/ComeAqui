@@ -170,7 +170,6 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view =  inflater.inflate(R.layout.fragment_profile, container, false);
-        final ImageView backGroundImageView = view.findViewById(R.id.backGroundImage);
 
         profileImageView = view.findViewById(R.id.profile_image);
         backGroundImage = view.findViewById(R.id.backGroundImage);
