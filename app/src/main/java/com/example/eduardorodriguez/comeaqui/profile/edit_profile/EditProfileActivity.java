@@ -1,7 +1,10 @@
 package com.example.eduardorodriguez.comeaqui.profile.edit_profile;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.FrameLayout;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,14 +17,19 @@ import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.EditAcountDetailsActivity;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
-public class EditProfileActivity extends AppCompatActivity {
+public class EditProfileActivity extends AppCompatActivity implements SelectImageFromFragment.OnFragmentInteractionListener{
 
     private TextView firstNameView;
     private TextView lastNameView;
@@ -32,6 +40,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private ImageView profileImageView;
     private ImageView backgroundImageView;
 
+    boolean isBackGound;
 
     @Override
     protected void onResume() {
@@ -78,6 +87,7 @@ public class EditProfileActivity extends AppCompatActivity {
         }
 
         editProfilePhotoView.setOnClickListener(v -> {
+            isBackGound = false;
             selectFrom.setVisibility(View.VISIBLE);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.select_from, SelectImageFromFragment.newInstance(false))
@@ -85,6 +95,7 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         editCoverPhoto.setOnClickListener(v -> {
+            isBackGound = true;
             selectFrom.setVisibility(View.VISIBLE);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.select_from, SelectImageFromFragment.newInstance(true))
@@ -109,24 +120,26 @@ public class EditProfileActivity extends AppCompatActivity {
         backView.setOnClickListener(v -> finish());
     }
 
-    private void saveFirebaseProfile(){
-        uploadFirebaseUserImage();
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(MainActivity.firebaseUser.id);
-        reference.child("first_name").setValue(firstNameView.getText().toString());
-        reference.child("last_name").setValue(lastNameView.getText().toString());
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        saveProfileImage(uri);
     }
 
-    private void uploadFirebaseUserImage(){
-        StorageReference firebaseStorage = FirebaseStorage.getInstance().getReference().child("user_image/" + MainActivity.firebaseUser.id);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        //imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] imageBytes = baos.toByteArray();
-        firebaseStorage.putBytes(imageBytes);
 
-        firebaseStorage.getDownloadUrl().addOnSuccessListener(uri -> {
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(MainActivity.firebaseUser.id);
-            reference.child("profile_photo").setValue(uri.toString());
-        }).addOnFailureListener(exception -> {});
+    private void saveProfileImage(Uri imageUri){
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+            if (bitmap != null){
+                PatchAsyncTask putTask = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
+                putTask.bitmap = bitmap;
+                if (isBackGound){
+                    putTask.execute(new String[]{"background_photo", "image"}).get(15, TimeUnit.SECONDS);
+                }else {
+                    putTask.execute(new String[]{"profile_photo", "image"}).get(15, TimeUnit.SECONDS);
+                }
+            }
+        } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {
+            e.printStackTrace();
+        }
     }
 }
