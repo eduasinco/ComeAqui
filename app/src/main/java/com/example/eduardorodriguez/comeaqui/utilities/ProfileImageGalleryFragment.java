@@ -100,7 +100,7 @@ public class ProfileImageGalleryFragment extends Fragment {
 
 
     void getPostFromUser(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_images/");
+        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_images/" + userId + "/");
         try {
             String response = process.execute().get();
             if (response != null) {
@@ -116,8 +116,8 @@ public class ProfileImageGalleryFragment extends Fragment {
         for (JsonElement pa : jsonArray) {
 
             JsonObject jo = pa.getAsJsonObject();
-            FoodPostImageObject foodPostImageObject = new FoodPostImageObject(jo);
-            if (foodPostImageObject.image != null && !foodPostImageObject.image.contains("no-image")){
+            FoodPostImageObject imageObject = new FoodPostImageObject(jo);
+            if (imageObject.image != null && !imageObject.image.contains("no-image")){
                 count++;
                 ImageView imageView = new ImageView(getContext());
                 imageView.setLayoutParams(new LinearLayout.LayoutParams(
@@ -131,11 +131,11 @@ public class ProfileImageGalleryFragment extends Fragment {
 
                 makeImageRoundCornered(imageView, 20);
 
-                Glide.with(view.getContext()).load(foodPostImageObject.image).into(imageView);
+                Glide.with(view.getContext()).load(imageObject.image).into(imageView);
 
                 imageView.setOnClickListener((v) -> {
                     Intent imageLook = new Intent(getContext(), ImageLookActivity.class);
-                    imageLook.putExtra("image_url", foodPostImageObject.image);
+                    imageLook.putExtra("image_url", imageObject.image);
                     startActivity(imageLook);
                 });
 
