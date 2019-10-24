@@ -1,11 +1,11 @@
 package com.example.eduardorodriguez.comeaqui.utilities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.util.DisplayMetrics;
@@ -17,10 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.craftman.cardform.Card;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostImageObject;
-import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -32,7 +31,9 @@ import java.util.concurrent.TimeoutException;
 
 public class HorizontalFoodPostImageDisplayFragment extends Fragment {
     private static final String FOOD_POST_ID = "foodPostId";
+    private static final String STYLE = "style";
     private int foodPostId;
+    private String style;
     private OnFragmentInteractionListener mListener;
 
     DisplayMetrics displayMetrics;
@@ -40,12 +41,14 @@ public class HorizontalFoodPostImageDisplayFragment extends Fragment {
     ArrayList<FoodPostImageObject> foodPostImageObjects;
 
     LinearLayout imageList;
+    ConstraintLayout parentView;
 
     public HorizontalFoodPostImageDisplayFragment() {}
-    public static HorizontalFoodPostImageDisplayFragment newInstance(int foodPostId) {
+    public static HorizontalFoodPostImageDisplayFragment newInstance(int foodPostId,  String style) {
         HorizontalFoodPostImageDisplayFragment fragment = new HorizontalFoodPostImageDisplayFragment();
         Bundle args = new Bundle();
         args.putInt(FOOD_POST_ID, foodPostId);
+        args.putString(STYLE, style);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,6 +58,7 @@ public class HorizontalFoodPostImageDisplayFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             foodPostId = getArguments().getInt(FOOD_POST_ID);
+            style = getArguments().getString(STYLE);
         }
     }
 
@@ -73,6 +77,7 @@ public class HorizontalFoodPostImageDisplayFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_horizontal_image_display, container, false);
         imageList = view.findViewById(R.id.images_list);
+        parentView = view.findViewById(R.id.parent_view);
         displayMetrics = view.getContext().getResources().getDisplayMetrics();
         return view;
     }
@@ -80,12 +85,7 @@ public class HorizontalFoodPostImageDisplayFragment extends Fragment {
         imageList.removeAllViews();
         for (FoodPostImageObject io: foodPostImageObjects){
 
-            CardView card = new CardView(getContext());
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(displayMetrics.widthPixels - dpToPx(100), dpToPx(200));
-            lp.setMargins(dpToPx(24), dpToPx(8), 0, dpToPx(8));
-            card.setLayoutParams(lp);
-            card.setRadius(dpToPx(8));
-
+            CardView card = createCard();
             ImageView imageView = new ImageView(getContext());
             imageView.setLayoutParams(new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
@@ -99,6 +99,33 @@ public class HorizontalFoodPostImageDisplayFragment extends Fragment {
                 imageView.setOnClickListener(v -> goToImageLook(io.image));
             }
         }
+    }
+
+    CardView createCard(){
+        CardView card = new CardView(getContext());
+        LinearLayout.LayoutParams lp;
+        switch (style){
+            case "big":
+                lp = new LinearLayout.LayoutParams(displayMetrics.widthPixels - dpToPx(100), dpToPx(200));
+                lp.setMargins(dpToPx(24), dpToPx(8), 0, dpToPx(8));
+                card.setLayoutParams(lp);
+                card.setRadius(dpToPx(8));
+                break;
+            case "medium":
+                lp = new LinearLayout.LayoutParams((int) (parentView.getMeasuredWidth() * 0.7), dpToPx(100));
+                lp.setMargins(0, 0, dpToPx(4), 0);
+                card.setLayoutParams(lp);
+                card.setRadius(0);
+                card.setElevation(0);
+                break;
+            case "small":
+                lp = new LinearLayout.LayoutParams(displayMetrics.widthPixels - dpToPx(100), dpToPx(200));
+                lp.setMargins(dpToPx(24), dpToPx(8), 0, dpToPx(8));
+                card.setLayoutParams(lp);
+                card.setRadius(dpToPx(8));
+                break;
+        }
+        return card;
     }
 
     void goToImageLook(String url){

@@ -68,9 +68,9 @@ public class MapCardFragment extends Fragment {
         int move = cardView.getMeasuredHeight() + ((ConstraintLayout.LayoutParams) cardView.getLayoutParams()).bottomMargin * 2;
         if (up) {
             cardView.setTranslationY(move);
-            cardView.animate().translationY(0).setDuration(move);
+            cardView.animate().translationY(0).setDuration(move / 2);
         } else {
-            cardView.animate().translationY(move).setDuration(move);
+            cardView.animate().translationY(move).setDuration(move / 2);
         }
     }
 
@@ -84,7 +84,7 @@ public class MapCardFragment extends Fragment {
                 .commit();
 
         getChildFragmentManager().beginTransaction()
-                .replace(R.id.image_list, HorizontalFoodPostImageDisplayFragment.newInstance(foodPost.id))
+                .replace(R.id.image_list, HorizontalFoodPostImageDisplayFragment.newInstance(foodPost.id,"medium"))
                 .commit();
 
         favouriteId = foodPost.favouriteId;

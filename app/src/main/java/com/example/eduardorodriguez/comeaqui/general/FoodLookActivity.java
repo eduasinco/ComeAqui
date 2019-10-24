@@ -138,7 +138,7 @@ public class FoodLookActivity extends AppCompatActivity {
             posterImage.setOnClickListener(v -> goToProfileView(foodPostDetail.owner));
         }
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.image_list, HorizontalFoodPostImageDisplayFragment.newInstance(foodPostDetail.id))
+                .replace(R.id.image_list, HorizontalFoodPostImageDisplayFragment.newInstance(foodPostDetail.id, "big"))
                 .commit();
 
         String url = "http://maps.google.com/maps/api/staticmap?center=" + foodPostDetail.lat + "," + foodPostDetail.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
