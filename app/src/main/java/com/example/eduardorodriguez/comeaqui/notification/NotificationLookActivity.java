@@ -148,7 +148,7 @@ public class NotificationLookActivity extends AppCompatActivity {
 
         if(!orderObject.owner.profile_photo.contains("no-image")) Glide.with(this).load(orderObject.owner.profile_photo).into(dinnerImage);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.image_list, HorizontalFoodPostImageDisplayFragment.newInstance(orderObject.post.id, "big"))
+                .replace(R.id.image_list, HorizontalFoodPostImageDisplayFragment.newInstance(orderObject.post.id, "CARD"))
                 .commit();
         String url = "http://maps.google.com/maps/api/staticmap?center=" + orderObject.post.lat + "," + orderObject.post.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
         Glide.with(this).load(url).into(staticMapView);

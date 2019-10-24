@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.craftman.cardform.Card;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostImageObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
@@ -28,6 +27,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
 
 public class HorizontalFoodPostImageDisplayFragment extends Fragment {
     private static final String FOOD_POST_ID = "foodPostId";
@@ -84,7 +84,6 @@ public class HorizontalFoodPostImageDisplayFragment extends Fragment {
     void setImages(){
         imageList.removeAllViews();
         for (FoodPostImageObject io: foodPostImageObjects){
-
             CardView card = createCard();
             ImageView imageView = new ImageView(getContext());
             imageView.setLayoutParams(new LinearLayout.LayoutParams(
@@ -105,24 +104,25 @@ public class HorizontalFoodPostImageDisplayFragment extends Fragment {
         CardView card = new CardView(getContext());
         LinearLayout.LayoutParams lp;
         switch (style){
-            case "big":
+            case "CARD":
                 lp = new LinearLayout.LayoutParams(displayMetrics.widthPixels - dpToPx(100), dpToPx(200));
                 lp.setMargins(dpToPx(24), dpToPx(8), 0, dpToPx(8));
                 card.setLayoutParams(lp);
                 card.setRadius(dpToPx(8));
                 break;
-            case "medium":
+            case "SMALL":
                 lp = new LinearLayout.LayoutParams((int) (parentView.getMeasuredWidth() * 0.7), dpToPx(100));
                 lp.setMargins(0, 0, dpToPx(4), 0);
                 card.setLayoutParams(lp);
                 card.setRadius(0);
                 card.setElevation(0);
                 break;
-            case "small":
-                lp = new LinearLayout.LayoutParams(displayMetrics.widthPixels - dpToPx(100), dpToPx(200));
-                lp.setMargins(dpToPx(24), dpToPx(8), 0, dpToPx(8));
+            case "MEDIUM":
+                lp = new LinearLayout.LayoutParams((int) (parentView.getMeasuredWidth() * 0.7), dpToPx(200));
+                lp.setMargins(0, 0, dpToPx(8), 0);
                 card.setLayoutParams(lp);
-                card.setRadius(dpToPx(8));
+                card.setRadius(0);
+                card.setElevation(0);
                 break;
         }
         return card;

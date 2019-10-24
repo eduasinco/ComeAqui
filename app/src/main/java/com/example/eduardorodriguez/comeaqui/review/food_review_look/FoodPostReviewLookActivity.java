@@ -31,6 +31,7 @@ import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.HorizontalFoodPostImageDisplayFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.android.material.appbar.AppBarLayout;
@@ -61,7 +62,6 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
     public TextView postNameView;
     public TextView postRating;
     public View cardButtonView;
-    public ImageView header1;
     FrameLayout waitingFrame;
 
     ImageView vegetarian;
@@ -97,7 +97,6 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
         posterDescriptionView = findViewById(R.id.description_post_review);
         cardButtonView = findViewById(R.id.cardButton);
         postRating = findViewById(R.id.food_post_review_rating);
-        header1 = findViewById(R.id.header1);
         waitingFrame = findViewById(R.id.waiting_frame);
 
         vegetarian = findViewById(R.id.vegetarian);
@@ -120,6 +119,9 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
         if(b != null){
             fpId = b.getInt("foodPostId");
             getReviewsFrompFoodPost(fpId);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.image_list, HorizontalFoodPostImageDisplayFragment.newInstance(fpId, "MEDIUM"))
+                    .commit();
         }
 
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.no_food);
@@ -185,17 +187,6 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
             rating = String.format("%.01f", foodPostReview.rating);
         }
         postRating.setText(rating);
-
-
-        if (foodPostReview.images.size() > 0) {
-            header1.setVisibility(View.VISIBLE);
-            Glide.with(this).load(foodPostReview.images.get(0).image).into(header1);
-            header1.setOnClickListener((v) -> {
-                Intent imageLook = new Intent(this, ImageLookActivity.class);
-                imageLook.putExtra("image_url", foodPostReview.images.get(0).image);
-                startActivity(imageLook);
-            });
-        }
         setTypes(foodPostReview.type);
     }
 

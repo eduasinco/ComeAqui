@@ -23,19 +23,16 @@ import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.objects.User;
-import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
-import com.example.eduardorodriguez.comeaqui.review.food_review_look.MyFoodReviewRecyclerViewAdapter;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.HorizontalFoodPostImageDisplayFragment;
-import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -138,7 +135,7 @@ public class FoodLookActivity extends AppCompatActivity {
             posterImage.setOnClickListener(v -> goToProfileView(foodPostDetail.owner));
         }
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.image_list, HorizontalFoodPostImageDisplayFragment.newInstance(foodPostDetail.id, "big"))
+                .replace(R.id.image_list, HorizontalFoodPostImageDisplayFragment.newInstance(foodPostDetail.id, "CARD"))
                 .commit();
 
         String url = "http://maps.google.com/maps/api/staticmap?center=" + foodPostDetail.lat + "," + foodPostDetail.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
