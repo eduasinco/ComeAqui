@@ -61,8 +61,8 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
     int fabCount;
 
     MapPickerFragment mapPickerFragment;
+    MapCardFragment mapCardFragment;
 
-    CardView cardView;
     FloatingActionButton myFab;
     ImageView cancelPostView;
 
@@ -136,7 +136,6 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
         mMapView = rootView.findViewById(R.id.mapView);
         myFab =  rootView.findViewById(R.id.fab);
         cancelPostView = rootView.findViewById(R.id.cancel_post);
-        cardView = rootView.findViewById(R.id.card);
 
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
@@ -167,6 +166,11 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
 
         getFragmentManager().beginTransaction()
                 .replace(R.id.upper_notification, UpperNotificationFragment.newInstance())
+                .commit();
+
+        mapCardFragment = MapCardFragment.newInstance();
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container1, mapCardFragment)
                 .commit();
 
         listenToChatMessages();
@@ -237,35 +241,15 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
 
 
         googleMap.setOnMarkerClickListener(marker -> {
-
-            cardView.setVisibility(View.GONE);
             myFab.setVisibility(View.GONE);
             cancelPostView.setVisibility(View.VISIBLE);
 
             final int key = (int) (marker.getTag());
             touchedMarkers.add(key);
             FoodPost foodPost = foodPostHashMap.get(key);
-            getChildFragmentManager().beginTransaction()
-                    .replace(R.id.container1, MapCardFragment.newInstance(foodPost))
-                    .commit();
-            moveCardUp();
+            mapCardFragment.showPost(foodPost);
+            mapCardFragment.moveCardUp(true);
             return false;
-        });
-    }
-
-    void moveCardUp(){
-        int move = 200;
-        cardView.setScaleX(0);
-        cardView.setScaleY(0);
-        cardView.setVisibility(View.VISIBLE);
-        cardView.animate().scaleY(1).scaleX(1).setDuration(move);
-    }
-
-    void moveCardDown(){
-        int move = 200;
-        cardView.setVisibility(View.VISIBLE);
-        cardView.animate().scaleY(0).scaleX(0).setDuration(move).withEndAction(() -> {
-            cardView.setVisibility(View.GONE);
         });
     }
 
@@ -332,7 +316,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
         cancelPostView.setVisibility(View.GONE);
         myFab.setVisibility(View.VISIBLE);
         mapPickerFragment.apearMapPicker(false);
-        moveCardDown();
+        mapCardFragment.moveCardUp(false);
     }
 
     void switchFabImage(boolean toPlus){

@@ -3,6 +3,8 @@ package com.example.eduardorodriguez.comeaqui.map;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
+import com.example.eduardorodriguez.comeaqui.utilities.HorizontalFoodPostImageDisplayFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 
 import java.util.concurrent.ExecutionException;
@@ -28,27 +31,22 @@ public class MapCardFragment extends Fragment {
 
     TextView posterNameView;
     TextView posterUserName;
-
     ImageView posterImageView;
     ImageView starView;
-    ImageView postImageView;
-
-    ImageView imageLayout;
-
+    CardView cardView;
     FoodPost foodPost;
-    int favouriteId;
-    boolean favourite;
 
-    public MapCardFragment() {
-        // Required empty public constructor
+    int favouriteId;
+
+    public MapCardFragment() {}
+
+    public static MapCardFragment newInstance() {
+        return new MapCardFragment();
     }
 
-    public static MapCardFragment newInstance(FoodPost foodPost) {
-        MapCardFragment fragment = new MapCardFragment();
-        Bundle args = new Bundle();
-        args.putSerializable("object", foodPost);
-        fragment.setArguments(args);
-        return fragment;
+    public void showPost(FoodPost foodPost){
+        this.foodPost = foodPost;
+        setView();
     }
 
 
@@ -60,18 +58,33 @@ public class MapCardFragment extends Fragment {
         posterNameView = view.findViewById(R.id.poster_name);
         posterUserName = view.findViewById(R.id.poster_username);
         starView = view.findViewById(R.id.star);
-
         posterImageView = view.findViewById(R.id.poster_image);
-        postImageView = view.findViewById(R.id.image_layout);
+        cardView = view.findViewById(R.id.map_card);
 
-        foodPost = (FoodPost) getArguments().getSerializable("object");
+        return view;
+    }
 
+    public void moveCardUp(boolean up){
+        int move = cardView.getMeasuredHeight() + ((ConstraintLayout.LayoutParams) cardView.getLayoutParams()).bottomMargin * 2;
+        if (up) {
+            cardView.setTranslationY(move);
+            cardView.animate().translationY(0).setDuration(move);
+        } else {
+            cardView.animate().translationY(move).setDuration(move);
+        }
+    }
+
+    void setView(){
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.container2, FoodElementFragment.newInstance(foodPost))
                 .commit();
 
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.profile_rating, RatingFragment.newInstance(USER.rating, USER.ratingN))
+                .commit();
+
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.image_list, HorizontalFoodPostImageDisplayFragment.newInstance(foodPost.id))
                 .commit();
 
         favouriteId = foodPost.favouriteId;
@@ -81,20 +94,10 @@ public class MapCardFragment extends Fragment {
         starView.setImageResource(foodPost.favourite ? R.drawable.star_fill: R.drawable.star);
         MapFragment.markerPutColor(MapFragment.markerHashMap.get(foodPost.id), !foodPost.favourite ? R.color.grey : R.color.favourite);
 
-        if(!foodPost.owner.profile_photo.contains("no-image")) Glide.with(view.getContext()).load(foodPost.owner.profile_photo).into(posterImageView);
-        if(foodPost.images.size() > 0){
-            postImageView.setVisibility(View.VISIBLE);
-            Glide.with(view.getContext()).load(foodPost.images.get(0).image).into(postImageView);
-            postImageView.setOnClickListener((v) -> {
-                Intent foodLook = new Intent(getContext(), FoodLookActivity.class);
-                foodLook.putExtra("foodPostId", foodPost.id);
-                startActivity(foodLook);
-            });
-        }
+        if(!foodPost.owner.profile_photo.contains("no-image")) Glide.with(getContext()).load(foodPost.owner.profile_photo).into(posterImageView);
 
         posterImageView.setOnClickListener(v -> goToProfileView());
         setFavourite();
-        return view;
     }
 
     void goToProfileView(){
