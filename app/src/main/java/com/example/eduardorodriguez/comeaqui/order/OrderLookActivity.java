@@ -26,6 +26,7 @@ import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.ContinueCancelFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.HorizontalFoodPostImageDisplayFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
@@ -59,7 +60,6 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
     FrameLayout waitingFrame;
     View orderCancelProgress;
 
-    CardView imageCard;
 
     OrderObject order;
 
@@ -83,8 +83,6 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
         orderStatus = findViewById(R.id.order_status);
 
         posterImageView = findViewById(R.id.poster_image);
-        postImageView = findViewById(R.id.image_layout);
-        imageCard = findViewById(R.id.image_card);
         staticMapView = findViewById(R.id.static_map);
         cancelOrderButton = findViewById(R.id.cancelOrderButton);
         cancelMessage = findViewById(R.id.cancel_message);
@@ -213,15 +211,10 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
             Glide.with(context).load(order.poster.profile_photo).into(posterImageView);
             posterImageView.setOnClickListener(v -> goToProfileView(order.poster));
         }
-        if(!order.post.food_photo.contains("no-image")){
-            imageCard.setVisibility(View.VISIBLE);
-            Glide.with(context).load(order.post.food_photo).into(postImageView);
-            imageCard.setOnClickListener((v) -> {
-                Intent imageLook = new Intent(this, ImageLookActivity.class);
-                imageLook.putExtra("image_url", order.post.food_photo);
-                startActivity(imageLook);
-            });
-        }
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.image_list, HorizontalFoodPostImageDisplayFragment.newInstance(order.post.id))
+                .commit();
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.profile_rating, RatingFragment.newInstance(order.poster.rating, order.poster.ratingN))

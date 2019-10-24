@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 
 import com.example.eduardorodriguez.comeaqui.WebSocketMessage;
+import com.example.eduardorodriguez.comeaqui.map.add_food.AddImagesFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodTimePickerFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.WordLimitEditTextFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
@@ -31,6 +32,7 @@ import com.example.eduardorodriguez.comeaqui.utilities.place_autocomplete.PlaceA
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -43,14 +45,14 @@ public class AddFoodActivity extends AppCompatActivity implements
         ErrorMessageFragment.OnFragmentInteractionListener,
         FoodTypeSelectorFragment.OnFragmentInteractionListener,
         FoodTimePickerFragment.OnFragmentInteractionListener,
-        WordLimitEditTextFragment.OnFragmentInteractionListener {
+        WordLimitEditTextFragment.OnFragmentInteractionListener,
+        AddImagesFragment.OnFragmentInteractionListener{
     EditText foodName;
     TextView price;
     ImageView image;
     SeekBar seekbar;
     ConstraintLayout descriptionLayout;
     Button submit;
-    ImageView doPhoto;
     ImageView backView;
     FrameLayout selectFromLayout;
     ScrollView scrollView;
@@ -62,7 +64,8 @@ public class AddFoodActivity extends AppCompatActivity implements
 
     Float price_data;
     boolean[] pressed = {false, false, false, false, false, false, false};
-    Bitmap imageBitmap;
+    ArrayList<Bitmap> imageBitmaps;
+    int imageIndex;
     int dinners = 0;
     String postTimeString;
     double lat;
@@ -77,6 +80,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     FoodTypeSelectorFragment foodTypeSelectorFragment;
     FoodTimePickerFragment foodTimePickerFragment;
     WordLimitEditTextFragment wordLimitEditTextFragment;
+    AddImagesFragment addImageFragment;
 
     private String setTypes(){
         StringBuilder types = new StringBuilder();
@@ -105,6 +109,7 @@ public class AddFoodActivity extends AppCompatActivity implements
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.order_choices, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        imageBitmaps = new ArrayList<>();
 
         foodName = findViewById(R.id.plateName);
         price = findViewById(R.id.priceText);
@@ -112,7 +117,6 @@ public class AddFoodActivity extends AppCompatActivity implements
         seekbar = findViewById(R.id.seekBar);
         descriptionLayout = findViewById(R.id.descriptionLayout);
         submit = findViewById(R.id.submitButton);
-        doPhoto = findViewById(R.id.photo);
         backView = findViewById(R.id.back_arrow);
         selectFromLayout = findViewById(R.id.select_image_from);
         scrollView = findViewById(R.id.scrollview);
@@ -134,6 +138,7 @@ public class AddFoodActivity extends AppCompatActivity implements
             foodTypeSelectorFragment = FoodTypeSelectorFragment.newInstance();
             foodTimePickerFragment = FoodTimePickerFragment.newInstance();
             wordLimitEditTextFragment = WordLimitEditTextFragment.newInstance();
+            addImageFragment = AddImagesFragment.newInstance();
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.locationAutocomplete, placeAutocompleteFragment)
@@ -150,14 +155,11 @@ public class AddFoodActivity extends AppCompatActivity implements
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.post_limit_text_edit, wordLimitEditTextFragment)
                     .commit();
-        }
 
-        doPhoto.setOnClickListener((v) -> {
-            selectFromLayout.setVisibility(View.VISIBLE);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.select_image_from, SelectImageFromFragment.newInstance(false))
+                    .replace(R.id.add_images_frame, addImageFragment)
                     .commit();
-        });
+        }
 
         setPlateName();
         setFoodName();
@@ -281,11 +283,9 @@ public class AddFoodActivity extends AppCompatActivity implements
                 protected void onPostExecute(String response) {
                     FoodPost foodPost = new FoodPost(new JsonParser().parse(response).getAsJsonObject());
                     sendPostMessage(foodPost);
-                    finish();
-                    super.onPostExecute(response);
+                    postImages(foodPost.id);
                 }
             };
-            post.bitmap = imageBitmap;
             post.execute(
                     new String[]{"plate_name", foodName.getText().toString()},
                     new String[]{"address", address},
@@ -296,8 +296,7 @@ public class AddFoodActivity extends AppCompatActivity implements
                     new String[]{"time_zone", USER.timeZone},
                     new String[]{"price", price_data.toString()},
                     new String[]{"food_type", setTypes()},
-                    new String[]{"description", description},
-                    new String[]{"food_photo", ""}
+                    new String[]{"description", description}
             ).get(10, TimeUnit.SECONDS);
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
@@ -308,6 +307,35 @@ public class AddFoodActivity extends AppCompatActivity implements
             e.printStackTrace();
             showProgress(false);
             Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    void postImages(int foodPostId){
+        for (Bitmap image: imageBitmaps){
+            showProgress(true);
+            try {
+                PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/food_images/"){
+                    @Override
+                    protected void onPostExecute(String response) {
+                        super.onPostExecute(response);
+                    }
+                };
+                post.bitmap = image;
+                post.execute(
+                        new String[]{"post", "" + foodPostId},
+                        new String[]{"image", ""}
+                ).get(10, TimeUnit.SECONDS);
+                finish();
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+                showErrorMessage();
+                showProgress(false);
+                Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+                showProgress(false);
+                Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
+            }
         }
     }
     void sendPostMessage(FoodPost foodPost){
@@ -367,10 +395,9 @@ public class AddFoodActivity extends AppCompatActivity implements
     public void onFragmentInteraction(Uri uri) {
         try {
             selectFromLayout.setVisibility(View.GONE);
-            imageBitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
-            doPhoto.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
-            doPhoto.getLayoutParams().height = 500;
-            doPhoto.setImageURI(uri);
+            Bitmap bm = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
+            imageBitmaps.add(imageIndex, bm);
+            addImageFragment.addImage(uri, imageIndex);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -406,6 +433,15 @@ public class AddFoodActivity extends AppCompatActivity implements
     @Override
     public void onFragmentInteraction(String postTimeString) {
         this.postTimeString = postTimeString;
+    }
+
+    @Override
+    public void onAddImage(int index) {
+        imageIndex = index;
+        selectFromLayout.setVisibility(View.VISIBLE);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.select_image_from, SelectImageFromFragment.newInstance(false))
+                .commit();
     }
 }
 

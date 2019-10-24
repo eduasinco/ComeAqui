@@ -67,25 +67,11 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/image_layout"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="210dp"
-                android:visibility="gone">
-
-                <ImageView
-                    android:id="@+id/image"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:visibility="visible"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/no_food" />
-            </androidx.cardview.widget.CardView>
-
+                android:layout_height="wrap_content"
+                android:id="@+id/image_list">
+            </FrameLayout>
             <TextView
                 android:id="@+id/textView20"
                 android:layout_width="match_parent"

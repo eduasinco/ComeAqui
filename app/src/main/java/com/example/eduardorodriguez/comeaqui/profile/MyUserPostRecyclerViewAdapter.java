@@ -49,12 +49,12 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         holder.postTime.setText(foodPost.time);
         holder.posterDescriptionView.setText(foodPost.description);
 
-        if (!foodPost.food_photo.contains("no-image")) {
+        if (foodPost.images.size() > 0) {
             holder.imageView.setVisibility(View.VISIBLE);
-            Glide.with(holder.mView.getContext()).load(foodPost.food_photo).into(holder.imageView);
+            Glide.with(holder.mView.getContext()).load(foodPost.images.get(0).image).into(holder.imageView);
             holder.imageView.setOnClickListener((v) -> {
                 Intent imageLook = new Intent(holder.mView.getContext(), ImageLookActivity.class);
-                imageLook.putExtra("image_url", foodPost.food_photo);
+                imageLook.putExtra("image_url", foodPost.images.get(0).image);
                 holder.mView.getContext().startActivity(imageLook);
             });
         }

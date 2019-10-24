@@ -23,6 +23,7 @@ import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.HorizontalFoodPostImageDisplayFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
@@ -49,11 +50,9 @@ public class NotificationLookActivity extends AppCompatActivity {
     TextView statucMessage;
     Button confirmCancelButton;
 
-    ImageView postImage;
     ImageView dinnerImage;
     ImageView staticMapView;
     ImageView backView;
-    CardView postImageLayout;
     View confirmNotificationProgress;
     FrameLayout waitingFrame;
 
@@ -76,10 +75,8 @@ public class NotificationLookActivity extends AppCompatActivity {
         posterLocationView = findViewById(R.id.posterLocation);
         statucMessage = findViewById(R.id.status_message);
 
-        postImage = findViewById(R.id.image);
         dinnerImage = findViewById(R.id.dinner_image);
         staticMapView = findViewById(R.id.static_map);
-        postImageLayout = findViewById(R.id.image_layout);
         backView = findViewById(R.id.back_arrow);
         confirmNotificationProgress = findViewById(R.id.confirm_notification_progress);
         waitingFrame = findViewById(R.id.waiting_frame);
@@ -150,15 +147,9 @@ public class NotificationLookActivity extends AppCompatActivity {
 
 
         if(!orderObject.owner.profile_photo.contains("no-image")) Glide.with(this).load(orderObject.owner.profile_photo).into(dinnerImage);
-        if(!orderObject.post.food_photo.contains("no-image")){
-            postImageLayout.setVisibility(View.VISIBLE);
-            Glide.with(this).load(orderObject.post.food_photo).into(postImage);
-            postImageLayout.setOnClickListener((v) -> {
-                Intent imageLook = new Intent(this, ImageLookActivity.class);
-                imageLook.putExtra("image_url", orderObject.post.food_photo);
-                startActivity(imageLook);
-            });
-        }
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.image_list, HorizontalFoodPostImageDisplayFragment.newInstance(orderObject.post.id))
+                .commit();
         String url = "http://maps.google.com/maps/api/staticmap?center=" + orderObject.post.lat + "," + orderObject.post.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
         Glide.with(this).load(url).into(staticMapView);
 

@@ -34,6 +34,7 @@ import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.HorizontalFoodPostImageDisplayFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonObject;
@@ -59,7 +60,6 @@ public class FoodLookActivity extends AppCompatActivity {
     TextView changePaymentMethod;
     Button placeOrderButton;
 
-    ImageView postImage;
     ImageView posterImage;
     ImageView staticMapView;
     View backView;
@@ -89,10 +89,8 @@ public class FoodLookActivity extends AppCompatActivity {
         posterNameView = findViewById(R.id.poster_name);
         posterLocationView = findViewById(R.id.posterLocation);
 
-        postImage = findViewById(R.id.post_image);
         posterImage = findViewById(R.id.poster_image);
         staticMapView = findViewById(R.id.static_map);
-        postImageLayout = findViewById(R.id.image_layout);
         backView = findViewById(R.id.back);
         paymentMethod = findViewById(R.id.payment_method_layout);
         changePaymentMethod = findViewById(R.id.change_payment);
@@ -139,15 +137,10 @@ public class FoodLookActivity extends AppCompatActivity {
             Glide.with(this).load(foodPostDetail.owner.profile_photo).into(posterImage);
             posterImage.setOnClickListener(v -> goToProfileView(foodPostDetail.owner));
         }
-        if(!foodPostDetail.food_photo.contains("no-image")){
-            postImageLayout.setVisibility(View.VISIBLE);
-            Glide.with(this).load(foodPostDetail.food_photo).into(postImage);
-            postImageLayout.setOnClickListener((v) -> {
-                Intent imageLook = new Intent(this, ImageLookActivity.class);
-                imageLook.putExtra("image_url", foodPostDetail.food_photo);
-                startActivity(imageLook);
-            });
-        }
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.image_list, HorizontalFoodPostImageDisplayFragment.newInstance(foodPostDetail.id))
+                .commit();
+
         String url = "http://maps.google.com/maps/api/staticmap?center=" + foodPostDetail.lat + "," + foodPostDetail.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
         Glide.with(this).load(url).into(staticMapView);
 

@@ -1,8 +1,10 @@
 package com.example.eduardorodriguez.comeaqui.objects;
 
 import com.example.eduardorodriguez.comeaqui.utilities.DateFragment;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class FoodPost implements Serializable {
     public int id;
@@ -12,9 +14,9 @@ public class FoodPost implements Serializable {
     public String price;
     public String type;
     public String description;
-    public String food_photo;
     public String time;
     public String address;
+    public ArrayList<FoodPostImageObject> images;
     public float lat;
     public float lng;
     public boolean favourite = false;
@@ -28,12 +30,18 @@ public class FoodPost implements Serializable {
         price = jo.get("price").getAsString();
         type = jo.get("food_type").getAsString();
         description = jo.get("description").getAsString();
-        food_photo = ImageStringProcessor.processString(jo.get("food_photo").getAsString());
         time = DateFragment.getHourForFoodPosts(jo.get("time").getAsString());
         lat = jo.get("lat").getAsFloat();
         lng = jo.get("lng").getAsFloat();
         address = jo.get("address").getAsString();
         rating = jo.get("rating").getAsInt();
         owner = new User(jo.get("owner").getAsJsonObject());
+
+        images = new ArrayList<>();
+        try {
+            for (JsonElement je: jo.get("images").getAsJsonArray()){
+                images.add(new FoodPostImageObject(je.getAsJsonObject()));
+            }
+        }catch (Exception ignore){}
     }
 }

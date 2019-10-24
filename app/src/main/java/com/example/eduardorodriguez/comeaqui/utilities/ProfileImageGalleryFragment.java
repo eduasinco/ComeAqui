@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPostImageObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.gson.JsonArray;
@@ -99,7 +100,7 @@ public class ProfileImageGalleryFragment extends Fragment {
 
 
     void getPostFromUser(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_food_posts/" + userId + "/");
+        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_images/");
         try {
             String response = process.execute().get();
             if (response != null) {
@@ -115,8 +116,8 @@ public class ProfileImageGalleryFragment extends Fragment {
         for (JsonElement pa : jsonArray) {
 
             JsonObject jo = pa.getAsJsonObject();
-            FoodPost foodPost = new FoodPost(jo);
-            if (foodPost.food_photo != null && !foodPost.food_photo.contains("no-image")){
+            FoodPostImageObject foodPostImageObject = new FoodPostImageObject(jo);
+            if (foodPostImageObject.image != null && !foodPostImageObject.image.contains("no-image")){
                 count++;
                 ImageView imageView = new ImageView(getContext());
                 imageView.setLayoutParams(new LinearLayout.LayoutParams(
@@ -130,11 +131,11 @@ public class ProfileImageGalleryFragment extends Fragment {
 
                 makeImageRoundCornered(imageView, 20);
 
-                Glide.with(view.getContext()).load(foodPost.food_photo).into(imageView);
+                Glide.with(view.getContext()).load(foodPostImageObject.image).into(imageView);
 
                 imageView.setOnClickListener((v) -> {
                     Intent imageLook = new Intent(getContext(), ImageLookActivity.class);
-                    imageLook.putExtra("image_url", foodPost.food_photo);
+                    imageLook.putExtra("image_url", foodPostImageObject.image);
                     startActivity(imageLook);
                 });
 

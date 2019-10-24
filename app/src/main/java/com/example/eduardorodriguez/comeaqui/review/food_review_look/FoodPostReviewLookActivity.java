@@ -187,12 +187,12 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
         postRating.setText(rating);
 
 
-        if (!foodPostReview.food_photo.contains("no-image")) {
+        if (foodPostReview.images.size() > 0) {
             header1.setVisibility(View.VISIBLE);
-            Glide.with(this).load(foodPostReview.food_photo).into(header1);
+            Glide.with(this).load(foodPostReview.images.get(0).image).into(header1);
             header1.setOnClickListener((v) -> {
                 Intent imageLook = new Intent(this, ImageLookActivity.class);
-                imageLook.putExtra("image_url", foodPostReview.food_photo);
+                imageLook.putExtra("image_url", foodPostReview.images.get(0).image);
                 startActivity(imageLook);
             });
         }

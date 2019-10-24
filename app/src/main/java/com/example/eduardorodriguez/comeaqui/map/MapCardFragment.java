@@ -82,9 +82,9 @@ public class MapCardFragment extends Fragment {
         MapFragment.markerPutColor(MapFragment.markerHashMap.get(foodPost.id), !foodPost.favourite ? R.color.grey : R.color.favourite);
 
         if(!foodPost.owner.profile_photo.contains("no-image")) Glide.with(view.getContext()).load(foodPost.owner.profile_photo).into(posterImageView);
-        if(!foodPost.food_photo.contains("no-image")){
+        if(foodPost.images.size() > 0){
             postImageView.setVisibility(View.VISIBLE);
-            Glide.with(view.getContext()).load(foodPost.food_photo).into(postImageView);
+            Glide.with(view.getContext()).load(foodPost.images.get(0).image).into(postImageView);
             postImageView.setOnClickListener((v) -> {
                 Intent foodLook = new Intent(getContext(), FoodLookActivity.class);
                 foodLook.putExtra("foodPostId", foodPost.id);
