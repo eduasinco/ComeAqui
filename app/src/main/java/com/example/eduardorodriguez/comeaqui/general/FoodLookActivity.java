@@ -132,7 +132,6 @@ public class FoodLookActivity extends AppCompatActivity {
             }
         });
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.collapseMenu = menu;
@@ -148,16 +147,16 @@ public class FoodLookActivity extends AppCompatActivity {
                 if (!isCollapsed){
                     final Drawable upArrow = getResources().getDrawable(R.drawable.back_arrow_white);
                     getSupportActionBar().setHomeAsUpIndicator(upArrow);
-                    findViewById(R.id.action_settings).setBackgroundColor(Color.TRANSPARENT);
-                    findViewById(R.id.other).setBackgroundColor(Color.TRANSPARENT);
+                    findViewById(R.id.action_settings).setBackground(ContextCompat.getDrawable(this, R.drawable.collapse_three_dots));
+                    findViewById(R.id.other).setBackground(ContextCompat.getDrawable(this, R.drawable.collapse_plus));
                 }
                 isCollapsed = true;
             }else{
                 if (isCollapsed){
                     final Drawable upArrow = getResources().getDrawable(R.drawable.back_arrow_with_background);
                     getSupportActionBar().setHomeAsUpIndicator(upArrow);
-                    findViewById(R.id.action_settings).setBackground(ContextCompat.getDrawable(this, R.drawable.circle_in_toolbar));
-                    findViewById(R.id.other).setBackground(ContextCompat.getDrawable(this, R.drawable.circle_in_toolbar));
+                    findViewById(R.id.action_settings).setBackground(ContextCompat.getDrawable(this, R.drawable.three_dots_with_background));
+                    findViewById(R.id.other).setBackground(ContextCompat.getDrawable(this, R.drawable.plus_with_bacground));
                 }
                 isCollapsed = false;
             }
