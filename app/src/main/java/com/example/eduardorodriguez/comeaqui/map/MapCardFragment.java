@@ -64,9 +64,9 @@ public class MapCardFragment extends Fragment {
     }
 
     public void moveCardUp(boolean up){
-        cardView.setVisibility(View.VISIBLE);
         int move = cardView.getMeasuredHeight() + ((ConstraintLayout.LayoutParams) cardView.getLayoutParams()).bottomMargin * 2;
         if (up) {
+            cardView.setVisibility(View.VISIBLE);
             cardView.setTranslationY(move);
             cardView.animate().translationY(0).setDuration(move / 2);
         } else {
