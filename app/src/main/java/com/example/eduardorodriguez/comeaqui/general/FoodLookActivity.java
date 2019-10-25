@@ -1,14 +1,21 @@
 package com.example.eduardorodriguez.comeaqui.general;
 
-import android.content.Context;
-import android.content.Intent;
-
-import androidx.cardview.widget.CardView;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.palette.graphics.Palette;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -22,18 +29,20 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
-import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
+import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
-import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.HorizontalFoodPostImageDisplayFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -45,7 +54,10 @@ import static com.example.eduardorodriguez.comeaqui.App.USER;
 
 public class FoodLookActivity extends AppCompatActivity {
 
-    static Context context;
+    private Toolbar toolbar;
+    private CollapsingToolbarLayout collapsingToolbar;
+    private AppBarLayout appBarLayout;
+    boolean isCollapsed = true;
 
     TextView plateNameView;
     TextView descriptionView;
@@ -59,15 +71,13 @@ public class FoodLookActivity extends AppCompatActivity {
 
     ImageView posterImage;
     ImageView staticMapView;
-    View backView;
     LinearLayout paymentMethod;
-    CardView postImageLayout;
     View placeOrderProgress;
     FrameLayout placeOrderErrorMessage;
     LinearLayout dinnersListView;
     ImageView[] dinnerArray;
     FrameLayout waitingFrame;
-    ImageButton editFoodOptions;
+    Menu collapseMenu;
 
     FoodPostDetail foodPostDetail;
 
@@ -75,7 +85,10 @@ public class FoodLookActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_look);
-        context = getApplicationContext();
+
+        toolbar = findViewById(R.id.anim_toolbar);
+        collapsingToolbar = findViewById(R.id.collapsing_toolbar);
+        appBarLayout = findViewById(R.id.appbar);
 
         plateNameView = findViewById(R.id.postPlateName);
         descriptionView = findViewById(R.id.post_description);
@@ -88,13 +101,11 @@ public class FoodLookActivity extends AppCompatActivity {
 
         posterImage = findViewById(R.id.poster_image);
         staticMapView = findViewById(R.id.static_map);
-        backView = findViewById(R.id.back);
         paymentMethod = findViewById(R.id.payment_method_layout);
         changePaymentMethod = findViewById(R.id.change_payment);
         placeOrderProgress = findViewById(R.id.place_order_progress);
-        placeOrderErrorMessage = findViewById(R.id.place_order_error_message);
         dinnersListView = findViewById(R.id.dinners_list_view);
-        editFoodOptions = findViewById(R.id.edit_food_options);
+        // editFoodOptions = findViewById(R.id.edit_food_options);
 
         waitingFrame = findViewById(R.id.waiting_frame);
 
@@ -102,61 +113,78 @@ public class FoodLookActivity extends AppCompatActivity {
         Bundle b = intent.getExtras();
         if(b != null && b.get("foodPostId") != null){
             int fpId = b.getInt("foodPostId");
-
             getFoodPostDetailsAndSet(fpId);
         }
         changePaymentMethod.setOnClickListener(v -> {
             Intent paymentMethod = new Intent(this, PaymentMethodsActivity.class);
             startActivity(paymentMethod);
         });
-        backView.setOnClickListener(v -> finish());
-    }
 
-    void setDetails(){
-        posterNameView.setText(foodPostDetail.owner.first_name + " " + foodPostDetail.owner.last_name);
-        usernameView.setText(foodPostDetail.owner.username);
-        plateNameView.setText(foodPostDetail.plate_name);
-        descriptionView.setText(foodPostDetail.description);
-        posterLocationView.setText(foodPostDetail.address);
-        priceView.setText(foodPostDetail.price + "$");
-        timeView.setText(foodPostDetail.time);
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("type", foodPostDetail.type);
-        FoodTypeFragment fragment = new FoodTypeFragment();
-        fragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.types, fragment)
-                .commit();
-
-
-        if(!foodPostDetail.owner.profile_photo.contains("no-image")) {
-            Glide.with(this).load(foodPostDetail.owner.profile_photo).into(posterImage);
-            posterImage.setOnClickListener(v -> goToProfileView(foodPostDetail.owner));
-        }
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.image_list, HorizontalFoodPostImageDisplayFragment.newInstance(foodPostDetail.id, "CARD"))
-                .commit();
-
-        String url = "http://maps.google.com/maps/api/staticmap?center=" + foodPostDetail.lat + "," + foodPostDetail.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
-        Glide.with(this).load(url).into(staticMapView);
-
-        setPlaceButton();
-        setDinners();
-        setEditOptionsMenu();
-    }
-
-    void setEditOptionsMenu(){
-        editFoodOptions.setOnClickListener(v -> {
-            PopupMenu popupMenu = new PopupMenu(this, editFoodOptions);
-            if (foodPostDetail.owner.id == USER.id){
-                popupMenu.getMenu().add("Edit");
-                popupMenu.getMenu().add("Delete");
-            } else {
-                popupMenu.getMenu().add("Report");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.no_food);
+        Palette.from(bitmap).generate(palette -> {
+            Palette.Swatch vibrant = palette.getVibrantSwatch();
+            if (vibrant != null) {
+                collapsingToolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
+                collapsingToolbar.setStatusBarScrimColor(ContextCompat.getColor(this, R.color.colorPrimary));
+                collapsingToolbar.setContentScrimColor(ContextCompat.getColor(this, R.color.colorPrimary));
             }
+        });
+    }
 
-            popupMenu.setOnMenuItemClickListener(item -> {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.collapseMenu = menu;
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        super.onCreateOptionsMenu(menu);
+        setCollapseLogic();
+        return true;
+    }
+
+    void setCollapseLogic(){
+        appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+            if(Math.abs(verticalOffset) > 200){
+                if (!isCollapsed){
+                    final Drawable upArrow = getResources().getDrawable(R.drawable.back_arrow_white);
+                    getSupportActionBar().setHomeAsUpIndicator(upArrow);
+                    findViewById(R.id.action_settings).setBackgroundColor(Color.TRANSPARENT);
+                    findViewById(R.id.other).setBackgroundColor(Color.TRANSPARENT);
+                }
+                isCollapsed = true;
+            }else{
+                if (isCollapsed){
+                    final Drawable upArrow = getResources().getDrawable(R.drawable.back_arrow_with_background);
+                    getSupportActionBar().setHomeAsUpIndicator(upArrow);
+                    findViewById(R.id.action_settings).setBackground(ContextCompat.getDrawable(this, R.drawable.circle_in_toolbar));
+                    findViewById(R.id.other).setBackground(ContextCompat.getDrawable(this, R.drawable.circle_in_toolbar));
+                }
+                isCollapsed = false;
+            }
+            invalidateOptionsMenu();
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        PopupMenu popupMenu = new PopupMenu(this, findViewById(R.id.action_settings));
+        if (foodPostDetail.owner.id == USER.id){
+            popupMenu.getMenu().add("Edit");
+            popupMenu.getMenu().add("Delete");
+        } else {
+            popupMenu.getMenu().add("Report");
+        }
+
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.action_settings:
                 String title = item.getTitle().toString();
                 switch (title){
                     case "Edit":
@@ -168,10 +196,10 @@ public class FoodLookActivity extends AppCompatActivity {
                     case "Report":
                         break;
                 }
-                return true;
-            });
-            popupMenu.show();
-        });
+                popupMenu.show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     void editFoodPost(){}
@@ -202,9 +230,43 @@ public class FoodLookActivity extends AppCompatActivity {
         }
     }
 
+    void setDetails(){
+        posterNameView.setText(foodPostDetail.owner.first_name + " " + foodPostDetail.owner.last_name);
+        usernameView.setText(foodPostDetail.owner.username);
+        plateNameView.setText(foodPostDetail.plate_name);
+        descriptionView.setText(foodPostDetail.description);
+        posterLocationView.setText(foodPostDetail.address);
+        priceView.setText(foodPostDetail.price + "$");
+        timeView.setText(foodPostDetail.time);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("type", foodPostDetail.type);
+        FoodTypeFragment fragment = new FoodTypeFragment();
+        fragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.types, fragment)
+                .commit();
+
+
+        if(!foodPostDetail.owner.profile_photo.contains("no-image")) {
+            Glide.with(this).load(foodPostDetail.owner.profile_photo).into(posterImage);
+            posterImage.setOnClickListener(v -> goToProfileView(foodPostDetail.owner));
+        }
+
+        String url = "http://maps.google.com/maps/api/staticmap?center=" + foodPostDetail.lat + "," + foodPostDetail.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
+        Glide.with(this).load(url).into(staticMapView);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.image_list, HorizontalFoodPostImageDisplayFragment.newInstance(foodPostDetail.id, "MEDIUM"))
+                .commit();
+
+        setPlaceButton();
+        setDinners();
+    }
+
     void getFoodPostDetailsAndSet(int foodPostId){
         try{
-            new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/foods/" + foodPostId + "/"){
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/foods/" + foodPostId + "/"){
                 @Override
                 protected void onPostExecute(String response) {
                     if (response != null){
@@ -306,9 +368,9 @@ public class FoodLookActivity extends AppCompatActivity {
 
     void goToOrder(OrderObject orderObject){
         try{
-            Intent goToOrders = new Intent(context, OrderLookActivity.class);
+            Intent goToOrders = new Intent(this, OrderLookActivity.class);
             goToOrders.putExtra("orderId", orderObject.id);
-            context.startActivity(goToOrders);
+            startActivity(goToOrders);
         }catch (Exception e){
             e.printStackTrace();
         }

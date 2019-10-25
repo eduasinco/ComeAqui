@@ -24,6 +24,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -101,7 +102,7 @@ public class HorizontalFoodPostImageDisplayFragment extends Fragment {
     }
 
     CardView createCard(){
-        CardView card = new CardView(getContext());
+        CardView card = new CardView(Objects.requireNonNull(getContext()));
         LinearLayout.LayoutParams lp;
         switch (style){
             case "CARD":

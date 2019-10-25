@@ -30,7 +30,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".profile.edit_profile.edit_account_details.confirm_email.ConfirmEmailActivity"></activity>
+        <activity android:name=".general.FoodLookActivity"></activity>
+        <activity android:name=".profile.edit_profile.edit_account_details.confirm_email.ConfirmEmailActivity" />
         <activity android:name=".review.food_review_look.ReplyReviewActivity" />
         <activity android:name=".review.food_review_look.FoodPostReviewLookActivity" />
         <activity android:name=".general.DinnersListActivity" />
@@ -91,7 +92,6 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".general.FoodLookActivity" />
         <activity android:name=".map.AddFoodActivity" />
         <activity
             android:name=".profile.edit_profile.EditProfileActivity"
