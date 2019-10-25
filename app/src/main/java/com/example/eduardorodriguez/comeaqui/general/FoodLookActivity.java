@@ -121,6 +121,7 @@ public class FoodLookActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.no_food);
         Palette.from(bitmap).generate(palette -> {
             Palette.Swatch vibrant = palette.getVibrantSwatch();
