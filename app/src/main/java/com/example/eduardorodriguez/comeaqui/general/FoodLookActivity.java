@@ -105,7 +105,6 @@ public class FoodLookActivity extends AppCompatActivity {
         changePaymentMethod = findViewById(R.id.change_payment);
         placeOrderProgress = findViewById(R.id.place_order_progress);
         dinnersListView = findViewById(R.id.dinners_list_view);
-        // editFoodOptions = findViewById(R.id.edit_food_options);
 
         waitingFrame = findViewById(R.id.waiting_frame);
 
