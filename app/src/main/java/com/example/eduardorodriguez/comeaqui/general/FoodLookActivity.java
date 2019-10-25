@@ -134,11 +134,6 @@ public class FoodLookActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.collapseMenu = menu;
         getMenuInflater().inflate(R.menu.main_menu, menu);
@@ -338,7 +333,6 @@ public class FoodLookActivity extends AppCompatActivity {
     }
 
     void deleteOrder(){
-        showProgress(true);
         Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/foods/" + foodPostDetail.id + "/");
         try {
             deleteFoodPost.execute().get();

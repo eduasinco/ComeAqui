@@ -11,12 +11,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +45,8 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+import static com.example.eduardorodriguez.comeaqui.App.USER;
 
 public class FoodPostReviewLookActivity extends AppCompatActivity implements MyFoodReviewRecyclerViewAdapter.OnListFragmentInteractionListener {
 
@@ -75,6 +80,7 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
     private boolean appBarExpanded = true;
 
     int fpId;
+    boolean isCollapsed = true;
 
     @Override
     protected void onResume() {
@@ -224,26 +230,72 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
         this.collapseMenu = menu;
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        super.onCreateOptionsMenu(menu);
+        setCollapseLogic();
         return true;
+    }
+
+    void setCollapseLogic(){
+        appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+            if(Math.abs(verticalOffset) > 200){
+                if (!isCollapsed){
+                    final Drawable upArrow = getResources().getDrawable(R.drawable.back_arrow_white);
+                    getSupportActionBar().setHomeAsUpIndicator(upArrow);
+                    findViewById(R.id.action_settings).setBackgroundColor(Color.TRANSPARENT);
+                    findViewById(R.id.other).setBackgroundColor(Color.TRANSPARENT);
+                }
+                isCollapsed = true;
+            }else{
+                if (isCollapsed){
+                    final Drawable upArrow = getResources().getDrawable(R.drawable.back_arrow_with_background);
+                    getSupportActionBar().setHomeAsUpIndicator(upArrow);
+                    findViewById(R.id.action_settings).setBackground(ContextCompat.getDrawable(this, R.drawable.circle_in_toolbar));
+                    findViewById(R.id.other).setBackground(ContextCompat.getDrawable(this, R.drawable.circle_in_toolbar));
+                }
+                isCollapsed = false;
+            }
+            invalidateOptionsMenu();
+        });
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        PopupMenu popupMenu = new PopupMenu(this, findViewById(R.id.action_settings));
+        if (foodPostReview.owner.id == USER.id){
+            popupMenu.getMenu().add("Delete");
+        } else {
+            popupMenu.getMenu().add("Report");
+        }
+
         switch (item.getItemId()){
             case android.R.id.home:
                 finish();
                 break;
             case R.id.action_settings:
-                Toast.makeText(this, "Setting menu clicked!", Toast.LENGTH_SHORT).show();
+                String title = item.getTitle().toString();
+                switch (title){
+                    case "Delete":
+                        deleteOrder();
+                        break;
+                    case "Report":
+                        break;
+                }
+                popupMenu.show();
                 break;
         }
-
-        if(item.getTitle() == "Add"){
-            Toast.makeText(this, "Add menu clicked!", Toast.LENGTH_SHORT).show();
-        }
         return super.onOptionsItemSelected(item);
+    }
+
+    void deleteOrder(){
+        Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/foods/" + foodPostReview.id + "/");
+        try {
+            deleteFoodPost.execute().get();
+            finish();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 
