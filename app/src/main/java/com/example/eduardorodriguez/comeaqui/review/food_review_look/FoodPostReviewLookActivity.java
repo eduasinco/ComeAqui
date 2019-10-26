@@ -113,8 +113,7 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
         meat = findViewById(R.id.meat);
         dairy = findViewById(R.id.dairy);
 
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setToolbar();
 
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -141,6 +140,78 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
         });
 
     }
+
+    void setToolbar(){
+        collapsingToolbar.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        toolbar.setTitle("Reviews");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        collapsingToolbar.setTitleEnabled(true);
+        collapsingToolbar.setExpandedTitleColor(ContextCompat.getColor(this, R.color.colorPrimary_trans));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.collapseMenu = menu;
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        setCollapseLogic();
+        return true;
+    }
+
+    int vo = 1;
+    void setCollapseLogic(){
+        appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+            if (Math.abs(vo)-appBarLayout.getTotalScrollRange() == 0) {
+                if (!isCollapsed){
+                    isCollapsed = true;
+                    final Drawable upArrow = getResources().getDrawable(R.drawable.back_arrow_white);
+                    getSupportActionBar().setHomeAsUpIndicator(upArrow);
+                    findViewById(R.id.action_settings).setBackground(ContextCompat.getDrawable(this, R.drawable.collapse_three_dots));
+                    findViewById(R.id.other).setBackground(ContextCompat.getDrawable(this, R.drawable.collapse_plus));
+                }
+            } else {
+                if (isCollapsed){
+                    isCollapsed = false;
+                    final Drawable upArrow = getResources().getDrawable(R.drawable.back_arrow_with_background);
+                    getSupportActionBar().setHomeAsUpIndicator(upArrow);
+                    findViewById(R.id.action_settings).setBackground(ContextCompat.getDrawable(this, R.drawable.three_dots_with_background));
+                    findViewById(R.id.other).setBackground(ContextCompat.getDrawable(this, R.drawable.plus_with_bacground));
+                }
+            }
+            vo = verticalOffset;
+            invalidateOptionsMenu();
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        PopupMenu popupMenu = new PopupMenu(this, findViewById(R.id.action_settings));
+        if (foodPostReview.owner.id == USER.id){
+            popupMenu.getMenu().add("Delete");
+        } else {
+            popupMenu.getMenu().add("Report");
+        }
+
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.action_settings:
+                String title = item.getTitle().toString();
+                switch (title){
+                    case "Delete":
+                        deleteOrder();
+                        break;
+                    case "Report":
+                        break;
+                }
+                popupMenu.show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     void getReviewsFrompFoodPost(int foodPostId){
         Context activity = this;
@@ -228,65 +299,6 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        this.collapseMenu = menu;
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        super.onCreateOptionsMenu(menu);
-        setCollapseLogic();
-        return true;
-    }
-
-    void setCollapseLogic(){
-        appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
-            if(Math.abs(verticalOffset) > 200){
-                if (!isCollapsed){
-                    final Drawable upArrow = getResources().getDrawable(R.drawable.back_arrow_white);
-                    getSupportActionBar().setHomeAsUpIndicator(upArrow);
-                    findViewById(R.id.action_settings).setBackground(ContextCompat.getDrawable(this, R.drawable.collapse_three_dots));
-                    findViewById(R.id.other).setBackground(ContextCompat.getDrawable(this, R.drawable.collapse_plus));
-                }
-                isCollapsed = true;
-            }else{
-                if (isCollapsed){
-                    final Drawable upArrow = getResources().getDrawable(R.drawable.back_arrow_with_background);
-                    getSupportActionBar().setHomeAsUpIndicator(upArrow);
-                    findViewById(R.id.action_settings).setBackground(ContextCompat.getDrawable(this, R.drawable.three_dots_with_background));
-                    findViewById(R.id.other).setBackground(ContextCompat.getDrawable(this, R.drawable.plus_with_bacground));
-                }
-                isCollapsed = false;
-            }
-            invalidateOptionsMenu();
-        });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        PopupMenu popupMenu = new PopupMenu(this, findViewById(R.id.action_settings));
-        if (foodPostReview.owner.id == USER.id){
-            popupMenu.getMenu().add("Delete");
-        } else {
-            popupMenu.getMenu().add("Report");
-        }
-
-        switch (item.getItemId()){
-            case android.R.id.home:
-                finish();
-                break;
-            case R.id.action_settings:
-                String title = item.getTitle().toString();
-                switch (title){
-                    case "Delete":
-                        deleteOrder();
-                        break;
-                    case "Report":
-                        break;
-                }
-                popupMenu.show();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     void deleteOrder(){
         Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/foods/" + foodPostReview.id + "/");
