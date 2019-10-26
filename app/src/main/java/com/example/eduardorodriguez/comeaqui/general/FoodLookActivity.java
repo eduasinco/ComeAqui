@@ -35,6 +35,7 @@ import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
@@ -58,6 +59,7 @@ public class FoodLookActivity extends AppCompatActivity {
     private CollapsingToolbarLayout collapsingToolbar;
     private AppBarLayout appBarLayout;
     boolean isCollapsed = true;
+    boolean first = true;
 
     TextView plateNameView;
     TextView descriptionView;
@@ -119,47 +121,48 @@ public class FoodLookActivity extends AppCompatActivity {
             startActivity(paymentMethod);
         });
 
+        setToolbar();
+    }
+
+    void setToolbar(){
+        collapsingToolbar.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        toolbar.setTitle("Food Post");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.no_food);
-        Palette.from(bitmap).generate(palette -> {
-            Palette.Swatch vibrant = palette.getVibrantSwatch();
-            if (vibrant != null) {
-                collapsingToolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
-                collapsingToolbar.setStatusBarScrimColor(ContextCompat.getColor(this, R.color.colorPrimary));
-                collapsingToolbar.setContentScrimColor(ContextCompat.getColor(this, R.color.colorPrimary));
-            }
-        });
+        collapsingToolbar.setTitleEnabled(true);
+        collapsingToolbar.setExpandedTitleColor(ContextCompat.getColor(this, R.color.colorPrimary_trans));
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.collapseMenu = menu;
         getMenuInflater().inflate(R.menu.main_menu, menu);
-        super.onCreateOptionsMenu(menu);
         setCollapseLogic();
         return true;
     }
 
+    int vo = 1;
     void setCollapseLogic(){
         appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
-            if(Math.abs(verticalOffset) > 200){
+            if (Math.abs(vo)-appBarLayout.getTotalScrollRange() == 0) {
                 if (!isCollapsed){
+                    isCollapsed = true;
                     final Drawable upArrow = getResources().getDrawable(R.drawable.back_arrow_white);
                     getSupportActionBar().setHomeAsUpIndicator(upArrow);
                     findViewById(R.id.action_settings).setBackground(ContextCompat.getDrawable(this, R.drawable.collapse_three_dots));
                     findViewById(R.id.other).setBackground(ContextCompat.getDrawable(this, R.drawable.collapse_plus));
                 }
-                isCollapsed = true;
-            }else{
+            } else {
                 if (isCollapsed){
+                    isCollapsed = false;
                     final Drawable upArrow = getResources().getDrawable(R.drawable.back_arrow_with_background);
                     getSupportActionBar().setHomeAsUpIndicator(upArrow);
                     findViewById(R.id.action_settings).setBackground(ContextCompat.getDrawable(this, R.drawable.three_dots_with_background));
                     findViewById(R.id.other).setBackground(ContextCompat.getDrawable(this, R.drawable.plus_with_bacground));
                 }
-                isCollapsed = false;
             }
+            vo = verticalOffset;
             invalidateOptionsMenu();
         });
     }
@@ -182,7 +185,7 @@ public class FoodLookActivity extends AppCompatActivity {
                 String title = item.getTitle().toString();
                 switch (title){
                     case "Edit":
-                        editFoodPost();
+                        editFoodPost(-1);
                         break;
                     case "Delete":
                         deleteOrder();
@@ -196,7 +199,18 @@ public class FoodLookActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    void editFoodPost(){}
+    void editFoodPost(int foodPostId){
+        PatchAsyncTask putTast = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_food_post/" + foodPostId + "/");
+        try {
+            putTast.execute(
+                    new String[]{"first_name", ""},
+                    new String[]{"last_name", ""},
+                    new String[]{"phone_number", ""}
+            ).get(5, TimeUnit.SECONDS);
+        } catch (ExecutionException | InterruptedException | TimeoutException e) {
+            e.printStackTrace();
+        }
+    }
 
     void setDinners(){
         dinnersListView.setOnClickListener((v) -> {
@@ -226,7 +240,7 @@ public class FoodLookActivity extends AppCompatActivity {
 
     void setDetails(){
         posterNameView.setText(foodPostDetail.owner.first_name + " " + foodPostDetail.owner.last_name);
-        usernameView.setText(foodPostDetail.owner.username);
+        usernameView.setText("@" + foodPostDetail.owner.username);
         plateNameView.setText(foodPostDetail.plate_name);
         descriptionView.setText(foodPostDetail.description);
         posterLocationView.setText(foodPostDetail.address);
