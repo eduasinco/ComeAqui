@@ -78,8 +78,6 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
                 holder.messageCard.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_message_final_left));
             }
         }
-
-        Glide.with(holder.mView.getContext()).load(holder.mItem.sender.profile_photo).into(holder.chattererImage);
     }
 
     @Override
@@ -92,7 +90,6 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
         public final TextView messageView;
         public final TextView dateView;
         public final TextView datePop;
-        public final ImageView chattererImage;
         public MessageObject mItem;
         public LinearLayout wholeMessage;
         public LinearLayout messageCard;
@@ -104,7 +101,6 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
             wholeMessage = view.findViewById(R.id.view);
             messageView = view.findViewById(R.id.mensajeMensaje);
             dateView = view.findViewById(R.id.horaMensaje);
-            chattererImage = view.findViewById(R.id.fotoPerfilMensaje);
             messageCard = view.findViewById(R.id.message_card);
 
             datePop = view.findViewById(R.id.datePop);
