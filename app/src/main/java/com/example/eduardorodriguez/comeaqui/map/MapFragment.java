@@ -64,6 +64,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
     MapCardFragment mapCardFragment;
 
     FloatingActionButton myFab;
+    FloatingActionButton centerButton;
     ImageView cancelPostView;
 
     double lng;
@@ -135,6 +136,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
 
         mMapView = rootView.findViewById(R.id.mapView);
         myFab =  rootView.findViewById(R.id.fab);
+        centerButton =  rootView.findViewById(R.id.center_map);
         cancelPostView = rootView.findViewById(R.id.cancel_post);
 
         mMapView.onCreate(savedInstanceState);
@@ -157,6 +159,10 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
 
         myFab.setOnClickListener(v -> {
             fabFunctionality();
+        });
+
+        centerButton.setOnClickListener(v -> {
+            centerMap();
         });
 
         mMapView.getMapAsync(mMap -> {
@@ -218,6 +224,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
     void setMap(GoogleMap mMap){
         googleMap = mMap;
         googleMap.setMyLocationEnabled(true);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
         setLocationPicker();
         setMapMarkers();
@@ -242,6 +249,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
 
         googleMap.setOnMarkerClickListener(marker -> {
             myFab.setVisibility(View.GONE);
+            centerButton.setVisibility(View.GONE);
             cancelPostView.setVisibility(View.VISIBLE);
 
             final int key = (int) (marker.getTag());
@@ -315,6 +323,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
         fabCount = 0;
         cancelPostView.setVisibility(View.GONE);
         myFab.setVisibility(View.VISIBLE);
+        centerButton.setVisibility(View.VISIBLE);
         mapPickerFragment.apearMapPicker(false);
         mapCardFragment.moveCardUp(false);
     }
@@ -342,11 +351,17 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
         marker.setIcon(getMarkerIconFromDrawable(myIcon));
     }
 
+    void centerMap(){
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(lat, lng))
+                .zoom(15)
+                .build();
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        //Save the fragment's state here
     }
 
     @Override
