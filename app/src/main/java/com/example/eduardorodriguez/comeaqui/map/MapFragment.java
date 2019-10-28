@@ -225,6 +225,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
         googleMap = mMap;
         googleMap.setMyLocationEnabled(true);
         googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
 
         setLocationPicker();
         setMapMarkers();
