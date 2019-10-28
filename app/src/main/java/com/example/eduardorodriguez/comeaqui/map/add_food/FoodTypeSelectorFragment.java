@@ -27,7 +27,6 @@ public class FoodTypeSelectorFragment extends Fragment {
     ImageView meat;
     ImageView dairy;
 
-
     public FoodTypeSelectorFragment() {}
     public static FoodTypeSelectorFragment newInstance() {
         return new FoodTypeSelectorFragment();
@@ -36,6 +35,15 @@ public class FoodTypeSelectorFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    public void setTypes(String types){
+        for (int i = 0; i < types.length(); i++){
+            if (types.charAt(i) == '1'){
+                pressed[i] = true;
+            }
+        }
+        initializeTypeViews();
     }
 
     @Override
@@ -123,6 +131,22 @@ public class FoodTypeSelectorFragment extends Fragment {
             else
                 dairy.setImageResource(R.drawable.dairy);
         });
+    }
+    void initializeTypeViews(){
+        if(pressed[0])
+            vegetarian.setImageResource(R.drawable.vegetarianfill);
+        if(pressed[1])
+            vegan.setImageResource(R.drawable.veganfill);
+        if(pressed[2])
+            cereal.setImageResource(R.drawable.cerealfill);
+        if(pressed[3])
+            spicy.setImageResource(R.drawable.spicyfill);
+        if(pressed[4])
+            fish.setImageResource(R.drawable.fishfill);
+        if(pressed[5])
+            meat.setImageResource(R.drawable.meatfill);
+        if(pressed[6])
+            dairy.setImageResource(R.drawable.dairyfill);
     }
 
     @Override

@@ -33,6 +33,10 @@ public class WordLimitEditTextFragment extends Fragment {
         return  new WordLimitEditTextFragment();
     }
 
+    public void setText(String text){
+        editText.setText(text);
+    }
+
     public void setErrorBackground(boolean error){
         if (error){
             wholeView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.text_input_shape_error));

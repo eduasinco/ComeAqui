@@ -30,7 +30,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".general.FoodLookActivity"></activity>
+        <activity android:name=".general.EditFoodPostActivity"></activity>
+        <activity android:name=".general.FoodLookActivity" />
         <activity android:name=".profile.edit_profile.edit_account_details.confirm_email.ConfirmEmailActivity" />
         <activity android:name=".review.food_review_look.ReplyReviewActivity" />
         <activity android:name=".review.food_review_look.FoodPostReviewLookActivity" />

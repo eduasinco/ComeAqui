@@ -35,12 +35,25 @@ public class AddImagesFragment extends Fragment {
     ImageView[] imageViews;
     boolean[] imagesSet = {false, false, false};
 
+    ArrayList<FoodPostImageObject> foodPostImageObjects;
+
     public AddImagesFragment() {}
 
     public void addImage(Uri uri, int index){
         imagesSet[index] = true;
         imageViews[index].setImageURI(uri);
         setImageAbailable();
+    }
+
+    public void initializeImages(ArrayList<FoodPostImageObject> foodPostImageObjects){
+        this.foodPostImageObjects = foodPostImageObjects;
+        for (int i = 0; i < foodPostImageObjects.size(); i++){
+            if(!foodPostImageObjects.get(i).image.contains("no-image")){
+                imagesSet[i] = true;
+                Glide.with(getContext()).load(foodPostImageObjects.get(i).image).into(imageViews[i]);
+            }
+            setImageAbailable();
+        }
     }
 
     public static AddImagesFragment newInstance() {

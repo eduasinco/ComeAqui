@@ -34,6 +34,7 @@ import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
+import com.example.eduardorodriguez.comeaqui.review.GuestsReviewActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
@@ -59,7 +60,6 @@ public class FoodLookActivity extends AppCompatActivity {
     private CollapsingToolbarLayout collapsingToolbar;
     private AppBarLayout appBarLayout;
     boolean isCollapsed = true;
-    boolean first = true;
 
     TextView plateNameView;
     TextView descriptionView;
@@ -109,6 +109,7 @@ public class FoodLookActivity extends AppCompatActivity {
         dinnersListView = findViewById(R.id.dinners_list_view);
 
         waitingFrame = findViewById(R.id.waiting_frame);
+        setToolbar();
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -121,7 +122,6 @@ public class FoodLookActivity extends AppCompatActivity {
             startActivity(paymentMethod);
         });
 
-        setToolbar();
     }
 
     void setToolbar(){
@@ -177,39 +177,35 @@ public class FoodLookActivity extends AppCompatActivity {
             popupMenu.getMenu().add("Report");
         }
 
+        popupMenu.setOnMenuItemClickListener(item1 -> {
+            String title = item1.getTitle().toString();
+            switch (title){
+                case "Edit":
+                    editFoodPost();
+                    break;
+                case "Delete":
+                    deleteOrder();
+                    break;
+                case "Report":
+                    break;
+            }
+            return false;
+        });
         switch (item.getItemId()){
             case android.R.id.home:
                 finish();
                 break;
             case R.id.action_settings:
-                String title = item.getTitle().toString();
-                switch (title){
-                    case "Edit":
-                        editFoodPost(-1);
-                        break;
-                    case "Delete":
-                        deleteOrder();
-                        break;
-                    case "Report":
-                        break;
-                }
                 popupMenu.show();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    void editFoodPost(int foodPostId){
-        PatchAsyncTask putTast = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_food_post/" + foodPostId + "/");
-        try {
-            putTast.execute(
-                    new String[]{"first_name", ""},
-                    new String[]{"last_name", ""},
-                    new String[]{"phone_number", ""}
-            ).get(5, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException | TimeoutException e) {
-            e.printStackTrace();
-        }
+    void editFoodPost(){
+        Intent k = new Intent(this, EditFoodPostActivity.class);
+        k.putExtra("foodPostId", foodPostDetail.id);
+        startActivity(k);
     }
 
     void setDinners(){
