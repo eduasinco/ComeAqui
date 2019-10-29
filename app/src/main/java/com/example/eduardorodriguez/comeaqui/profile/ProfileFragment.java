@@ -1,17 +1,12 @@
 package com.example.eduardorodriguez.comeaqui.profile;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Outline;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-
-import com.example.eduardorodriguez.comeaqui.login_and_register.LoginActivity;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
 import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
 import com.example.eduardorodriguez.comeaqui.objects.User;
@@ -19,7 +14,7 @@ import com.example.eduardorodriguez.comeaqui.profile.edit_profile.EditProfileAct
 import com.example.eduardorodriguez.comeaqui.profile.post_and_reviews.PostAndReviewsFragment;
 import com.example.eduardorodriguez.comeaqui.profile.settings.SettingsActivity;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
-import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
+import com.example.eduardorodriguez.comeaqui.utilities.image_view_pager.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.ProfileImageGalleryFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 import com.google.android.material.tabs.TabLayout;
@@ -107,7 +102,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
             Glide.with(view.getContext()).load(user.profile_photo).into(profileImageView);
             profileImageView.setOnClickListener((v) -> {
                 Intent imageLook = new Intent(getContext(), ImageLookActivity.class);
-                imageLook.putExtra("image_url", user.profile_photo);
+                imageLook.putExtra("image_urls", new String[]{user.profile_photo});
                 getContext().startActivity(imageLook);
             });
         }
@@ -115,7 +110,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
             Glide.with(view.getContext()).load(user.background_photo).into(backGroundImage);
             backGroundImage.setOnClickListener((v) -> {
                 Intent imageLook = new Intent(getContext(), ImageLookActivity.class);
-                imageLook.putExtra("image_url", user.background_photo);
+                imageLook.putExtra("image_urls", new String[]{user.background_photo});
                 getContext().startActivity(imageLook);
             });
         }

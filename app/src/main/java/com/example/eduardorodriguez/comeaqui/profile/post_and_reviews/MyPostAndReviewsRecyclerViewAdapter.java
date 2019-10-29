@@ -13,9 +13,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPostImageObject;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostReview;
 import com.example.eduardorodriguez.comeaqui.review.food_review_look.FoodPostReviewLookActivity;
-import com.example.eduardorodriguez.comeaqui.utilities.ImageLookActivity;
+import com.example.eduardorodriguez.comeaqui.utilities.image_view_pager.ImageLookActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,12 @@ public class MyPostAndReviewsRecyclerViewAdapter extends RecyclerView.Adapter<My
             Glide.with(holder.mView.getContext()).load(foodPost.images.get(0).image).into(holder.imageView);
             holder.imageView.setOnClickListener((v) -> {
                 Intent imageLook = new Intent(holder.mView.getContext(), ImageLookActivity.class);
-                imageLook.putExtra("image_url", foodPost.images.get(0).image);
+                ArrayList<String> urls = new ArrayList<>();
+                for(FoodPostImageObject fio: foodPost.images){
+                    urls.add(fio.image);
+                }
+                imageLook.putExtra("image_urls", urls);
+                imageLook.putExtra("index", 0);
                 holder.mView.getContext().startActivity(imageLook);
             });
         }

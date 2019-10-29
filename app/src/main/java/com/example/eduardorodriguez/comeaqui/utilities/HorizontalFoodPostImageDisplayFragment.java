@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostImageObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.utilities.image_view_pager.ImageLookActivity;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
@@ -84,7 +85,8 @@ public class HorizontalFoodPostImageDisplayFragment extends Fragment {
     }
     void setImages(){
         imageList.removeAllViews();
-        for (FoodPostImageObject io: foodPostImageObjects){
+        for (int i = 0; i < foodPostImageObjects.size(); i++){
+            FoodPostImageObject io = foodPostImageObjects.get(i);
             CardView card = createCard();
             ImageView imageView = new ImageView(getContext());
             imageView.setLayoutParams(new LinearLayout.LayoutParams(
@@ -94,9 +96,10 @@ public class HorizontalFoodPostImageDisplayFragment extends Fragment {
 
             card.addView(imageView);
             imageList.addView(card);
+            final int fi = i;
             if(!io.image.contains("no-image")) {
                 Glide.with(getContext()).load(io.image).into(imageView);
-                imageView.setOnClickListener(v -> goToImageLook(io.image));
+                imageView.setOnClickListener(v -> goToImageLook(fi));
             }
         }
     }
@@ -129,9 +132,14 @@ public class HorizontalFoodPostImageDisplayFragment extends Fragment {
         return card;
     }
 
-    void goToImageLook(String url){
+    void goToImageLook(int i){
         Intent k = new Intent(getContext(), ImageLookActivity.class);
-        k.putExtra("image_url", url);
+        ArrayList<String> urls = new ArrayList<>();
+        for(FoodPostImageObject fio: foodPostImageObjects){
+            urls.add(fio.image);
+        }
+        k.putExtra("image_urls", urls);
+        k.putExtra("index", i);
         startActivity(k);
     }
 

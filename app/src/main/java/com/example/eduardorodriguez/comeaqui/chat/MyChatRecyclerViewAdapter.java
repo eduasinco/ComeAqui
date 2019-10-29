@@ -70,11 +70,7 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
         if (!chattingWith.profile_photo.contains("no-image"))
             Glide.with(holder.mView.getContext()).load(chattingWith.profile_photo).into(holder.chattererImage);
 
-        if (holder.mItem.last_message != null) {
-            ((AppCompatActivity) holder.mView.getContext()).getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.date, DateFragment.newInstance(holder.mItem.last_message.createdAt))
-                    .commit();
-        }
+        holder.dateView.setText(DateFragment.getDateInForMessageConversation(holder.mItem.last_message.createdAt));
     }
 
     @Override
@@ -87,6 +83,7 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
         public final TextView username;
         public final TextView lastMessage;
         public final TextView notChat;
+        public final TextView dateView;
         public final ImageView chattererImage;
         public ChatObject mItem;
 
@@ -95,6 +92,7 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
             mView = view;
             username = view.findViewById(R.id.username);
             lastMessage = view.findViewById(R.id.last_message);
+            dateView = view.findViewById(R.id.date);
             chattererImage = view.findViewById(R.id.receiver_image);
             notChat = view.findViewById(R.id.notChat);
         }

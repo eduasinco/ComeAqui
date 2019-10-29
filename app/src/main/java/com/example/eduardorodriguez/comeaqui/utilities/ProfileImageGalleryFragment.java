@@ -16,15 +16,15 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostImageObject;
-import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.utilities.image_view_pager.ImageLookActivity;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class ProfileImageGalleryFragment extends Fragment {
@@ -113,11 +113,15 @@ public class ProfileImageGalleryFragment extends Fragment {
     }
 
     void makeList(JsonArray jsonArray){
-        for (JsonElement pa : jsonArray) {
+        ArrayList<String> imageUrls = new ArrayList<>();
 
+        for (int i = 0; i <jsonArray.size(); i++){
+            JsonElement pa = jsonArray.get(i);
             JsonObject jo = pa.getAsJsonObject();
-            FoodPostImageObject imageObject = new FoodPostImageObject(jo);
-            if (imageObject.image != null && !imageObject.image.contains("no-image")){
+            String imageUrl = new FoodPostImageObject(jo).image;
+            imageUrls.add(imageUrl);
+            if (imageUrl != null && !imageUrl.contains("no-image")){
+                final int fi = i;
                 count++;
                 ImageView imageView = new ImageView(getContext());
                 imageView.setLayoutParams(new LinearLayout.LayoutParams(
@@ -131,11 +135,12 @@ public class ProfileImageGalleryFragment extends Fragment {
 
                 makeImageRoundCornered(imageView, 20);
 
-                Glide.with(view.getContext()).load(imageObject.image).into(imageView);
+                Glide.with(view.getContext()).load(imageUrl).into(imageView);
 
                 imageView.setOnClickListener((v) -> {
                     Intent imageLook = new Intent(getContext(), ImageLookActivity.class);
-                    imageLook.putExtra("image_url", imageObject.image);
+                    imageLook.putExtra("image_urls", imageUrls);
+                    imageLook.putExtra("index", fi);
                     startActivity(imageLook);
                 });
 

@@ -62,7 +62,7 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".utilities.ImageLookActivity" />
+        <activity android:name=".utilities.image_view_pager.ImageLookActivity" />
         <activity android:name=".profile.edit_profile.edit_account_details.payment.AddPaymentMethodActivity" />
         <activity android:name=".profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity" />
         <activity android:name=".profile.edit_profile.edit_account_details.EditAcountDetailsActivity" />
