@@ -63,7 +63,7 @@ public class ConversationActivity extends AppCompatActivity {
         rvMensajes = findViewById(R.id.rvMensajes);
         txtMensaje = findViewById(R.id.txtMensaje);
         btnEnviar = findViewById(R.id.btnEnviar);
-        backView = findViewById(R.id.back_arrow);
+        backView = findViewById(R.id.back);
 
         adapter = new AdapterMensajes(this);
         LinearLayoutManager l = new LinearLayoutManager(this);
