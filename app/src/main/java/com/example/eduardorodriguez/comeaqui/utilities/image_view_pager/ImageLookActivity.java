@@ -26,8 +26,10 @@ public class ImageLookActivity extends AppCompatActivity {
             int index = b.getInt("index", 0);
 
             ViewPager viewPager = findViewById(R.id.view_pager);
-            ViewPagerAdapter adapter = new ViewPagerAdapter(this, imageUrls);
+            ViewPagerAdapter adapter = new ViewPagerAdapter(this, imageUrls, index);
             viewPager.setAdapter(adapter);
+            viewPager.setCurrentItem(index);
+
         }
 
         findViewById(R.id.close).setOnClickListener((v) -> finish());

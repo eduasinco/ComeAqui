@@ -30,6 +30,7 @@ import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -102,7 +103,9 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
             Glide.with(view.getContext()).load(user.profile_photo).into(profileImageView);
             profileImageView.setOnClickListener((v) -> {
                 Intent imageLook = new Intent(getContext(), ImageLookActivity.class);
-                imageLook.putExtra("image_urls", new String[]{user.profile_photo});
+                ArrayList<String> urls = new ArrayList<>();
+                urls.add(user.profile_photo);
+                imageLook.putExtra("image_urls", urls);
                 getContext().startActivity(imageLook);
             });
         }
@@ -110,7 +113,9 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
             Glide.with(view.getContext()).load(user.background_photo).into(backGroundImage);
             backGroundImage.setOnClickListener((v) -> {
                 Intent imageLook = new Intent(getContext(), ImageLookActivity.class);
-                imageLook.putExtra("image_urls", new String[]{user.background_photo});
+                ArrayList<String> urls = new ArrayList<>();
+                urls.add(user.background_photo);
+                imageLook.putExtra("image_urls", urls);
                 getContext().startActivity(imageLook);
             });
         }

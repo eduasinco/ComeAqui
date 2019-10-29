@@ -16,10 +16,13 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     private Context context;
     private ArrayList<String> imageUrls;
+    private int position;
 
-    ViewPagerAdapter(Context context, ArrayList<String> imageUrls) {
+
+    ViewPagerAdapter(Context context, ArrayList<String> imageUrls, int position) {
         this.context = context;
         this.imageUrls = imageUrls;
+        this.position = position;
     }
 
     @Override
