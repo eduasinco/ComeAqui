@@ -10,16 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.order.PendingOrdersFragment.OnListFragmentInteractionListener;
-import com.example.eduardorodriguez.comeaqui.utilities.DateFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.DateFormatting;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.example.eduardorodriguez.comeaqui.App.USER;
 
 
 public class MyPendingOrdersRecyclerViewAdapter extends RecyclerView.Adapter<MyPendingOrdersRecyclerViewAdapter.ViewHolder> {
@@ -68,7 +64,7 @@ public class MyPendingOrdersRecyclerViewAdapter extends RecyclerView.Adapter<MyP
             orderLook.putExtra("orderId", holder.mItem.id);
             holder.mView.getContext().startActivity(orderLook);
         });
-        holder.dateView.setText(DateFragment.getDateInSimpleFormat(holder.mItem.createdAt));
+        holder.dateView.setText(DateFormatting.hYesterdayWeekDay(holder.mItem.createdAt));
     }
 
     @Override

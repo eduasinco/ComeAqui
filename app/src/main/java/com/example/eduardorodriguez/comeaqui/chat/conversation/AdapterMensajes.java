@@ -4,16 +4,15 @@ import android.content.Context;import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-import com.bumptech.glide.Glide;
+
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.MessageObject;
-import com.example.eduardorodriguez.comeaqui.utilities.DateFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.DateFormatting;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -49,7 +48,7 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
 
         holder.mItem = listMensaje.get(position);
         holder.messageView.setText(holder.mItem.message);
-        holder.dateView.setText(DateFragment.getHourForMessage(holder.mItem.createdAt));
+        holder.dateView.setText(DateFormatting.h(holder.mItem.createdAt));
         holder.datePopContainer.setVisibility(View.GONE);
 
         int paddingSides = holder.wholeMessage.getPaddingLeft();
@@ -59,9 +58,9 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
         if (holder.mItem.newDay) {
             holder.datePop.setVisibility(View.VISIBLE);
             holder.datePopContainer.setVisibility(View.VISIBLE);
-            holder.datePop.setText(DateFragment.getDateInForMessageConversation(holder.mItem.createdAt));
+            holder.datePop.setText(DateFormatting.todayYesterdayWeekDay(holder.mItem.createdAt));
         } else if (holder.mItem.topSpace){
-            holder.datePop.setText(DateFragment.getDateInForMessageConversation(holder.mItem.createdAt));
+            holder.datePop.setText(DateFormatting.todayYesterdayWeekDay(holder.mItem.createdAt));
             holder.wholeMessage.setPadding(paddingSides, topBottomPadding * 2, paddingSides, topBottomPadding);
         }
 

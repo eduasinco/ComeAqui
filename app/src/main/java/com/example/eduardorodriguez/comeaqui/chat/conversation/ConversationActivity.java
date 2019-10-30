@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
-import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.MessageObject;
@@ -21,7 +20,7 @@ import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PutAsyncTask;
-import com.example.eduardorodriguez.comeaqui.utilities.DateFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.DateFormatting;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -178,7 +177,7 @@ public class ConversationActivity extends AppCompatActivity {
 
     public void setMessageStatus(MessageObject currentMessage){
 
-        String currentMessageDate = DateFragment.getDateInSimpleFormat(currentMessage.createdAt);
+        String currentMessageDate = DateFormatting.h(currentMessage.createdAt);
         if (!lastMessageDate.equals(currentMessageDate)){
             currentMessage.newDay = true;
         }

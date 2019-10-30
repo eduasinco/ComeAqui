@@ -6,8 +6,6 @@ import android.content.Intent;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +14,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
-import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
-import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.review.food_review_look.FoodPostReviewLookActivity;
-import com.example.eduardorodriguez.comeaqui.utilities.DateFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.DateFormatting;
 import com.example.eduardorodriguez.comeaqui.R;
 
 import java.util.ArrayList;
@@ -47,7 +43,7 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
         holder.mItem = mValues.get(position);
         holder.usernameView.setText(holder.mItem.from_user.username);
         holder.notificationView.setText(holder.mItem.title);
-        holder.date.setText(DateFragment.getDateInSimpleFormat(holder.mItem.createdAt));
+        holder.date.setText(DateFormatting.hYesterdayWeekDay(holder.mItem.createdAt));
         if (!holder.mItem.from_user.profile_photo.contains("no-image"))
             Glide.with(holder.mView.getContext()).load(holder.mItem.from_user.profile_photo).into(holder.senderImageView);
 

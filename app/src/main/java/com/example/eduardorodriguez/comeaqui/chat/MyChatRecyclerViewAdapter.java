@@ -1,7 +1,7 @@
 package com.example.eduardorodriguez.comeaqui.chat;
 
 import android.content.Intent;
-import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,9 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
-import com.example.eduardorodriguez.comeaqui.chat.chat_objects.MessageObject;
-import com.example.eduardorodriguez.comeaqui.utilities.DateFragment;
-import com.example.eduardorodriguez.comeaqui.MainActivity;
+import com.example.eduardorodriguez.comeaqui.utilities.DateFormatting;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.ChatFragment.OnListFragmentInteractionListener;
 import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
@@ -21,8 +19,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -70,7 +66,7 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
         if (!chattingWith.profile_photo.contains("no-image"))
             Glide.with(holder.mView.getContext()).load(chattingWith.profile_photo).into(holder.chattererImage);
 
-        holder.dateView.setText(DateFragment.getDateInForMessageConversation(holder.mItem.last_message.createdAt));
+        holder.dateView.setText(DateFormatting.hYesterdayWeekDay(holder.mItem.last_message.createdAt));
     }
 
     @Override
