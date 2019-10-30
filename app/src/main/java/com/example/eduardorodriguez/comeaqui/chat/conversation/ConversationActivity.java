@@ -177,7 +177,7 @@ public class ConversationActivity extends AppCompatActivity {
 
     public void setMessageStatus(MessageObject currentMessage){
 
-        String currentMessageDate = DateFormatting.h(currentMessage.createdAt);
+        String currentMessageDate = DateFormatting.todayYesterdayWeekDay(currentMessage.createdAt);
         if (!lastMessageDate.equals(currentMessageDate)){
             currentMessage.newDay = true;
         }

@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
 public class DateFormatting {
+    static String[] WEEK_DAYS = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"};
 
     private static Date convertToDate(String dateString) throws ParseException {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'");
@@ -35,34 +36,38 @@ public class DateFormatting {
         return null;
     }
 
+    public static Date startOfToday() throws ParseException {
+        long now_in_UTC = System.currentTimeMillis();
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String startTodayString = format.format(new Date(now_in_UTC));
+        return format.parse(startTodayString);
+    }
+
     public static String todayYesterdayWeekDay(String dateString){
         try {
             Date date = convertToDate(dateString);
-            String[] week_days = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"};
-            String dateTextString = "";
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
 
-                long now = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-                long startOfDay = LocalDateTime.now().with(LocalTime.MIN).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            long now_in_UTC = System.currentTimeMillis();
+            long startOfDay_UTC = startOfToday().getTime();
 
-                long differenceToDate = now - date.getTime();
-                long differenceToStartOrDay = now - startOfDay;
+            long differenceToDate = now_in_UTC - date.getTime();
+            long differenceToStartOrDay = now_in_UTC - startOfDay_UTC;
 
-                if (differenceToStartOrDay >= differenceToDate) {
-                    dateTextString = "TODAY";
-                } else if (differenceToStartOrDay + TimeUnit.DAYS.toMillis(1) >= differenceToDate && differenceToDate > differenceToStartOrDay) {
-                    dateTextString = "YESTERDAY";
-                } else if (differenceToStartOrDay + TimeUnit.DAYS.toMillis(7) >= differenceToDate && differenceToDate > differenceToStartOrDay + TimeUnit.DAYS.toMillis(1)) {
-                    Calendar c = Calendar.getInstance();
-                    c.setTime(date);
-                    dateTextString = week_days[c.get(Calendar.DAY_OF_WEEK) - 1];
-                } else{
-                    String pattern = "MM/dd/yyyy";
-                    DateFormat df = new SimpleDateFormat(pattern);
-                    dateTextString = df.format(date);
-                }
+            if (differenceToStartOrDay >= differenceToDate) {
+                return "TODAY";
+            } else if (differenceToStartOrDay + TimeUnit.DAYS.toMillis(1) >= differenceToDate && differenceToDate > differenceToStartOrDay) {
+                return "YESTERDAY";
+            } else if (differenceToStartOrDay + TimeUnit.DAYS.toMillis(7) >= differenceToDate && differenceToDate > differenceToStartOrDay + TimeUnit.DAYS.toMillis(1)) {
+                Calendar c = Calendar.getInstance();
+                c.setTime(date);
+                return WEEK_DAYS[c.get(Calendar.DAY_OF_WEEK) - 1];
+            } else{
+                String pattern = "MM/dd/yyyy";
+                DateFormat df = new SimpleDateFormat(pattern);
+                df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
+                return df.format(date);
             }
-            return dateTextString;
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -72,33 +77,29 @@ public class DateFormatting {
     public static String hYesterdayWeekDay(String dateString){
         try {
             Date date = convertToDate(dateString);
-            String[] week_days = {"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"};
-            String dateTextString = "";
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            long now_in_UTC = System.currentTimeMillis();
+            long startOfDay = startOfToday().getTime();
 
-                long now = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-                long startOfDay = LocalDateTime.now().with(LocalTime.MIN).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            long differenceToDate = now_in_UTC - date.getTime();
+            long differenceToStartOrDay = now_in_UTC - startOfDay;
 
-                long differenceToDate = now - date.getTime();
-                long differenceToStartOrDay = now - startOfDay;
-
-                if (differenceToStartOrDay >= differenceToDate) {
-                    String pattern = "h:mm a";
-                    DateFormat df = new SimpleDateFormat(pattern);
-                    dateTextString = df.format(date);
-                } else if (differenceToStartOrDay + TimeUnit.DAYS.toMillis(1) >= differenceToDate && differenceToDate > differenceToStartOrDay) {
-                    dateTextString = "YESTERDAY";
-                } else if (differenceToStartOrDay + TimeUnit.DAYS.toMillis(7) >= differenceToDate && differenceToDate > differenceToStartOrDay + TimeUnit.DAYS.toMillis(1)) {
-                    Calendar c = Calendar.getInstance();
-                    c.setTime(date);
-                    dateTextString = week_days[c.get(Calendar.DAY_OF_WEEK) - 1];
-                } else{
-                    String pattern = "MM/dd/yyyy";
-                    DateFormat df = new SimpleDateFormat(pattern);
-                    dateTextString = df.format(date);
-                }
+            if (differenceToStartOrDay >= differenceToDate) {
+                String pattern = "h:mm a";
+                DateFormat df = new SimpleDateFormat(pattern);
+                df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
+                return df.format(date);
+            } else if (differenceToStartOrDay + TimeUnit.DAYS.toMillis(1) >= differenceToDate && differenceToDate > differenceToStartOrDay) {
+                return "YESTERDAY";
+            } else if (differenceToStartOrDay + TimeUnit.DAYS.toMillis(7) >= differenceToDate && differenceToDate > differenceToStartOrDay + TimeUnit.DAYS.toMillis(1)) {
+                Calendar c = Calendar.getInstance();
+                c.setTime(date);
+                return WEEK_DAYS[c.get(Calendar.DAY_OF_WEEK) - 1];
+            } else{
+                String pattern = "MM/dd/yyyy";
+                DateFormat df = new SimpleDateFormat(pattern);
+                df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
+                return df.format(date);
             }
-            return dateTextString;
         } catch (ParseException e) {
             e.printStackTrace();
         }
