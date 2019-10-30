@@ -2,7 +2,6 @@ package com.example.eduardorodriguez.comeaqui.map.add_food;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
@@ -16,13 +15,13 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.objects.User;
+import com.example.eduardorodriguez.comeaqui.utilities.DateFormatting;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
@@ -39,7 +38,7 @@ public class FoodTimePickerFragment extends Fragment {
 
     boolean isNow = false;
     String postTimeString;
-    int minutes = 30;
+    int MINUTES = 30;
 
     public FoodTimePickerFragment() {}
     public static FoodTimePickerFragment newInstance() {
@@ -66,25 +65,17 @@ public class FoodTimePickerFragment extends Fragment {
         timeTextView = view.findViewById(R.id.time_text);
         buttonTimeArray = view.findViewById(R.id.button_array_time);
 
-        setTimeLogic();
+        setButtonsLogic();
         setTimePickerLogic();
         return view;
     }
 
-    void setTimeLogic(){
+
+    void setButtonsLogic(){
         nowButton.setOnClickListener(v -> {
-            Date now = Calendar.getInstance().getTime();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            sdf.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
-            String nowString = sdf.format(now);
-            try {
-                Date nowDate = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US).parse(nowString);
-                Date postTimeDate = new Date(nowDate.getTime() + minutes*60*1000);
-                postTimeString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").format(postTimeDate);
-                mListener.onFragmentInteraction(postTimeString);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            Date postTimeDate = new Date(System.currentTimeMillis() + MINUTES *60*1000);
+            postTimeString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").format(postTimeDate);
+            mListener.onFragmentInteraction(postTimeString);
 
             isNow = true;
             timeTextView.setText("Now (the post will be visible for an hour)");
@@ -103,24 +94,27 @@ public class FoodTimePickerFragment extends Fragment {
 
     void setTimePickerLogic(){
         timePicker.setOnTimeChangedListener((arg0, arg1, arg2) -> {
-            timeTextView.setText("Today at: " + arg0.getHour() + ":" + arg0.getMinute());
 
-            Date now = Calendar.getInstance().getTime();
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            format.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
-            String formattedDate = format.format(now);
             try {
-                Date todayDate = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(formattedDate);
-                Date postTimeDate = new Date(todayDate.getTime() + (arg0.getHour()*60 + arg0.getMinute())*60*1000);
-                postTimeString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").format(postTimeDate);
-                mListener.onFragmentInteraction(postTimeString);
-                if (now.getTime() + minutes*60*1000 > postTimeDate.getTime()){
-                    Date date = new Date(now.getTime() + minutes*60*1000);
-                    DateFormat formatter = new SimpleDateFormat("HH:mm");
-                    formatter.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
-                    String dateFormatted = formatter.format(date);
+                Date now = new Date(System.currentTimeMillis());
+                Date todayDate = DateFormatting.startOfToday(USER.timeZone);
 
+                Date postTimeDate = new Date(todayDate.getTime() + (arg0.getHour()*60 + arg0.getMinute())*60*1000);
+                DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
+                format.setTimeZone(TimeZone.getTimeZone("UTC"));
+                postTimeString = format.format(postTimeDate);
+                mListener.onFragmentInteraction(postTimeString);
+
+                Date now_plus_time_picked = new Date(now.getTime() + MINUTES *60*1000);
+                DateFormat formatter = new SimpleDateFormat("h:mm a");
+                if (now_plus_time_picked.getTime() > postTimeDate.getTime()){
+                    formatter.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
+                    String dateFormatted = formatter.format(now_plus_time_picked);
                     timeTextView.setText("Please pick a time greater than " + dateFormatted);
+                } else {
+                    formatter.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
+                    String dateFormatted = formatter.format(postTimeDate);
+                    timeTextView.setText("Today at: " + dateFormatted);
                 }
             } catch (ParseException e) {
                 e.printStackTrace();

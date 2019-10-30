@@ -3,12 +3,8 @@ package com.example.eduardorodriguez.comeaqui.utilities;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -40,10 +36,18 @@ public class DateFormatting {
         return null;
     }
 
-    public static Date startOfToday() throws ParseException {
+    public static Date startOfTodayUTC() throws ParseException {
         long now_in_UTC = System.currentTimeMillis();
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String startTodayString = format.format(new Date(now_in_UTC));
+        return format.parse(startTodayString);
+    }
+
+    public static Date startOfToday(String timeZone) throws ParseException {
+        long now_in_UTC = System.currentTimeMillis();
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        format.setTimeZone(TimeZone.getTimeZone(timeZone));
         String startTodayString = format.format(new Date(now_in_UTC));
         return format.parse(startTodayString);
     }
@@ -53,7 +57,7 @@ public class DateFormatting {
             Date date = convertToDate(dateString);
 
             long now_in_UTC = System.currentTimeMillis();
-            long startOfDay_UTC = startOfToday().getTime();
+            long startOfDay_UTC = startOfTodayUTC().getTime();
 
             long differenceToDate = now_in_UTC - date.getTime();
             long differenceToStartOrDay = now_in_UTC - startOfDay_UTC;
@@ -82,7 +86,7 @@ public class DateFormatting {
         try {
             Date date = convertToDate(dateString);
             long now_in_UTC = System.currentTimeMillis();
-            long startOfDay = startOfToday().getTime();
+            long startOfDay = startOfTodayUTC().getTime();
 
             long differenceToDate = now_in_UTC - date.getTime();
             long differenceToStartOrDay = now_in_UTC - startOfDay;
