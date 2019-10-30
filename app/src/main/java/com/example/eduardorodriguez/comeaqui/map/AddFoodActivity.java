@@ -214,6 +214,7 @@ public class AddFoodActivity extends AppCompatActivity implements
         submit.setOnClickListener(v -> {
             if (validateFrom()){
                 postFood();
+                finish();
             }
         });
     }
@@ -282,9 +283,8 @@ public class AddFoodActivity extends AppCompatActivity implements
                 @Override
                 protected void onPostExecute(String response) {
                     FoodPost foodPost = new FoodPost(new JsonParser().parse(response).getAsJsonObject());
-                    sendPostMessage(foodPost);
                     postImages(foodPost.id);
-                    finish();
+                    sendPostMessage(foodPost);
                 }
             };
             post.execute(
@@ -325,16 +325,12 @@ public class AddFoodActivity extends AppCompatActivity implements
                 post.execute(
                         new String[]{"post", "" + foodPostId},
                         new String[]{"image", ""}
-                ).get(10, TimeUnit.SECONDS);
+                ).get();
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
                 showErrorMessage();
                 showProgress(false);
                 Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
-            } catch (TimeoutException e) {
-                e.printStackTrace();
-                showProgress(false);
-                Toast.makeText(this, "Slow internet connection", Toast.LENGTH_LONG).show();
             }
         }
     }
