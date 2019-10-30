@@ -7,11 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 
-import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
-import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.utilities.MyLocation;
 import com.example.eduardorodriguez.comeaqui.utilities.UpperNotificationFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -23,9 +19,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
+
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
@@ -42,9 +37,6 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -81,16 +73,15 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
             lat = fp.lat;
             lng = fp.lng;
 
-            Marker marker =  googleMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(lat, lng)));
+            Marker marker =  googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)));
             marker.setTag(key);
 
             if (fp.favourite){
-                markerPutColor(marker, R.color.favourite);
+                setMarkerIcon(marker, R.drawable.map_icon_favourite);
             } else if (touchedMarkers.contains(key)){
-                markerPutColor(marker, R.color.grey);
+                setMarkerIcon(marker, R.drawable.map_icon_seen);
             } else {
-                markerPutColor(marker, R.color.colorPrimary);
+                setMarkerIcon(marker, R.drawable.map_icon);
             }
             markerHashMap.put(fp.id, marker);
         }
@@ -201,7 +192,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
                         Marker marker =  googleMap.addMarker(new MarkerOptions()
                                 .position(new LatLng(fp.lat, fp.lng)));
                         marker.setTag(fp.id);
-                        markerPutColor(marker, fp.favourite ? R.color.favourite : R.color.colorPrimary);
+                        setMarkerIcon(marker, fp.favourite ? R.drawable.map_icon_favourite : R.drawable.map_icon);
                         markerHashMap.put(fp.id, marker);
                     });
                 }
@@ -342,14 +333,8 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
         }
     }
 
-    static void markerPutColor(Marker marker, int color){
-        Drawable myIcon = rootView.getResources().getDrawable( R.drawable.map_food_icon);
-        ColorFilter filter = new LightingColorFilter(
-                ContextCompat.getColor(rootView.getContext(), color),
-                ContextCompat.getColor(rootView.getContext(), color)
-        );
-        myIcon.setColorFilter(filter);
-        marker.setIcon(getMarkerIconFromDrawable(myIcon));
+    static void setMarkerIcon(Marker marker, int drawable){
+        marker.setIcon(getMarkerIconFromDrawable(ContextCompat.getDrawable(rootView.getContext(), drawable)));
     }
 
     void centerMap(){
