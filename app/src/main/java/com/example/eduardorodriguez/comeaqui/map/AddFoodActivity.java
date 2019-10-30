@@ -284,6 +284,7 @@ public class AddFoodActivity extends AppCompatActivity implements
                     FoodPost foodPost = new FoodPost(new JsonParser().parse(response).getAsJsonObject());
                     sendPostMessage(foodPost);
                     postImages(foodPost.id);
+                    finish();
                 }
             };
             post.execute(
@@ -325,7 +326,6 @@ public class AddFoodActivity extends AppCompatActivity implements
                         new String[]{"post", "" + foodPostId},
                         new String[]{"image", ""}
                 ).get(10, TimeUnit.SECONDS);
-                finish();
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
                 showErrorMessage();
@@ -334,7 +334,7 @@ public class AddFoodActivity extends AppCompatActivity implements
             } catch (TimeoutException e) {
                 e.printStackTrace();
                 showProgress(false);
-                Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Slow internet connection", Toast.LENGTH_LONG).show();
             }
         }
     }

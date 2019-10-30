@@ -25,7 +25,11 @@ public class DateFormatting {
 
     public static String h(String dateString){
         try {
-            Date date = convertToDate(dateString);
+            // https://stackoverflow.com/questions/32113211/saving-model-instance-with-datetimefield-in-django-admin-loses-microsecond-resol
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            format.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date date = format.parse(dateString);
+
             DateFormat df = new SimpleDateFormat("h:mm a");
             df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
             String dateTextString = df.format(date);

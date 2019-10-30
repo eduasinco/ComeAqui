@@ -74,13 +74,13 @@ public class FoodTimePickerFragment extends Fragment {
     void setTimeLogic(){
         nowButton.setOnClickListener(v -> {
             Date now = Calendar.getInstance().getTime();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mmZ");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             sdf.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
             String nowString = sdf.format(now);
             try {
-                Date nowDate = new SimpleDateFormat("yyyy-MM-dd HH:mmZ", Locale.US).parse(nowString);
+                Date nowDate = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US).parse(nowString);
                 Date postTimeDate = new Date(nowDate.getTime() + minutes*60*1000);
-                postTimeString = new SimpleDateFormat("yyyy-MM-dd HH:mmZ").format(postTimeDate);
+                postTimeString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").format(postTimeDate);
                 mListener.onFragmentInteraction(postTimeString);
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -106,13 +106,13 @@ public class FoodTimePickerFragment extends Fragment {
             timeTextView.setText("Today at: " + arg0.getHour() + ":" + arg0.getMinute());
 
             Date now = Calendar.getInstance().getTime();
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-ddZ");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             format.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
             String formattedDate = format.format(now);
             try {
-                Date todayDate = new SimpleDateFormat("yyyy-MM-ddZ", Locale.US).parse(formattedDate);
+                Date todayDate = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(formattedDate);
                 Date postTimeDate = new Date(todayDate.getTime() + (arg0.getHour()*60 + arg0.getMinute())*60*1000);
-                postTimeString = new SimpleDateFormat("yyyy-MM-dd HH:mmZ").format(postTimeDate);
+                postTimeString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").format(postTimeDate);
                 mListener.onFragmentInteraction(postTimeString);
                 if (now.getTime() + minutes*60*1000 > postTimeDate.getTime()){
                     Date date = new Date(now.getTime() + minutes*60*1000);
