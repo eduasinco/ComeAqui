@@ -31,7 +31,7 @@ import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
-import com.example.eduardorodriguez.comeaqui.utilities.HorizontalFoodPostImageDisplayFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.HorizontalImageDisplayFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -121,7 +121,7 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
             fpId = b.getInt("foodPostId");
             getReviewsFrompFoodPost(fpId);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.image_list, HorizontalFoodPostImageDisplayFragment.newInstance(fpId, "MEDIUM"))
+                    .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(fpId, "MEDIUM"))
                     .commit();
         }
 

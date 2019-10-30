@@ -33,6 +33,7 @@ public class AddImagesFragment extends Fragment {
     Integer foodPostId;
 
     ImageView[] imageViews;
+    ImageView[] addImageViews;
     boolean[] imagesSet = {false, false, false};
 
     ArrayList<FoodPostImageObject> foodPostImageObjects;
@@ -77,6 +78,11 @@ public class AddImagesFragment extends Fragment {
                 view.findViewById(R.id.image1),
                 view.findViewById(R.id.image2)
         };
+        addImageViews = new ImageView[]{
+                view.findViewById(R.id.add_image_0),
+                view.findViewById(R.id.add_image_1),
+                view.findViewById(R.id.add_image_2)
+        };
         setImageAbailable();
         return view;
     }
@@ -97,7 +103,7 @@ public class AddImagesFragment extends Fragment {
         final int finalI = i;
         if (i < imageViews.length) {
             imageViews[i].setOnClickListener(v -> mListener.onAddImage(finalI));
-            imageViews[i].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.camera_icon));
+            addImageViews[i].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.add_image_icon));
         }
     }
 

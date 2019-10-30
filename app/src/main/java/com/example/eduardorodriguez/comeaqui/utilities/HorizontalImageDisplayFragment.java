@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 
-public class HorizontalFoodPostImageDisplayFragment extends Fragment {
+public class HorizontalImageDisplayFragment extends Fragment {
     private static final String FOOD_POST_ID = "foodPostId";
     private static final String STYLE = "style";
     private int foodPostId;
@@ -45,9 +45,9 @@ public class HorizontalFoodPostImageDisplayFragment extends Fragment {
     LinearLayout imageList;
     ConstraintLayout parentView;
 
-    public HorizontalFoodPostImageDisplayFragment() {}
-    public static HorizontalFoodPostImageDisplayFragment newInstance(int foodPostId,  String style) {
-        HorizontalFoodPostImageDisplayFragment fragment = new HorizontalFoodPostImageDisplayFragment();
+    public HorizontalImageDisplayFragment() {}
+    public static HorizontalImageDisplayFragment newInstance(int foodPostId, String style) {
+        HorizontalImageDisplayFragment fragment = new HorizontalImageDisplayFragment();
         Bundle args = new Bundle();
         args.putInt(FOOD_POST_ID, foodPostId);
         args.putString(STYLE, style);

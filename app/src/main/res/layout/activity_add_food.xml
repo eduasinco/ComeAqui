@@ -214,7 +214,8 @@
                 <FrameLayout
                     android:id="@+id/add_images_frame"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="8dp">
 
                 </FrameLayout>
 
@@ -256,17 +257,14 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
-    <ImageView
+    <ImageButton
         android:id="@+id/back_arrow"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:layout_weight="1"
-        android:alpha="1"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@android:color/transparent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/back_arrow" />
+        app:srcCompat="@drawable/back_arrow_with_background" />
 
     <FrameLayout
         android:id="@+id/select_image_from"

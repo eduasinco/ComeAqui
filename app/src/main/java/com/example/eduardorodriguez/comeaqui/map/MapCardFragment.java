@@ -19,7 +19,7 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
-import com.example.eduardorodriguez.comeaqui.utilities.HorizontalFoodPostImageDisplayFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.HorizontalImageDisplayFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 
 import java.util.concurrent.ExecutionException;
@@ -84,7 +84,7 @@ public class MapCardFragment extends Fragment {
                 .commit();
 
         getChildFragmentManager().beginTransaction()
-                .replace(R.id.image_list, HorizontalFoodPostImageDisplayFragment.newInstance(foodPost.id,"SMALL"))
+                .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(foodPost.id,"SMALL"))
                 .commit();
 
         favouriteId = foodPost.favouriteId;
