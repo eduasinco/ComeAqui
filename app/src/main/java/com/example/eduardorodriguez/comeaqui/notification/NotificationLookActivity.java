@@ -70,7 +70,7 @@ public class NotificationLookActivity extends AppCompatActivity {
 
         dinnerImage = findViewById(R.id.dinner_image);
         staticMapView = findViewById(R.id.static_map);
-        backView = findViewById(R.id.back_arrow);
+        backView = findViewById(R.id.back);
         confirmNotificationProgress = findViewById(R.id.confirm_notification_progress);
         waitingFrame = findViewById(R.id.waiting_frame);
 

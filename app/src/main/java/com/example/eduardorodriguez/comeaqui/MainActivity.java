@@ -88,10 +88,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
@@ -156,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
         });
         setNotificationsBubbles();
         listenToOrdersChanges();
+        listenToNotificationChanges();
         listenToChatMessages();
     }
 
@@ -238,6 +235,39 @@ public class MainActivity extends AppCompatActivity {
                         if (ordersNotSeen > 0 ){
                             notOrders.setVisibility(View.VISIBLE);
                             notOrders.setText("" + ordersNotSeen);
+                        }
+                    });
+                }
+                @Override
+                public void onClose(int i, String s, boolean b) {
+                    Log.i("Websocket", "Closed " + s);
+                }
+                @Override
+                public void onError(Exception e) {
+                    Log.i("Websocket", "Error " + e.getMessage());
+                }
+            };
+            mWebSocketClient.connect();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+    public void listenToNotificationChanges(){
+        try {
+            URI uri = new URI(getResources().getString(R.string.server) + "/ws/notification/" + USER.id +  "/");
+            WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
+                @Override
+                public void onOpen(ServerHandshake serverHandshake) {
+                    runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Orders!", Toast.LENGTH_LONG).show());
+                }
+                @Override
+                public void onMessage(String s) {
+                    final String message = s;
+                    runOnUiThread(() -> {
+                        int notiNotSeen = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("not_seen").getAsInt();
+                        if (notiNotSeen > 0 ){
+                            notNotifications.setVisibility(View.VISIBLE);
+                            notNotifications.setText("" + notiNotSeen);
                         }
                     });
                 }

@@ -66,8 +66,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 notificationManager.notify(2, notificationNotification);
                 break;
         }
-
-        System.out.println("HOLAAAAAAAA: " + remoteMessage.getData().get("message"));
         super.onMessageReceived(remoteMessage);
     }
 }

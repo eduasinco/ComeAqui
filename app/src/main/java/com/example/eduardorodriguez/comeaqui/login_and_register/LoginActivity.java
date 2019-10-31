@@ -1,5 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.login_and_register;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -14,6 +15,8 @@ import com.example.eduardorodriguez.comeaqui.login_and_register.forgot_password.
 import com.example.eduardorodriguez.comeaqui.login_and_register.register.RegisterActivity;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import android.app.LoaderManager.LoaderCallbacks;
 
 import android.database.Cursor;
@@ -72,6 +75,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
 
         // Set up the login form.
         context = getApplicationContext();
