@@ -185,7 +185,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
                 @Override
                 public void onMessage(String s) {
                     getActivity().runOnUiThread(() -> {
-                        JsonObject jo = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("food_post").getAsJsonObject();;
+                        JsonObject jo = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject();
                         FoodPost fp = new FoodPost(jo);
                         foodPostHashMap.put(fp.id, fp);
 

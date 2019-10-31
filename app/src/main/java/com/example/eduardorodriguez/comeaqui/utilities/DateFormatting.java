@@ -35,7 +35,7 @@ public class DateFormatting {
     public static String hPost(String dateString){
         try {
             // https://stackoverflow.com/questions/32113211/saving-model-instance-with-datetimefield-in-django-admin-loses-microsecond-resol
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'");
             format.setTimeZone(TimeZone.getTimeZone("UTC"));
             Date date = format.parse(dateString);
 

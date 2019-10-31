@@ -284,7 +284,7 @@ public class AddFoodActivity extends AppCompatActivity implements
                 protected void onPostExecute(String response) {
                     FoodPost foodPost = new FoodPost(new JsonParser().parse(response).getAsJsonObject());
                     postImages(foodPost.id);
-                    sendPostMessage(foodPost);
+                    //sendPostMessage(foodPost);
                 }
             };
             post.execute(
