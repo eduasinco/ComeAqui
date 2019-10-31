@@ -199,10 +199,6 @@ public class NotificationLookActivity extends AppCompatActivity {
             e.printStackTrace();
             showProgress(false);
         }
-        WebSocketMessage.send(this,
-                "/ws/orders/" + order.owner.id +  "/",
-                "{\"order_id\": \"" + order.id + "\", \"seen_owner\": false}"
-        );
     }
 
     void goToProfileView(){

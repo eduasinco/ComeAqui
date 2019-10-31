@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.eduardorodriguez.comeaqui.WebSocketMessage;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.User;
@@ -172,10 +171,6 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
             e.printStackTrace();
             showProgress(false);
         }
-        WebSocketMessage.send(this,
-                "/ws/orders/" + order.poster.id +  "/",
-                "{\"order_id\": \"" + order.id + "\", \"seen_poster\": false}"
-        );
         finish();
     }
 

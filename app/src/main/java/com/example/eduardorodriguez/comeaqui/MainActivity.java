@@ -234,16 +234,10 @@ public class MainActivity extends AppCompatActivity {
                 public void onMessage(String s) {
                     final String message = s;
                     runOnUiThread(() -> {
-                        int ordersNotSeen = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("orders_not_seen_owner").getAsInt();
+                        int ordersNotSeen = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("not_seen").getAsInt();
                         if (ordersNotSeen > 0 ){
                             notOrders.setVisibility(View.VISIBLE);
                             notOrders.setText("" + ordersNotSeen);
-                        }
-
-                        int notificationsNotSeen = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("orders_not_seen_poster").getAsInt();
-                        if (notificationsNotSeen > 0 ){
-                            notNotifications.setVisibility(View.VISIBLE);
-                            notNotifications.setText("" + notificationsNotSeen);
                         }
                     });
                 }

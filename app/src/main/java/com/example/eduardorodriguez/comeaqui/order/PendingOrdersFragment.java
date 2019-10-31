@@ -1,6 +1,5 @@
 package com.example.eduardorodriguez.comeaqui.order;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -16,7 +15,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
-import com.example.eduardorodriguez.comeaqui.utilities.UpperNotificationFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -158,7 +156,7 @@ public class PendingOrdersFragment extends Fragment {
                 public void onMessage(String s) {
                     getActivity().runOnUiThread(() -> {
                         OrderObject orderChanged = new OrderObject(new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("order_changed").getAsJsonObject());
-                        data.get(orderChanged.id).seenOwner = orderChanged.seenOwner;
+                        data.get(orderChanged.id).seen = orderChanged.seen;
                         data.get(orderChanged.id).status = orderChanged.status;
                         orderAdapter.notifyDataSetChanged();
                     });

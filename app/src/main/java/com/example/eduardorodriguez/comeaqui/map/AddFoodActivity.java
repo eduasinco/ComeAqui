@@ -15,10 +15,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.*;
 
-import com.example.eduardorodriguez.comeaqui.WebSocketMessage;
 import com.example.eduardorodriguez.comeaqui.map.add_food.AddImagesFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodTimePickerFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.WordLimitEditTextFragment;
@@ -333,12 +331,6 @@ public class AddFoodActivity extends AppCompatActivity implements
                 Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
             }
         }
-    }
-    void sendPostMessage(FoodPost foodPost){
-        WebSocketMessage.send(this,
-                "/ws/posts/",
-                "{\"post_id\": " + foodPost.id + "}"
-        );
     }
     void showErrorMessage(){
         errorMessage.setVisibility(View.VISIBLE);

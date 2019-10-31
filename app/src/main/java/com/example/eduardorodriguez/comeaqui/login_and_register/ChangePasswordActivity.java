@@ -6,9 +6,7 @@ import androidx.core.content.ContextCompat;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,17 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.WebSocketMessage;
 import com.example.eduardorodriguez.comeaqui.login_and_register.forgot_password.ForgotPasswordActivity;
-import com.example.eduardorodriguez.comeaqui.login_and_register.register.VerifyEmailActivity;
-import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
-import com.example.eduardorodriguez.comeaqui.objects.User;
-import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
-import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
-import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import org.json.JSONObject;
 
@@ -35,8 +24,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.example.eduardorodriguez.comeaqui.App.USER;
 
 public class ChangePasswordActivity extends AppCompatActivity {
 
