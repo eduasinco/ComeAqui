@@ -21,6 +21,19 @@ public class DateFormatting {
 
     public static String h(String dateString){
         try {
+            Date date = convertToDate(dateString);
+            DateFormat df = new SimpleDateFormat("h:mm a");
+            df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
+            String dateTextString = df.format(date);
+            return dateTextString;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String hPost(String dateString){
+        try {
             // https://stackoverflow.com/questions/32113211/saving-model-instance-with-datetimefield-in-django-admin-loses-microsecond-resol
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
             format.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -36,19 +49,11 @@ public class DateFormatting {
         return null;
     }
 
-    public static Date startOfTodayUTC() throws ParseException {
-        long now_in_UTC = System.currentTimeMillis();
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        format.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String startTodayString = format.format(new Date(now_in_UTC));
-        return format.parse(startTodayString);
-    }
-
     public static Date startOfToday(String timeZone) throws ParseException {
-        long now_in_UTC = System.currentTimeMillis();
+        long now = System.currentTimeMillis();
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         format.setTimeZone(TimeZone.getTimeZone(timeZone));
-        String startTodayString = format.format(new Date(now_in_UTC));
+        String startTodayString = format.format(new Date(now));
         return format.parse(startTodayString);
     }
 
@@ -56,11 +61,11 @@ public class DateFormatting {
         try {
             Date date = convertToDate(dateString);
 
-            long now_in_UTC = System.currentTimeMillis();
-            long startOfDay_UTC = startOfTodayUTC().getTime();
+            long now = System.currentTimeMillis();
+            long startOfDay = DateFormatting.startOfToday(USER.timeZone).getTime();
 
-            long differenceToDate = now_in_UTC - date.getTime();
-            long differenceToStartOrDay = now_in_UTC - startOfDay_UTC;
+            long differenceToDate = now - date.getTime();
+            long differenceToStartOrDay = now - startOfDay;
 
             if (differenceToStartOrDay >= differenceToDate) {
                 return "TODAY";
@@ -85,11 +90,11 @@ public class DateFormatting {
     public static String hYesterdayWeekDay(String dateString){
         try {
             Date date = convertToDate(dateString);
-            long now_in_UTC = System.currentTimeMillis();
-            long startOfDay = startOfTodayUTC().getTime();
+            long now = System.currentTimeMillis();
+            long startOfDay = startOfToday(USER.timeZone).getTime();
 
-            long differenceToDate = now_in_UTC - date.getTime();
-            long differenceToStartOrDay = now_in_UTC - startOfDay;
+            long differenceToDate = now - date.getTime();
+            long differenceToStartOrDay = now - startOfDay;
 
             if (differenceToStartOrDay >= differenceToDate) {
                 String pattern = "h:mm a";

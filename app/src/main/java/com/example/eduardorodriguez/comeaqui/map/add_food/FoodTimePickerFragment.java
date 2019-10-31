@@ -85,6 +85,7 @@ public class FoodTimePickerFragment extends Fragment {
         });
 
         scheduleButton.setOnClickListener(v -> {
+            mListener.onFragmentInteraction("");
             timeTextView.setText("-- --");
             nowButton.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.text_input_shape));
             scheduleButton.setBackgroundColor(Color.TRANSPARENT);
@@ -94,6 +95,9 @@ public class FoodTimePickerFragment extends Fragment {
 
     void setTimePickerLogic(){
         timePicker.setOnTimeChangedListener((arg0, arg1, arg2) -> {
+            scheduleButton.setBackgroundColor(Color.TRANSPARENT);
+            nowButton.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.text_input_shape));
+
 
             try {
                 Date now = new Date(System.currentTimeMillis());
@@ -102,8 +106,6 @@ public class FoodTimePickerFragment extends Fragment {
                 Date postTimeDate = new Date(todayDate.getTime() + (arg0.getHour()*60 + arg0.getMinute())*60*1000);
                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
                 format.setTimeZone(TimeZone.getTimeZone("UTC"));
-                postTimeString = format.format(postTimeDate);
-                mListener.onFragmentInteraction(postTimeString);
 
                 Date now_plus_time_picked = new Date(now.getTime() + MINUTES *60*1000);
                 DateFormat formatter = new SimpleDateFormat("h:mm a");
@@ -115,6 +117,8 @@ public class FoodTimePickerFragment extends Fragment {
                     formatter.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
                     String dateFormatted = formatter.format(postTimeDate);
                     timeTextView.setText("Today at: " + dateFormatted);
+                    postTimeString = format.format(postTimeDate);
+                    mListener.onFragmentInteraction(postTimeString);
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
