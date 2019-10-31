@@ -71,8 +71,6 @@ public class MainActivity extends AppCompatActivity {
     public static FirebaseUser firebaseUser;
 
     private static Context context;
-
-    int currentFrame, previousFrame = 0;
     TextView[] notArray;
 
     @Override
@@ -151,9 +149,7 @@ public class MainActivity extends AppCompatActivity {
             profile.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.profilefill));
         });
         setNotificationsBubbles();
-        listenToOrdersChanges();
         listenToNotificationChanges();
-        listenToChatMessages();
     }
 
     void checkRatings(){
@@ -199,9 +195,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void initiateIcons(int cf){
-        previousFrame = currentFrame;
-        currentFrame = cf;
-        notArray[previousFrame].setVisibility(View.INVISIBLE);
         map.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.food));
         orders.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.order));
         notifications.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.notification));
@@ -218,91 +211,48 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, fragment).commit();
         mainFrame.setVisibility(View.VISIBLE);
     }
-
-    public void listenToOrdersChanges(){
-        try {
-            URI uri = new URI(getResources().getString(R.string.server) + "/ws/orders/" + USER.id +  "/");
-            WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
-                @Override
-                public void onOpen(ServerHandshake serverHandshake) {
-                    //unOnUiThread(() -> Toast.makeText(getApplicationContext(), "Orders!", Toast.LENGTH_LONG).show());
-                }
-                @Override
-                public void onMessage(String s) {
-                    final String message = s;
-                    runOnUiThread(() -> {
-                        int ordersNotSeen = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("not_seen").getAsInt();
-                        if (ordersNotSeen > 0 ){
-                            notOrders.setVisibility(View.VISIBLE);
-                            notOrders.setText("" + ordersNotSeen);
-                        }
-                    });
-                }
-                @Override
-                public void onClose(int i, String s, boolean b) {
-                    Log.i("Websocket", "Closed " + s);
-                }
-                @Override
-                public void onError(Exception e) {
-                    Log.i("Websocket", "Error " + e.getMessage());
-                }
-            };
-            mWebSocketClient.connect();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-    }
     public void listenToNotificationChanges(){
         try {
             URI uri = new URI(getResources().getString(R.string.server) + "/ws/notification/" + USER.id +  "/");
             WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
-                    runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Orders!", Toast.LENGTH_LONG).show());
+                    // runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Orders!", Toast.LENGTH_LONG).show());
                 }
                 @Override
                 public void onMessage(String s) {
-                    final String message = s;
                     runOnUiThread(() -> {
-                        int notiNotSeen = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("not_seen").getAsInt();
-                        if (notiNotSeen > 0 ){
-                            notNotifications.setVisibility(View.VISIBLE);
-                            notNotifications.setText("" + notiNotSeen);
-                        }
-                    });
-                }
-                @Override
-                public void onClose(int i, String s, boolean b) {
-                    Log.i("Websocket", "Closed " + s);
-                }
-                @Override
-                public void onError(Exception e) {
-                    Log.i("Websocket", "Error " + e.getMessage());
-                }
-            };
-            mWebSocketClient.connect();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-    }
-    public void listenToChatMessages(){
-        try {
-            URI uri = new URI(getResources().getString(R.string.server) + "/ws/unread_messages/" + USER.id +  "/");
-            WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
-                @Override
-                public void onOpen(ServerHandshake serverHandshake) {
-                    runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Unread Messages!", Toast.LENGTH_LONG).show());
-                }
-                @Override
-                public void onMessage(String s) {
-                    final String message = s;
-                    runOnUiThread(() -> {
-                        JsonObject jsonMessage = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject();
-                        int ordersNotSeen = jsonMessage.get("unread_messages").getAsInt();
-                        if (ordersNotSeen > 0 ){
-                            notChat.setVisibility(View.VISIBLE);
-                            notChat.setText("" + ordersNotSeen);
-                        }
+                        JsonObject message = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject();
+                        try {
+                            int notiNotSeen = message.get("notifications_not_seen").getAsInt();
+                            if (notiNotSeen > 0) {
+                                notNotifications.setVisibility(View.VISIBLE);
+                                notNotifications.setText("" + notiNotSeen);
+                            } else {
+                                notNotifications.setVisibility(View.INVISIBLE);
+                                notNotifications.setText("" + notiNotSeen);
+                            }
+                        } catch (Exception ignore) {}
+                        try {
+                            int unseenMessages = message.get("unread_messages").getAsInt();
+                            if (unseenMessages > 0 ){
+                                notChat.setVisibility(View.VISIBLE);
+                                notChat.setText("" + unseenMessages);
+                            } else {
+                                notChat.setVisibility(View.INVISIBLE);
+                                notChat.setText("" + unseenMessages);
+                            }
+                        } catch (Exception ignore) {}
+                        try {
+                            int ordersNotSeen = message.get("orders_not_seen").getAsInt();
+                            if (ordersNotSeen > 0 ){
+                                notOrders.setVisibility(View.VISIBLE);
+                                notOrders.setText("" + ordersNotSeen);
+                            } else {
+                                notOrders.setVisibility(View.INVISIBLE);
+                                notOrders.setText("" + ordersNotSeen);
+                            }
+                        } catch (Exception ignore) {}
                     });
                 }
                 @Override
