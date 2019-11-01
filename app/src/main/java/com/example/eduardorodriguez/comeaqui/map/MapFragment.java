@@ -63,7 +63,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
     double lat;
     String pickedAdress = "";
 
-    Set<Integer> touchedMarkers = new HashSet<>();
+    static Set<Integer> touchedMarkers = new HashSet<>();
     public static HashMap<Integer, Marker> markerHashMap = new HashMap<>();
     LatLng latLng;
 
@@ -76,16 +76,11 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
             Marker marker =  googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)));
             marker.setTag(key);
 
-            if (fp.favourite){
-                setMarkerIcon(marker, R.drawable.map_icon_favourite);
-            } else if (touchedMarkers.contains(key)){
-                setMarkerIcon(marker, R.drawable.map_icon_seen);
-            } else {
-                setMarkerIcon(marker, R.drawable.map_icon);
-            }
+            setMarkerDesign(marker, false);
             markerHashMap.put(fp.id, marker);
         }
     }
+
 
     private static BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable) {
         Canvas canvas = new Canvas();
@@ -115,7 +110,6 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
         super.onResume();
         mMapView.onResume();
         cancelPost();
-        try{setMapMarkers();}catch(Exception ignored){}
     }
 
 
@@ -188,7 +182,8 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
                         JsonObject jo = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject();
                         FoodPost fp = new FoodPost(jo.get("post").getAsJsonObject());
                         if (jo.get("delete").getAsBoolean()){
-                            markerHashMap.get(fp.id).remove();
+                            Marker marker = markerHashMap.get(fp.id);
+                            marker.remove();
                         } else {
                             foodPostHashMap.put(fp.id, fp);
                             Marker marker =  googleMap.addMarker(new MarkerOptions().position(new LatLng(fp.lat, fp.lng)));
@@ -251,8 +246,41 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
             FoodPost foodPost = foodPostHashMap.get(key);
             mapCardFragment.showPost(foodPost);
             mapCardFragment.moveCardUp(true);
+
+            setMarkerBigger(marker);
             return false;
         });
+    }
+
+    Marker currentBigMarker;
+    void setMarkerBigger(Marker marker){
+        if (currentBigMarker != null){
+            setMarkerDesign(currentBigMarker, false);
+        }
+        setMarkerDesign(marker, true);
+        currentBigMarker = marker;
+    }
+
+    static void setMarkerDesign(Marker marker, boolean big){
+        FoodPost fp = foodPostHashMap.get(marker.getTag());
+        if (big){
+            if (fp.favourite){
+                setMarkerIcon(marker, R.drawable.map_icon_favourite_big);
+            } else if (touchedMarkers.contains(marker.getTag())){
+                setMarkerIcon(marker, R.drawable.map_icon_seen_big);
+            } else {
+                setMarkerIcon(marker, R.drawable.map_icon_big);
+            }
+        } else {
+            if (fp.favourite){
+                setMarkerIcon(marker, R.drawable.map_icon_favourite);
+            } else if (touchedMarkers.contains(marker.getTag())){
+                setMarkerIcon(marker, R.drawable.map_icon_seen);
+            } else {
+                setMarkerIcon(marker, R.drawable.map_icon);
+            }
+        }
+
     }
 
     void setMapMarkers(){
@@ -312,6 +340,9 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
 
     @SuppressLint("RestrictedApi")
     void cancelPost(){
+        if (currentBigMarker != null){
+            setMarkerDesign(currentBigMarker, false);
+        }
         markersVisibility(true);
         switchFabImage(false);
         fabCount = 0;

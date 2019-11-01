@@ -92,7 +92,7 @@ public class MapCardFragment extends Fragment {
         posterNameView.setText(foodPost.owner.first_name + " " + foodPost.owner.last_name);
         posterUserName.setText(foodPost.owner.username);
         starView.setImageResource(foodPost.favourite ? R.drawable.star_fill: R.drawable.star);
-        MapFragment.setMarkerIcon(MapFragment.markerHashMap.get(foodPost.id), !foodPost.favourite ? R.drawable.map_icon_seen : R.drawable.map_icon_favourite);
+        MapFragment.setMarkerDesign(MapFragment.markerHashMap.get(foodPost.id), true);
 
         if(!foodPost.owner.profile_photo.contains("no-image")) Glide.with(getContext()).load(foodPost.owner.profile_photo).into(posterImageView);
 
@@ -112,7 +112,7 @@ public class MapCardFragment extends Fragment {
             foodPost.favourite = !foodPost.favourite;
             starView.setImageResource(foodPost.favourite ? R.drawable.star_fill: R.drawable.star);
             if (foodPost.favourite) {
-                MapFragment.setMarkerIcon(MapFragment.markerHashMap.get(foodPost.id), R.drawable.map_icon_favourite);
+                MapFragment.setMarkerDesign(MapFragment.markerHashMap.get(foodPost.id), true);
                 PostAsyncTask putFavourite = new PostAsyncTask(getResources().getString(R.string.server) + "/favourites/");
                 try {
                     favouriteId = Integer.parseInt(putFavourite.execute(new String[]{"food_post_id", "" + foodPost.id}).get());
@@ -127,7 +127,7 @@ public class MapCardFragment extends Fragment {
                 } catch (ExecutionException | InterruptedException e) {
                     e.printStackTrace();
                 }
-                MapFragment.setMarkerIcon(MapFragment.markerHashMap.get(foodPost.id), !foodPost.favourite ? R.drawable.map_icon_seen : R.drawable.map_icon_favourite);
+                MapFragment.setMarkerDesign(MapFragment.markerHashMap.get(foodPost.id), true);
             }
         });
     }
