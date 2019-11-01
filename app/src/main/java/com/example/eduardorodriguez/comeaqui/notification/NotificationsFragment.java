@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonArray;
@@ -38,7 +39,7 @@ import static com.example.eduardorodriguez.comeaqui.App.USER;
 
 public class NotificationsFragment extends Fragment {
 
-    LinkedHashMap<Integer, NotificationObject> data;
+    ArrayList<NotificationObject> data;
     static MyNotificationsRecyclerViewAdapter notificationAdapter;
 
     RecyclerView recyclerView;
@@ -53,13 +54,13 @@ public class NotificationsFragment extends Fragment {
 
     public void makeList(JsonArray jsonArray){
         try {
-            data = new LinkedHashMap<>();
+            data = new ArrayList<>();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
                 NotificationObject oo = new NotificationObject(jo);
-                data.put(oo.id, oo);
+                data.add(oo);
             }
-            notificationAdapter = new MyNotificationsRecyclerViewAdapter(getContext(), new ArrayList<>(data.values()));
+            notificationAdapter = new MyNotificationsRecyclerViewAdapter(getContext(), data);
             recyclerView.setAdapter(notificationAdapter);
         } catch (Exception e){
             e.printStackTrace();
@@ -155,7 +156,7 @@ public class NotificationsFragment extends Fragment {
 
     private void start(){
         try {
-            URI uri = new URI(getActivity().getResources().getString(R.string.server) + "/ws/orders/" + USER.id +  "/");
+            URI uri = new URI(getActivity().getResources().getString(R.string.server) + "/ws/notifications/" + USER.id +  "/");
             WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
@@ -166,10 +167,9 @@ public class NotificationsFragment extends Fragment {
                 @Override
                 public void onMessage(String s) {
                     getActivity().runOnUiThread(() -> {
-//                        OrderObject orderChanged = new OrderObject(new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("order_changed").getAsJsonObject());
-//                        data.get(orderChanged.id).seenPoster = orderChanged.seenPoster;
-//                        data.get(orderChanged.id).status = orderChanged.status;
-//                        notificationAdapter.notifyDataSetChanged();
+                        NotificationObject notificationObject = new NotificationObject(new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("notification_added").getAsJsonObject());
+                        data.add(0, notificationObject);
+                        notificationAdapter.notifyDataSetChanged();
                     });
                 }
                 @Override

@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         context = getApplicationContext();
-        setNotificationsBubbles();
         checkRatings();
     }
 
@@ -148,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
             setFragment(profileFragment);
             profile.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.profilefill));
         });
-        setNotificationsBubbles();
         listenToNotificationChanges();
     }
 
@@ -213,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void listenToNotificationChanges(){
         try {
-            URI uri = new URI(getResources().getString(R.string.server) + "/ws/notification/" + USER.id +  "/");
+            URI uri = new URI(getResources().getString(R.string.server) + "/ws/popups/" + USER.id +  "/");
             WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
@@ -234,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         } catch (Exception ignore) {}
                         try {
-                            int unseenMessages = message.get("unread_messages").getAsInt();
+                            int unseenMessages = message.get("messages_not_seen").getAsInt();
                             if (unseenMessages > 0 ){
                                 notChat.setVisibility(View.VISIBLE);
                                 notChat.setText("" + unseenMessages);
@@ -268,63 +266,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-    }
-
-    private void setNotificationsBubbles(){
-        setUnseenOrders();
-        setUnseenNotifications();
-        setUnseenChatMessages();
-    }
-    private void setUnseenOrders(){
-        ArrayList<OrderObject> orderObjects = new ArrayList<>();
-        new GetAsyncTask("GET", getResources().getString(R.string.server) + "/unseen_orders/"){
-            @Override
-            protected void onPostExecute(String response) {
-                if (response != null){
-                    for (JsonElement pa : new JsonParser().parse(response).getAsJsonArray()) {
-                        orderObjects.add(new OrderObject(pa.getAsJsonObject()));
-                    }
-                }
-                if (orderObjects.size() > 0){
-                    notOrders.setVisibility(View.VISIBLE);
-                    notOrders.setText("" + orderObjects.size());
-                }
-                super.onPostExecute(response);
-            }
-        }.execute();
-    }
-    private void setUnseenNotifications(){
-        ArrayList<OrderObject> orderObjects = new ArrayList<>();
-        new GetAsyncTask("GET", getResources().getString(R.string.server) + "/unseen_notifications/"){
-            @Override
-            protected void onPostExecute(String response) {
-                if (response != null){
-                    int count = new JsonParser().parse(response).getAsJsonObject().get("count").getAsInt();
-                    if (count > 0){
-                        notNotifications.setVisibility(View.VISIBLE);
-                        notNotifications.setText("" + orderObjects.size());
-                    }
-                }
-                super.onPostExecute(response);
-            }
-        }.execute();
-    }
-    private void setUnseenChatMessages(){
-        new GetAsyncTask("GET", getResources().getString(R.string.server) + "/unseen_chat_messages/"){
-            @Override
-            protected void onPostExecute(String response) {
-                if (response != null){
-                    Integer count = new JsonParser().parse(response).getAsJsonObject().get("count").getAsInt();
-                    if (count > 0){
-                        notChat.setVisibility(View.VISIBLE);
-                        notChat.setText("" + count);
-                    } else {
-                        notChat.setVisibility(View.INVISIBLE);
-                    }
-                }
-                super.onPostExecute(response);
-            }
-        }.execute();
     }
 
     @Override
