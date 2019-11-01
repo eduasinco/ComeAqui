@@ -263,6 +263,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
 
     static void setMarkerDesign(Marker marker, boolean big){
         FoodPost fp = foodPostHashMap.get(marker.getTag());
+        if (fp == null) return;
         if (big){
             if (fp.favourite){
                 setMarkerIcon(marker, R.drawable.map_icon_favourite_big);
