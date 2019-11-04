@@ -1,7 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.map;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -30,6 +29,7 @@ public class MapPickerFragment extends Fragment {
     public TextView pickedAdress;
     ConstraintLayout mapPickerPanView;
 
+    public boolean abled;
     String LOADING = "Loading...";
 
     public MapPickerFragment() {}
@@ -41,6 +41,8 @@ public class MapPickerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,7 +79,7 @@ public class MapPickerFragment extends Fragment {
                         String address = jsonArray.get(0).getAsJsonObject().get("formatted_address").getAsString();
                         pickedAdress.setText(address);
                         if (!address.equals(LOADING)){
-                            mListener.onFragmentInteraction(address);
+                            mListener.refreshFragment(address);
                         }
                     }
                 }
@@ -87,11 +89,11 @@ public class MapPickerFragment extends Fragment {
     }
 
     public void apearMapPicker(boolean apear){
+        abled = apear;
         shadowPoint.setVisibility(apear ? View.VISIBLE: View.INVISIBLE);
-        mapPickerPanView.setVisibility(apear ? View.VISIBLE: View.GONE);
-        hande.setVisibility(apear ? View.VISIBLE: View.GONE);
-        shadow.setVisibility(apear ? View.VISIBLE: View.GONE);
-        shadow.setVisibility(apear ? View.VISIBLE: View.GONE);
+        mapPickerPanView.setVisibility(apear ? View.VISIBLE: View.INVISIBLE);
+        hande.setVisibility(apear ? View.VISIBLE: View.INVISIBLE);
+        shadow.setVisibility(apear ? View.VISIBLE: View.INVISIBLE);
     }
 
     public void moveMapPicker(boolean up){
@@ -129,6 +131,6 @@ public class MapPickerFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(String address);
+        void refreshFragment(String address);
     }
 }

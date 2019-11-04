@@ -1,8 +1,11 @@
 package com.example.eduardorodriguez.comeaqui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -34,9 +37,10 @@ public class PrepareActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prepare);
+
         initializeUser();
         getFirebaseToken();
-        getUserTimeZone();
+        goToMain();
     }
 
     private void getFirebaseToken(){
@@ -65,35 +69,6 @@ public class PrepareActivity extends AppCompatActivity {
         );
     }
 
-    void getUserTimeZone(){
-        MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
-            @Override
-            public void gotLocation(Location location){
-                //Got the location!
-                double lng = location.getLongitude();
-                double lat = location.getLatitude();
-
-                if (!gotTimezone){
-                    Server gAPI2 = new Server("GET", "https://maps.googleapis.com/maps/api/timezone/json?location=" +
-                            lat + "," + lng + "&timestamp=0&key=" + getResources().getString(R.string.google_key));
-                    try {
-                        String response = gAPI2.execute().get();
-                        if (response != null) {
-                            String timeZone = new JsonParser().parse(response).getAsJsonObject().get("timeZoneId").getAsString();
-                            USER.timeZone = timeZone;
-                            setUserTimeZone(timeZone);
-                            gotTimezone = true;
-                        }
-                    } catch (ExecutionException | InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-        MyLocation myLocation = new MyLocation();
-        myLocation.getLocation(this, locationResult);
-    }
-
     public User initializeUser(){
         GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_profile/");
         try {
@@ -107,20 +82,6 @@ public class PrepareActivity extends AppCompatActivity {
     }
 
 
-    private void setUserTimeZone(String timeZone){
-        try {
-            new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/"){
-                @Override
-                protected void onPostExecute(JSONObject response) {
-                    goToMain();
-                    super.onPostExecute(response);
-                }
-            }.execute(
-                    new String[]{"time_zone", timeZone, ""}
-            ).get(5, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException | TimeoutException e) {
-        }
-    }
     void goToMain(){
         Intent k = new Intent(this, MainActivity.class);
         startActivity(k);

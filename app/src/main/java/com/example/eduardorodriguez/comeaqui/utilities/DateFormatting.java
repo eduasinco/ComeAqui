@@ -3,6 +3,7 @@ package com.example.eduardorodriguez.comeaqui.utilities;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -36,14 +37,15 @@ public class DateFormatting {
         Date date;
         try {
             date = convertToDate(dateString);
-        } catch (ParseException e) {}
-        try {
-            // https://stackoverflow.com/questions/32113211/saving-model-instance-with-datetimefield-in-django-admin-loses-microsecond-resol
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-            format.setTimeZone(TimeZone.getTimeZone("UTC"));
-            date = format.parse(dateString);
         } catch (ParseException e) {
-            return null;
+            try {
+                // https://stackoverflow.com/questions/32113211/saving-model-instance-with-datetimefield-in-django-admin-loses-microsecond-resol
+                DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                format.setTimeZone(TimeZone.getTimeZone("UTC"));
+                date = format.parse(dateString);
+            } catch (ParseException e2) {
+                return null;
+            }
         }
 
         DateFormat df = new SimpleDateFormat("h:mm a");

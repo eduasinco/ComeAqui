@@ -1,16 +1,23 @@
 package com.example.eduardorodriguez.comeaqui.map;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
-
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
+import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.utilities.MyLocation;
 import com.example.eduardorodriguez.comeaqui.utilities.UpperNotificationFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
 
@@ -31,12 +38,18 @@ import com.google.gson.JsonParser;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static com.example.eduardorodriguez.comeaqui.App.USER;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,9 +58,8 @@ import java.util.Set;
  * create an instance of this fragment.
  */
 public class MapFragment extends Fragment implements MapPickerFragment.OnFragmentInteractionListener {
-
     MapView mMapView;
-    static View rootView;
+    static View view;
     private static GoogleMap googleMap;
     public static HashMap<Integer, FoodPost> foodPostHashMap = new HashMap<>();;
     int fabCount;
@@ -61,11 +73,14 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
 
     double lng;
     double lat;
+    LatLng myLocation;
     String pickedAdress = "";
 
     static Set<Integer> touchedMarkers = new HashSet<>();
     public static HashMap<Integer, Marker> markerHashMap = new HashMap<>();
     LatLng latLng;
+    boolean gotTimezone = false;
+
 
     void setMarkers(){
         for (int key : foodPostHashMap.keySet()) {
@@ -106,69 +121,48 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_map, container, false);
+        mMapView = view.findViewById(R.id.mapView);
+        myFab = view.findViewById(R.id.fab);
+        centerButton = view.findViewById(R.id.center_map);
+        cancelPostView = view.findViewById(R.id.cancel_post);
+        mMapView.onCreate(savedInstanceState);
+
+        mapPickerFragment = MapPickerFragment.newInstance();
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.map_picker_frame, mapPickerFragment)
+                .commit();
+        getFragmentManager().beginTransaction()
+                .replace(R.id.upper_notification, UpperNotificationFragment.newInstance())
+                .commit();
+        mapCardFragment = MapCardFragment.newInstance();
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container1, mapCardFragment)
+                .commit();
+        mMapView.onResume();
+        fabCount = 0;
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        cancelPostView.setOnClickListener(v -> cancelPost());
+        myFab.setOnClickListener(v -> fabFunctionality());
+        centerButton.setOnClickListener(v -> centerMap());
+        mMapView.getMapAsync(mMap -> setMap(mMap));
+        listenToPosts();
+        return view;
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         mMapView.onResume();
         cancelPost();
     }
 
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_map, container, false);
-
-        fabCount = 0;
-
-        mMapView = rootView.findViewById(R.id.mapView);
-        myFab =  rootView.findViewById(R.id.fab);
-        centerButton =  rootView.findViewById(R.id.center_map);
-        cancelPostView = rootView.findViewById(R.id.cancel_post);
-
-        mMapView.onCreate(savedInstanceState);
-        mMapView.onResume();
-
-        mapPickerFragment = MapPickerFragment.newInstance();
-        getChildFragmentManager().beginTransaction()
-                .replace(R.id.map_picker_frame, mapPickerFragment)
-                .commit();
-
-        try {
-            MapsInitializer.initialize(getActivity().getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        cancelPostView.setOnClickListener(v -> {
-            cancelPost();
-        });
-
-        myFab.setOnClickListener(v -> {
-            fabFunctionality();
-        });
-
-        centerButton.setOnClickListener(v -> {
-            centerMap();
-        });
-
-        mMapView.getMapAsync(mMap -> {
-            setMap(mMap);
-        });
-
-
-        getFragmentManager().beginTransaction()
-                .replace(R.id.upper_notification, UpperNotificationFragment.newInstance())
-                .commit();
-
-        mapCardFragment = MapCardFragment.newInstance();
-        getFragmentManager().beginTransaction()
-                .replace(R.id.container1, mapCardFragment)
-                .commit();
-
-        listenToChatMessages();
-        return rootView;
-    }
-
-    public void listenToChatMessages(){
+    public void listenToPosts(){
         try {
             URI uri = new URI(getResources().getString(R.string.server) + "/ws/posts/");
             WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
@@ -225,11 +219,26 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
                 lng = location.getLongitude();
                 lat = location.getLatitude();
 
-                LatLng place = new LatLng(lat, lng);
+                myLocation = new LatLng(lat, lng);
                 // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(place).zoom(15).build();
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(myLocation).zoom(15).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
+                if (!gotTimezone){
+                    Server gAPI2 = new Server("GET", "https://maps.googleapis.com/maps/api/timezone/json?location=" +
+                            lat + "," + lng + "&timestamp=0&key=" + getResources().getString(R.string.google_key));
+                    try {
+                        String response = gAPI2.execute().get();
+                        if (response != null) {
+                            String timeZone = new JsonParser().parse(response).getAsJsonObject().get("timeZoneId").getAsString();
+                            USER.timeZone = timeZone;
+                            setUserTimeZone(timeZone);
+                            gotTimezone = true;
+                        }
+                    } catch (ExecutionException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         };
         MyLocation myLocation = new MyLocation();
@@ -250,6 +259,20 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
             setMarkerBigger(marker);
             return false;
         });
+    }
+
+    private void setUserTimeZone(String timeZone){
+        try {
+            new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/"){
+                @Override
+                protected void onPostExecute(JSONObject response) {
+                    super.onPostExecute(response);
+                }
+            }.execute(
+                    new String[]{"time_zone", timeZone, ""}
+            ).get(5, TimeUnit.SECONDS);
+        } catch (ExecutionException | InterruptedException | TimeoutException e) {
+        }
     }
 
     Marker currentBigMarker;
@@ -310,18 +333,23 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
 
     void setLocationPicker(){
         googleMap.setOnCameraMoveStartedListener(i -> {
-            mapPickerFragment.setAddressTextVisible(false);
-            mapPickerFragment.moveMapPicker(true);
+            if (mapPickerFragment.abled){
+                mapPickerFragment.setAddressTextVisible(false);
+                mapPickerFragment.moveMapPicker(true);
+            }
         });
         googleMap.setOnCameraIdleListener(() -> {
-            mapPickerFragment.moveMapPicker(false);
-            latLng = googleMap.getCameraPosition().target;
-            mapPickerFragment.getLocationFromGoogle(latLng);
+            if (mapPickerFragment.abled){
+                mapPickerFragment.moveMapPicker(false);
+                latLng = googleMap.getCameraPosition().target;
+                mapPickerFragment.getLocationFromGoogle(latLng);
+            }
         });
     }
 
     void fabFunctionality(){
         mapPickerFragment.apearMapPicker(true);
+        mapPickerFragment.getLocationFromGoogle(myLocation);
         if (fabCount == 0){
             markersVisibility(false);
             fabCount = 1;
@@ -368,7 +396,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
     }
 
     static void setMarkerIcon(Marker marker, int drawable){
-        marker.setIcon(getMarkerIconFromDrawable(ContextCompat.getDrawable(rootView.getContext(), drawable)));
+        marker.setIcon(getMarkerIconFromDrawable(ContextCompat.getDrawable(view.getContext(), drawable)));
     }
 
     void centerMap(){
@@ -403,7 +431,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
     }
 
     @Override
-    public void onFragmentInteraction(String address) {
+    public void refreshFragment(String address) {
         this.pickedAdress = address;
     }
 }

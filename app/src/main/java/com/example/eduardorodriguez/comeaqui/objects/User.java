@@ -2,6 +2,7 @@ package com.example.eduardorodriguez.comeaqui.objects;
 
 import com.google.gson.JsonObject;
 import java.io.Serializable;
+import java.util.TimeZone;
 
 public class User implements Serializable {
     public int id;
@@ -18,7 +19,7 @@ public class User implements Serializable {
     public String background_photo;
     public float rating;
     public int ratingN;
-    public String timeZone;
+    public String timeZone = TimeZone.getDefault().getID();
 
     public User(JsonObject jo){
         id = jo.get("id").getAsInt();

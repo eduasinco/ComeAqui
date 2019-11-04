@@ -1,6 +1,7 @@
 package com.example.eduardorodriguez.comeaqui;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,6 +11,7 @@ import android.widget.*;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
+import com.example.eduardorodriguez.comeaqui.map.NoLocationFragmentFragment;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.FirebaseUser;
 import com.example.eduardorodriguez.comeaqui.review.GuestsReviewActivity;
@@ -84,13 +86,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.CAMERA},
-                    0);
-        }
+//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+//                != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this,
+//                    new String[]{Manifest.permission.CAMERA},
+//                    0);
+//        }
         chatView = findViewById(R.id.chat);
 
         map = findViewById(R.id.map);
@@ -123,7 +124,12 @@ public class MainActivity extends AppCompatActivity {
             startActivity(chatIntent);
         });
 
-        setMapFragment(mapFragment);
+        if (checkLocationPermission()){
+            setMapFragment(mapFragment);
+        } else {
+            setMapFragment(NoLocationFragmentFragment.newInstance());
+        }
+
         map.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.foodfill));
 
         navMap.setOnClickListener(v -> {
@@ -274,5 +280,57 @@ public class MainActivity extends AppCompatActivity {
         intent.addCategory(Intent.CATEGORY_HOME);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
+    void showNoLocationNotification(){
+        new AlertDialog.Builder(this)
+                .setTitle("ComeAqui Location")
+                .setMessage("We need your location to show you who is offering food and for them to see you")
+                .setPositiveButton("OK", (dialogInterface, i) -> {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                            MY_PERMISSIONS_REQUEST_LOCATION);
+                })
+                .create()
+                .show();
+    }
+
+    public boolean checkLocationPermission(){
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+                showNoLocationNotification();
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        setMapFragment(mapFragment);
+                    }
+                } else {
+                    showNoLocationNotification();
+                }
+            }
+        }
     }
 }

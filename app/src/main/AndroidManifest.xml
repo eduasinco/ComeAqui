@@ -54,14 +54,6 @@
         <activity android:name=".review.GuestsReviewActivity" />
         <activity android:name=".review.ReviewPostActivity" />
 
-        <service
-            android:name=".MyFirebaseMessagingService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-
         <activity android:name=".utilities.image_view_pager.ImageLookActivity" />
         <activity android:name=".profile.edit_profile.edit_account_details.payment.AddPaymentMethodActivity" />
         <activity android:name=".profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity" />
