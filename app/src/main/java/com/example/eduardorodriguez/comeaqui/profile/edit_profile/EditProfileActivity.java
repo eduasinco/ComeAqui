@@ -14,20 +14,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.EditAcountDetailsActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.google.gson.JsonParser;
-
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -38,11 +31,12 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
     private TextView firstNameView;
     private TextView lastNameView;
     private TextView addBioView;
-    private FrameLayout selectFrom;
     private TextView phoneNumber;
     private TextView bioTextView;
     private ImageView profileImageView;
     private ImageView backgroundImageView;
+
+    private SelectImageFromFragment selectImageFromFragment;
 
     boolean isBackGound;
     int userId;
@@ -50,7 +44,7 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
     @Override
     protected void onResume() {
         super.onResume();
-        selectFrom.setVisibility(View.GONE);
+        selectImageFromFragment.hideCard();
         setProfile(getUser(userId));
     }
 
@@ -78,12 +72,10 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
         TextView editCoverPhoto = findViewById(R.id.edit_cover_photo);
         ImageView backView = findViewById(R.id.back_arrow);
         backgroundImageView = findViewById(R.id.background_image);
-        selectFrom = findViewById(R.id.select_from);
         TextView editAccountDetailsView = findViewById(R.id.edit_account_details);
         firstNameView = findViewById(R.id.first_name);
         lastNameView = findViewById(R.id.last_name);
         phoneNumber = findViewById(R.id.phone_number);
-        TextView creditCardNumber = findViewById(R.id.credit_card_number);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -93,21 +85,23 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
             setProfile(user);
         }
 
+        selectImageFromFragment = SelectImageFromFragment.newInstance(false);
+
         editProfilePhotoView.setOnClickListener(v -> {
             isBackGound = false;
-            selectFrom.setVisibility(View.VISIBLE);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.select_from, SelectImageFromFragment.newInstance(false))
-                    .commit();
+            selectImageFromFragment.showCard();
+
         });
+
 
         editCoverPhoto.setOnClickListener(v -> {
             isBackGound = true;
-            selectFrom.setVisibility(View.VISIBLE);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.select_from, SelectImageFromFragment.newInstance(true))
-                    .commit();
+            selectImageFromFragment.showCard();
         });
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.select_from, selectImageFromFragment)
+                .commit();
 
         addBioView.setOnClickListener(v -> {
             Intent bioActivity = new Intent(this, AddBioActivity.class);

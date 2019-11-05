@@ -57,9 +57,10 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
 
     private ImageButton settingsButton;
 
+    private SelectImageFromFragment selectImageFromFragment;
+
     int userId;
 
-    FrameLayout fragmentView;
     private static final String USER_TO_DISPLAY = "user";
 
     public ProfileFragment() {}
@@ -74,7 +75,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
 
 
     public void setProfile(User user){
-        fragmentView.setVisibility(View.GONE);
+        selectImageFromFragment.hideCard();
         settingsButton.setVisibility(View.GONE);
         if (user.id == USER.id){
             settingsButton.setVisibility(View.VISIBLE);
@@ -180,7 +181,6 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         editProfileView = view.findViewById(R.id.edit_profile);
         addProfilePhotoView = view.findViewById(R.id.add_profile_photo);
         addBackGroundPhotoView = view.findViewById(R.id.add_background_photo);
-        fragmentView = view.findViewById(R.id.select_from);
         settingsButton = view.findViewById(R.id.settings_profile_button);
 
         ViewPager viewPager = view.findViewById(R.id.viewpager);
@@ -188,20 +188,21 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
 
+        selectImageFromFragment = SelectImageFromFragment.newInstance(true);
+
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.select_from, selectImageFromFragment)
+                .commit();
+
         addProfilePhotoView.setOnClickListener(v -> {
             isBackGound = false;
-            fragmentView.setVisibility(View.VISIBLE);
-            getChildFragmentManager().beginTransaction()
-                    .replace(R.id.select_from, SelectImageFromFragment.newInstance(true))
-                    .commit();
+            selectImageFromFragment.showCard();
         });
 
         addBackGroundPhotoView.setOnClickListener(v -> {
             isBackGound = true;
-            fragmentView.setVisibility(View.VISIBLE);
-            getChildFragmentManager().beginTransaction()
-                    .replace(R.id.select_from, SelectImageFromFragment.newInstance(true))
-                    .commit();
+            selectImageFromFragment.showCard();
+
         });
         return view;
     }

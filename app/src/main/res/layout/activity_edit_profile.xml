@@ -201,9 +201,12 @@
                 android:gravity="center_vertical" android:textStyle="bold" android:textSize="24sp"
                 android:textColor="@android:color/white" android:paddingStart="24dp"/>
     </LinearLayout>
+
     <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" android:id="@+id/select_from">
+        android:id="@+id/select_from"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
 
     </FrameLayout>
 

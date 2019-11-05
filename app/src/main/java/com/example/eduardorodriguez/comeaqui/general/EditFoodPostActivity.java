@@ -31,7 +31,6 @@ import com.google.gson.JsonParser;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -45,13 +44,13 @@ public class EditFoodPostActivity extends AppCompatActivity implements
     ImageButton close;
     Button post;
     EditText plateName;
-    FrameLayout selectFromLayout;
     FrameLayout waitingFrame;
 
     FoodTypeSelectorFragment foodTypeSelectorFragment;
     FoodTimePickerFragment foodTimePickerFragment;
     WordLimitEditTextFragment wordLimitEditTextFragment;
     AddImagesFragment addImageFragment;
+    SelectImageFromFragment selectImageFromLayout;
 
     Bitmap[] imageBitmaps = new Bitmap[3];
     int imageIndex;
@@ -63,7 +62,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        selectFromLayout.setVisibility(View.GONE);
+        selectImageFromLayout.hideCard();
     }
 
     @Override
@@ -74,13 +73,13 @@ public class EditFoodPostActivity extends AppCompatActivity implements
         close = findViewById(R.id.close);
         post = findViewById(R.id.post_reply);
         plateName = findViewById(R.id.postPlateName);
-        selectFromLayout = findViewById(R.id.select_image_from);
         waitingFrame = findViewById(R.id.waiting_frame);
 
         foodTypeSelectorFragment = FoodTypeSelectorFragment.newInstance();
         foodTimePickerFragment = FoodTimePickerFragment.newInstance();
         wordLimitEditTextFragment = WordLimitEditTextFragment.newInstance();
         addImageFragment = AddImagesFragment.newInstance();
+        selectImageFromLayout = SelectImageFromFragment.newInstance(false);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -99,6 +98,10 @@ public class EditFoodPostActivity extends AppCompatActivity implements
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.add_images_frame, addImageFragment)
+                .commit();
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.select_image_from, selectImageFromLayout)
                 .commit();
 
         post.setOnClickListener(v -> postEditFood());
@@ -260,10 +263,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
     @Override
     public void onAddImage(int index) {
         imageIndex = index;
-        selectFromLayout.setVisibility(View.VISIBLE);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.select_image_from, SelectImageFromFragment.newInstance(false))
-                .commit();
+        selectImageFromLayout.showCard();
     }
 
     @Override
@@ -274,7 +274,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
     @Override
     public void onFragmentInteraction(Uri uri) {
         try {
-            selectFromLayout.setVisibility(View.GONE);
+            selectImageFromLayout.hideCard();
             Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
             imageBitmaps[imageIndex] = bm;
             addImageFragment.addImage(uri, imageIndex);
