@@ -1,7 +1,10 @@
 package com.example.eduardorodriguez.comeaqui.profile;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -9,7 +12,11 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
+
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +54,8 @@ public class SelectImageFromFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     View view;
+    CardView card;
+    ConstraintLayout outOfCard;
 
     String SAMPLE_CROP_IMAGE_NAME = "SampleCropImage";
     static final int REQUEST_IMAGE_CAPTURE = 2;
@@ -64,6 +73,7 @@ public class SelectImageFromFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,38 +89,42 @@ public class SelectImageFromFragment extends Fragment {
 
         LinearLayout selectFromCamera = view.findViewById(R.id.select_from_camera);
         LinearLayout selectFromGallery = view.findViewById(R.id.select_from_gallery);
-        ConstraintLayout outOfCard = view.findViewById(R.id.out_of_card);
+        card = view.findViewById(R.id.select_card);
+        outOfCard = view.findViewById(R.id.out_of_card);
 
-        outOfCard.setVisibility(View.VISIBLE);
-        outOfCard.setScaleX(0);
-        outOfCard.setScaleY(0);
-        outOfCard.animate().scaleX(1).scaleY(1).setDuration(200);
+        outOfCard.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    hideCard();
+                    break;
+                default:
+                    return true;
+            }
+            return true;
+        });
 
         selectFromCamera.setOnClickListener(v -> {
-            openCamera();
+            checkCameraPermission();
         });
 
         selectFromGallery.setOnClickListener(v -> {
             openGallery();
         });
-
-        outOfCard.setOnTouchListener((v, event) -> {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    outOfCard.animate().scaleX(0).scaleY(0).setDuration(200).withEndAction(() -> {
-                        outOfCard.setVisibility(View.GONE);
-                    });
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    break;
-                case MotionEvent.ACTION_UP:
-                    break;
-                default:
-                    return false;
-            }
-            return true;
-        });
         return view;
+    }
+
+    public void showCard(){
+        card.setVisibility(View.VISIBLE);
+        outOfCard.setVisibility(View.VISIBLE);
+        card.setScaleX(0);
+        card.setScaleY(0);
+        card.animate().scaleX(1).scaleY(1).setDuration(200);
+    }
+    public void hideCard(){
+        card.animate().scaleX(0).scaleY(0).setDuration(200).withEndAction(() -> {
+            card.setVisibility(View.GONE);
+            outOfCard.setVisibility(View.GONE);
+        });
     }
 
     private void openCamera(){
@@ -241,18 +255,58 @@ public class SelectImageFromFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    int MY_PERMISSIONS_REQUEST_CAMERA = 1;
+    void showNoLocationNotification(){
+        new AlertDialog.Builder(getContext())
+                .setTitle("ComeAqui Location")
+                .setMessage("We need your location to show you who is offering food and for them to see you")
+                .setPositiveButton("OK", (dialogInterface, i) -> {
+                    ActivityCompat.requestPermissions(getActivity(),
+                            new String[]{Manifest.permission.CAMERA},
+                            MY_PERMISSIONS_REQUEST_CAMERA);
+                })
+                .create()
+                .show();
+    }
+    public boolean checkCameraPermission(){
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.CAMERA},
+                    MY_PERMISSIONS_REQUEST_CAMERA);
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.CAMERA)) {
+                showNoLocationNotification();
+            } else {
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_CAMERA);
+            }
+
+            return false;
+        } else {
+            openCamera();
+            return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (requestCode == MY_PERMISSIONS_REQUEST_CAMERA) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    openCamera();
+                }
+            } else {
+                showNoLocationNotification();
+            }
+        }
     }
 }

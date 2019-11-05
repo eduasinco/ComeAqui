@@ -12,6 +12,7 @@
         android:visibility="visible">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/select_card"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:visibility="visible"

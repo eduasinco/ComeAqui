@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.*;
 
@@ -52,7 +53,6 @@ public class AddFoodActivity extends AppCompatActivity implements
     ConstraintLayout descriptionLayout;
     Button submit;
     ImageView backView;
-    FrameLayout selectFromLayout;
     ScrollView scrollView;
     FrameLayout errorMessage;
     TextView validationError;
@@ -79,6 +79,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     FoodTimePickerFragment foodTimePickerFragment;
     WordLimitEditTextFragment wordLimitEditTextFragment;
     AddImagesFragment addImageFragment;
+    SelectImageFromFragment selectImagesFromFragment;
 
     private String setTypes(){
         StringBuilder types = new StringBuilder();
@@ -90,12 +91,6 @@ public class AddFoodActivity extends AppCompatActivity implements
             }
         }
         return types.toString();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        selectFromLayout.setVisibility(View.GONE);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -116,7 +111,6 @@ public class AddFoodActivity extends AppCompatActivity implements
         descriptionLayout = findViewById(R.id.descriptionLayout);
         submit = findViewById(R.id.submitButton);
         backView = findViewById(R.id.back_arrow);
-        selectFromLayout = findViewById(R.id.select_image_from);
         scrollView = findViewById(R.id.scrollview);
         mProgressView = findViewById(R.id.post_progress);
         errorMessage = findViewById(R.id.error_message_frame);
@@ -137,6 +131,7 @@ public class AddFoodActivity extends AppCompatActivity implements
             foodTimePickerFragment = FoodTimePickerFragment.newInstance();
             wordLimitEditTextFragment = WordLimitEditTextFragment.newInstance();
             addImageFragment = AddImagesFragment.newInstance();
+            selectImagesFromFragment = SelectImageFromFragment.newInstance(false);
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.locationAutocomplete, placeAutocompleteFragment)
@@ -157,6 +152,10 @@ public class AddFoodActivity extends AppCompatActivity implements
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.add_images_frame, addImageFragment)
                     .commit();
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.select_image_from, selectImagesFromFragment)
+                    .commit();
         }
 
         setPlateName();
@@ -170,6 +169,12 @@ public class AddFoodActivity extends AppCompatActivity implements
         });
 
         backView.setOnClickListener(v -> finish());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        selectImagesFromFragment.hideCard();
     }
 
     void setPlateName(){
@@ -382,7 +387,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     @Override
     public void onFragmentInteraction(Uri uri) {
         try {
-            selectFromLayout.setVisibility(View.GONE);
+            selectImagesFromFragment.hideCard();
             Bitmap bm = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
             imageBitmaps.add(imageIndex, bm);
             addImageFragment.addImage(uri, imageIndex);
@@ -426,10 +431,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     @Override
     public void onAddImage(int index) {
         imageIndex = index;
-        selectFromLayout.setVisibility(View.VISIBLE);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.select_image_from, SelectImageFromFragment.newInstance(false))
-                .commit();
+        selectImagesFromFragment.showCard();
     }
 }
 

@@ -1,11 +1,7 @@
 package com.example.eduardorodriguez.comeaqui.map;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -17,7 +13,6 @@ import com.example.eduardorodriguez.comeaqui.utilities.MyLocation;
 import com.example.eduardorodriguez.comeaqui.utilities.UpperNotificationFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
 
@@ -73,12 +68,11 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
 
     double lng;
     double lat;
-    LatLng myLocation;
+    LatLng pickedLocation;
     String pickedAdress = "";
 
     static Set<Integer> touchedMarkers = new HashSet<>();
     public static HashMap<Integer, Marker> markerHashMap = new HashMap<>();
-    LatLng latLng;
     boolean gotTimezone = false;
 
 
@@ -202,6 +196,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
         }
     }
 
+    int c  = 0;
     @SuppressLint("RestrictedApi")
     void setMap(GoogleMap mMap){
         googleMap = mMap;
@@ -219,23 +214,29 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
                 lng = location.getLongitude();
                 lat = location.getLatitude();
 
-                myLocation = new LatLng(lat, lng);
+                pickedLocation = new LatLng(lat, lng);
                 // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(myLocation).zoom(15).build();
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(pickedLocation).zoom(15).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                 if (!gotTimezone){
-                    Server gAPI2 = new Server("GET", "https://maps.googleapis.com/maps/api/timezone/json?location=" +
-                            lat + "," + lng + "&timestamp=0&key=" + getResources().getString(R.string.google_key));
+                    System.out.println(++c);
+                    gotTimezone = true;
+                    String uri = "https://maps.googleapis.com/maps/api/timezone/json?location=" +
+                            lat + "," + lng + "&timestamp=0&key=" + getResources().getString(R.string.google_key);
                     try {
-                        String response = gAPI2.execute().get();
-                        if (response != null) {
-                            String timeZone = new JsonParser().parse(response).getAsJsonObject().get("timeZoneId").getAsString();
-                            USER.timeZone = timeZone;
-                            setUserTimeZone(timeZone);
-                            gotTimezone = true;
-                        }
+                        new Server("GET", uri){
+                            @Override
+                            protected void onPostExecute(String response) {
+                                if (response != null) {
+                                    String timeZone = new JsonParser().parse(response).getAsJsonObject().get("timeZoneId").getAsString();
+                                    USER.timeZone = timeZone;
+                                    setUserTimeZone(timeZone);
+                                }
+                            }
+                        }.execute().get();
                     } catch (ExecutionException | InterruptedException e) {
+                        gotTimezone = false;
                         e.printStackTrace();
                     }
                 }
@@ -341,15 +342,15 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
         googleMap.setOnCameraIdleListener(() -> {
             if (mapPickerFragment.abled){
                 mapPickerFragment.moveMapPicker(false);
-                latLng = googleMap.getCameraPosition().target;
-                mapPickerFragment.getLocationFromGoogle(latLng);
+                pickedLocation = googleMap.getCameraPosition().target;
+                mapPickerFragment.getLocationFromGoogle(pickedLocation);
             }
         });
     }
 
     void fabFunctionality(){
         mapPickerFragment.apearMapPicker(true);
-        mapPickerFragment.getLocationFromGoogle(myLocation);
+        mapPickerFragment.getLocationFromGoogle(pickedLocation);
         if (fabCount == 0){
             markersVisibility(false);
             fabCount = 1;
@@ -358,8 +359,8 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
         } else if (fabCount == 1) {
             Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
             addFood.putExtra("address" , pickedAdress);
-            addFood.putExtra("lat" , latLng.latitude);
-            addFood.putExtra("lng" , latLng.longitude);
+            addFood.putExtra("lat" , pickedLocation.latitude);
+            addFood.putExtra("lng" , pickedLocation.longitude);
             getActivity().startActivity(addFood);
         } else {
             fabCount = 2;
