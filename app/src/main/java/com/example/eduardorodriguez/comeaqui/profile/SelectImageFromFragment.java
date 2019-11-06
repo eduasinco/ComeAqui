@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.yalantis.ucrop.UCrop;
@@ -91,6 +92,9 @@ public class SelectImageFromFragment extends Fragment {
         LinearLayout selectFromGallery = view.findViewById(R.id.select_from_gallery);
         card = view.findViewById(R.id.select_card);
         outOfCard = view.findViewById(R.id.out_of_card);
+
+        card.setVisibility(View.GONE);
+        outOfCard.setVisibility(View.GONE);
 
         outOfCard.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
@@ -286,7 +290,7 @@ public class SelectImageFromFragment extends Fragment {
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_CAMERA);
             }
-
+            Toast.makeText(getContext(), "Not camera access", Toast.LENGTH_LONG).show();
             return false;
         } else {
             openCamera();

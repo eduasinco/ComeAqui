@@ -75,7 +75,6 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
 
 
     public void setProfile(User user){
-        selectImageFromFragment.hideCard();
         settingsButton.setVisibility(View.GONE);
         if (user.id == USER.id){
             settingsButton.setVisibility(View.VISIBLE);
@@ -138,6 +137,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
     @Override
     public void onResume() {
         super.onResume();
+        selectImageFromFragment.hideCard();
         user = getUser(userId);
         setProfile(user);
     }

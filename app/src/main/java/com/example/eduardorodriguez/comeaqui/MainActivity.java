@@ -305,6 +305,7 @@ public class MainActivity extends AppCompatActivity {
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_LOCATION);
             }
+            Toast.makeText(this, "Not location access", Toast.LENGTH_LONG).show();
             return false;
         } else {
             return true;
