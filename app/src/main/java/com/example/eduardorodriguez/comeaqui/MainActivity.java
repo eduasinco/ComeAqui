@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
                     if (ja.size() > 0){
                         OrderObject orderObject = new OrderObject(ja.get(0).getAsJsonObject());
                         Intent k = new Intent(context, GuestsReviewActivity.class);
-                        k.putExtra("orderId", orderObject);
+                        k.putExtra("order", orderObject);
                         startActivity(k);
                     }
                 }
