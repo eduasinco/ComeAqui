@@ -128,10 +128,6 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
                 outline.setRoundRect(0, 0, view.getWidth(), (view.getHeight() + curveRadius), curveRadius);
             }
         });
-
-        getFragmentManager().beginTransaction()
-                .replace(R.id.profile_rating, RatingFragment.newInstance(user.rating, user.ratingN))
-                .commit();
     }
 
     @Override
@@ -192,6 +188,10 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
 
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.select_from, selectImageFromFragment)
+                .commit();
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.profile_rating, RatingFragment.newInstance(user.rating, user.ratingN))
                 .commit();
 
         addProfilePhotoView.setOnClickListener(v -> {

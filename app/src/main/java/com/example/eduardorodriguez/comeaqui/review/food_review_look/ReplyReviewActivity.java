@@ -95,7 +95,7 @@ public class ReplyReviewActivity extends AppCompatActivity {
         if (start) {
             waitingFrame.setVisibility(View.VISIBLE);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.wait_frame, WaitFragment.newInstance())
+                    .replace(R.id.waiting_frame, WaitFragment.newInstance())
                     .commit();
         } else {
             waitingFrame.setVisibility(View.GONE);

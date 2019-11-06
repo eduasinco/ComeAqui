@@ -113,7 +113,6 @@ public class RegisterActivity extends AppCompatActivity {
         setEmailOrPhone();
 
         registerButton.setOnClickListener((v) -> {
-            showProgress(true);
             register();
         });
     }
