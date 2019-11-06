@@ -38,7 +38,7 @@ public class FoodTimePickerFragment extends Fragment {
 
     boolean isNow = false;
     String postTimeString;
-    int MINUTES = 30;
+    int MINUTES = 0;
 
     public FoodTimePickerFragment() {}
     public static FoodTimePickerFragment newInstance() {

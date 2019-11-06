@@ -44,7 +44,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".profile.settings.SettingsActivity" />
-        <activity android:name=".delete.MainActivity2" />
         <activity android:name=".login_and_register.ChangePasswordActivity" />
         <activity android:name=".login_and_register.forgot_password.ForgotPasswordActivity" />
         <activity android:name=".login_and_register.phone_code_verification.VerifyPhoneActivity" />
@@ -71,6 +70,15 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
+
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
