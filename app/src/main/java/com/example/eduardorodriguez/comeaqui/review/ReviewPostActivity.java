@@ -31,7 +31,7 @@ import static com.example.eduardorodriguez.comeaqui.R.color.grey_light;
 import static com.example.eduardorodriguez.comeaqui.R.color.secondary_text_default_material_light;
 
 enum SubmitButtonStatus{
-    NEXT, SUBMIT, DISABLED
+    NEXT, SUBMIT
 }
 
 public class ReviewPostActivity extends AppCompatActivity implements StarReasonFragment.OnFragmentInteractionListener {
@@ -74,12 +74,25 @@ public class ReviewPostActivity extends AppCompatActivity implements StarReasonF
             posterName.setText(orderObject.poster.first_name);
             amount.setText(orderObject.post.price);
             cardLastNumbers.setText("USER CARD");
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.star_reason_frame, StarReasonFragment.newInstance())
+                    .commit();
         }
 
         submitButton.setAlpha(0.5f);
 
         setTipButtons();
-        setSubmitButton();
+        submitButton.setOnClickListener(v -> {
+            if (buttonStatus == SubmitButtonStatus.NEXT){
+                submitButton.setAlpha(0.5f);
+                scrollView.fullScroll(View.FOCUS_DOWN);
+                submitButton.setText("SUBMIT");
+                rateMealView.setVisibility(View.VISIBLE);
+            } else {
+                submit();
+            }
+        });
     }
 
 
@@ -113,23 +126,6 @@ public class ReviewPostActivity extends AppCompatActivity implements StarReasonF
             progress.setVisibility(View.GONE);
             Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
         }
-    }
-
-    void setSubmitButton(){
-        submitButton.setOnClickListener(v -> {
-            if (buttonStatus == SubmitButtonStatus.NEXT){
-                submitButton.setAlpha(0.5f);
-                scrollView.fullScroll(View.FOCUS_DOWN);
-                submitButton.setText("SUBMIT");
-                rateMealView.setVisibility(View.VISIBLE);
-
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.star_reason_frame, StarReasonFragment.newInstance())
-                        .commit();
-            } else {
-                submit();
-            }
-        });
     }
 
     void setTipButtons(){
