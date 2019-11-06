@@ -79,8 +79,8 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
     void setMarkers(){
         for (int key : foodPostHashMap.keySet()) {
             FoodPost fp = foodPostHashMap.get(key);
-            lat = fp.lat;
-            lng = fp.lng;
+            double lat = fp.lat;
+            double lng = fp.lng;
 
             Marker marker =  googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)));
             marker.setTag(key);
