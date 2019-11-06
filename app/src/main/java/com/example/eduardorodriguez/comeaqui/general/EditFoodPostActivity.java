@@ -228,14 +228,11 @@ public class EditFoodPostActivity extends AppCompatActivity implements
             post.execute(
                     new String[]{"post", "" + foodPostDetail.id},
                     new String[]{"image", ""}
-            ).get(10, TimeUnit.SECONDS);
+            ).get();
             finish();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
             Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
         }
     }
 

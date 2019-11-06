@@ -316,12 +316,7 @@ public class FoodLookActivity extends AppCompatActivity {
                 placeOrderButton.setBackgroundColor(Color.TRANSPARENT);
                 placeOrderButton.setTextColor(ContextCompat.getColor(this, R.color.success));
             } else {
-                placeOrderButton.setText("Delete Post");
-                placeOrderButton.setBackgroundColor(ContextCompat.getColor(this, R.color.canceled));
-                placeOrderButton.setOnClickListener(v -> {
-                    showProgress(true);
-                    deleteOrder();
-                });
+                placeOrderButton.setVisibility(View.GONE);
             }
             paymentMethod.setVisibility(View.GONE);
         }else{
