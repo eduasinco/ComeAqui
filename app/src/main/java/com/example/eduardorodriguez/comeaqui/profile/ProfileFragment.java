@@ -158,7 +158,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
             Toast.makeText(getContext(), "A problem has occurred", Toast.LENGTH_LONG).show();
         } catch (TimeoutException e) {
             e.printStackTrace();
-            Toast.makeText(getContext(), "Not internet connection", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "No internet connection", Toast.LENGTH_LONG).show();
         }
         return null;
     }

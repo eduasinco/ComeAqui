@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
@@ -145,6 +146,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
         myFab.setOnClickListener(v -> fabFunctionality());
         centerButton.setOnClickListener(v -> centerMap());
         mMapView.getMapAsync(mMap -> setMap(mMap));
+        setMapMarkers();
         listenToPosts();
         return view;
     }
@@ -205,7 +207,6 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
         googleMap.getUiSettings().setMapToolbarEnabled(false);
 
         setLocationPicker();
-        setMapMarkers();
         // For dropping a marker at a point on the Map
         MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
             @Override
@@ -308,28 +309,44 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
 
     }
 
+    void removeAllMarkers(){
+        for (Marker marker: markerHashMap.values()){
+            marker.remove();
+        }
+        markerHashMap = new HashMap<>();
+    }
+
     void setMapMarkers(){
-        new GetAsyncTask("GET", getResources().getString(R.string.server) + "/foods/"){
-            @Override
-            protected void onPostExecute(String s) {
-                if (s != null)
-                    makeList(new JsonParser().parse(s).getAsJsonArray(), false);
-                setMapFavouriteMarkers();
-                super.onPostExecute(s);
-            }
-        }.execute();
+        removeAllMarkers();
+        try {
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/foods/"){
+                @Override
+                protected void onPostExecute(String s) {
+                    if (s != null)
+                        makeList(new JsonParser().parse(s).getAsJsonArray(), false);
+                    setMapFavouriteMarkers();
+                    super.onPostExecute(s);
+                }
+            }.execute().get();
+        } catch (InterruptedException | ExecutionException e) {
+            Toast.makeText(getContext(), "No internet connection", Toast.LENGTH_LONG).show();
+        }
     }
 
     void setMapFavouriteMarkers(){
-        new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_favourites/"){
-            @Override
-            protected void onPostExecute(String s) {
-                if (s != null)
-                    makeList(new JsonParser().parse(s).getAsJsonArray(), true);
-                setMarkers();
-                super.onPostExecute(s);
-            }
-        }.execute();
+        try {
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_favourites/"){
+                @Override
+                protected void onPostExecute(String s) {
+                    if (s != null)
+                        makeList(new JsonParser().parse(s).getAsJsonArray(), true);
+                    setMarkers();
+                    super.onPostExecute(s);
+                }
+            }.execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            Toast.makeText(getContext(), "No internet connection", Toast.LENGTH_LONG).show();
+        }
     }
 
     void setLocationPicker(){
