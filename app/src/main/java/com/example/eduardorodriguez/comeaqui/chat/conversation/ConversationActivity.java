@@ -126,12 +126,17 @@ public class ConversationActivity extends AppCompatActivity {
         backView.setOnClickListener(v -> finish());
         start();
         btnEnviar.setOnClickListener(view -> {
-            mWebSocketClient.send("{ \"message\": \"" + validJsonString(txtMensaje.getText().toString()) + "\"," +
-                    "\"command\": \"new_message\"," +
-                    "\"from\": \"" + USER.id + "\"," +
-                    "\"to\": \"" + chattingWith.id + "\"," +
-                    "\"chatId\": \"" + chat.id + "\"}"
-            );
+            try{
+                mWebSocketClient.send("{ \"message\": \"" + validJsonString(txtMensaje.getText().toString()) + "\"," +
+                        "\"command\": \"new_message\"," +
+                        "\"from\": \"" + USER.id + "\"," +
+                        "\"to\": \"" + chattingWith.id + "\"," +
+                        "\"chatId\": \"" + chat.id + "\"}"
+                );
+            } catch (Exception e){
+                e.printStackTrace();
+                Toast.makeText(this, "The message was not able to be delivered", Toast.LENGTH_LONG).show();
+            }
             txtMensaje.setText("");
         });
 

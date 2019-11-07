@@ -55,6 +55,9 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
     private TextView bioView;
     private TextView nameView;
 
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
+
     private ImageButton settingsButton;
 
     private SelectImageFromFragment selectImageFromFragment;
@@ -73,8 +76,83 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         return fragment;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        selectImageFromFragment.hideCard();
+        user = getUser(userId);
+        if (null != user){
+            setProfile(user);
+        }
+    }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            userId = getArguments().getInt(USER_TO_DISPLAY);
+        }
+    }
+
+    public User getUser(int userId) {
+        try {
+            String response = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/profile_detail/" + userId + "/").execute().get(10, TimeUnit.SECONDS);
+            if (response != null){
+                return new User(new JsonParser().parse(response).getAsJsonObject());
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "A problem has occurred", Toast.LENGTH_LONG).show();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "No internet connection", Toast.LENGTH_LONG).show();
+        }
+        return null;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        view =  inflater.inflate(R.layout.fragment_profile, container, false);
+
+        profileImageView = view.findViewById(R.id.profile_image);
+        backGroundImage = view.findViewById(R.id.backGroundImage);
+        messageImage = view.findViewById(R.id.message);
+        emailView = view.findViewById(R.id.senderEmail);
+        bioView = view.findViewById(R.id.bioView);
+        nameView = view.findViewById(R.id.nameView);
+        editProfileView = view.findViewById(R.id.edit_profile);
+        addProfilePhotoView = view.findViewById(R.id.add_profile_photo);
+        addBackGroundPhotoView = view.findViewById(R.id.add_background_photo);
+        settingsButton = view.findViewById(R.id.settings_profile_button);
+
+        viewPager = view.findViewById(R.id.viewpager);
+        tabLayout = view.findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(viewPager);
+
+        selectImageFromFragment = SelectImageFromFragment.newInstance(true);
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.select_from, selectImageFromFragment)
+                .commit();
+
+        return view;
+    }
     public void setProfile(User user){
+        viewPager.setAdapter(new TestPagerAdapter(getChildFragmentManager()));
+        getFragmentManager().beginTransaction()
+                .replace(R.id.profile_rating, RatingFragment.newInstance(user.rating, user.ratingN))
+                .commit();
+
+        addProfilePhotoView.setOnClickListener(v -> {
+            isBackGound = false;
+            selectImageFromFragment.showCard();
+        });
+
+        addBackGroundPhotoView.setOnClickListener(v -> {
+            isBackGound = true;
+            selectImageFromFragment.showCard();
+
+        });
         settingsButton.setVisibility(View.GONE);
         if (user.id == USER.id){
             settingsButton.setVisibility(View.VISIBLE);
@@ -130,82 +208,6 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        selectImageFromFragment.hideCard();
-        user = getUser(userId);
-        setProfile(user);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            userId = getArguments().getInt(USER_TO_DISPLAY);
-            user = getUser(userId);
-        }
-    }
-
-    public User getUser(int userId) {
-        try {
-            String response = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/profile_detail/" + userId + "/").execute().get(10, TimeUnit.SECONDS);
-            if (response != null){
-                return new User(new JsonParser().parse(response).getAsJsonObject());
-            }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(), "A problem has occurred", Toast.LENGTH_LONG).show();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(), "No internet connection", Toast.LENGTH_LONG).show();
-        }
-        return null;
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        view =  inflater.inflate(R.layout.fragment_profile, container, false);
-
-        profileImageView = view.findViewById(R.id.profile_image);
-        backGroundImage = view.findViewById(R.id.backGroundImage);
-        messageImage = view.findViewById(R.id.message);
-        emailView = view.findViewById(R.id.senderEmail);
-        bioView = view.findViewById(R.id.bioView);
-        nameView = view.findViewById(R.id.nameView);
-        editProfileView = view.findViewById(R.id.edit_profile);
-        addProfilePhotoView = view.findViewById(R.id.add_profile_photo);
-        addBackGroundPhotoView = view.findViewById(R.id.add_background_photo);
-        settingsButton = view.findViewById(R.id.settings_profile_button);
-
-        ViewPager viewPager = view.findViewById(R.id.viewpager);
-        viewPager.setAdapter(new TestPagerAdapter(getChildFragmentManager()));
-        TabLayout tabLayout = view.findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(viewPager);
-
-        selectImageFromFragment = SelectImageFromFragment.newInstance(true);
-
-        getChildFragmentManager().beginTransaction()
-                .replace(R.id.select_from, selectImageFromFragment)
-                .commit();
-
-        getFragmentManager().beginTransaction()
-                .replace(R.id.profile_rating, RatingFragment.newInstance(user.rating, user.ratingN))
-                .commit();
-
-        addProfilePhotoView.setOnClickListener(v -> {
-            isBackGound = false;
-            selectImageFromFragment.showCard();
-        });
-
-        addBackGroundPhotoView.setOnClickListener(v -> {
-            isBackGound = true;
-            selectImageFromFragment.showCard();
-
-        });
-        return view;
-    }
 
     void setSettingsButton(){
         settingsButton.setOnClickListener(v -> {
