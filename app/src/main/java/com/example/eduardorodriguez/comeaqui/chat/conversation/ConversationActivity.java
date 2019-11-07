@@ -96,13 +96,11 @@ public class ConversationActivity extends AppCompatActivity {
         btnEnviar.setVisibility(View.GONE);
         txtMensaje.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (txtMensaje.getText().toString().trim().length() > 0){
+                 if (txtMensaje.getText().toString().trim().length() > 0){
                     btnEnviar.setVisibility(View.VISIBLE);
                     btnEnviar.animate().scaleX(1).setDuration(200);
                 } else {
@@ -128,7 +126,7 @@ public class ConversationActivity extends AppCompatActivity {
         backView.setOnClickListener(v -> finish());
         start();
         btnEnviar.setOnClickListener(view -> {
-            mWebSocketClient.send("{ \"message\": \"" + txtMensaje.getText().toString() + "\"," +
+            mWebSocketClient.send("{ \"message\": \"" + validJsonString(txtMensaje.getText().toString()) + "\"," +
                     "\"command\": \"new_message\"," +
                     "\"from\": \"" + USER.id + "\"," +
                     "\"to\": \"" + chattingWith.id + "\"," +
@@ -137,6 +135,11 @@ public class ConversationActivity extends AppCompatActivity {
             txtMensaje.setText("");
         });
 
+    }
+
+    String validJsonString(String str){
+        String regex = "\n";
+        return str.replaceAll(regex, "\\\\n");
     }
 
     void goToProfileView(User user){
