@@ -139,7 +139,7 @@ public class NotificationLookActivity extends AppCompatActivity {
                 .commit();
 
 
-        if(!orderObject.owner.profile_photo.contains("no-image")) Glide.with(this).load(orderObject.owner.profile_photo).into(dinnerImage);
+        if(!orderObject.poster.profile_photo.contains("no-image")) Glide.with(this).load(orderObject.poster.profile_photo).into(dinnerImage);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(orderObject.post.id, "CARD"))
                 .commit();
@@ -147,7 +147,7 @@ public class NotificationLookActivity extends AppCompatActivity {
         Glide.with(this).load(url).into(staticMapView);
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.profile_rating, RatingFragment.newInstance(orderObject.owner.rating, orderObject.owner.ratingN))
+                .replace(R.id.profile_rating, RatingFragment.newInstance(orderObject.poster.rating, orderObject.poster.ratingN))
                 .commit();
 
         setConfirmCancelButton();
@@ -203,7 +203,7 @@ public class NotificationLookActivity extends AppCompatActivity {
 
     void goToProfileView(){
         Intent k = new Intent(this, ProfileViewActivity.class);
-        k.putExtra("userId", orderObject.owner.id);
+        k.putExtra("userId", orderObject.poster.id);
         startActivity(k);
     }
 }
