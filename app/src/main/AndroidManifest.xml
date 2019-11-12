@@ -60,8 +60,15 @@
         <activity android:name=".profile.edit_profile.AddBioActivity" />
         <activity android:name=".notification.NotificationLookActivity" />
         <activity android:name=".profile.ProfileViewActivity" />
-        <activity android:name=".chat.conversation.ConversationActivity" />
-        <activity android:name=".chat.ChatActivity" />
+        <activity android:name=".chat.conversation.ConversationActivity">
+            <intent-filter>
+                <action android:name="CONVERSATION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".chat.ChatActivity">
+
+        </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

@@ -1,10 +1,14 @@
 package com.example.eduardorodriguez.comeaqui;
 
 import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+
+import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -32,12 +36,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         switch (channel){
             case MESSAGES_CHANNEL_ID:
+                Intent intent = new Intent(remoteMessage.getNotification().getClickAction());
+                intent.putExtra("chatId", remoteMessage.getData().get("chatId"));
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent pendingIntent = PendingIntent.getActivity(this,0, intent, PendingIntent.FLAG_ONE_SHOT);
                 Notification messageNotification = new NotificationCompat.Builder(this, MESSAGES_CHANNEL_ID)
                         .setSmallIcon(R.drawable.app_icon)
                         .setContentTitle(remoteMessage.getNotification().getTitle())
                         .setContentText(remoteMessage.getNotification().getBody())
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                        .setContentIntent(pendingIntent)
                         .build();
                 notificationManager.notify(0, messageNotification);
                 break;

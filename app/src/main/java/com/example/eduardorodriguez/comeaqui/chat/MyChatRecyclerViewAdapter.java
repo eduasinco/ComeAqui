@@ -55,7 +55,7 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
 
         holder.mView.setOnClickListener(v -> {
             Intent conversation = new Intent(holder.mView.getContext(), ConversationActivity.class);
-            conversation.putExtra("chat", holder.mItem);
+            conversation.putExtra("chatId", holder.mItem.id + "");
             holder.mView.getContext().startActivity(conversation);
         });
 

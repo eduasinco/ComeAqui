@@ -238,7 +238,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
 
     void goToConversationActivity(ChatObject chat){
         Intent k = new Intent(getContext(), ConversationActivity.class);
-        k.putExtra("chat", chat);
+        k.putExtra("chatId", chat.id + "");
         startActivity(k);
     }
 

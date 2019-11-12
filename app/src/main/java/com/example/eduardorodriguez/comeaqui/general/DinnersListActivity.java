@@ -86,7 +86,7 @@ public class DinnersListActivity extends AppCompatActivity implements DinnerFrag
 
     void goToConversationActivity(ChatObject chat){
         Intent k = new Intent(this, ConversationActivity.class);
-        k.putExtra("chat", chat);
+        k.putExtra("chatId", chat.id + "");
         startActivity(k);
     }
 }

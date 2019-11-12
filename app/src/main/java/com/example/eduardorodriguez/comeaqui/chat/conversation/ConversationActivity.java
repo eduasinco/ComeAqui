@@ -22,6 +22,7 @@ import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PutAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.DateFormatting;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.hdodenhof.circleimageview.CircleImageView;
 import org.java_websocket.client.WebSocketClient;
@@ -80,16 +81,9 @@ public class ConversationActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if(b != null) {
-            chat = (ChatObject) b.get("chat");
-            chattingWith = USER.id == (chat.users.get(0).id) ? chat.users.get(1) : chat.users.get(0);
-
-            nombre.setText(chattingWith.first_name + " " + chattingWith.last_name);
-
-            if (!chattingWith.profile_photo.contains("no-image"))
-                Glide.with(this).load(chattingWith.profile_photo).into(fotoPerfil);
-            fotoPerfil.setOnClickListener(v -> goToProfileView(chattingWith));
-
-            getChatMessages();
+            String chatId = b.getString("chatId");
+            getChatMessages(chatId);
+            start(chatId);
         }
 
         btnEnviar.setScaleX(0);
@@ -124,7 +118,6 @@ public class ConversationActivity extends AppCompatActivity {
         });
 
         backView.setOnClickListener(v -> finish());
-        start();
         btnEnviar.setOnClickListener(view -> {
             try{
                 mWebSocketClient.send("{ \"message\": \"" + validJsonString(txtMensaje.getText().toString()) + "\"," +
@@ -140,6 +133,15 @@ public class ConversationActivity extends AppCompatActivity {
             txtMensaje.setText("");
         });
 
+    }
+
+    private void setChat(){
+        chattingWith = USER.id == (chat.users.get(0).id) ? chat.users.get(1) : chat.users.get(0);
+        nombre.setText(chattingWith.first_name + " " + chattingWith.last_name);
+
+        if (!chattingWith.profile_photo.contains("no-image"))
+            Glide.with(this).load(chattingWith.profile_photo).into(fotoPerfil);
+        fotoPerfil.setOnClickListener(v -> goToProfileView(chattingWith));
     }
 
     String validJsonString(String str){
@@ -161,18 +163,21 @@ public class ConversationActivity extends AppCompatActivity {
         }
     }
 
-    private void getChatMessages(){
+    private void getChatMessages(String chatId){
         try {
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/chat_detail/" + chat.id + "/"){
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/chat_detail/" + chatId + "/"){
                 @Override
                 protected void onPostExecute(String response) {
                     if (response != null) {
-                        for (JsonElement je: new JsonParser().parse(response).getAsJsonObject().get("message_set").getAsJsonArray()){
+                        JsonObject chatJson = new JsonParser().parse(response).getAsJsonObject();
+                        for (JsonElement je: chatJson.get("message_set").getAsJsonArray()){
                             MessageObject currentMessage = new MessageObject(je.getAsJsonObject());
 
                             setMessageStatus(currentMessage);
                             adapter.addMensaje(currentMessage);
                         }
+                        chat = new ChatObject(chatJson);
+                        setChat();
                     }
                     super.onPostExecute(response);
                 }
@@ -211,9 +216,9 @@ public class ConversationActivity extends AppCompatActivity {
     }
 
 
-    public void start(){
+    public void start(String chatId){
         try {
-            String url = getResources().getString(R.string.server) + "/ws/chat/" + chat.id + "/";
+            String url = getResources().getString(R.string.server) + "/ws/chat/" + chatId + "/";
             URI uri = new URI(url);
             mWebSocketClient = new WebSocketClient(uri) {
                 @Override
