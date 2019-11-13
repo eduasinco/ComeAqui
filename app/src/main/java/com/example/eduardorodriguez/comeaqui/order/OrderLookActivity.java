@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -196,6 +197,12 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
 
         String url = "http://maps.google.com/maps/api/staticmap?center=" + order.post.lat + "," + order.post.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=AIzaSyDqkl1DgwHu03SmMoqVey3sgR62GnJ-VY4";
         Glide.with(this).load(url).into(staticMapView);
+
+        staticMapView.setOnClickListener(v -> {
+            Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + order.post.lat + "," + order.post.lng));
+            startActivity(intent);
+        });
+
         if(!order.poster.profile_photo.contains("no-image")) {
             Glide.with(context).load(order.poster.profile_photo).into(posterImageView);
             posterImageView.setOnClickListener(v -> goToProfileView(order.poster));

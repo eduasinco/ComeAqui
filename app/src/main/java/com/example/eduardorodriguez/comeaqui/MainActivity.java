@@ -139,8 +139,6 @@ public class MainActivity extends AppCompatActivity {
             openFragment(tab);
         }
 
-        map.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.foodfill));
-
         navMap.setOnClickListener(v -> {
             mainFrame.setVisibility(View.INVISIBLE);
             openFragment(0);

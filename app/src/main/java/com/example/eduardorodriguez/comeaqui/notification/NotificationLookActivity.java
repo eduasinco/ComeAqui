@@ -2,6 +2,7 @@ package com.example.eduardorodriguez.comeaqui.notification;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -145,6 +146,11 @@ public class NotificationLookActivity extends AppCompatActivity {
                 .commit();
         String url = "http://maps.google.com/maps/api/staticmap?center=" + orderObject.post.lat + "," + orderObject.post.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
         Glide.with(this).load(url).into(staticMapView);
+
+        staticMapView.setOnClickListener(v -> {
+            Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + orderObject.post.lat + "," + orderObject.post.lng));
+            startActivity(intent);
+        });
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.profile_rating, RatingFragment.newInstance(orderObject.poster.rating, orderObject.poster.ratingN))

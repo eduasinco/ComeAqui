@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -250,6 +251,11 @@ public class FoodLookActivity extends AppCompatActivity {
 
         String url = "http://maps.google.com/maps/api/staticmap?center=" + foodPostDetail.lat + "," + foodPostDetail.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
         Glide.with(this).load(url).into(staticMapView);
+
+        staticMapView.setOnClickListener(v -> {
+            Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + foodPostDetail.lat + "," + foodPostDetail.lng));
+            startActivity(intent);
+        });
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(foodPostDetail.id, "MEDIUM"))
