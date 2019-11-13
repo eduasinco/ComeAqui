@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
@@ -48,8 +49,6 @@ public class PrepareActivity extends AppCompatActivity {
         }
 
         initializeUser();
-        getFirebaseToken();
-        goToMain();
     }
 
     private void getFirebaseToken(){
@@ -70,29 +69,43 @@ public class PrepareActivity extends AppCompatActivity {
 
     private void postTokenToServer(String token){
         String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        PostAsyncTask postToken = new PostAsyncTask(this,getResources().getString(R.string.server) + "/fcm/v1/devices/");
-        postToken.execute(
-                new String[]{"dev_id", androidID},
-                new String[]{"reg_id", token},
-                new String[]{"name", "" + USER.id}
-        );
-    }
-
-    public User initializeUser(){
-        GetAsyncTask process = new GetAsyncTask(this, "GET", getResources().getString(R.string.server) + "/my_profile/");
         try {
-            String response = process.execute().get();
-            if (response != null){
-                SharedPreferences sp = getSharedPreferences("Login", MODE_PRIVATE);
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putString("user", response);
-                editor.apply();
-                USER = new User(new JsonParser().parse(response).getAsJsonArray().get(0).getAsJsonObject());
-            }
+            new PostAsyncTask(this,getResources().getString(R.string.server) + "/fcm/v1/devices/").execute(
+                    new String[]{"dev_id", androidID},
+                    new String[]{"reg_id", token},
+                    new String[]{"name", "" + USER.id}
+            ).get(10, TimeUnit.SECONDS);
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "No internet connections", Toast.LENGTH_LONG).show();
         }
-        return USER;
+        goToMain();
+    }
+
+    public void initializeUser(){
+        try {
+            new GetAsyncTask(this, "GET", getResources().getString(R.string.server) + "/my_profile/"){
+                @Override
+                protected void onPostExecute(String response) {
+                    if (response != null){
+                        SharedPreferences sp = getSharedPreferences("Login", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putString("user", response);
+                        editor.apply();
+                        USER = new User(new JsonParser().parse(response).getAsJsonArray().get(0).getAsJsonObject());
+                        getFirebaseToken();
+                    }
+                    super.onPostExecute(response);
+                }
+            }.execute().get(10, TimeUnit.SECONDS);
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "No internet connections", Toast.LENGTH_LONG).show();
+        }
     }
 
 
