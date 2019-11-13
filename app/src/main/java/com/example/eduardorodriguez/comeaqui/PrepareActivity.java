@@ -5,10 +5,12 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Base64;
 import android.util.Log;
 
 import com.example.eduardorodriguez.comeaqui.objects.User;
@@ -70,11 +72,16 @@ public class PrepareActivity extends AppCompatActivity {
     }
 
     public User initializeUser(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_profile/");
+        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_profile/", this);
         try {
             String response = process.execute().get();
-            if (response != null)
+            if (response != null){
+                SharedPreferences sp = getSharedPreferences("Login", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("user", response);
+                editor.apply();
                 USER = new User(new JsonParser().parse(response).getAsJsonArray().get(0).getAsJsonObject());
+            }
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }

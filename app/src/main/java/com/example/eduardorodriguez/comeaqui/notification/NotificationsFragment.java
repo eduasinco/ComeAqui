@@ -123,7 +123,7 @@ public class NotificationsFragment extends Fragment {
     void getData(){
         try {
             startWaitingFrame(true);
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_notifications/"){
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_notifications/", getContext()){
                 @Override
                 protected void onPostExecute(String s) {
                     if (s != null)

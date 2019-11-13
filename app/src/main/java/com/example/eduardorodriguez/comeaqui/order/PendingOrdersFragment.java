@@ -113,7 +113,7 @@ public class PendingOrdersFragment extends Fragment {
     void getDataAndSet(){
         try {
             startWaitingFrame(true);
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + (pending ? "/my_pending_orders/" : "/my_past_orders/")){
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + (pending ? "/my_pending_orders/" : "/my_past_orders/"), getContext()){
                 @Override
                 protected void onPostExecute(String s) {
                     if (s != null)

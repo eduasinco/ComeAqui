@@ -96,7 +96,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
 
     public User getUser(int userId) {
         try {
-            String response = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/profile_detail/" + userId + "/").execute().get(10, TimeUnit.SECONDS);
+            String response = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/profile_detail/" + userId + "/", getContext()).execute().get(10, TimeUnit.SECONDS);
             if (response != null){
                 return new User(new JsonParser().parse(response).getAsJsonObject());
             }
@@ -217,7 +217,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
 
     void goToConversationWithUser(User user){
         try {
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/get_or_create_chat/" + user.id + "/"){
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/get_or_create_chat/" + user.id + "/", getContext()){
                 @Override
                 protected void onPostExecute(String response) {
                     super.onPostExecute(response);

@@ -319,7 +319,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
     void setMapMarkers(){
         removeAllMarkers();
         try {
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/foods/"){
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/foods/", getContext()){
                 @Override
                 protected void onPostExecute(String s) {
                     if (s != null)
@@ -335,7 +335,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
 
     void setMapFavouriteMarkers(){
         try {
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_favourites/"){
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_favourites/", getContext()){
                 @Override
                 protected void onPostExecute(String s) {
                     if (s != null)

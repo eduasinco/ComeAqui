@@ -92,7 +92,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
         try {
             sendCodeButton.setVisibility(View.GONE);
             progress.setVisibility(View.VISIBLE);
-            String response = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/send_code_to_email/" + emailAdress.getText() + "/"){
+            String response = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/send_code_to_email/" + emailAdress.getText() + "/", this){
                 @Override
                 protected void onPostExecute(String response) {
                     sendCodeButton.setVisibility(View.VISIBLE);
@@ -115,7 +115,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
 
     void sendCode(){
         try {
-            String response = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/is_code_valid/" + verificationCode.getText() + "/"){
+            String response = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/is_code_valid/" + verificationCode.getText() + "/", this){
                 @Override
                 protected void onPostExecute(String response) {
                     super.onPostExecute(response);

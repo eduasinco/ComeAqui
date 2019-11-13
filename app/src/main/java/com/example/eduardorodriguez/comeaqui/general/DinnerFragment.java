@@ -68,7 +68,7 @@ public class DinnerFragment extends Fragment {
     void getFoodPostDetailsAndSet(int foodPostId){
         try {
             startWaitingFrame(true);
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/foods/" + foodPostId + "/"){
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/foods/" + foodPostId + "/", getContext()){
                 @Override
                 protected void onPostExecute(String response) {
                     if (response != null){

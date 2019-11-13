@@ -213,7 +213,7 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
         Context activity = this;
         try {
             startWaitingFrame(true);
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/food_reviews/" + foodPostId + "/"){
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/food_reviews/" + foodPostId + "/", this){
                 @Override
                 protected void onPostExecute(String response) {
                     if (response != null){

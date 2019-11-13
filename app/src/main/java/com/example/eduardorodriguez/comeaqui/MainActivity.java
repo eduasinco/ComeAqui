@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void checkUnratedOrdersAsPoster(){
-        new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/my_unreviewed_order_guest/"){
+        new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/my_unreviewed_order_guest/", this){
             @Override
             protected void onPostExecute(String response) {
                 if (response != null){
@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void checkUnratedOrdersAsDinner(){
-        new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/my_unreviewed_order_post/"){
+        new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/my_unreviewed_order_post/", this){
             @Override
             protected void onPostExecute(String response) {
                 if (response != null){

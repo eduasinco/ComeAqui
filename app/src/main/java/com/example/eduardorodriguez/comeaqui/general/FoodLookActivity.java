@@ -261,7 +261,7 @@ public class FoodLookActivity extends AppCompatActivity {
 
     void getFoodPostDetailsAndSet(int foodPostId){
         try{
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/foods/" + foodPostId + "/"){
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/foods/" + foodPostId + "/", this){
                 @Override
                 protected void onPostExecute(String response) {
                     if (response != null){

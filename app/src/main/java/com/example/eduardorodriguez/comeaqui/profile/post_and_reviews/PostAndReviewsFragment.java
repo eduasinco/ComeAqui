@@ -79,7 +79,7 @@ public class PostAndReviewsFragment extends Fragment {
     void getPostFromUser(){
         try {
             startWaitingFrame(true);
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_food_posts_reviews/" + userId + "/"){
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_food_posts_reviews/" + userId + "/", getContext()){
                 @Override
                 protected void onPostExecute(String response) {
                     startWaitingFrame(false);

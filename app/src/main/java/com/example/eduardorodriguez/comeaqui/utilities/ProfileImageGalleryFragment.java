@@ -100,7 +100,7 @@ public class ProfileImageGalleryFragment extends Fragment {
 
 
     void getPostFromUser(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_images/" + userId + "/");
+        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_images/" + userId + "/", getContext());
         try {
             String response = process.execute().get();
             if (response != null) {

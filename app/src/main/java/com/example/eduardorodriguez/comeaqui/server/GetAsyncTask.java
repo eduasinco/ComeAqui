@@ -1,5 +1,7 @@
 package com.example.eduardorodriguez.comeaqui.server;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import com.example.eduardorodriguez.comeaqui.SplashActivity;
@@ -19,15 +21,19 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class  GetAsyncTask extends AsyncTask<String[], Void, String> {
 
 
     private String uri;
     public String method;
+    private Context context;
 
-    public GetAsyncTask(String method, String uri){
+    public GetAsyncTask(String method, String uri, Context context){
         this.uri = uri;
         this.method = method;
+        this.context = context;
     }
 
     @Override
@@ -36,9 +42,14 @@ public class  GetAsyncTask extends AsyncTask<String[], Void, String> {
         StringBuilder builder = new StringBuilder();
         HttpClient client = new DefaultHttpClient();
 
+        String credentials = "";
+        SharedPreferences pref = context.getSharedPreferences("Login", MODE_PRIVATE);
+        if (pref.getBoolean("signed_in", false)) {
+            credentials = pref.getString("cred", "");
+        }
 
         HttpGet httpGet = new HttpGet(this.uri);
-        httpGet.addHeader("Authorization", "Basic " + SplashActivity.getCredemtials());
+        httpGet.addHeader("Authorization", "Basic " + credentials);
         httpGet.setHeader("Content-Type", "application/json");
         try {
             HttpResponse response = client.execute(httpGet);

@@ -89,7 +89,7 @@ public class NotificationLookActivity extends AppCompatActivity {
 
     void getOrderObject(int orderId){
         try {
-            new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/order_detail/" + orderId + "/"){
+            new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/order_detail/" + orderId + "/", this){
                 @Override
                 protected void onPostExecute(String response) {
                     if (response != null){

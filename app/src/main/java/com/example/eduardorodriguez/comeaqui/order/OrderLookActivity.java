@@ -92,7 +92,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
 
     void getOrderDetails(int orderId){
         try {
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/order_detail/" + orderId + "/"){
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/order_detail/" + orderId + "/", this){
                 @Override
                 protected void onPostExecute(String response) {
                     if (response != null) {

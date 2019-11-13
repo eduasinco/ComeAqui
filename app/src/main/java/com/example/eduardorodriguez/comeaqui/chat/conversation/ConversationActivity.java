@@ -2,6 +2,7 @@ package com.example.eduardorodriguez.comeaqui.chat.conversation;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +17,8 @@ import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.MessageObject;
+import com.example.eduardorodriguez.comeaqui.login_and_register.LoginOrRegisterActivity;
+import com.example.eduardorodriguez.comeaqui.login_and_register.register.RegisterActivity;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
@@ -77,6 +80,14 @@ public class ConversationActivity extends AppCompatActivity {
                 setScrollbar();
             }
         });
+        SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
+
+        if (pref.getBoolean("signed_in", false)) {
+            USER = new User(new JsonParser().parse(pref.getString("user", "")).getAsJsonArray().get(0).getAsJsonObject());
+        } else {
+            Intent a = new Intent(this, LoginOrRegisterActivity.class);
+            startActivity(a);
+        }
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -119,21 +130,25 @@ public class ConversationActivity extends AppCompatActivity {
 
         backView.setOnClickListener(v -> finish());
         btnEnviar.setOnClickListener(view -> {
-            try{
-                mWebSocketClient.send("{ \"message\": \"" + validJsonString(txtMensaje.getText().toString()) + "\"," +
-                        "\"command\": \"new_message\"," +
-                        "\"from\": \"" + USER.id + "\"," +
-                        "\"to\": \"" + chattingWith.id + "\"," +
-                        "\"chatId\": \"" + chat.id + "\"}"
-                );
-            } catch (Exception e){
-                e.printStackTrace();
-                Toast.makeText(this, "The message was not able to be delivered", Toast.LENGTH_LONG).show();
-            }
-            txtMensaje.setText("");
+            sendMessage(validJsonString(txtMensaje.getText().toString()));
         });
 
     }
+    private void sendMessage(String message){
+        try{
+            mWebSocketClient.send("{ \"message\": \"" + message + "\"," +
+                    "\"command\": \"new_message\"," +
+                    "\"from\": \"" + USER.id + "\"," +
+                    "\"to\": \"" + chattingWith.id + "\"," +
+                    "\"chatId\": \"" + chat.id + "\"}"
+            );
+        } catch (Exception e){
+            e.printStackTrace();
+            Toast.makeText(this, "The message was not able to be delivered", Toast.LENGTH_LONG).show();
+        }
+        txtMensaje.setText("");
+    }
+
 
     private void setChat(){
         chattingWith = USER.id == (chat.users.get(0).id) ? chat.users.get(1) : chat.users.get(0);
@@ -165,7 +180,7 @@ public class ConversationActivity extends AppCompatActivity {
 
     private void getChatMessages(String chatId){
         try {
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/chat_detail/" + chatId + "/"){
+            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/chat_detail/" + chatId + "/", this){
                 @Override
                 protected void onPostExecute(String response) {
                     if (response != null) {
