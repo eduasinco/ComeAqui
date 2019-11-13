@@ -1,6 +1,5 @@
 package com.example.eduardorodriguez.comeaqui.login_and_register;
 
-import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -10,12 +9,9 @@ import androidx.annotation.NonNull;
 
 import com.example.eduardorodriguez.comeaqui.PrepareActivity;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.SplashActivity;
 import com.example.eduardorodriguez.comeaqui.login_and_register.forgot_password.ForgotPasswordActivity;
-import com.example.eduardorodriguez.comeaqui.login_and_register.register.RegisterActivity;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -26,7 +22,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.text.TextUtils;
 import android.util.Base64;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -341,8 +336,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     editor.putBoolean("signed_in", true);
                     editor.putString("username", mEmail);
                     editor.putString("password", mPassword);
-
-                    SplashActivity.setCredenditals(authorization);
                     editor.apply();
 
                     return true;

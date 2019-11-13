@@ -3,7 +3,6 @@ package com.example.eduardorodriguez.comeaqui.server;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import com.example.eduardorodriguez.comeaqui.SplashActivity;
 
 import java.io.*;
 import java.net.HttpURLConnection;

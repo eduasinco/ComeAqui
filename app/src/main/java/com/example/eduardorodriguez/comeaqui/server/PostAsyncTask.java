@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import com.example.eduardorodriguez.comeaqui.SplashActivity;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
