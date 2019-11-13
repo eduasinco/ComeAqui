@@ -34,11 +34,18 @@ import static com.yalantis.ucrop.UCropFragment.TAG;
 public class PrepareActivity extends AppCompatActivity {
 
     boolean gotTimezone = false;
+    int tab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prepare);
+
+        Intent intent = getIntent();
+        Bundle b = intent.getExtras();
+        if(b != null && b.get("tab") != null) {
+            tab = b.getInt("tab");
+        }
 
         initializeUser();
         getFirebaseToken();
@@ -47,23 +54,23 @@ public class PrepareActivity extends AppCompatActivity {
 
     private void getFirebaseToken(){
         FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        Log.w(TAG, "getInstanceId failed", task.getException());
-                        return;
-                    }
+            .addOnCompleteListener(task -> {
+                if (!task.isSuccessful()) {
+                    Log.w(TAG, "getInstanceId failed", task.getException());
+                    return;
+                }
 
-                    // Get new Instance ID token
-                    String token = task.getResult().getToken();
-                    System.out.println("TOKEEEEEEEEN " + token);
+                // Get new Instance ID token
+                String token = task.getResult().getToken();
+                System.out.println("TOKEEEEEEEEN " + token);
 
-                    postTokenToServer(token);
-                });
+                postTokenToServer(token);
+            });
     }
 
     private void postTokenToServer(String token){
         String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        PostAsyncTask postToken = new PostAsyncTask(getResources().getString(R.string.server) + "/fcm/v1/devices/");
+        PostAsyncTask postToken = new PostAsyncTask(this,getResources().getString(R.string.server) + "/fcm/v1/devices/");
         postToken.execute(
                 new String[]{"dev_id", androidID},
                 new String[]{"reg_id", token},
@@ -72,7 +79,7 @@ public class PrepareActivity extends AppCompatActivity {
     }
 
     public User initializeUser(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_profile/", this);
+        GetAsyncTask process = new GetAsyncTask(this, "GET", getResources().getString(R.string.server) + "/my_profile/");
         try {
             String response = process.execute().get();
             if (response != null){
@@ -91,7 +98,8 @@ public class PrepareActivity extends AppCompatActivity {
 
     void goToMain(){
         Intent k = new Intent(this, MainActivity.class);
+        k.putExtra("tab", tab);
         startActivity(k);
-       overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
+        overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
     }
 }

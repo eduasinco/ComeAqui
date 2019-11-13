@@ -74,6 +74,9 @@ public class MainActivity extends AppCompatActivity {
 
     private static Context context;
     TextView[] notArray;
+    ImageView[] iv;
+    Fragment[] fragments;
+    int[] icons;
 
     @Override
     protected void onResume() {
@@ -125,30 +128,39 @@ public class MainActivity extends AppCompatActivity {
             setMapFragment(NoLocationFragmentFragment.newInstance());
         }
 
+        iv = new ImageView[]{map, orders, notifications, profile};
+        fragments = new Fragment[]{new Fragment(), getPastOderFragment, notificationFragment, profileFragment};
+        icons = new int[]{R.drawable.foodfill, R.drawable.orderfill, R.drawable.notificationfill, R.drawable.profilefill};
+
+        Intent intent = getIntent();
+        Bundle b = intent.getExtras();
+        if(b != null && b.get("tab") != null) {
+            int tab = b.getInt("tab");
+            openFragment(tab);
+        }
+
         map.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.foodfill));
 
         navMap.setOnClickListener(v -> {
-            initiateIcons(0);
             mainFrame.setVisibility(View.INVISIBLE);
-            setFragment(new Fragment());
-            map.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.foodfill));
+            openFragment(0);
         });
         navOrders.setOnClickListener(v -> {
-            initiateIcons(1);
-            setFragment(getPastOderFragment);
-            orders.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.orderfill));
+            openFragment(1);
         });
          navNotifications.setOnClickListener(v -> {
-             initiateIcons(2);
-             setFragment(notificationFragment);
-             notifications.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.notificationfill));
+             openFragment(2);
         });
         navProfile.setOnClickListener(v -> {
-            initiateIcons(3);
-            setFragment(profileFragment);
-            profile.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.profilefill));
+            openFragment(3);
         });
         listenToNotificationChanges();
+    }
+
+    private void openFragment(int i){
+        initiateIcons(i);
+        setFragment(fragments[i]);
+        iv[i].setImageDrawable(ContextCompat.getDrawable(this, icons[i]));
     }
 
     void checkRatings(){
@@ -157,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void checkUnratedOrdersAsPoster(){
-        new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/my_unreviewed_order_guest/", this){
+        new GetAsyncTask(this,"GET", context.getResources().getString(R.string.server) + "/my_unreviewed_order_guest/"){
             @Override
             protected void onPostExecute(String response) {
                 if (response != null){
@@ -175,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void checkUnratedOrdersAsDinner(){
-        new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/my_unreviewed_order_post/", this){
+        new GetAsyncTask(this, "GET", context.getResources().getString(R.string.server) + "/my_unreviewed_order_post/"){
             @Override
             protected void onPostExecute(String response) {
                 if (response != null){

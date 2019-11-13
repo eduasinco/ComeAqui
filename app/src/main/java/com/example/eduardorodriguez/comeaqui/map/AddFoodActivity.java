@@ -282,7 +282,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     void postFood(){
         try {
             showProgress(true);
-            PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/foods/"){
+            PostAsyncTask post = new PostAsyncTask(this,getResources().getString(R.string.server) + "/foods/"){
                 @Override
                 protected void onPostExecute(String response) {
                     FoodPost foodPost = new FoodPost(new JsonParser().parse(response).getAsJsonObject());
@@ -318,7 +318,7 @@ public class AddFoodActivity extends AppCompatActivity implements
         for (Bitmap image: imageBitmaps){
             showProgress(true);
             try {
-                PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/food_images/"){
+                PostAsyncTask post = new PostAsyncTask(this,getResources().getString(R.string.server) + "/food_images/"){
                     @Override
                     protected void onPostExecute(String response) {
                         super.onPostExecute(response);

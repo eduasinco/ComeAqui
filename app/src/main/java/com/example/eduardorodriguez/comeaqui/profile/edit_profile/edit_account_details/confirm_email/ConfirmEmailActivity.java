@@ -115,7 +115,7 @@ public class ConfirmEmailActivity extends AppCompatActivity {
             saveEmail.setVisibility(View.GONE);
             progress.setVisibility(View.VISIBLE);
             emailToSend = emailAdress.getText().toString();
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/send_code_to_email/" + emailToSend + "/", this){
+            new GetAsyncTask(this,"GET", getResources().getString(R.string.server) + "/send_code_to_email/" + emailToSend + "/"){
                 @Override
                 protected void onPostExecute(String response) {
                     try{
@@ -147,7 +147,7 @@ public class ConfirmEmailActivity extends AppCompatActivity {
         try {
             sendCodeButton.setVisibility(View.GONE);
             progress2.setVisibility(View.VISIBLE);
-            new PostAsyncTask(getResources().getString(R.string.server) + "/is_code_valid/"){
+            new PostAsyncTask(this,getResources().getString(R.string.server) + "/is_code_valid/"){
                 @Override
                 protected void onPostExecute(String response) {
                     try{

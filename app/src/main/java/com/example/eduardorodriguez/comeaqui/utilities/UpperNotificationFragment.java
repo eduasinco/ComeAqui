@@ -140,7 +140,7 @@ public class UpperNotificationFragment extends Fragment {
     }
 
     void getConfirmedOrders(){
-        new GetAsyncTask("GET", getResources().getString(R.string.server) +  "/my_next_confirmed_order/", getContext()){
+        new GetAsyncTask(getContext(),"GET", getResources().getString(R.string.server) +  "/my_next_confirmed_order/"){
             @Override
             protected void onPostExecute(String response) {
                 if (response != null){
@@ -155,7 +155,7 @@ public class UpperNotificationFragment extends Fragment {
         }.execute();
     }
     void getConfirmedFoodPosts(){
-        new GetAsyncTask("GET", getResources().getString(R.string.server) +  "/my_next_confirmed_post/", getContext()){
+        new GetAsyncTask(getContext(),"GET", getResources().getString(R.string.server) +  "/my_next_confirmed_post/"){
             @Override
             protected void onPostExecute(String response) {
                 if (response != null){

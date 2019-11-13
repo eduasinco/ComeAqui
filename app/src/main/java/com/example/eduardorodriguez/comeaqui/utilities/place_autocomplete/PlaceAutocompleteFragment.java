@@ -133,7 +133,7 @@ public class PlaceAutocompleteFragment extends Fragment {
         String uri = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + addressView.getText().toString() +
                 "&types=geocode&language=en&key=" + getResources().getString(R.string.google_key);
         try {
-            new Server("GET", uri){
+            new Server(getContext(),"GET", uri){
                 @Override
                 protected void onPostExecute(String response) {
                     super.onPostExecute(response);

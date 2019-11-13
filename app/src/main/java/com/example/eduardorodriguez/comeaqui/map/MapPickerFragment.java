@@ -69,7 +69,7 @@ public class MapPickerFragment extends Fragment {
         String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLngString + "&key=" + getResources().getString(R.string.google_key);
         pickedAdress.setVisibility(View.VISIBLE);
         pickedAdress.setText(LOADING);
-        new Server("GET", uri){
+        new Server(getContext(),"GET", uri){
             @Override
             protected void onPostExecute(String response) {
                 if (response != null){

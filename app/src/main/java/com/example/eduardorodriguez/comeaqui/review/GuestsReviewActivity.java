@@ -68,7 +68,7 @@ public class GuestsReviewActivity extends AppCompatActivity implements StarReaso
         try {
             submitButton.setVisibility(View.GONE);
             progress.setVisibility(View.VISIBLE);
-            new PostAsyncTask(getResources().getString(R.string.server) + "/rate_user/"){
+            new PostAsyncTask(this,getResources().getString(R.string.server) + "/rate_user/"){
                 @Override
                 protected void onPostExecute(String response) {
                     JsonObject jo = new JsonParser().parse(response).getAsJsonObject();

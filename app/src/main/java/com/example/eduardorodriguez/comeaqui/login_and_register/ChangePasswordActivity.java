@@ -110,7 +110,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         try {
             passwordSetText.setVisibility(View.GONE);
             progress.setVisibility(View.VISIBLE);
-            new PatchAsyncTask(getResources().getString(R.string.server) + "/password_change/"){
+            new PatchAsyncTask(this,getResources().getString(R.string.server) + "/password_change/"){
                 @Override
                 protected void onPostExecute(JSONObject jo) {
                     passwordSetText.setVisibility(View.VISIBLE);

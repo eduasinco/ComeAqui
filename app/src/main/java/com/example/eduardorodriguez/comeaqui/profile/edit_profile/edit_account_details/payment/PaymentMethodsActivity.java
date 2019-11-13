@@ -47,7 +47,7 @@ public class PaymentMethodsActivity extends AppCompatActivity {
     }
 
     void getCardPaymentMethods(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_cards/", this);
+        GetAsyncTask process = new GetAsyncTask(this,"GET", getResources().getString(R.string.server) + "/my_cards/");
         try {
             String response = process.execute().get();
             if (response != null)

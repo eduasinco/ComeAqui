@@ -92,7 +92,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
 
     void getOrderDetails(int orderId){
         try {
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/order_detail/" + orderId + "/", this){
+            new GetAsyncTask(this,"GET", getResources().getString(R.string.server) + "/order_detail/" + orderId + "/"){
                 @Override
                 protected void onPostExecute(String response) {
                     if (response != null) {
@@ -157,7 +157,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
         showProgress(true);
         order.status = "CANCELED";
         try {
-            new PostAsyncTask(context.getString(R.string.server) + "/set_order_status/"){
+            new PostAsyncTask(this,context.getString(R.string.server) + "/set_order_status/"){
                 @Override
                 protected void onPostExecute(String response) {
                     showProgress(false);

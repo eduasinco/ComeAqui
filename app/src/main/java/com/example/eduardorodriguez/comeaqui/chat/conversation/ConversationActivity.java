@@ -180,7 +180,7 @@ public class ConversationActivity extends AppCompatActivity {
 
     private void getChatMessages(String chatId){
         try {
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/chat_detail/" + chatId + "/", this){
+            new GetAsyncTask(this,"GET", getResources().getString(R.string.server) + "/chat_detail/" + chatId + "/"){
                 @Override
                 protected void onPostExecute(String response) {
                     if (response != null) {
@@ -267,7 +267,7 @@ public class ConversationActivity extends AppCompatActivity {
     }
 
     private void setMessagAsSeen(int messageId){
-        PutAsyncTask resetPassword = new PutAsyncTask(getResources().getString(R.string.server) + "/mark_message_as_seen/" + messageId + "/");
+        PutAsyncTask resetPassword = new PutAsyncTask(this,getResources().getString(R.string.server) + "/mark_message_as_seen/" + messageId + "/");
         resetPassword.execute();
     }
 }

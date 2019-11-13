@@ -98,7 +98,7 @@ public class UserPostFragment extends Fragment {
     void getPostFromUser(int userId){
         try {
             startWaitingFrame(true);
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/user_food_posts/" + userId + "/", getContext()){
+            new GetAsyncTask(getContext(),"GET", getResources().getString(R.string.server) + "/user_food_posts/" + userId + "/"){
                 @Override
                 protected void onPostExecute(String response) {
                     startWaitingFrame(false);

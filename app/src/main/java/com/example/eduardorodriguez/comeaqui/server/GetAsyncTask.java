@@ -30,7 +30,7 @@ public class  GetAsyncTask extends AsyncTask<String[], Void, String> {
     public String method;
     private Context context;
 
-    public GetAsyncTask(String method, String uri, Context context){
+    public GetAsyncTask(Context context, String method, String uri){
         this.uri = uri;
         this.method = method;
         this.context = context;

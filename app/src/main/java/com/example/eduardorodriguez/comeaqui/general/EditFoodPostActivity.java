@@ -117,7 +117,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
 
     void getFoodPost(int foodPostId){
         try{
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/foods/" + foodPostId + "/", this){
+            new GetAsyncTask(this,"GET", getResources().getString(R.string.server) + "/foods/" + foodPostId + "/"){
                 @Override
                 protected void onPostExecute(String response) {
                     if (response != null){
@@ -169,7 +169,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
     }
 
     void patchPost(){
-        PatchAsyncTask putTast = new PatchAsyncTask(getResources().getString(R.string.server) + "/foods/" + foodPostDetail.id + "/"){
+        PatchAsyncTask putTast = new PatchAsyncTask(this,getResources().getString(R.string.server) + "/foods/" + foodPostDetail.id + "/"){
             @Override
             protected void onPostExecute(JSONObject response) {
                 super.onPostExecute(response);
@@ -194,7 +194,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
     }
 
     void patchImage(int imageId, Bitmap image){
-        PatchAsyncTask patch = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_image/" + imageId + "/"){
+        PatchAsyncTask patch = new PatchAsyncTask(this,getResources().getString(R.string.server) + "/edit_image/" + imageId + "/"){
             @Override
             protected void onPostExecute(JSONObject response) {
                 super.onPostExecute(response);
@@ -218,7 +218,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
 
     void postImage(Bitmap image){
         try {
-            PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/food_images/"){
+            PostAsyncTask post = new PostAsyncTask(this,getResources().getString(R.string.server) + "/food_images/"){
                 @Override
                 protected void onPostExecute(String response) {
                     super.onPostExecute(response);

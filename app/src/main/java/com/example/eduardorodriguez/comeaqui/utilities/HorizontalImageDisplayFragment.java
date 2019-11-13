@@ -146,7 +146,7 @@ public class HorizontalImageDisplayFragment extends Fragment {
     void getFoodPostImages(){
         try{
             foodPostImageObjects = new ArrayList<>();
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/food_images/" + foodPostId + "/", getContext()){
+            new GetAsyncTask(getContext(),"GET", getResources().getString(R.string.server) + "/food_images/" + foodPostId + "/"){
                 @Override
                 protected void onPostExecute(String response) {
                     if (response != null){

@@ -226,7 +226,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
                     String uri = "https://maps.googleapis.com/maps/api/timezone/json?location=" +
                             lat + "," + lng + "&timestamp=0&key=" + getResources().getString(R.string.google_key);
                     try {
-                        new Server("GET", uri){
+                        new Server(getContext(),"GET", uri){
                             @Override
                             protected void onPostExecute(String response) {
                                 if (response != null) {
@@ -265,7 +265,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
 
     private void setUserTimeZone(String timeZone){
         try {
-            new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/"){
+            new PatchAsyncTask(getContext(),getResources().getString(R.string.server) + "/edit_profile/"){
                 @Override
                 protected void onPostExecute(JSONObject response) {
                     super.onPostExecute(response);
@@ -319,7 +319,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
     void setMapMarkers(){
         removeAllMarkers();
         try {
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/foods/", getContext()){
+            new GetAsyncTask(getContext(), "GET", getResources().getString(R.string.server) + "/foods/"){
                 @Override
                 protected void onPostExecute(String s) {
                     if (s != null)
@@ -335,7 +335,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
 
     void setMapFavouriteMarkers(){
         try {
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_favourites/", getContext()){
+            new GetAsyncTask(getContext(),"GET", getResources().getString(R.string.server) + "/my_favourites/"){
                 @Override
                 protected void onPostExecute(String s) {
                     if (s != null)

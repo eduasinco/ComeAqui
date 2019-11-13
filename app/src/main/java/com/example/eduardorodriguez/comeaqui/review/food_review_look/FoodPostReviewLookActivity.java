@@ -213,7 +213,7 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
         Context activity = this;
         try {
             startWaitingFrame(true);
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/food_reviews/" + foodPostId + "/", this){
+            new GetAsyncTask(this,"GET", getResources().getString(R.string.server) + "/food_reviews/" + foodPostId + "/"){
                 @Override
                 protected void onPostExecute(String response) {
                     if (response != null){
@@ -297,7 +297,7 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
 
 
     void deleteOrder(){
-        Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/foods/" + foodPostReview.id + "/");
+        Server deleteFoodPost = new Server(this,"DELETE", getResources().getString(R.string.server) + "/foods/" + foodPostReview.id + "/");
         try {
             deleteFoodPost.execute().get();
             finish();
@@ -315,7 +315,7 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
                 .commit();
     }
     void deleteReview(int reviewId){
-        Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/delete_review/" + reviewId + "/");
+        Server deleteFoodPost = new Server(this,"DELETE", getResources().getString(R.string.server) + "/delete_review/" + reviewId + "/");
         try {
             deleteFoodPost.execute().get();
         } catch (ExecutionException | InterruptedException e) {
@@ -325,7 +325,7 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
     }
 
     void deleteReply(int replyId){
-        Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/delete_reply/" + replyId + "/");
+        Server deleteFoodPost = new Server(this,"DELETE", getResources().getString(R.string.server) + "/delete_reply/" + replyId + "/");
         try {
             deleteFoodPost.execute().get();
         } catch (ExecutionException | InterruptedException e) {

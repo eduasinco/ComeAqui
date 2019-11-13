@@ -58,7 +58,7 @@ public class MyPlacesAutocompleteRecyclerViewAdapter extends RecyclerView.Adapte
 
     JsonObject getPlacesDetailFromGoogle(String placeId){
         String uri = "https://maps.googleapis.com/maps/api/place/details/json?input=bar&placeid=" + placeId + "&key=" + f.getResources().getString(R.string.google_key);
-        Server gAPI = new Server("GET", uri);
+        Server gAPI = new Server(f.getContext(),"GET", uri);
         try {
             String jsonString = gAPI.execute().get(15, TimeUnit.SECONDS);
             if (jsonString != null) {

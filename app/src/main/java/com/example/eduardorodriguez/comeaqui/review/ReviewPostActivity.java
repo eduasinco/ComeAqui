@@ -101,7 +101,7 @@ public class ReviewPostActivity extends AppCompatActivity implements StarReasonF
         try {
             submitButton.setVisibility(View.GONE);
             progress.setVisibility(View.VISIBLE);
-            new PostAsyncTask(getResources().getString(R.string.server) + "/create_review/"){
+            new PostAsyncTask(this,getResources().getString(R.string.server) + "/create_review/"){
                 @Override
                 protected void onPostExecute(String response) {
                     JsonObject jo = new JsonParser().parse(response).getAsJsonObject();

@@ -89,7 +89,7 @@ public class NotificationLookActivity extends AppCompatActivity {
 
     void getOrderObject(int orderId){
         try {
-            new GetAsyncTask("GET", context.getResources().getString(R.string.server) + "/order_detail/" + orderId + "/", this){
+            new GetAsyncTask(this,"GET", context.getResources().getString(R.string.server) + "/order_detail/" + orderId + "/"){
                 @Override
                 protected void onPostExecute(String response) {
                     if (response != null){
@@ -188,7 +188,7 @@ public class NotificationLookActivity extends AppCompatActivity {
     }
 
     void confirmOrder(OrderObject order, boolean confirm, Context context){
-        PostAsyncTask orderStatus = new PostAsyncTask(context.getString(R.string.server) + "/set_order_status/");
+        PostAsyncTask orderStatus = new PostAsyncTask(this, context.getString(R.string.server) + "/set_order_status/");
         order.status = confirm ? "CONFIRMED" : "CANCELED";
         try {
             orderStatus.execute(

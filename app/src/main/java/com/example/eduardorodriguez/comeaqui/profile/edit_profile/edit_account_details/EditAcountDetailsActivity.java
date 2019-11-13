@@ -58,7 +58,7 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
     }
 
     public void initializeUser(){
-        GetAsyncTask process = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_profile/", this);
+        GetAsyncTask process = new GetAsyncTask(this,"GET", getResources().getString(R.string.server) + "/my_profile/");
         try {
             String response = process.execute().get();
             if (response != null){
@@ -84,7 +84,7 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
     }
 
     private void saveData(){
-        PatchAsyncTask putTast = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
+        PatchAsyncTask putTast = new PatchAsyncTask(this,getResources().getString(R.string.server) + "/edit_profile/");
         try {
             putTast.execute(
                     new String[]{"first_name", firstName.getText().toString(), ""},

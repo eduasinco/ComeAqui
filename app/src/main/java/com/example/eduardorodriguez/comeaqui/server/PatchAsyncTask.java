@@ -25,11 +25,16 @@ import org.json.JSONObject;
 
 import java.io.*;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class PatchAsyncTask extends AsyncTask<String[], Void, JSONObject> {
 
     public Bitmap bitmap;
     String uri;
-    public PatchAsyncTask(String uri){
+    private Context context;
+
+    public PatchAsyncTask(Context context, String uri){
+        this.context = context;
         this.uri = uri;
     }
 
@@ -37,8 +42,14 @@ public class PatchAsyncTask extends AsyncTask<String[], Void, JSONObject> {
     protected JSONObject doInBackground(String[]... params)
     {
 
+        String credentials = "";
+        SharedPreferences pref = context.getSharedPreferences("Login", MODE_PRIVATE);
+        if (pref.getBoolean("signed_in", false)) {
+            credentials = pref.getString("cred", "");
+        }
+
         HttpPatch httpPatch = new HttpPatch(uri);
-        httpPatch.addHeader("Authorization", "Basic " + SplashActivity.getCredemtials());
+        httpPatch.addHeader("Authorization", "Basic " + credentials);
 
         HttpClient httpclient = new DefaultHttpClient();
         String boundary = "-------------" + System.currentTimeMillis();

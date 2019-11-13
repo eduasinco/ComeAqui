@@ -52,23 +52,33 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 break;
 
             case ORDERS_CHANNEL_ID:
+                Intent intent2 = new Intent(remoteMessage.getNotification().getClickAction());
+                intent2.putExtra("tab", 1);
+                intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent pendingIntent2 = PendingIntent.getActivity(this,0, intent2, PendingIntent.FLAG_ONE_SHOT);
                 Notification orderNotification = new NotificationCompat.Builder(this, ORDERS_CHANNEL_ID)
                         .setSmallIcon(R.drawable.app_icon)
                         .setContentTitle(remoteMessage.getNotification().getTitle())
                         .setContentText(remoteMessage.getNotification().getBody())
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setCategory(NotificationCompat.CATEGORY_EVENT)
+                        .setContentIntent(pendingIntent2)
                         .build();
                 notificationManager.notify(1, orderNotification);
                 break;
 
             case NOTIFICATIONS_CHANNEL_ID:
+                Intent intent3 = new Intent(remoteMessage.getNotification().getClickAction());
+                intent3.putExtra("tab", 2);
+                intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent pendingIntent3 = PendingIntent.getActivity(this,0, intent3, PendingIntent.FLAG_ONE_SHOT);
                 Notification notificationNotification = new NotificationCompat.Builder(this, NOTIFICATIONS_CHANNEL_ID)
                         .setSmallIcon(R.drawable.app_icon)
                         .setContentTitle(remoteMessage.getNotification().getTitle())
                         .setContentText(remoteMessage.getNotification().getBody())
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setCategory(NotificationCompat.CATEGORY_EVENT)
+                        .setContentIntent(pendingIntent3)
                         .build();
                 notificationManager.notify(2, notificationNotification);
                 break;

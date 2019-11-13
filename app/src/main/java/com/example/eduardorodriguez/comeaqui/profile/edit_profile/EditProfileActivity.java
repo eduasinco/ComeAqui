@@ -123,7 +123,7 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
 
     public User getUser(int userId) {
         try {
-            String response = new GetAsyncTask("GET", getResources().getString(R.string.server) + "/profile_detail/" + userId + "/", this).execute().get(10, TimeUnit.SECONDS);
+            String response = new GetAsyncTask(this,"GET", getResources().getString(R.string.server) + "/profile_detail/" + userId + "/").execute().get(10, TimeUnit.SECONDS);
             if (response != null){
                 return new User(new JsonParser().parse(response).getAsJsonObject());
             }
@@ -147,7 +147,7 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
             if (bitmap != null){
-                PatchAsyncTask putTask = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
+                PatchAsyncTask putTask = new PatchAsyncTask(this,getResources().getString(R.string.server) + "/edit_profile/");
                 putTask.bitmap = bitmap;
                 if (isBackGound){
                     putTask.execute(new String[]{"background_photo", "image"}).get(15, TimeUnit.SECONDS);

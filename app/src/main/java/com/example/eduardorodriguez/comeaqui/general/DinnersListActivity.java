@@ -62,7 +62,7 @@ public class DinnersListActivity extends AppCompatActivity implements DinnerFrag
     void goToConversationWithUser(User user){
         try {
             fragment.startWaitingFrame(true);
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/get_or_create_chat/" + user.id + "/", this){
+            new GetAsyncTask(this,"GET", getResources().getString(R.string.server) + "/get_or_create_chat/" + user.id + "/"){
                 @Override
                 protected void onPostExecute(String response) {
                     if (response != null) {

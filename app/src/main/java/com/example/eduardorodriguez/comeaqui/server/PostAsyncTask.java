@@ -1,5 +1,7 @@
 package com.example.eduardorodriguez.comeaqui.server;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import com.example.eduardorodriguez.comeaqui.SplashActivity;
@@ -18,9 +20,13 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.*;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class PostAsyncTask extends AsyncTask<String[], Void, String>
 {
-    public PostAsyncTask(String uri){
+    private Context context;
+    public PostAsyncTask(Context context, String uri){
+        this.context = context;
         this.uri = uri;
     }
     String uri;
@@ -28,9 +34,14 @@ public class PostAsyncTask extends AsyncTask<String[], Void, String>
     @Override
     protected String doInBackground(String[]... params)
     {
+        String credentials = "";
+        SharedPreferences pref = context.getSharedPreferences("Login", MODE_PRIVATE);
+        if (pref.getBoolean("signed_in", false)) {
+            credentials = pref.getString("cred", "");
+        }
 
         HttpPost httpPost = new HttpPost(uri);
-        httpPost.addHeader("Authorization", "Basic " + SplashActivity.getCredemtials());
+        httpPost.addHeader("Authorization", "Basic " + credentials);
 
         HttpClient httpclient = new DefaultHttpClient();
         String boundary = "-------------" + System.currentTimeMillis();

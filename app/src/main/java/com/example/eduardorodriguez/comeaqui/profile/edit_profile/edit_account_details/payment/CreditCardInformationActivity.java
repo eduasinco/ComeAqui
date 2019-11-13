@@ -35,7 +35,7 @@ public class CreditCardInformationActivity extends AppCompatActivity {
         Button saveCardButtonView = findViewById(R.id.saveCardButton);
 
         saveCardButtonView.setOnClickListener(v -> {
-            PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/card/");
+            PostAsyncTask post = new PostAsyncTask(this,getResources().getString(R.string.server) + "/card/");
             try {
                 String response = post.execute(
                         new String[]{"card_number", creditCardView.getText().toString(), ""},

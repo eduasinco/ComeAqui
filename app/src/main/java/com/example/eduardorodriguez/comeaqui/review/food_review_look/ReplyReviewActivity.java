@@ -68,7 +68,7 @@ public class ReplyReviewActivity extends AppCompatActivity {
     void postReviewReply(){
         try {
             startWaitingFrame(true);
-            new PostAsyncTask(getResources().getString(R.string.server) + "/create_review_reply/"){
+            new PostAsyncTask(this,getResources().getString(R.string.server) + "/create_review_reply/"){
                 @Override
                 protected void onPostExecute(String response) {
                     JsonObject jo = new JsonParser().parse(response).getAsJsonObject();

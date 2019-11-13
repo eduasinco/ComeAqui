@@ -113,7 +113,7 @@ public class MapCardFragment extends Fragment {
             starView.setImageResource(foodPost.favourite ? R.drawable.star_fill: R.drawable.star);
             if (foodPost.favourite) {
                 MapFragment.setMarkerDesign(MapFragment.markerHashMap.get(foodPost.id), true);
-                PostAsyncTask putFavourite = new PostAsyncTask(getResources().getString(R.string.server) + "/favourites/");
+                PostAsyncTask putFavourite = new PostAsyncTask(getContext(), getResources().getString(R.string.server) + "/favourites/");
                 try {
                     favouriteId = Integer.parseInt(putFavourite.execute(new String[]{"food_post_id", "" + foodPost.id}).get());
                 } catch (ExecutionException | InterruptedException e) {
@@ -121,7 +121,7 @@ public class MapCardFragment extends Fragment {
                 }
             } else {
                 String uri = getResources().getString(R.string.server) + "/favourite_detail/" + favouriteId + "/";
-                Server deleteFoodPost = new Server("DELETE", uri);
+                Server deleteFoodPost = new Server(getContext(),"DELETE", uri);
                 try {
                     deleteFoodPost.execute().get();
                 } catch (ExecutionException | InterruptedException e) {

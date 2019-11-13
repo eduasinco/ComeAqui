@@ -101,7 +101,7 @@ public class ChatFragment extends Fragment{
     void getChatsAndSet(){
         startWaitingFrame(true);
         try {
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/my_chats/", getContext()){
+            new GetAsyncTask(getContext(),"GET", getResources().getString(R.string.server) + "/my_chats/"){
                 @Override
                 protected void onPostExecute(String response) {
                     if (response != null)

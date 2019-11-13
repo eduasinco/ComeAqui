@@ -261,7 +261,7 @@ public class FoodLookActivity extends AppCompatActivity {
 
     void getFoodPostDetailsAndSet(int foodPostId){
         try{
-            new GetAsyncTask("GET", getResources().getString(R.string.server) + "/foods/" + foodPostId + "/", this){
+            new GetAsyncTask(this,"GET", getResources().getString(R.string.server) + "/foods/" + foodPostId + "/"){
                 @Override
                 protected void onPostExecute(String response) {
                     if (response != null){
@@ -328,7 +328,7 @@ public class FoodLookActivity extends AppCompatActivity {
     }
 
     void deleteOrder(){
-        Server deleteFoodPost = new Server("DELETE", getResources().getString(R.string.server) + "/foods/" + foodPostDetail.id + "/");
+        Server deleteFoodPost = new Server(this,"DELETE", getResources().getString(R.string.server) + "/foods/" + foodPostDetail.id + "/");
         try {
             deleteFoodPost.execute().get();
             finish();
@@ -339,7 +339,7 @@ public class FoodLookActivity extends AppCompatActivity {
     }
 
     void createOrder(){
-        PostAsyncTask createOrder = new PostAsyncTask(getResources().getString(R.string.server) + "/create_order_and_notification/");
+        PostAsyncTask createOrder = new PostAsyncTask(this,getResources().getString(R.string.server) + "/create_order_and_notification/");
         try {
             String response = createOrder.execute(
                     new String[]{"food_post_id", "" + foodPostDetail.id}
