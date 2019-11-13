@@ -164,7 +164,9 @@ public class FoodLookActivity extends AppCompatActivity {
         PopupMenu popupMenu = new PopupMenu(this, findViewById(R.id.action_settings));
         if (foodPostDetail.owner.id == USER.id){
             popupMenu.getMenu().add("Edit");
-            popupMenu.getMenu().add("Delete");
+            if (foodPostDetail.confirmedOrdersList.size() == 0){
+                popupMenu.getMenu().add("Delete");
+            }
         } else {
             popupMenu.getMenu().add("Report");
         }
