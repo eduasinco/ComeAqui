@@ -35,7 +35,7 @@ import static com.yalantis.ucrop.UCropFragment.TAG;
 public class PrepareActivity extends AppCompatActivity {
 
     boolean gotTimezone = false;
-    int tab;
+    String tab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,7 @@ public class PrepareActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if(b != null && b.get("tab") != null) {
-            tab = b.getInt("tab");
+            tab = b.getString("tab");
         }
 
         initializeUser();

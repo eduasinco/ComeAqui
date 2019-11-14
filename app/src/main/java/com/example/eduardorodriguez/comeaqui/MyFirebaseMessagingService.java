@@ -7,8 +7,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-
-import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -53,9 +51,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             case ORDERS_CHANNEL_ID:
                 Intent intent1 = new Intent(remoteMessage.getNotification().getClickAction());
-                intent1.putExtra("tab", 1);
+                intent1.putExtra("tab", remoteMessage.getData().get("tab"));
                 intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                PendingIntent pendingIntent1 = PendingIntent.getActivity(this,1, intent1, PendingIntent.FLAG_ONE_SHOT);
+                PendingIntent pendingIntent1 = PendingIntent.getActivity(this,0, intent1, PendingIntent.FLAG_ONE_SHOT);
                 Notification orderNotification = new NotificationCompat.Builder(this, ORDERS_CHANNEL_ID)
                         .setSmallIcon(R.drawable.app_icon)
                         .setContentTitle(remoteMessage.getNotification().getTitle())
@@ -69,9 +67,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             case NOTIFICATIONS_CHANNEL_ID:
                 Intent intent2 = new Intent(remoteMessage.getNotification().getClickAction());
-                intent2.putExtra("tab", 2);
+                intent2.putExtra("tab", remoteMessage.getData().get("tab"));
                 intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                PendingIntent pendingIntent2 = PendingIntent.getActivity(this,2, intent2, PendingIntent.FLAG_ONE_SHOT);
+                PendingIntent pendingIntent2 = PendingIntent.getActivity(this,0, intent2, PendingIntent.FLAG_ONE_SHOT);
                 Notification notificationNotification = new NotificationCompat.Builder(this, NOTIFICATIONS_CHANNEL_ID)
                         .setSmallIcon(R.drawable.app_icon)
                         .setContentTitle(remoteMessage.getNotification().getTitle())
@@ -83,8 +81,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 notificationManager.notify(2, notificationNotification);
                 break;
         }
-
-        System.out.println("HOLAAAAAAAA: " + remoteMessage.getData().get("message"));
         super.onMessageReceived(remoteMessage);
     }
 }

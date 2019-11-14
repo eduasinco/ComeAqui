@@ -96,7 +96,12 @@
         <activity
             android:name=".login_and_register.LoginActivity"
             android:label="@string/title_activity_login" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <meta-data
             android:name="preloaded_fonts"

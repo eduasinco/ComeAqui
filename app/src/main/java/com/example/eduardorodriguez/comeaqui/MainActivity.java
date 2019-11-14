@@ -4,16 +4,17 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
+ import com.example.eduardorodriguez.comeaqui.login_and_register.LoginOrRegisterActivity;
 import com.example.eduardorodriguez.comeaqui.map.NoLocationFragmentFragment;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
-import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.FirebaseUser;
+import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.review.GuestsReviewActivity;
 import com.example.eduardorodriguez.comeaqui.review.ReviewPostActivity;
 import androidx.core.app.ActivityCompat;
@@ -21,7 +22,6 @@ import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
 import com.example.eduardorodriguez.comeaqui.chat.ChatActivity;
 import com.example.eduardorodriguez.comeaqui.notification.NotificationsFragment;
 import com.example.eduardorodriguez.comeaqui.order.OrderFragment;
@@ -29,7 +29,6 @@ import com.example.eduardorodriguez.comeaqui.map.MapFragment;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileFragment;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.java_websocket.client.WebSocketClient;
@@ -37,8 +36,6 @@ import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -63,14 +60,12 @@ public class MainActivity extends AppCompatActivity {
     private ConstraintLayout navNotifications;
     private ConstraintLayout navProfile;
 
-    private FrameLayout mapFrame;
     private FrameLayout mainFrame;
 
     private MapFragment mapFragment;
     private OrderFragment getPastOderFragment;
     private NotificationsFragment notificationFragment;
     private ProfileFragment profileFragment;
-    public static FirebaseUser firebaseUser;
 
     private static Context context;
     TextView[] notArray;
@@ -97,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
         notifications = findViewById(R.id.notification);
         profile = findViewById(R.id.profile);
 
-        mapFrame = findViewById(R.id.map_frame);
         mainFrame = findViewById(R.id.main_frame);
 
         navMap = findViewById(R.id.nav_map);
@@ -111,6 +105,14 @@ public class MainActivity extends AppCompatActivity {
         notProfile = findViewById(R.id.not_profile);
         notChat = findViewById(R.id.notChat);
         notArray = new TextView[]{notMap, notOrders, notNotifications, notProfile};
+
+        SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
+        if (pref.getBoolean("signed_in", false)) {
+            USER = new User(new JsonParser().parse(pref.getString("user", "")).getAsJsonArray().get(0).getAsJsonObject());
+        } else {
+            Intent a = new Intent(this, LoginOrRegisterActivity.class);
+            startActivity(a);
+        }
 
         getPastOderFragment = new OrderFragment();
         mapFragment = new MapFragment();
@@ -135,8 +137,8 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if(b != null && b.get("tab") != null) {
-            int tab = b.getInt("tab");
-            openFragment(tab);
+            String tab = b.getString("tab");
+            openFragment(Integer.parseInt(tab));
         }
 
         navMap.setOnClickListener(v -> {
