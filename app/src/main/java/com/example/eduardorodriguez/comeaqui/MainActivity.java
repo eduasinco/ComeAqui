@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             setMapFragment(NoLocationFragmentFragment.newInstance());
         }
+        map.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.foodfill));
 
         iv = new ImageView[]{map, orders, notifications, profile};
         fragments = new Fragment[]{new Fragment(), getPastOderFragment, notificationFragment, profileFragment};
