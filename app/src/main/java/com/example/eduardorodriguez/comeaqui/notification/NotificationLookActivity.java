@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.*;
+import com.example.eduardorodriguez.comeaqui.general.StaticMapFragment;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
@@ -45,7 +46,6 @@ public class NotificationLookActivity extends AppCompatActivity {
     Button confirmCancelButton;
 
     ImageView dinnerImage;
-    ImageView staticMapView;
     ImageView backView;
     View confirmNotificationProgress;
     FrameLayout waitingFrame;
@@ -70,7 +70,6 @@ public class NotificationLookActivity extends AppCompatActivity {
         statucMessage = findViewById(R.id.status_message);
 
         dinnerImage = findViewById(R.id.dinner_image);
-        staticMapView = findViewById(R.id.static_map);
         backView = findViewById(R.id.back);
         confirmNotificationProgress = findViewById(R.id.confirm_notification_progress);
         waitingFrame = findViewById(R.id.waiting_frame);
@@ -144,13 +143,10 @@ public class NotificationLookActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(orderObject.post.id, "CARD"))
                 .commit();
-        String url = "http://maps.google.com/maps/api/staticmap?center=" + orderObject.post.lat + "," + orderObject.post.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
-        Glide.with(this).load(url).into(staticMapView);
 
-        staticMapView.setOnClickListener(v -> {
-            Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + orderObject.post.lat + "," + orderObject.post.lng));
-            startActivity(intent);
-        });
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.static_map_frame, StaticMapFragment.newInstance(orderObject.post.lat, orderObject.post.lng))
+                .commit();
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.profile_rating, RatingFragment.newInstance(orderObject.poster.rating, orderObject.poster.ratingN))

@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.eduardorodriguez.comeaqui.general.StaticMapFragment;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.User;
@@ -48,7 +49,6 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
 
     ImageView posterImageView;
     ImageView postImageView;
-    ImageView staticMapView;
     Button cancelOrderButton;
     FrameLayout cancelMessage;
     FrameLayout waitingFrame;
@@ -77,7 +77,6 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
         orderStatus = findViewById(R.id.order_status);
 
         posterImageView = findViewById(R.id.poster_image);
-        staticMapView = findViewById(R.id.static_map);
         cancelOrderButton = findViewById(R.id.cancelOrderButton);
         cancelMessage = findViewById(R.id.cancel_message);
         orderCancelProgress = findViewById(R.id.order_cancel_progress);
@@ -195,13 +194,9 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
             orderStatus.setTextColor(getResources().getColor(R.color.colorPrimary));
         }
 
-        String url = "http://maps.google.com/maps/api/staticmap?center=" + order.post.lat + "," + order.post.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=AIzaSyDqkl1DgwHu03SmMoqVey3sgR62GnJ-VY4";
-        Glide.with(this).load(url).into(staticMapView);
-
-        staticMapView.setOnClickListener(v -> {
-            Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + order.post.lat + "," + order.post.lng));
-            startActivity(intent);
-        });
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.static_map_frame, StaticMapFragment.newInstance(order.post.lat, order.post.lng))
+                .commit();
 
         if(!order.poster.profile_photo.contains("no-image")) {
             Glide.with(context).load(order.poster.profile_photo).into(posterImageView);

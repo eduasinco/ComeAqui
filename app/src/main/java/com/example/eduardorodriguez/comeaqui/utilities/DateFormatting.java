@@ -23,7 +23,7 @@ public class DateFormatting {
     public static String h(String dateString){
         try {
             Date date = convertToDate(dateString);
-            DateFormat df = new SimpleDateFormat("h:mm a");
+            DateFormat df = new SimpleDateFormat("h:mm aa");
             df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
             String dateTextString = df.format(date);
             return dateTextString;
@@ -48,7 +48,7 @@ public class DateFormatting {
             }
         }
 
-        DateFormat df = new SimpleDateFormat("h:mm a");
+        DateFormat df = new SimpleDateFormat("h:mm aa");
         df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
         String dateTextString = df.format(date);
         return dateTextString;
@@ -102,7 +102,7 @@ public class DateFormatting {
             long differenceToStartOrDay = now - startOfDay;
 
             if (differenceToStartOrDay >= differenceToDate) {
-                String pattern = "h:mm a";
+                String pattern = "h:mm aa";
                 DateFormat df = new SimpleDateFormat(pattern);
                 df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
                 return df.format(date);
