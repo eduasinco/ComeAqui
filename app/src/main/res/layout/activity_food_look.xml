@@ -203,18 +203,12 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/static_map"
+            <FrameLayout
+                android:id="@+id/static_map_frame"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginBottom="16dp"
-                android:paddingStart="24dp"
-                android:paddingEnd="24dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/world_map" />
+                android:layout_height="wrap_content">
+
+            </FrameLayout>
 
             <LinearLayout
                 android:id="@+id/dinners_list_view"
@@ -354,7 +348,7 @@
                     android:text="-- : --"
                     android:textAlignment="textEnd"
                     android:textColor="@color/grey"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -383,8 +377,7 @@
                     android:layout_weight="1"
                     android:text="-.--€"
                     android:textAlignment="textEnd"
-                    android:textColor="@android:color/black"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
             </LinearLayout>
 

@@ -198,7 +198,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
             });
         }
 
-        int curveRadius = 40;
+        int curveRadius = 10;
         backGroundImage.setClipToOutline(true);
         backGroundImage.setOutlineProvider(new ViewOutlineProvider() {
             @Override

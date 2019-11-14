@@ -5,10 +5,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +26,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
@@ -34,7 +39,18 @@ import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.HorizontalImageDisplayFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.MyLocation;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.gson.JsonObject;
@@ -64,7 +80,6 @@ public class FoodLookActivity extends AppCompatActivity {
     Button placeOrderButton;
 
     ImageView posterImage;
-    ImageView staticMapView;
     LinearLayout paymentMethod;
     View placeOrderProgress;
     FrameLayout placeOrderErrorMessage;
@@ -80,6 +95,7 @@ public class FoodLookActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_look);
 
+
         toolbar = findViewById(R.id.anim_toolbar);
         collapsingToolbar = findViewById(R.id.collapsing_toolbar);
         appBarLayout = findViewById(R.id.appbar);
@@ -94,7 +110,6 @@ public class FoodLookActivity extends AppCompatActivity {
         posterLocationView = findViewById(R.id.posterLocation);
 
         posterImage = findViewById(R.id.poster_image);
-        staticMapView = findViewById(R.id.static_map);
         paymentMethod = findViewById(R.id.payment_method_layout);
         changePaymentMethod = findViewById(R.id.change_payment);
         placeOrderProgress = findViewById(R.id.place_order_progress);
@@ -102,6 +117,8 @@ public class FoodLookActivity extends AppCompatActivity {
 
         waitingFrame = findViewById(R.id.waiting_frame);
         setToolbar();
+
+
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -251,13 +268,9 @@ public class FoodLookActivity extends AppCompatActivity {
             posterImage.setOnClickListener(v -> goToProfileView(foodPostDetail.owner));
         }
 
-        String url = "http://maps.google.com/maps/api/staticmap?center=" + foodPostDetail.lat + "," + foodPostDetail.lng + "&zoom=15&size=" + 300 + "x" + 200 +"&sensor=false&key=" + getResources().getString(R.string.google_key);
-        Glide.with(this).load(url).into(staticMapView);
-
-        staticMapView.setOnClickListener(v -> {
-            Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + foodPostDetail.lat + "," + foodPostDetail.lng));
-            startActivity(intent);
-        });
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.static_map_frame, StaticMapFragment.newInstance(foodPostDetail.lat, foodPostDetail.lng))
+                .commit();
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(foodPostDetail.id, "MEDIUM"))
@@ -324,7 +337,7 @@ public class FoodLookActivity extends AppCompatActivity {
                 placeOrderButton.setBackgroundColor(Color.TRANSPARENT);
                 placeOrderButton.setTextColor(ContextCompat.getColor(this, R.color.success));
             } else {
-                placeOrderButton.setVisibility(View.GONE);
+                placeOrderButton.setVisibility(View.INVISIBLE);
             }
             paymentMethod.setVisibility(View.GONE);
         }else{
