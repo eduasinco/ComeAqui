@@ -33,6 +33,7 @@
                 android:id="@+id/plate_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
@@ -57,6 +58,7 @@
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
             android:ellipsize="end"
             android:maxLines="3"
             android:text="Description"
@@ -86,8 +88,7 @@
                 android:text="-- : --"
                 android:textAlignment="textStart"
                 android:textColor="@color/grey"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/price"
