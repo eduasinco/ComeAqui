@@ -43,6 +43,7 @@ public class NotificationLookActivity extends AppCompatActivity {
     TextView posterNameView;
     TextView posterLocationView;
     TextView statucMessage;
+    TextView rating;
     Button confirmCancelButton;
 
     ImageView dinnerImage;
@@ -68,6 +69,7 @@ public class NotificationLookActivity extends AppCompatActivity {
         posterNameView = findViewById(R.id.dinner_name);
         posterLocationView = findViewById(R.id.posterLocation);
         statucMessage = findViewById(R.id.status_message);
+        rating = findViewById(R.id.rating);
 
         dinnerImage = findViewById(R.id.dinner_image);
         backView = findViewById(R.id.back);
@@ -129,6 +131,7 @@ public class NotificationLookActivity extends AppCompatActivity {
         posterLocationView.setText(orderObject.post.address);
         priceView.setText(orderObject.post.price);
         timeView.setText(orderObject.post.time);
+        rating.setText(orderObject.poster.rating + "");
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("type", orderObject.post.type);
@@ -148,9 +151,6 @@ public class NotificationLookActivity extends AppCompatActivity {
                 .replace(R.id.static_map_frame, StaticMapFragment.newInstance(orderObject.post.lat, orderObject.post.lng))
                 .commit();
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.profile_rating, RatingFragment.newInstance(orderObject.poster.rating, orderObject.poster.ratingN))
-                .commit();
 
         setConfirmCancelButton();
     }
