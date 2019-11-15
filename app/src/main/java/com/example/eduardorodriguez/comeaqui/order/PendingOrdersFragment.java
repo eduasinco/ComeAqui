@@ -181,7 +181,8 @@ public class PendingOrdersFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        mWebSocketClient.close();
+        if (null != mWebSocketClient)
+            mWebSocketClient.close();
     }
 
     public interface OnListFragmentInteractionListener {
