@@ -64,8 +64,8 @@
 
     <ImageView
         android:id="@+id/type_image"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
         android:src="@drawable/orderfill"
         app:layout_constraintBottom_toBottomOf="@+id/dinner_image"
         app:layout_constraintEnd_toEndOf="@+id/dinner_image"

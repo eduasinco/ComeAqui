@@ -48,8 +48,24 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
             Glide.with(holder.mView.getContext()).load(holder.mItem.from_user.profile_photo).into(holder.senderImageView);
 
         switch (holder.mItem.type){
-            case "ORDER":
+            case "PENDING":
+                holder.typeImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.order_pending_not));
+                holder.mView.setOnClickListener(v -> {
+                    Intent notification = new Intent(context, NotificationLookActivity.class);
+                    notification.putExtra("orderId", holder.mItem.type_id);
+                    context.startActivity(notification);
+                });
+                break;
+            case "CONFIRMED":
                 holder.typeImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.order_confirmed_not));
+                holder.mView.setOnClickListener(v -> {
+                    Intent notification = new Intent(context, NotificationLookActivity.class);
+                    notification.putExtra("orderId", holder.mItem.type_id);
+                    context.startActivity(notification);
+                });
+                break;
+            case "CANCELED":
+                holder.typeImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.order_canceled_not));
                 holder.mView.setOnClickListener(v -> {
                     Intent notification = new Intent(context, NotificationLookActivity.class);
                     notification.putExtra("orderId", holder.mItem.type_id);
