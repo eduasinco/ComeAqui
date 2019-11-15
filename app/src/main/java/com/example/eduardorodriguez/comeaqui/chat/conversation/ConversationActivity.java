@@ -266,6 +266,12 @@ public class ConversationActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        mWebSocketClient.close();
+        super.onDestroy();
+    }
+
     private void setMessagAsSeen(int messageId){
         PutAsyncTask resetPassword = new PutAsyncTask(this,getResources().getString(R.string.server) + "/mark_message_as_seen/" + messageId + "/");
         resetPassword.execute();

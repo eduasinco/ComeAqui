@@ -59,6 +59,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
     private static GoogleMap googleMap;
     public static HashMap<Integer, FoodPost> foodPostHashMap = new HashMap<>();;
     int fabCount;
+    WebSocketClient mWebSocketClient;
 
     MapPickerFragment mapPickerFragment;
     MapCardFragment mapCardFragment;
@@ -161,7 +162,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
     public void listenToPosts(){
         try {
             URI uri = new URI(getResources().getString(R.string.server) + "/ws/posts/");
-            WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
+            mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
                     // runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Unread Messages!", Toast.LENGTH_LONG).show());
@@ -196,6 +197,12 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onDetach() {
+        mWebSocketClient.close();
+        super.onDetach();
     }
 
     int c  = 0;

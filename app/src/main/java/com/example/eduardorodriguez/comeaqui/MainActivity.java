@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     static public String data;
     private ImageView chatView;
+    WebSocketClient mWebSocketClient;
 
     private ImageView map;
     private ImageView orders;
@@ -226,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
     public void listenToNotificationChanges(){
         try {
             URI uri = new URI(getResources().getString(R.string.server) + "/ws/popups/" + USER.id +  "/");
-            WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
+            mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
                     // runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Orders!", Toast.LENGTH_LONG).show());
@@ -280,6 +281,12 @@ public class MainActivity extends AppCompatActivity {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        mWebSocketClient.close();
+        super.onDestroy();
     }
 
     @Override

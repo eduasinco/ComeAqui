@@ -45,6 +45,7 @@ public class ChatFragment extends Fragment{
     ArrayList<ChatObject> data;
     MyChatRecyclerViewAdapter adapter;
     HashMap<Integer, ChatObject> chatObjectHashMap;
+    WebSocketClient mWebSocketClient;
 
     RecyclerView recyclerView;
     FrameLayout waitFrame;
@@ -134,7 +135,7 @@ public class ChatFragment extends Fragment{
     private void start(){
         try {
             URI uri = new URI(getActivity().getResources().getString(R.string.server) + "/ws/unread_messages/" + USER.id +  "/");
-            WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
+            mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
                     // getActivity().runOnUiThread(() -> {
@@ -176,6 +177,7 @@ public class ChatFragment extends Fragment{
     @Override
     public void onDetach() {
         super.onDetach();
+        mWebSocketClient.close();
         mListener = null;
     }
 

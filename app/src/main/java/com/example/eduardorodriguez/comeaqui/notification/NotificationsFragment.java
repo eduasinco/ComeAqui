@@ -45,6 +45,7 @@ public class NotificationsFragment extends Fragment {
     RecyclerView recyclerView;
     SwipeController swipeController = null;
     FrameLayout waitFrame;
+    WebSocketClient mWebSocketClient;
 
     static NotificationsFragment f;
 
@@ -157,7 +158,7 @@ public class NotificationsFragment extends Fragment {
     private void start(){
         try {
             URI uri = new URI(getActivity().getResources().getString(R.string.server) + "/ws/notifications/" + USER.id +  "/");
-            WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
+            mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
                     // getActivity().runOnUiThread(() -> {
@@ -175,6 +176,9 @@ public class NotificationsFragment extends Fragment {
                 @Override
                 public void onClose(int i, String s, boolean b) {
                     Log.i("Websocket", "Closed " + s);
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getActivity(), "No connection", Toast.LENGTH_LONG).show();
+                    });
                 }
                 @Override
                 public void onError(Exception e) {
@@ -185,5 +189,11 @@ public class NotificationsFragment extends Fragment {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mWebSocketClient.close();
     }
 }

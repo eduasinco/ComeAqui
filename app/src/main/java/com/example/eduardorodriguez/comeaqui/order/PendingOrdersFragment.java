@@ -47,6 +47,7 @@ public class PendingOrdersFragment extends Fragment {
     SwipeRefreshLayout pullToRefresh;
     LinkedHashMap<Integer, OrderObject> data;
     MyPendingOrdersRecyclerViewAdapter orderAdapter;
+    WebSocketClient mWebSocketClient;
 
     FrameLayout waitFrame;
     View view;
@@ -145,7 +146,7 @@ public class PendingOrdersFragment extends Fragment {
     private void start(){
         try {
             URI uri = new URI(getActivity().getResources().getString(R.string.server) + "/ws/orders/" + USER.id +  "/");
-            WebSocketClient mWebSocketClient = new WebSocketClient(uri) {
+            mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
                     // getActivity().runOnUiThread(() -> {
@@ -180,6 +181,7 @@ public class PendingOrdersFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mWebSocketClient.close();
     }
 
     public interface OnListFragmentInteractionListener {
