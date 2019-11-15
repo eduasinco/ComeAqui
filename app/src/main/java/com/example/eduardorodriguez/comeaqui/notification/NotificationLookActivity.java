@@ -38,6 +38,7 @@ public class NotificationLookActivity extends AppCompatActivity {
     TextView plateNameView;
     TextView descriptionView;
     TextView priceView;
+    TextView orderAction;
     TextView timeView;
     TextView usernameView;
     TextView posterNameView;
@@ -70,6 +71,7 @@ public class NotificationLookActivity extends AppCompatActivity {
         posterLocationView = findViewById(R.id.posterLocation);
         statucMessage = findViewById(R.id.status_message);
         rating = findViewById(R.id.rating);
+        orderAction = findViewById(R.id.order_action);
 
         dinnerImage = findViewById(R.id.dinner_image);
         backView = findViewById(R.id.back);
@@ -132,6 +134,26 @@ public class NotificationLookActivity extends AppCompatActivity {
         priceView.setText(orderObject.post.price);
         timeView.setText(orderObject.post.time);
         rating.setText(orderObject.poster.rating + "");
+
+        switch (orderObject.status){
+            case "PENDING":
+                orderAction.setText("Wants to eat with you!");
+                orderAction.setBackground(ContextCompat.getDrawable(this, R.color.colorPrimary));
+                break;
+            case "CONFIRMED":
+                orderAction.setText("Is eating with you!");
+                orderAction.setBackground(ContextCompat.getDrawable(this, R.color.success));
+                break;
+            case "CANCELED":
+                orderAction.setText("Canceled the meal");
+                orderAction.setBackground(ContextCompat.getDrawable(this, R.color.canceled));
+                break;
+            case "FINISHED":
+                orderAction.setText("Has eaten with you");
+                orderAction.setBackground(ContextCompat.getDrawable(this, R.color.colorPrimary));
+                break;
+        }
+
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("type", orderObject.post.type);
