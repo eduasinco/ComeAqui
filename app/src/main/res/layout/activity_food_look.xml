@@ -42,8 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@android:color/transparent"
-                app:layout_collapseMode="pin"
-                app:title="Food Poste"/>
+                app:layout_collapseMode="pin"/>
 
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -61,7 +60,7 @@
                 android:layout_marginLeft="16dp"
                 android:src="@drawable/no_profile_photo"
                 app:civ_border_color="@color/colorPrimaryDark"
-                app:civ_border_width="2dp"
+                app:civ_border_width="0dp"
                 app:civ_shadow="true"
                 app:civ_shadow_color="@color/colorPrimaryDark"
                 app:civ_shadow_radius="1"
@@ -85,7 +84,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Eduardo Rodriguez"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 

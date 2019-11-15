@@ -134,8 +134,8 @@ public class FoodLookActivity extends AppCompatActivity {
     }
 
     void setToolbar(){
-        collapsingToolbar.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        collapsingToolbar.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         toolbar.setTitle("Food Post");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

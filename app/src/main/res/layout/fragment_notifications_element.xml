@@ -68,5 +68,6 @@
         android:layout_height="20dp"
         android:src="@drawable/orderfill"
         app:layout_constraintBottom_toBottomOf="@+id/dinner_image"
-        app:layout_constraintEnd_toEndOf="@+id/dinner_image" />
+        app:layout_constraintEnd_toEndOf="@+id/dinner_image"
+        app:srcCompat="@drawable/order_confirmed_not" />
 </androidx.constraintlayout.widget.ConstraintLayout>
