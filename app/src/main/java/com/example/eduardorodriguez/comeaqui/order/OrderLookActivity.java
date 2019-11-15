@@ -12,7 +12,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +24,7 @@ import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
+import com.example.eduardorodriguez.comeaqui.review.food_review_look.MyFoodReviewRecyclerViewAdapter;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.ContinueCancelFragment;
@@ -34,8 +37,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import static com.example.eduardorodriguez.comeaqui.App.USER;
+
 public class OrderLookActivity extends AppCompatActivity implements ContinueCancelFragment.OnFragmentInteractionListener {
 
+    ImageButton back;
+    ImageButton options;
     TextView plateName;
     TextView price;
     TextView posterDescription;
@@ -48,8 +55,6 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
     TextView orderStatus;
 
     ImageView posterImageView;
-    ImageView postImageView;
-    Button cancelOrderButton;
     FrameLayout cancelMessage;
     FrameLayout waitingFrame;
     View orderCancelProgress;
@@ -65,6 +70,9 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_look);
         context = getApplicationContext();
+        back = findViewById(R.id.back);
+        options = findViewById(R.id.options);
+        plateName = findViewById(R.id.plate_name);
         plateName = findViewById(R.id.plate_name);
         posterNameView = findViewById(R.id.poster_name);
         posterUsername = findViewById(R.id.poster_username);
@@ -77,7 +85,6 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
         orderStatus = findViewById(R.id.order_status);
 
         posterImageView = findViewById(R.id.poster_image);
-        cancelOrderButton = findViewById(R.id.cancelOrderButton);
         cancelMessage = findViewById(R.id.cancel_message);
         orderCancelProgress = findViewById(R.id.order_cancel_progress);
         waitingFrame = findViewById(R.id.waiting_frame);
@@ -87,6 +94,30 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
         if (b != null){
             int orderId = b.getInt("orderId");
             getOrderDetails(orderId);
+        }
+        back.setOnClickListener(v -> finish());
+        options.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(this, v);
+            popupMenu.getMenu().add("Help");
+
+            if (!order.status.equals("CANCELED"))
+                popupMenu.getMenu().add("Cancel order");
+
+            popupMenu.setOnMenuItemClickListener(item -> {
+                setOptionsActions(item.getTitle().toString());
+                return true;
+            });
+            popupMenu.show();
+        });
+    }
+
+    void setOptionsActions(String title){
+        switch (title){
+            case "Reply":
+                break;
+            case "Cancel order":
+                checkIfUserWantsToCancel();
+                break;
         }
     }
 
@@ -98,7 +129,6 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
                     if (response != null) {
                         order = new OrderObject(new JsonParser().parse(response).getAsJsonObject());
                         setView();
-                        setCancelOrderButton();
                     }
                     super.onPostExecute(response);
                 }
@@ -124,19 +154,6 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
         }
     }
 
-    void setCancelOrderButton(){
-        if (order.status.equals("CANCELED")) {
-            cancelOrderButton.setText("CANCELED");
-            cancelOrderButton.setBackgroundColor(Color.WHITE);
-            cancelOrderButton.setTextColor(ContextCompat.getColor(this, R.color.canceled));
-        }else if (order.status.equals("FINISHED")){
-            cancelOrderButton.setText("FINISHED");
-            cancelOrderButton.setBackgroundColor(Color.WHITE);
-            cancelOrderButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
-        } else {
-            cancelOrderButton.setOnClickListener(v -> {checkIfUserWantsToCancel();});
-        }
-    }
 
     void goToProfileView(User user){
         Intent k = new Intent(getApplicationContext(), ProfileViewActivity.class);
@@ -215,10 +232,8 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
     void showProgress(boolean show){
         if (show){
             orderCancelProgress.setVisibility(View.VISIBLE);
-            cancelOrderButton.setVisibility(View.GONE);
         } else {
             orderCancelProgress.setVisibility(View.GONE);
-            cancelOrderButton.setVisibility(View.VISIBLE);
         }
     }
 
