@@ -55,11 +55,10 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
     TextView orderStatus;
 
     ImageView posterImageView;
-    FrameLayout cancelMessage;
     FrameLayout waitingFrame;
-    View orderCancelProgress;
 
 
+    ContinueCancelFragment continueCancelFragment;
     OrderObject order;
 
     Context context;
@@ -85,8 +84,6 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
         orderStatus = findViewById(R.id.order_status);
 
         posterImageView = findViewById(R.id.poster_image);
-        cancelMessage = findViewById(R.id.cancel_message);
-        orderCancelProgress = findViewById(R.id.order_cancel_progress);
         waitingFrame = findViewById(R.id.waiting_frame);
 
         Intent intent = getIntent();
@@ -95,6 +92,15 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
             int orderId = b.getInt("orderId");
             getOrderDetails(orderId);
         }
+
+        continueCancelFragment = ContinueCancelFragment.newInstance(
+                "Your are canceling the order",
+                "Should you cancel after confirmation you would still owe the full fee");
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.cancel_message, continueCancelFragment)
+                .commit();
+
         back.setOnClickListener(v -> finish());
         options.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(this, v);
@@ -162,22 +168,16 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
     }
 
     void checkIfUserWantsToCancel(){
-        cancelMessage.setVisibility(View.VISIBLE);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.cancel_message, ContinueCancelFragment.newInstance(
-                        "Your are canceling the order",
-                        "Should you cancel after confirmation you would still owe the full fee"))
-                .commit();
+        continueCancelFragment.appear();
     }
 
     void cancelOrder(){
-        showProgress(true);
+        continueCancelFragment.waiting();
         order.status = "CANCELED";
         try {
             new PostAsyncTask(this,context.getString(R.string.server) + "/set_order_status/"){
                 @Override
                 protected void onPostExecute(String response) {
-                    showProgress(false);
                     super.onPostExecute(response);
                 }
             }.execute(
@@ -186,7 +186,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
             ).get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
-            showProgress(false);
+            continueCancelFragment.dessapear();
         }
         finish();
     }
@@ -229,19 +229,10 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
                 .commit();
     }
 
-    void showProgress(boolean show){
-        if (show){
-            orderCancelProgress.setVisibility(View.VISIBLE);
-        } else {
-            orderCancelProgress.setVisibility(View.GONE);
-        }
-    }
-
     @Override
     public void onFragmentInteraction(boolean ok) {
         if (ok){
             cancelOrder();
         }
-        cancelMessage.setVisibility(View.GONE);
     }
 }

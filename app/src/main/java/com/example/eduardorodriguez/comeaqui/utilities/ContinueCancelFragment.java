@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -23,6 +25,9 @@ public class ContinueCancelFragment extends Fragment {
 
     Button continueButton;
     Button cancelButton;
+    CardView watingCard;
+    CardView cancelCard;
+    ConstraintLayout background;
 
     private OnFragmentInteractionListener mListener;
 
@@ -54,12 +59,35 @@ public class ContinueCancelFragment extends Fragment {
         TextView messageView = view.findViewById(R.id.message);
         continueButton = view.findViewById(R.id.continue_button);
         cancelButton = view.findViewById(R.id.cancel_button);
+        watingCard = view.findViewById(R.id.wait_card);
+        cancelCard = view.findViewById(R.id.cancel_card);
+        background = view.findViewById(R.id.background);
 
         titleView.setText(title);
         messageView.setText(message);
 
         setButtons();
         return view;
+    }
+
+    public void appear(){
+        cancelCard.setVisibility(View.VISIBLE);
+        watingCard.setVisibility(View.GONE);
+        background.setVisibility(View.VISIBLE);
+        background.setClickable(true);
+    }
+
+    public void dessapear(){
+        watingCard.setVisibility(View.GONE);
+        watingCard.setVisibility(View.GONE);
+        background.setVisibility(View.INVISIBLE);
+        background.setClickable(false);
+    }
+
+    public void waiting(){
+        background.setVisibility(View.INVISIBLE);
+        cancelCard.setVisibility(View.GONE);
+        watingCard.setVisibility(View.VISIBLE);
     }
 
     void setButtons(){

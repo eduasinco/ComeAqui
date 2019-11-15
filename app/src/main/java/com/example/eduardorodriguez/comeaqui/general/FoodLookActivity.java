@@ -81,6 +81,7 @@ public class FoodLookActivity extends AppCompatActivity {
 
     ImageView posterImage;
     LinearLayout paymentMethod;
+    LinearLayout profileLook;
     View placeOrderProgress;
     FrameLayout placeOrderErrorMessage;
     LinearLayout dinnersListView;
@@ -114,6 +115,7 @@ public class FoodLookActivity extends AppCompatActivity {
         changePaymentMethod = findViewById(R.id.change_payment);
         placeOrderProgress = findViewById(R.id.place_order_progress);
         dinnersListView = findViewById(R.id.dinners_list_view);
+        profileLook = findViewById(R.id.profile_look);
 
         waitingFrame = findViewById(R.id.waiting_frame);
         setToolbar();
@@ -134,8 +136,8 @@ public class FoodLookActivity extends AppCompatActivity {
     }
 
     void setToolbar(){
-        collapsingToolbar.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+        collapsingToolbar.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
         toolbar.setTitle("Food Post");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -265,7 +267,7 @@ public class FoodLookActivity extends AppCompatActivity {
 
         if(!foodPostDetail.owner.profile_photo.contains("no-image")) {
             Glide.with(this).load(foodPostDetail.owner.profile_photo).into(posterImage);
-            posterImage.setOnClickListener(v -> goToProfileView(foodPostDetail.owner));
+            profileLook.setOnClickListener(v -> goToProfileView(foodPostDetail.owner));
         }
 
         getSupportFragmentManager().beginTransaction()
