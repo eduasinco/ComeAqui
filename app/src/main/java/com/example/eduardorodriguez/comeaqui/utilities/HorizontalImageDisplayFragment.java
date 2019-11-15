@@ -109,20 +109,20 @@ public class HorizontalImageDisplayFragment extends Fragment {
         LinearLayout.LayoutParams lp;
         switch (style){
             case "CARD":
-                lp = new LinearLayout.LayoutParams(displayMetrics.widthPixels - dpToPx(100), dpToPx(200));
+                lp = new LinearLayout.LayoutParams(foodPostImageObjects.size() > 1 ? displayMetrics.widthPixels - dpToPx(100) : displayMetrics.widthPixels , dpToPx(200));
                 lp.setMargins(dpToPx(24), dpToPx(8), 0, dpToPx(8));
                 card.setLayoutParams(lp);
                 card.setRadius(dpToPx(8));
                 break;
             case "SMALL":
-                lp = new LinearLayout.LayoutParams((int) (parentView.getMeasuredWidth() * 0.7), dpToPx(100));
+                lp = new LinearLayout.LayoutParams(foodPostImageObjects.size() > 1 ? (int) (parentView.getMeasuredWidth() * 0.7) : parentView.getMeasuredWidth(), dpToPx(100));
                 lp.setMargins(0, 0, dpToPx(4), 0);
                 card.setLayoutParams(lp);
                 card.setRadius(0);
                 card.setElevation(0);
                 break;
             case "MEDIUM":
-                lp = new LinearLayout.LayoutParams((int) (parentView.getMeasuredWidth() * 0.7), dpToPx(200));
+                lp = new LinearLayout.LayoutParams(foodPostImageObjects.size() > 1 ? (int) (parentView.getMeasuredWidth() * 0.7) : parentView.getMeasuredWidth(), dpToPx(200));
                 lp.setMargins(0, 0, dpToPx(8), 0);
                 card.setLayoutParams(lp);
                 card.setRadius(0);
