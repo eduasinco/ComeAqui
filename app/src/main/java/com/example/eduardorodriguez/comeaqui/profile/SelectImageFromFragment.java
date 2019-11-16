@@ -23,7 +23,6 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.yalantis.ucrop.UCrop;
@@ -107,7 +106,7 @@ public class SelectImageFromFragment extends Fragment {
         });
 
         selectFromCamera.setOnClickListener(v -> {
-            checkCameraPermission();
+            checkPermissions();
         });
 
         selectFromGallery.setOnClickListener(v -> {
@@ -269,75 +268,60 @@ public class SelectImageFromFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    int MY_PERMISSIONS_REQUEST_CAMERA = 1;
-    void showNoLocationNotification(){
+    void showNoAccessNotification(String title, String message) {
         new AlertDialog.Builder(getContext())
-                .setTitle("ComeAqui Location")
-                .setMessage("We need your location to show you who is offering food and for them to see you")
+                .setTitle(title)
+                .setMessage(message)
                 .setPositiveButton("OK", (dialogInterface, i) -> {
-                    ActivityCompat.requestPermissions(getActivity(),
-                            new String[]{Manifest.permission.CAMERA},
-                            MY_PERMISSIONS_REQUEST_CAMERA);
+                    requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE},
+                            READ_EX_STORAGE_AND_CAMERA);
                 })
                 .create()
                 .show();
     }
-    public boolean checkCameraPermission(){
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.CAMERA},
-                    MY_PERMISSIONS_REQUEST_CAMERA);
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    Manifest.permission.CAMERA)) {
-                showNoLocationNotification();
-            } else {
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_CAMERA);
-            }
-            Toast.makeText(getContext(), "Not camera access", Toast.LENGTH_LONG).show();
-            return false;
-        } else {
-            requestRead();
-            return true;
-        }
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        if (requestCode == MY_PERMISSIONS_REQUEST_CAMERA) {
-            if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (ContextCompat.checkSelfPermission(getContext(),
-                        Manifest.permission.ACCESS_FINE_LOCATION)
-                        == PackageManager.PERMISSION_GRANTED) {
-                    requestRead();
+        switch (requestCode){
+            case READ_EX_STORAGE_AND_CAMERA:
+                if (
+                        grantResults[0] != PackageManager.PERMISSION_GRANTED &&
+                        grantResults[1] != PackageManager.PERMISSION_GRANTED) {
+                    showNoAccessNotification("Camera and storage access",
+                            "In order to obtain best quality images we need access to camera and external storage");
+                } else if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    showNoAccessNotification("Camera access","In order to capture images we need access to camera");
+                } else if (grantResults[1] != PackageManager.PERMISSION_GRANTED) {
+                    showNoAccessNotification("Storage access", "In order to obtain best quality images we need access external storage");
+                } else {
+                    dispatchTakePictureIntent();
                 }
-            } else {
-                showNoLocationNotification();
-            }
-        }
-
-        if (requestCode == MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                dispatchTakePictureIntent();
-            } else {
-                Toast.makeText(getContext(), "Permission Denied", Toast.LENGTH_SHORT).show();
-            }
-            return;
+                return;
         }
     }
 
-    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 33;
-    public void requestRead() {
+    private static final int READ_EX_STORAGE_AND_CAMERA = 3;
+    public void checkPermissions() {
         if (ContextCompat.checkSelfPermission(getContext(),
                 Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED ||  ContextCompat.checkSelfPermission(getContext(),
+                Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.CAMERA) && ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                showNoAccessNotification("Camera and storage access",
+                        "In order to obtain best quality images we need access to camera and external storage");
+            } else if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.CAMERA)) {
+                showNoAccessNotification("Camera access","In order to capture images we need access to camera");
+            } else if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE)){
+                showNoAccessNotification("Storage access", "In order to obtain best quality images we need access external storage");
+            } else {
+                requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EX_STORAGE_AND_CAMERA);
+            }
         } else {
             dispatchTakePictureIntent();
         }
