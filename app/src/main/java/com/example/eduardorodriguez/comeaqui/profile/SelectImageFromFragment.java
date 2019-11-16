@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
@@ -17,6 +18,7 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,15 +28,13 @@ import android.widget.Toast;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.yalantis.ucrop.UCrop;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
+import static com.yalantis.ucrop.UCrop.REQUEST_CROP;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,7 +59,6 @@ public class SelectImageFromFragment extends Fragment {
     ConstraintLayout outOfCard;
 
     String SAMPLE_CROP_IMAGE_NAME = "SampleCropImage";
-    static final int REQUEST_IMAGE_CAPTURE = 2;
     public static final int PICK_IMAGE = 1;
 
     public SelectImageFromFragment() {
@@ -131,10 +130,41 @@ public class SelectImageFromFragment extends Fragment {
         });
     }
 
-    private void openCamera(){
-        Intent m_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(m_intent, REQUEST_IMAGE_CAPTURE);
+    File photoFile;
+    static final int REQUEST_TAKE_PHOTO = 2;
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+            }
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(getContext(),
+                        "com.example.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+        }
     }
+
+    String currentPhotoPath;
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+
     private void openGallery(){
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -144,41 +174,34 @@ public class SelectImageFromFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
-            Uri selectedImage = data.getData();
-            if (selectedImage != null) {
-                if (isProfile){
-                    startCrop(selectedImage);
-                } else {
-                    onButtonPressed(selectedImage);
-                }
-            }
-
-        } else if(requestCode == UCrop.REQUEST_CROP && resultCode == RESULT_OK){
-            Uri imageUri = UCrop.getOutput(data);
-            if(imageUri != null){
-                onButtonPressed(imageUri);
-            }
-        } else if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
-            File file = createImageFile();
-            if (file != null) {
-                FileOutputStream fout;
-                try {
-                    fout = new FileOutputStream(file);
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    ((Bitmap) data.getExtras().get("data")).compress(Bitmap.CompressFormat.PNG, 100, fout);
-                    fout.flush();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                Uri imageUri = Uri.fromFile(file);
-                if (imageUri != null) {
-                    if (isProfile){
-                        startCrop(imageUri);
-                    } else {
+        if (resultCode == RESULT_OK){
+            switch (requestCode){
+                case PICK_IMAGE:
+                    Uri selectedImage = data.getData();
+                    if (selectedImage != null) {
+                        if (isProfile){
+                            startCrop(selectedImage);
+                        } else {
+                            onButtonPressed(selectedImage);
+                        }
+                    }
+                    break;
+                case REQUEST_CROP:
+                    Uri imageUri = UCrop.getOutput(data);
+                    if(imageUri != null){
                         onButtonPressed(imageUri);
                     }
-                }
+                    break;
+                case REQUEST_TAKE_PHOTO:
+                    Uri photoUri = Uri.fromFile(photoFile);
+                    if (photoUri != null) {
+                        if (isProfile) {
+                            startCrop(photoUri);
+                        } else {
+                            onButtonPressed(photoUri);
+                        }
+                    }
+                    break;
             }
         }
     }
@@ -209,23 +232,6 @@ public class SelectImageFromFragment extends Fragment {
         options.setToolbarTitle("Image Crop");
 
         return options;
-    }
-
-    public File createImageFile() {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File mFileTemp = null;
-        String root = view.getContext().getDir("my_sub_dir",Context.MODE_PRIVATE).getAbsolutePath();
-        File myDir = new File(root + "/Img");
-        if(!myDir.exists()){
-            myDir.mkdirs();
-        }
-        try {
-            mFileTemp=File.createTempFile(imageFileName,".jpg",myDir.getAbsoluteFile());
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return mFileTemp;
     }
 
 
@@ -293,7 +299,7 @@ public class SelectImageFromFragment extends Fragment {
             Toast.makeText(getContext(), "Not camera access", Toast.LENGTH_LONG).show();
             return false;
         } else {
-            openCamera();
+            requestRead();
             return true;
         }
     }
@@ -306,11 +312,34 @@ public class SelectImageFromFragment extends Fragment {
                 if (ContextCompat.checkSelfPermission(getContext(),
                         Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED) {
-                    openCamera();
+                    requestRead();
                 }
             } else {
                 showNoLocationNotification();
             }
+        }
+
+        if (requestCode == MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                dispatchTakePictureIntent();
+            } else {
+                Toast.makeText(getContext(), "Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+    }
+
+    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 33;
+    public void requestRead() {
+        if (ContextCompat.checkSelfPermission(getContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+        } else {
+            dispatchTakePictureIntent();
         }
     }
 }
