@@ -38,7 +38,7 @@ public class FoodTimePickerFragment extends Fragment {
 
     boolean isNow = false;
     String postTimeString;
-    int MINUTES = 0;
+    int MINUTES = 30;
 
     public FoodTimePickerFragment() {}
     public static FoodTimePickerFragment newInstance() {
@@ -80,7 +80,7 @@ public class FoodTimePickerFragment extends Fragment {
             mListener.onFragmentInteraction(postTimeString);
 
             isNow = true;
-            timeTextView.setText("Now (the post will be visible for an hour)");
+            timeTextView.setText("Now (the post will be visible during " + MINUTES + " minutes from now)");
             nowButton.setBackgroundColor(Color.TRANSPARENT);
             scheduleButton.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.text_input_shape));
             showTimePicker(false);

@@ -275,7 +275,7 @@ public class FoodLookActivity extends AppCompatActivity {
                 .commit();
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(foodPostDetail.id, "MEDIUM"))
+                .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(foodPostDetail.id, 0, 4, 200,0, 0))
                 .commit();
 
         setPlaceButton();

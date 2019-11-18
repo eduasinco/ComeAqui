@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.*;
 import com.example.eduardorodriguez.comeaqui.general.StaticMapFragment;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
+import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
@@ -30,6 +31,8 @@ import com.google.gson.JsonParser;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+import static com.example.eduardorodriguez.comeaqui.App.USER;
 
 public class NotificationLookActivity extends AppCompatActivity {
 
@@ -147,6 +150,10 @@ public class NotificationLookActivity extends AppCompatActivity {
             case "CANCELED":
                 orderAction.setText("Canceled the meal");
                 orderAction.setBackground(ContextCompat.getDrawable(this, R.color.canceled));
+
+                if(!orderObject.owner.profile_photo.contains("no-image")){
+                    Glide.with(this).load(orderObject.owner.profile_photo).into(dinnerImage);
+                }
                 break;
             case "FINISHED":
                 orderAction.setText("Has eaten with you");
@@ -154,6 +161,10 @@ public class NotificationLookActivity extends AppCompatActivity {
                 break;
         }
 
+        User userToShow = orderObject.owner.id == USER.id  ? orderObject.poster : orderObject.owner;
+        if(!userToShow.profile_photo.contains("no-image")){
+            Glide.with(this).load(userToShow.profile_photo).into(dinnerImage);
+        }
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("type", orderObject.post.type);
@@ -163,10 +174,8 @@ public class NotificationLookActivity extends AppCompatActivity {
                 .replace(R.id.types, fragment)
                 .commit();
 
-
-        if(!orderObject.poster.profile_photo.contains("no-image")) Glide.with(this).load(orderObject.poster.profile_photo).into(dinnerImage);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(orderObject.post.id, "CARD"))
+                .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(orderObject.post.id,24, 8, 200,4, 4))
                 .commit();
 
         getSupportFragmentManager().beginTransaction()

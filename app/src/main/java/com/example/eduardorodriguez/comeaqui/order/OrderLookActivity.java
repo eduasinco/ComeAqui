@@ -221,7 +221,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
         }
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(order.post.id, "CARD"))
+                .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(order.post.id,24, 8, 200,4, 4))
                 .commit();
 
         getSupportFragmentManager().beginTransaction()

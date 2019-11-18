@@ -12,6 +12,7 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -33,9 +34,18 @@ import java.util.concurrent.TimeoutException;
 
 public class HorizontalImageDisplayFragment extends Fragment {
     private static final String FOOD_POST_ID = "foodPostId";
-    private static final String STYLE = "style";
+    private static final String PADDING = "padding";
+    private static final String GAP = "gap";
+    private static final String HEIGHT = "height";
+    private static final String RADIUS = "radius";
+    private static final String ELEVATION = "radius";
+    private int padding;
+    private int gap;
+    private int height;
+    private int radius;
+    private int elevation;
+
     private int foodPostId;
-    private String style;
     private OnFragmentInteractionListener mListener;
 
     DisplayMetrics displayMetrics;
@@ -46,11 +56,15 @@ public class HorizontalImageDisplayFragment extends Fragment {
     ConstraintLayout parentView;
 
     public HorizontalImageDisplayFragment() {}
-    public static HorizontalImageDisplayFragment newInstance(int foodPostId, String style) {
+    public static HorizontalImageDisplayFragment newInstance(int foodPostId, int padding, int gap, int height, int radius, int elevation) {
         HorizontalImageDisplayFragment fragment = new HorizontalImageDisplayFragment();
         Bundle args = new Bundle();
         args.putInt(FOOD_POST_ID, foodPostId);
-        args.putString(STYLE, style);
+        args.putInt(PADDING, padding);
+        args.putInt(GAP, gap);
+        args.putInt(HEIGHT, height);
+        args.putInt(RADIUS, radius);
+        args.putInt(ELEVATION, elevation);
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,8 +73,13 @@ public class HorizontalImageDisplayFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            displayMetrics = getContext().getResources().getDisplayMetrics();
             foodPostId = getArguments().getInt(FOOD_POST_ID);
-            style = getArguments().getString(STYLE);
+            padding = dpToPx(getArguments().getInt(PADDING));
+            gap = dpToPx(getArguments().getInt(GAP));
+            height = dpToPx(getArguments().getInt(HEIGHT));
+            radius = dpToPx(getArguments().getInt(RADIUS));
+            elevation = dpToPx(getArguments().getInt(ELEVATION));
         }
     }
 
@@ -80,14 +99,13 @@ public class HorizontalImageDisplayFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_horizontal_image_display, container, false);
         imageList = view.findViewById(R.id.images_list);
         parentView = view.findViewById(R.id.parent_view);
-        displayMetrics = view.getContext().getResources().getDisplayMetrics();
         return view;
     }
     void setImages(){
         imageList.removeAllViews();
         for (int i = 0; i < foodPostImageObjects.size(); i++){
             FoodPostImageObject io = foodPostImageObjects.get(i);
-            CardView card = createCard();
+            CardView card = createCard(i);
             ImageView imageView = new ImageView(getContext());
             imageView.setLayoutParams(new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
@@ -96,6 +114,7 @@ public class HorizontalImageDisplayFragment extends Fragment {
 
             card.addView(imageView);
             imageList.addView(card);
+
             final int fi = i;
             if(!io.image.contains("no-image")) {
                 Glide.with(getContext()).load(io.image).into(imageView);
@@ -104,31 +123,21 @@ public class HorizontalImageDisplayFragment extends Fragment {
         }
     }
 
-    CardView createCard(){
+    CardView createCard(int i){
         CardView card = new CardView(Objects.requireNonNull(getContext()));
         LinearLayout.LayoutParams lp;
-        switch (style){
-            case "CARD":
-                lp = new LinearLayout.LayoutParams(foodPostImageObjects.size() > 1 ? displayMetrics.widthPixels - dpToPx(100) : displayMetrics.widthPixels , dpToPx(200));
-                lp.setMargins(dpToPx(24), dpToPx(8), 0, dpToPx(8));
-                card.setLayoutParams(lp);
-                card.setRadius(dpToPx(8));
-                break;
-            case "SMALL":
-                lp = new LinearLayout.LayoutParams(foodPostImageObjects.size() > 1 ? (int) (parentView.getMeasuredWidth() * 0.7) : parentView.getMeasuredWidth(), dpToPx(100));
-                lp.setMargins(0, 0, dpToPx(4), 0);
-                card.setLayoutParams(lp);
-                card.setRadius(0);
-                card.setElevation(0);
-                break;
-            case "MEDIUM":
-                lp = new LinearLayout.LayoutParams(foodPostImageObjects.size() > 1 ? (int) (parentView.getMeasuredWidth() * 0.7) : parentView.getMeasuredWidth(), dpToPx(200));
-                lp.setMargins(0, 0, dpToPx(8), 0);
-                card.setLayoutParams(lp);
-                card.setRadius(0);
-                card.setElevation(0);
-                break;
+        lp = new LinearLayout.LayoutParams(foodPostImageObjects.size() > 1 ? (int) (parentView.getMeasuredWidth() * 0.7) : parentView.getMeasuredWidth(), height);
+        if (i == 0){
+            lp.setMargins(padding, elevation, 0, elevation*2);
+        } else {
+            lp.setMargins(gap, elevation, 0, elevation*2);
         }
+        if (foodPostImageObjects.size() > 1 && i == foodPostImageObjects.size() - 1){
+            lp.setMargins(gap, elevation, padding, elevation*2);
+        }
+        card.setLayoutParams(lp);
+        card.setRadius(radius);
+        card.setElevation(elevation);
         return card;
     }
 

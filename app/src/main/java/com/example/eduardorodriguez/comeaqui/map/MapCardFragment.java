@@ -84,7 +84,7 @@ public class MapCardFragment extends Fragment {
                 .commit();
 
         getChildFragmentManager().beginTransaction()
-                .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(foodPost.id,"SMALL"))
+                .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(foodPost.id, 0, 4, 100, 0, 0))
                 .commit();
 
         favouriteId = foodPost.favouriteId;
