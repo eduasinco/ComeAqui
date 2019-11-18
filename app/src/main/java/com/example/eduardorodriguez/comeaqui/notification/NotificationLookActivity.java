@@ -136,7 +136,7 @@ public class NotificationLookActivity extends AppCompatActivity {
         posterLocationView.setText(orderObject.post.address);
         priceView.setText(orderObject.post.price);
         timeView.setText(orderObject.post.time);
-        rating.setText(orderObject.poster.rating + "");
+        rating.setText(String.format("%.01f", orderObject.poster.rating));
 
         switch (orderObject.status){
             case "PENDING":
