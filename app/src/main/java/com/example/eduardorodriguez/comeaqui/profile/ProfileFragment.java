@@ -153,7 +153,6 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
             selectImageFromFragment.showCard();
 
         });
-        settingsButton.setVisibility(View.GONE);
         if (user.id == USER.id){
             settingsButton.setVisibility(View.VISIBLE);
             setSettingsButton();

@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#92278f</color>
     <color name="colorPrimaryDark">#6B0067</color>
-    <color name="colorPrimaryLight">#945890</color>
+    <color name="colorPrimaryLight">#945990</color>
     <color name="colorPrimaryDim">#B98EB5</color>
     <color name="colorPrimary_trans">#9992278F</color>
     <color name="colorPrimaryLighter">#FFDBF9</color>
