@@ -1,6 +1,7 @@
 package com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details;
 
 import android.content.Intent;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -8,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.login_and_register.ChangePasswordActivity;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.confirm_email.ConfirmEmailActivity;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
@@ -27,6 +29,7 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
     private EditText lastName;
     private TextView phoneNumber;
     private TextView emailAddress;
+    private Button changePassword;
 
     @Override
     protected void onResume() {
@@ -43,6 +46,7 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
         lastName = findViewById(R.id.last_name);
         phoneNumber = findViewById(R.id.phone_number);
         emailAddress = findViewById(R.id.email_address);
+        changePassword = findViewById(R.id.change_password);
         TextView save = findViewById(R.id.save);
         LinearLayout paymentMethod = findViewById(R.id.payment_method);
 
@@ -55,6 +59,7 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
 
         emailAddress.setOnClickListener(v -> goToChangeEmail());
         save.setOnClickListener(v -> saveData());
+        changePassword.setOnClickListener((v) -> startActivity(new Intent(this, ChangePasswordActivity.class)));
     }
 
     public void initializeUser(){

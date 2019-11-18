@@ -16,18 +16,13 @@ import com.example.eduardorodriguez.comeaqui.login_and_register.LoginOrRegisterA
 public class SettingsActivity extends AppCompatActivity {
 
     TextView signOut;
-    TextView changePassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-
         signOut = findViewById(R.id.sign_out);
-        changePassword = findViewById(R.id.change_password);
-
         signOut.setOnClickListener((v) -> signOut());
-        changePassword.setOnClickListener((v) -> startActivity(new Intent(this, ChangePasswordActivity.class)));
     }
 
     private void signOut(){
