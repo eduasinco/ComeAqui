@@ -73,7 +73,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="0"
                             android:paddingLeft="4dp"
-                            app:srcCompat="@android:drawable/star_big_off" />
+                            app:srcCompat="@drawable/start_black" />
 
                         <TextView
                             android:id="@+id/rating"

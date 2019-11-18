@@ -89,9 +89,6 @@ public class NotificationLookActivity extends AppCompatActivity {
             getOrderObject(orderId);
         }
         backView.setOnClickListener(v -> finish());
-        dinnerImage.setOnClickListener(v -> {
-            goToProfileView();
-        });
     }
 
     void getOrderObject(int orderId){
@@ -182,7 +179,9 @@ public class NotificationLookActivity extends AppCompatActivity {
                 .replace(R.id.static_map_frame, StaticMapFragment.newInstance(orderObject.post.lat, orderObject.post.lng))
                 .commit();
 
-
+        dinnerImage.setOnClickListener(v -> {
+            goToProfileView(userToShow.id);
+        });
         setConfirmCancelButton();
     }
 
@@ -234,9 +233,9 @@ public class NotificationLookActivity extends AppCompatActivity {
         }
     }
 
-    void goToProfileView(){
+    void goToProfileView(int userId){
         Intent k = new Intent(this, ProfileViewActivity.class);
-        k.putExtra("userId", orderObject.poster.id);
+        k.putExtra("userId", userId);
         startActivity(k);
     }
 }
