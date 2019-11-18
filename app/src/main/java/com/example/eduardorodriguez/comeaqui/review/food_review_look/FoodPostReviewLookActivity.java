@@ -121,7 +121,7 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
             fpId = b.getInt("foodPostId");
             getReviewsFrompFoodPost(fpId);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(fpId, 0, 4, 100,0, 0))
+                    .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(fpId, 0, 4, 200,0, 0))
                     .commit();
         }
 
