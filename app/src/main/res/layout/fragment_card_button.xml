@@ -95,7 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="_ . __€"
+                android:text="_ . __$"
                 android:textAlignment="textEnd"
                 app:layout_constraintBottom_toBottomOf="@+id/time"
                 app:layout_constraintEnd_toEndOf="parent" />

@@ -46,7 +46,7 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
         final FoodPost foodPost = mValues.get(position);
 
         holder.postNameView.setText(foodPost.plate_name);
-        holder.postPrice.setText(foodPost.price + "€");
+        holder.postPrice.setText(foodPost.price + "$");
         holder.postTime.setText(foodPost.time);
         holder.posterDescriptionView.setText(foodPost.description);
 

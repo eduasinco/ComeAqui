@@ -41,7 +41,7 @@ public class MyPostAndReviewsRecyclerViewAdapter extends RecyclerView.Adapter<My
         final FoodPostReview foodPost = mValues.get(position);
 
         holder.postNameView.setText(foodPost.plate_name);
-        holder.postPrice.setText(foodPost.price + "€");
+        holder.postPrice.setText(foodPost.price + "$");
         holder.postTime.setText(foodPost.time);
         holder.posterDescriptionView.setText(foodPost.description);
 

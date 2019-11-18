@@ -211,7 +211,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="_ . __€"
+                    android:text="_ . __$"
                     android:textAlignment="textEnd"
                     android:textColor="@color/grey"
                     app:layout_constraintBottom_toBottomOf="@+id/time"

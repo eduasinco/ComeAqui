@@ -182,7 +182,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="-.--€"
+                    android:text="-.--$"
                     android:textAlignment="textEnd"
                     android:textColor="@color/grey"
                     android:textSize="14sp" />

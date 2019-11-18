@@ -253,7 +253,7 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
         postNameView.setText(foodPostReview.plate_name);
         posterDescriptionView.setText(foodPostReview.description);
         posterDescriptionView.setVisibility(View.VISIBLE);
-        postPrice.setText(foodPostReview.price + "€");
+        postPrice.setText(foodPostReview.price + "$");
 
         String rating = "-.-";
         if (foodPostReview.rating != 0){
