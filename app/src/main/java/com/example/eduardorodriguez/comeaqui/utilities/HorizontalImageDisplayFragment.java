@@ -126,14 +126,18 @@ public class HorizontalImageDisplayFragment extends Fragment {
     CardView createCard(int i){
         CardView card = new CardView(Objects.requireNonNull(getContext()));
         LinearLayout.LayoutParams lp;
-        lp = new LinearLayout.LayoutParams(foodPostImageObjects.size() > 1 ? (int) (parentView.getMeasuredWidth() * 0.7) : parentView.getMeasuredWidth(), height);
+        lp = new LinearLayout.LayoutParams(foodPostImageObjects.size() > 1 ? (int) (parentView.getMeasuredWidth() * 0.7) : parentView.getMeasuredWidth() - padding * 2, height);
         if (i == 0){
             lp.setMargins(padding, elevation, 0, elevation*2);
         } else {
             lp.setMargins(gap, elevation, 0, elevation*2);
         }
-        if (foodPostImageObjects.size() > 1 && i == foodPostImageObjects.size() - 1){
-            lp.setMargins(gap, elevation, padding, elevation*2);
+        if (i == foodPostImageObjects.size() - 1){
+            if (foodPostImageObjects.size() > 1){
+                lp.setMargins(gap, elevation, padding, elevation*2);
+            } else {
+                // lp.setMargins(0, elevation, padding, elevation*2);
+            }
         }
         card.setLayoutParams(lp);
         card.setRadius(radius);

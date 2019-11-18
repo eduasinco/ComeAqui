@@ -54,7 +54,7 @@ public class GuestsReviewActivity extends AppCompatActivity implements StarReaso
                 Glide.with(this).load(orderObject.poster.profile_photo).into(guestImage);
             }
             guestName.setText(orderObject.owner.first_name);
-            rating.setText(orderObject.owner.rating + "");
+            rating.setText(String.format("%.01f", orderObject.owner.rating));
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.star_rating_fr, StarReasonFragment.newInstance())
