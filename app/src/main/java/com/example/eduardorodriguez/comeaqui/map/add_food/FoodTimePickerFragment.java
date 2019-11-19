@@ -74,7 +74,7 @@ public class FoodTimePickerFragment extends Fragment {
     void setButtonsLogic(){
         nowButton.setOnClickListener(v -> {
             Date postTimeDate = new Date(System.currentTimeMillis() + MINUTES * 60 * 1000);
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd H H:mm:ss.SSSSSS");
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
             format.setTimeZone(TimeZone.getTimeZone("UTC"));
             postTimeString = format.format(postTimeDate);
             mListener.onFragmentInteraction(postTimeString);
