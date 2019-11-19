@@ -81,13 +81,6 @@
             app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="350dp"
             android:visibility="gone"/>
 
-    <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp" app:srcCompat="@drawable/cross_sign"
-            android:id="@+id/cancel_post" android:layout_marginTop="16dp"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="16dp" android:visibility="gone"/>
-
     <FrameLayout
         android:id="@+id/map_picker_frame"
         android:layout_width="match_parent"
@@ -105,5 +98,16 @@
         app:layout_constraintTop_toTopOf="parent">
 
     </FrameLayout>
+
+    <ImageView
+        android:id="@+id/cancel_post"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/close_map" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

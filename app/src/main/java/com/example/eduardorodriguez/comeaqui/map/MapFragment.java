@@ -179,8 +179,10 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
                         JsonObject jo = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject();
                         FoodPost fp = new FoodPost(jo.get("post").getAsJsonObject());
                         if (jo.get("delete").getAsBoolean()){
-                            Marker marker = markerHashMap.get(fp.id);
-                            marker.remove();
+                            if (markerHashMap.containsKey(fp.id)){
+                                Marker marker = markerHashMap.get(fp.id);
+                                marker.remove();
+                            }
                         } else {
                             foodPostHashMap.put(fp.id, fp);
                             Marker marker =  googleMap.addMarker(new MarkerOptions().position(new LatLng(fp.lat, fp.lng)));

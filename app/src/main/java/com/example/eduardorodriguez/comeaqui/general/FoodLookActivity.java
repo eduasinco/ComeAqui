@@ -183,7 +183,7 @@ public class FoodLookActivity extends AppCompatActivity {
         PopupMenu popupMenu = new PopupMenu(this, findViewById(R.id.action_settings));
         if (foodPostDetail.owner.id == USER.id){
             popupMenu.getMenu().add("Edit");
-            if (foodPostDetail.confirmedOrdersList.size() == 0){
+            if (foodPostDetail.confirmedOrdersList.size() == 0 ||(foodPostDetail.confirmedOrdersList.size() > 0 && foodPostDetail.confirmedOrdersList.get(0).status.equals("FINISHED"))){
                 popupMenu.getMenu().add("Delete");
             }
         } else {
