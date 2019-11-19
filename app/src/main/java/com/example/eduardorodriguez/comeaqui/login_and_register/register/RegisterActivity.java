@@ -206,8 +206,8 @@ public class RegisterActivity extends AppCompatActivity {
     boolean valid(){
         boolean valid = true;
 
-        if (TextUtils.isEmpty(username.getText().toString())){
-            showValtext(usernameValtext, "Please, insert a username ", username);
+        if (TextUtils.isEmpty(username.getText().toString()) && !username.getText().toString().matches("[A-Za-z0-9_]+")){
+            showValtext(usernameValtext, "Please, insert a valid username ", username);
             valid = false;
         }
 

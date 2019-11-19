@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -14,6 +15,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.eduardorodriguez.comeaqui.login_and_register.LoginOrRegisterActivity;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
@@ -96,6 +98,8 @@ public class PrepareActivity extends AppCompatActivity {
                         editor.apply();
                         USER = new User(new JsonParser().parse(response).getAsJsonArray().get(0).getAsJsonObject());
                         getFirebaseToken();
+                    } else {
+                        signOut();
                     }
                     super.onPostExecute(response);
                 }
@@ -114,5 +118,17 @@ public class PrepareActivity extends AppCompatActivity {
         k.putExtra("tab", tab);
         startActivity(k);
         overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
+    }
+
+    private void signOut(){
+        SharedPreferences pref = getSharedPreferences("Login", Context.MODE_PRIVATE);
+        SharedPreferences.Editor edt = pref.edit();
+        edt.putBoolean("signed_in", false);
+        edt.remove("email");
+        edt.remove("password");
+        edt.apply();
+
+        Intent bactToLogin = new Intent(this, LoginOrRegisterActivity.class);
+        startActivity(bactToLogin);
     }
 }
