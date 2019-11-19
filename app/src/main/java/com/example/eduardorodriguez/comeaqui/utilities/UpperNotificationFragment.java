@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.general.FoodLookActivity;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
@@ -71,6 +72,18 @@ public class UpperNotificationFragment extends Fragment {
 
         setCardView(orderCard);
         setCardView(postCard);
+
+        orderCard.setOnClickListener(v -> {
+            Intent goToOrders = new Intent(getContext(), OrderLookActivity.class);
+            goToOrders.putExtra("orderId", orderObject.id);
+            startActivity(goToOrders);
+        });
+
+        postCard.setOnClickListener(v -> {
+            Intent foodLook = new Intent(getContext(), FoodLookActivity.class);
+            foodLook.putExtra("foodPostId", orderPost.post.id);
+            startActivity(foodLook);
+        });
         return view;
     }
 
