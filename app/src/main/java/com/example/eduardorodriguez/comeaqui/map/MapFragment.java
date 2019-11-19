@@ -63,6 +63,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
 
     MapPickerFragment mapPickerFragment;
     MapCardFragment mapCardFragment;
+    UpperNotificationFragment upperNotificationFragment;
 
     FloatingActionButton myFab;
     FloatingActionButton centerButton;
@@ -116,6 +117,10 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
         }
     }
 
+    public void refreshUpperNotifications(){
+        upperNotificationFragment.refreshUpperNotifications();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_map, container, false);
@@ -129,8 +134,9 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.map_picker_frame, mapPickerFragment)
                 .commit();
+        upperNotificationFragment = UpperNotificationFragment.newInstance();
         getFragmentManager().beginTransaction()
-                .replace(R.id.upper_notification, UpperNotificationFragment.newInstance())
+                .replace(R.id.upper_notification, upperNotificationFragment)
                 .commit();
         mapCardFragment = MapCardFragment.newInstance();
         getFragmentManager().beginTransaction()

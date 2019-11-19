@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -15,8 +16,11 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.example.eduardorodriguez.comeaqui.R;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -38,6 +42,7 @@ public class StaticMapFragment extends Fragment {
     DisplayMetrics displayMetrics;
     private static GoogleMap googleMap;
     MapView staticMapView;
+    CardView cardView;
 
     public StaticMapFragment() {}
 
@@ -64,12 +69,14 @@ public class StaticMapFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_static_map, container, false);
         staticMapView = view.findViewById(R.id.static_map);
+        cardView = view.findViewById(R.id.card);
+
         staticMapView.onCreate(savedInstanceState);
         staticMapView.onResume();
         staticMapView.getMapAsync(mMap -> setMap(mMap));
         displayMetrics = getResources().getDisplayMetrics();
 
-        staticMapView.setOnClickListener(v -> {
+        cardView.setOnClickListener(v -> {
             Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + lat + "," + lng));
             startActivity(intent);
         });
@@ -84,6 +91,7 @@ public class StaticMapFragment extends Fragment {
 
     void setMap(GoogleMap mMap){
         googleMap = mMap;
+        googleMap.getUiSettings().setAllGesturesEnabled(false);
         googleMap.getUiSettings().setMyLocationButtonEnabled(true);
         googleMap.getUiSettings().setMapToolbarEnabled(true);
 
@@ -94,6 +102,7 @@ public class StaticMapFragment extends Fragment {
 
         Marker marker =  googleMap.addMarker(new MarkerOptions().position(location));
         marker.setIcon(getMarkerIconFromDrawable(ContextCompat.getDrawable(getContext(), R.drawable.map_icon)));
+
     }
 
     private static BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable) {

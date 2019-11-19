@@ -146,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
         navMap.setOnClickListener(v -> {
             mainFrame.setVisibility(View.INVISIBLE);
             openFragment(0);
+            mapFragment.refreshUpperNotifications();
         });
         navOrders.setOnClickListener(v -> {
             openFragment(1);

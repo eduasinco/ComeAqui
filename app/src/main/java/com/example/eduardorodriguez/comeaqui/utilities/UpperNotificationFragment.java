@@ -51,8 +51,6 @@ public class UpperNotificationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getConfirmedOrders();
-        getConfirmedFoodPosts();
     }
 
     @Override
@@ -76,6 +74,18 @@ public class UpperNotificationFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getConfirmedOrders();
+        getConfirmedFoodPosts();
+    }
+
+    public void refreshUpperNotifications(){
+        getConfirmedOrders();
+        getConfirmedFoodPosts();
+    }
+
     void setOrderCard(){
         if (orderObject != null){
             orderCard.setVisibility(View.VISIBLE);
@@ -86,6 +96,8 @@ public class UpperNotificationFragment extends Fragment {
             if(!orderObject.poster.profile_photo.contains("no-image")) {
                 Glide.with(getActivity()).load(orderObject.poster.profile_photo).into(posterImage);
             }
+        } else {
+            orderCard.setVisibility(View.GONE);
         }
     }
 
@@ -93,6 +105,8 @@ public class UpperNotificationFragment extends Fragment {
         if (orderPost != null){
             postCard.setVisibility(View.VISIBLE);
             time2.setText(orderPost.post.time);
+        } else {
+            postCard.setVisibility(View.GONE);
         }
     }
     
