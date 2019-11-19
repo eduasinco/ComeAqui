@@ -166,43 +166,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center"
-                android:text="Email or Phone"
+                android:text="Email"
                 android:textColor="@color/colorPrimary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/email_button"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/text_input_shape"
-                    android:text="email"
-                    android:textColor="@color/colorPrimary" />
-
-                <Button
-                    android:id="@+id/phone_button"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/text_input_shape"
-                    android:text="phone"
-                    android:textColor="@color/colorPrimary" />
-            </LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/email_whole"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                tools:visibility="gone">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/email_valtext"
@@ -224,52 +197,8 @@
                     android:hint="Email"
                     android:inputType="textEmailAddress"
                     android:paddingStart="16dp"
+                    android:visibility="visible"
                     tools:visibility="visible" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/phone_valtext"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Error"
-                    android:textColor="@color/canceled"
-                    android:textStyle="bold"
-                    android:visibility="gone"
-                    tools:visibility="gone" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/phone_whole"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="8dp"
-                    tools:visibility="gone">
-
-                    <com.rilixtech.widget.countrycodepicker.CountryCodePicker
-                        android:id="@+id/ccp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <EditText
-                        android:id="@+id/phone_number_edt"
-                        android:layout_width="0dp"
-                        android:layout_height="46dp"
-                        android:background="@drawable/text_input_shape"
-                        android:hint="Phone"
-                        android:inputType="phone"
-                        android:paddingStart="16dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/ccp"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
 
             <TextView

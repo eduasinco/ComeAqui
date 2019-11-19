@@ -55,12 +55,8 @@ public class RegisterActivity extends AppCompatActivity {
     EditText username;
     EditText name;
     EditText surname;
-    Button emailButton;
-    Button phoneButton;
     EditText email;
     CountryCodePicker ccp;
-    EditText phone;
-    ConstraintLayout phoneWhole;
     EditText password;
     TextView validationText;
     Button registerButton;
@@ -71,7 +67,6 @@ public class RegisterActivity extends AppCompatActivity {
     TextView surnameValtext;
     TextView usernameValtext;
     TextView passwordValtext;
-    TextView phoneValtext;
 
 
     @Override
@@ -82,12 +77,8 @@ public class RegisterActivity extends AppCompatActivity {
         username = findViewById(R.id.username);
         name = findViewById(R.id.name_name);
         surname = findViewById(R.id.surname);
-        emailButton = findViewById(R.id.email_button);
-        phoneButton = findViewById(R.id.phone_button);
         email = findViewById(R.id.email);
         ccp = findViewById(R.id.ccp);
-        phone = findViewById(R.id.phone_number_edt);
-        phoneWhole = findViewById(R.id.phone_whole);
         password = findViewById(R.id.password);
         validationText = findViewById(R.id.validation_text);
         registerButton = findViewById(R.id.register_button);
@@ -98,19 +89,12 @@ public class RegisterActivity extends AppCompatActivity {
         surnameValtext = findViewById(R.id.surname_valtext);
         passwordValtext = findViewById(R.id.password_valtext);
         usernameValtext = findViewById(R.id.username_valtext);
-        phoneValtext = findViewById(R.id.phone_valtext);
-
-        email.setVisibility(View.GONE);
-        phoneWhole.setVisibility(View.GONE);
-
 
         setEditText(username, usernameValtext);
         setEditText(name, nameValtext);
         setEditText(surname, surnameValtext);
         setEditText(email, emailValtext);
-        setEditText(phone, phoneValtext);
         setEditText(password, passwordValtext);
-        setEmailOrPhone();
 
         registerButton.setOnClickListener((v) -> {
             register();
@@ -144,13 +128,15 @@ public class RegisterActivity extends AppCompatActivity {
                         User newUser = new User(jo);
                         goToVerifyEmailActivity(newUser);
                     } catch (Exception e){
-                        if (jo != null && jo.get("username") != null){
+                        if (jo != null && jo.get("username") != null && jo.get("username").isJsonArray()){
                             showValtext(usernameValtext, jo.get("username").getAsJsonArray().get(0).getAsString(), username);
+                            validationText.setVisibility(View.VISIBLE);
                         }
-                        if (jo != null && jo.get("email") != null){
+                        if (jo != null && jo.get("email") != null && jo.get("email").isJsonArray()){
                             showValtext(emailValtext, jo.get("email").getAsJsonArray().get(0).getAsString(), email);
+                            validationText.setVisibility(View.VISIBLE);
                         }
-                        validationText.setVisibility(View.VISIBLE);
+                        showProgress(false);
                     }
                     super.onPostExecute(response);
                 }
@@ -159,8 +145,6 @@ public class RegisterActivity extends AppCompatActivity {
                     new String[]{"first_name", name.getText().toString()},
                     new String[]{"last_name", surname.getText().toString()},
                     new String[]{"email", email.getText().toString()},
-                    new String[]{"phone_code", ccp.getFullNumber()},
-                    new String[]{"phone_number", phone.getText().toString()},
                     new String[]{"password", password.getText().toString()}
             ).get(10, TimeUnit.SECONDS);
         } catch (ExecutionException | InterruptedException e) {
@@ -181,22 +165,6 @@ public class RegisterActivity extends AppCompatActivity {
         startActivity(imageLook);
     }
 
-    void setEmailOrPhone(){
-        emailButton.setOnClickListener(v -> {
-            emailButton.setBackgroundColor(Color.TRANSPARENT);
-            phoneButton.setBackground(ContextCompat.getDrawable(getApplication(), R.drawable.text_input_shape));
-            phoneWhole.setVisibility(View.GONE);
-            email.setVisibility(View.VISIBLE);
-        });
-
-        phoneButton.setOnClickListener(v -> {
-            emailButton.setBackground(ContextCompat.getDrawable(getApplication(), R.drawable.text_input_shape));
-            phoneButton.setBackgroundColor(Color.TRANSPARENT);
-            phoneWhole.setVisibility(View.VISIBLE);
-            email.setVisibility(View.GONE);
-        });
-    }
-
     void showValtext(TextView tv, String text, EditText et){
         tv.setText(text);
         tv.setVisibility(View.VISIBLE);
@@ -206,7 +174,7 @@ public class RegisterActivity extends AppCompatActivity {
     boolean valid(){
         boolean valid = true;
 
-        if (TextUtils.isEmpty(username.getText().toString()) && !username.getText().toString().matches("[A-Za-z0-9_]+")){
+        if (TextUtils.isEmpty(username.getText().toString()) || !username.getText().toString().matches("[A-Za-z0-9_]+")){
             showValtext(usernameValtext, "Please, insert a valid username ", username);
             valid = false;
         }
@@ -225,13 +193,10 @@ public class RegisterActivity extends AppCompatActivity {
             showValtext(emailValtext, "Not a valid email", email);
             valid = false;
         }
-        if (phone.getText().toString() == null || phone.getText().toString().trim().equals("")){
-            showValtext(phoneValtext,  "Please, insert a phone number", phone);
-            valid = false;
-        }
+
         Pattern p = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$");
         Matcher m = p.matcher(password.getText().toString());
-        if (false && !m.find()){
+        if (!m.find()){
             String text = "A digit must occur at least once \n" +
                     "A lower case letter must occur at least once \n" +
                     "An upper case letter must occur at least once \n" +

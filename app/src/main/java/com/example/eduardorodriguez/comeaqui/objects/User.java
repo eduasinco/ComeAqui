@@ -11,8 +11,8 @@ public class User implements Serializable {
     public String first_name;
     public String last_name;
     public String bio;
-    public String phone_number;
-    public String phone_code;
+    public String phone_number = "";
+    public String phone_code = "";
     public String profile_photo;
     public String is_active;
     public String is_admin;
@@ -28,8 +28,10 @@ public class User implements Serializable {
         first_name = jo.get("first_name").getAsString();
         last_name = jo.get("last_name").getAsString();
         bio = jo.get("bio").getAsString();
-        phone_number = jo.get("phone_number").getAsString();
-        phone_code = jo.get("phone_code").getAsString();
+        try{
+            phone_number = jo.get("phone_number").getAsString();
+            phone_code = jo.get("phone_number").getAsString();
+        } catch (Exception ignored){}
         profile_photo = ImageStringProcessor.processString(jo.get("profile_photo").getAsString());
         background_photo = ImageStringProcessor.processString(jo.get("background_photo").getAsString());
         is_active = jo.get("is_active").getAsString();
