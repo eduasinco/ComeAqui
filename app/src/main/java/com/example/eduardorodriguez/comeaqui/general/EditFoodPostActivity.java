@@ -196,7 +196,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
         protected String doInBackground(String[]... params) {
             try {
                 for (Integer imageId: bitmapHashMap.keySet()){
-                    ServerAPI.patchImages(getApplicationContext(), this.uri + imageId + "/", params, this.bitmapHashMap.get(imageId));
+                    ServerAPI.patchImage(getApplicationContext(), this.uri + imageId + "/", this.bitmapHashMap.get(imageId));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -224,7 +224,10 @@ public class EditFoodPostActivity extends AppCompatActivity implements
         @Override
         protected String doInBackground(String[]... params) {
             try {
-                return ServerAPI.postImages(getApplicationContext(), this.uri, params, bitmaps);
+                for (Bitmap image: this.bitmaps){
+                    ServerAPI.postImage(getApplicationContext(), this.uri, params, image);
+                }
+                return "";
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -240,7 +243,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
                 }
             }
             PatchImagesAsyncTask patch = new PatchImagesAsyncTask(getResources().getString(R.string.server) + "/edit_image/", bitmapHashMap);
-            patch.execute(new String[]{"food_photo", "image"});
+            patch.execute();
             super.onPostExecute(response);
         }
     }
@@ -306,6 +309,13 @@ public class EditFoodPostActivity extends AppCompatActivity implements
         public GetAsyncTask(String uri){
             this.uri = uri;
         }
+
+        @Override
+        protected void onPreExecute() {
+            showProgress(true);
+            super.onPreExecute();
+        }
+
         @Override
         protected String doInBackground(String[]... params) {
             try {
@@ -323,6 +333,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
                 setViewDetails();
                 addImageFragment.initializeImages(foodPostDetail.images);
             }
+            showProgress(false);
             super.onPostExecute(response);
         }
 

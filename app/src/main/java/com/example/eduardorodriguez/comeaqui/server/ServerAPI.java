@@ -108,7 +108,7 @@ public class ServerAPI {
 
     }
 
-    static public String postImages(Context context, String uri, String[][] params, Bitmap[] bitmaps) throws IOException {
+    static public String postImage(Context context, String uri, String[][] params, Bitmap bitmap) throws IOException {
         String credentials = "";
         SharedPreferences pref = context.getSharedPreferences("Login", MODE_PRIVATE);
         if (pref.getBoolean("signed_in", false)) {
@@ -125,21 +125,12 @@ public class ServerAPI {
                 .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
                 .setBoundary(boundary);
 
-        for(String[] ss: params){
-            entityBuilder.addPart(ss[0], new StringBody(ss[1], ContentType.TEXT_PLAIN));
-        }
-        for(int i = 0; i < bitmaps.length; i++){
-            Bitmap bitmap = bitmaps[i];
-            if (bitmap != null) {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                byte[] imageBytes = baos.toByteArray();
-                entityBuilder.addPart("image" + i, new ByteArrayBody(imageBytes, "ANDROID.png"));
-            }
-        }
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] imageBytes = baos.toByteArray();
+        entityBuilder.addPart("image", new ByteArrayBody(imageBytes, "ANDROID.png"));
 
         HttpEntity entity = entityBuilder.build();
-
         httpPost.setEntity(entity);
 
         HttpResponse response = httpclient.execute(httpPost);
@@ -195,7 +186,7 @@ public class ServerAPI {
 
     }
 
-    static public String patchImages(Context context, String uri, String[][] params, Bitmap bitmap) throws IOException {
+    static public String patchImage(Context context, String uri, Bitmap bitmap) throws IOException {
         String credentials = "";
         SharedPreferences pref = context.getSharedPreferences("Login", MODE_PRIVATE);
         if (pref.getBoolean("signed_in", false)) {
@@ -212,16 +203,11 @@ public class ServerAPI {
                 .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
                 .setBoundary(boundary);
 
-        for(String[] ss: params){
-            if (ss[1].equals("image") && bitmap != null) {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                byte[] imageBytes = baos.toByteArray();
-                entityBuilder.addPart(ss[0], new ByteArrayBody(imageBytes, "ANDROID.png"));
-            } else {
-                entityBuilder.addPart(ss[0], new StringBody(ss[1], ContentType.TEXT_PLAIN));
-            }
-        }
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] imageBytes = baos.toByteArray();
+        entityBuilder.addPart("food_photo", new ByteArrayBody(imageBytes, "ANDROID.png"));
+
         httpPatch.setEntity(entityBuilder.build());
         HttpResponse response = httpclient.execute(httpPatch);
         InputStream instream = response.getEntity().getContent();
