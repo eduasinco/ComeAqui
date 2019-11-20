@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.Server;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.MyLocation;
 import com.example.eduardorodriguez.comeaqui.utilities.UpperNotificationFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -24,7 +26,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
 import com.google.gson.JsonArray;
@@ -36,6 +37,7 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -333,34 +335,54 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
 
     void setMapMarkers(){
         removeAllMarkers();
-        try {
-            new GetAsyncTask(getContext(), "GET", getResources().getString(R.string.server) + "/foods/"){
-                @Override
-                protected void onPostExecute(String s) {
-                    if (s != null)
-                        makeList(new JsonParser().parse(s).getAsJsonArray(), false);
-                    setMapFavouriteMarkers();
-                    super.onPostExecute(s);
-                }
-            }.execute().get();
-        } catch (InterruptedException | ExecutionException e) {
-            Toast.makeText(getContext(), "No internet connection", Toast.LENGTH_LONG).show();
+        new GetMarkersAsyncTask(getResources().getString(R.string.server) + "/foods/").execute();
+    }
+    class GetMarkersAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetMarkersAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null)
+                makeList(new JsonParser().parse(response).getAsJsonArray(), false);
+            setMapFavouriteMarkers();
+            super.onPostExecute(response);
         }
     }
 
     void setMapFavouriteMarkers(){
-        try {
-            new GetAsyncTask(getContext(),"GET", getResources().getString(R.string.server) + "/my_favourites/"){
-                @Override
-                protected void onPostExecute(String s) {
-                    if (s != null)
-                        makeList(new JsonParser().parse(s).getAsJsonArray(), true);
-                    setMarkers();
-                    super.onPostExecute(s);
-                }
-            }.execute().get();
-        } catch (ExecutionException | InterruptedException e) {
-            Toast.makeText(getContext(), "No internet connection", Toast.LENGTH_LONG).show();
+        new GetFavouriteMarkersAsyncTask(getResources().getString(R.string.server) + "/my_favourites/").execute();
+    }
+    class GetFavouriteMarkersAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetFavouriteMarkersAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null)
+                makeList(new JsonParser().parse(response).getAsJsonArray(), true);
+            setMarkers();
+            super.onPostExecute(response);
         }
     }
 

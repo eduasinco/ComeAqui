@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
@@ -28,12 +29,14 @@ import com.example.eduardorodriguez.comeaqui.order.OrderFragment;
 import com.example.eduardorodriguez.comeaqui.map.MapFragment;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileFragment;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -172,39 +175,67 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void checkUnratedOrdersAsPoster(){
-        new GetAsyncTask(this,"GET", context.getResources().getString(R.string.server) + "/my_unreviewed_order_guest/"){
-            @Override
-            protected void onPostExecute(String response) {
-                if (response != null){
-                    JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
-                    if (ja.size() > 0){
-                        OrderObject orderObject = new OrderObject(ja.get(0).getAsJsonObject());
-                        Intent k = new Intent(context, GuestsReviewActivity.class);
-                        k.putExtra("order", orderObject);
-                        startActivity(k);
-                    }
-                }
-                super.onPostExecute(response);
+        new GetAsyncTask1(getResources().getString(R.string.server) + "/my_unreviewed_order_guest/").execute();
+    }
+    class GetAsyncTask1 extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetAsyncTask1(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        }.execute();
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
+                if (ja.size() > 0){
+                    OrderObject orderObject = new OrderObject(ja.get(0).getAsJsonObject());
+                    Intent k = new Intent(context, GuestsReviewActivity.class);
+                    k.putExtra("order", orderObject);
+                    startActivity(k);
+                }
+            }
+            super.onPostExecute(response);
+        }
     }
 
     void checkUnratedOrdersAsDinner(){
-        new GetAsyncTask(this, "GET", context.getResources().getString(R.string.server) + "/my_unreviewed_order_post/"){
-            @Override
-            protected void onPostExecute(String response) {
-                if (response != null){
-                    JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
-                    if (ja.size() > 0){
-                        OrderObject orderObject = new OrderObject(ja.get(0).getAsJsonObject());
-                        Intent k = new Intent(context, ReviewPostActivity.class);
-                        k.putExtra("order", orderObject);
-                        startActivity(k);
-                    }
-                }
-                super.onPostExecute(response);
+        new GetAsyncTask2(context.getResources().getString(R.string.server) + "/my_unreviewed_order_post/").execute();
+    }
+    class GetAsyncTask2 extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetAsyncTask2(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        }.execute();
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
+                if (ja.size() > 0){
+                    OrderObject orderObject = new OrderObject(ja.get(0).getAsJsonObject());
+                    Intent k = new Intent(context, ReviewPostActivity.class);
+                    k.putExtra("order", orderObject);
+                    startActivity(k);
+                }
+            }
+            super.onPostExecute(response);
+        }
     }
 
 

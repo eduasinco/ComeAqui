@@ -1,6 +1,7 @@
 package com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -15,8 +16,10 @@ import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_d
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonParser;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -63,7 +66,7 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
     }
 
     public void initializeUser(){
-        GetAsyncTask process = new GetAsyncTask(this,"GET", getResources().getString(R.string.server) + "/my_profile/");
+        GetAsyncTask process = new GetAsyncTask(getResources().getString(R.string.server) + "/my_profile/");
         try {
             String response = process.execute().get();
             if (response != null){
@@ -72,6 +75,27 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
             }
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+    class GetAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetAsyncTask(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
     }
 

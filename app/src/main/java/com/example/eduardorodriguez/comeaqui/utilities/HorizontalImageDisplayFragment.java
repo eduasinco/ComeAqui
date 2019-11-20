@@ -2,6 +2,7 @@ package com.example.eduardorodriguez.comeaqui.utilities;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
@@ -21,10 +22,12 @@ import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostImageObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.image_view_pager.ImageLookActivity;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
@@ -157,26 +160,32 @@ public class HorizontalImageDisplayFragment extends Fragment {
     }
 
     void getFoodPostImages(){
-        try{
-            foodPostImageObjects = new ArrayList<>();
-            new GetAsyncTask(getContext(),"GET", getResources().getString(R.string.server) + "/food_images/" + foodPostId + "/"){
-                @Override
-                protected void onPostExecute(String response) {
-                    if (response != null){
-                        for (JsonElement je: new JsonParser().parse(response).getAsJsonArray()){
-                            foodPostImageObjects.add(new FoodPostImageObject(je.getAsJsonObject()));
-                        }
-                        setImages();
-                    }
-                    super.onPostExecute(response);
+        new GetAsyncTask(getResources().getString(R.string.server) + "/food_images/" + foodPostId + "/").execute();
+    }
+    class GetAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                foodPostImageObjects = new ArrayList<>();
+                for (JsonElement je: new JsonParser().parse(response).getAsJsonArray()){
+                    foodPostImageObjects.add(new FoodPostImageObject(je.getAsJsonObject()));
                 }
-            }.execute().get(10, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(), "A problem has occurred", Toast.LENGTH_LONG).show();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(), "Not internet connection", Toast.LENGTH_LONG).show();
+                setImages();
+            }
+            super.onPostExecute(response);
         }
     }
 

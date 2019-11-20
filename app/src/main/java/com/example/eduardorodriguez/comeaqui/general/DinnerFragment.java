@@ -1,6 +1,7 @@
 package com.example.eduardorodriguez.comeaqui.general;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,9 +16,11 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonParser;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -66,28 +69,48 @@ public class DinnerFragment extends Fragment {
     }
 
     void getFoodPostDetailsAndSet(int foodPostId){
-        try {
-            startWaitingFrame(true);
-            new GetAsyncTask(getContext(), "GET", getResources().getString(R.string.server) + "/foods/" + foodPostId + "/"){
-                @Override
-                protected void onPostExecute(String response) {
-                    if (response != null){
-                        foodPostDetail = new FoodPostDetail(new JsonParser().parse(response).getAsJsonObject());
-                        dinnerAdapter = new MyDinnerRecyclerViewAdapter(foodPostDetail.confirmedOrdersList, mListener);
-                        recyclerView.setAdapter(dinnerAdapter);
-                        startWaitingFrame(false);
-                    }
-                    super.onPostExecute(response);
-                }
-            }.execute().get(10, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            startWaitingFrame(false);
-            Toast.makeText(getContext(), "A problem has occurred", Toast.LENGTH_LONG).show();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(), "Not internet connection", Toast.LENGTH_LONG).show();
+        new GetAsyncTask(getResources().getString(R.string.server) + "/foods/" + foodPostId + "/"){
+            @Override
+            protected void onPostExecute(String response) {
+
+                super.onPostExecute(response);
+            }
+        }.execute();
+    }
+    class GetAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetAsyncTask(String uri){
+            this.uri = uri;
         }
+
+        @Override
+        protected void onPreExecute() {
+            startWaitingFrame(true);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                foodPostDetail = new FoodPostDetail(new JsonParser().parse(response).getAsJsonObject());
+                dinnerAdapter = new MyDinnerRecyclerViewAdapter(foodPostDetail.confirmedOrdersList, mListener);
+                recyclerView.setAdapter(dinnerAdapter);
+                startWaitingFrame(false);
+            }
+            startWaitingFrame(false);
+            super.onPostExecute(response);
+        }
+
     }
 
     void startWaitingFrame(boolean start){

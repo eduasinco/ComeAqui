@@ -1,5 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.chat;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -15,9 +16,11 @@ import android.widget.Toast;
 import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.ChatFirebaseObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.firebase.database.*;
@@ -28,6 +31,7 @@ import com.google.gson.JsonParser;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -100,26 +104,43 @@ public class ChatFragment extends Fragment{
     }
 
     void getChatsAndSet(){
-        startWaitingFrame(true);
-        try {
-            new GetAsyncTask(getContext(),"GET", getResources().getString(R.string.server) + "/my_chats/"){
-                @Override
-                protected void onPostExecute(String response) {
-                    if (response != null)
-                        makeList(new JsonParser().parse(response).getAsJsonArray());
-                    startWaitingFrame(false);
-                    super.onPostExecute(response);
-                }
-            }.execute().get(10, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            startWaitingFrame(false);
-            Toast.makeText(getContext(), "A problem has occurred", Toast.LENGTH_LONG).show();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(), "Not internet connection", Toast.LENGTH_LONG).show();
-        }
+        new GetAsyncTask(getResources().getString(R.string.server) + "/my_chats/").execute();
     }
+
+    class GetAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetAsyncTask(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            startWaitingFrame(true);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                if (response != null)
+                    makeList(new JsonParser().parse(response).getAsJsonArray());
+            }
+            startWaitingFrame(false);
+            super.onPostExecute(response);
+        }
+
+    }
+
 
     void startWaitingFrame(boolean start){
         if (start) {

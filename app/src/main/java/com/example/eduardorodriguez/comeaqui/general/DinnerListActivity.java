@@ -3,6 +3,7 @@ package com.example.eduardorodriguez.comeaqui.general;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -17,9 +18,11 @@ import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonParser;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -60,27 +63,43 @@ public class DinnerListActivity extends AppCompatActivity implements DinnerFragm
     }
 
     void goToConversationWithUser(User user){
-        try {
-            fragment.startWaitingFrame(true);
-            new GetAsyncTask(this,"GET", getResources().getString(R.string.server) + "/get_or_create_chat/" + user.id + "/"){
-                @Override
-                protected void onPostExecute(String response) {
-                    if (response != null) {
-                        ChatObject chat = new ChatObject(new JsonParser().parse(response).getAsJsonObject());
-                        goToConversationActivity(chat);
-                        fragment.startWaitingFrame(false);
-                    }
-                    super.onPostExecute(response);
-                }
-            }.execute().get(10, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            fragment.startWaitingFrame(false);
-            Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
+        fragment.startWaitingFrame(true);
+        new GetAsyncTask(getResources().getString(R.string.server) + "/get_or_create_chat/" + user.id + "/").execute();
+    }
+    class GetAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetAsyncTask(String uri){
+            this.uri = uri;
         }
+
+        @Override
+        protected void onPreExecute() {
+            fragment.startWaitingFrame(true);
+
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null) {
+                ChatObject chat = new ChatObject(new JsonParser().parse(response).getAsJsonObject());
+                goToConversationActivity(chat);
+                fragment.startWaitingFrame(false);
+            }
+            fragment.startWaitingFrame(false);
+            super.onPostExecute(response);
+        }
+
     }
 
 

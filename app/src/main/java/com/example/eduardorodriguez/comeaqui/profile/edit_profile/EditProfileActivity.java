@@ -3,6 +3,7 @@ package com.example.eduardorodriguez.comeaqui.profile.edit_profile;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_d
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -45,7 +47,7 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
     protected void onResume() {
         super.onResume();
         selectImageFromFragment.hideCard();
-        setProfile(getUser(userId));
+        getUser(userId);
     }
 
     private void setProfile(User user){
@@ -122,19 +124,32 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
     }
 
     public User getUser(int userId) {
-        try {
-            String response = new GetAsyncTask(this,"GET", getResources().getString(R.string.server) + "/profile_detail/" + userId + "/").execute().get(10, TimeUnit.SECONDS);
-            if (response != null){
-                return new User(new JsonParser().parse(response).getAsJsonObject());
-            }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
-        }
+        new GetAsyncTask(getResources().getString(R.string.server) + "/profile_detail/" + userId + "/").execute();
         return null;
+    }
+    class GetAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                setProfile(new User(new JsonParser().parse(response).getAsJsonObject()));
+            }
+            super.onPostExecute(response);
+        }
+
     }
 
     @Override

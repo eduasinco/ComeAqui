@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -20,8 +21,10 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonParser;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -111,35 +114,45 @@ public class ConfirmEmailActivity extends AppCompatActivity {
     }
 
     void submit(){
-        try {
+        saveEmail.setVisibility(View.GONE);
+        progress.setVisibility(View.VISIBLE);
+        emailToSend = emailAdress.getText().toString();
+        new GetAsyncTask(getResources().getString(R.string.server) + "/send_code_to_email/" + emailToSend + "/").execute();
+    }
+    class GetAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected void onPreExecute() {
             saveEmail.setVisibility(View.GONE);
             progress.setVisibility(View.VISIBLE);
-            emailToSend = emailAdress.getText().toString();
-            new GetAsyncTask(this,"GET", getResources().getString(R.string.server) + "/send_code_to_email/" + emailToSend + "/"){
-                @Override
-                protected void onPostExecute(String response) {
-                    try{
-                        new User(new JsonParser().parse(response).getAsJsonObject());
-                        progress.setVisibility(View.GONE);
-                        wholeSendCode.setVisibility(View.VISIBLE);
-                    } catch(Exception e){
-                        showValtext(emailValtext, new JsonParser().parse(response).getAsJsonObject().get("message").getAsString(), emailAdress);
-                        saveEmail.setVisibility(View.VISIBLE);
-                        progress.setVisibility(View.GONE);
-                    }
-                    super.onPostExecute(response);
-                }
-            }.execute().get(10, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            saveEmail.setVisibility(View.VISIBLE);
-            progress.setVisibility(View.GONE);
-            Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            saveEmail.setVisibility(View.VISIBLE);
-            progress.setVisibility(View.GONE);
-            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+                saveEmail.setVisibility(View.VISIBLE);
+                progress.setVisibility(View.GONE);
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            try{
+                new User(new JsonParser().parse(response).getAsJsonObject());
+                progress.setVisibility(View.GONE);
+                wholeSendCode.setVisibility(View.VISIBLE);
+            } catch(Exception e){
+                showValtext(emailValtext, new JsonParser().parse(response).getAsJsonObject().get("message").getAsString(), emailAdress);
+                saveEmail.setVisibility(View.VISIBLE);
+                progress.setVisibility(View.GONE);
+            }
+            super.onPostExecute(response);
         }
     }
 

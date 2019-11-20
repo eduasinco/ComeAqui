@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +31,7 @@ import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.Server;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.HorizontalImageDisplayFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
@@ -37,6 +39,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.gson.JsonParser;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -210,32 +213,44 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
 
 
     void getReviewsFrompFoodPost(int foodPostId){
-        Context activity = this;
-        try {
-            startWaitingFrame(true);
-            new GetAsyncTask(this,"GET", getResources().getString(R.string.server) + "/food_reviews/" + foodPostId + "/"){
-                @Override
-                protected void onPostExecute(String response) {
-                    if (response != null){
-                        foodPostReview = new FoodPostReview(new JsonParser().parse(response).getAsJsonObject());
-                        reviews = foodPostReview.reviews;
-                        adapter = new MyFoodReviewRecyclerViewAdapter(reviews, activity, foodPostReview.owner);
-                        recList.setAdapter(adapter);
-                        setViewFoodPost();
-                        startWaitingFrame(false);
-                    }
-                    super.onPostExecute(response);
-                }
-            }.execute().get(10, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            startWaitingFrame(false);
-            Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            startWaitingFrame(false);
-            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
+        new GetAsyncTask(getResources().getString(R.string.server) + "/food_reviews/" + foodPostId + "/").execute();
+    }
+    class GetAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetAsyncTask(String uri){
+            this.uri = uri;
         }
+
+        @Override
+        protected void onPreExecute() {
+            startWaitingFrame(true);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                foodPostReview = new FoodPostReview(new JsonParser().parse(response).getAsJsonObject());
+                reviews = foodPostReview.reviews;
+                adapter = new MyFoodReviewRecyclerViewAdapter(reviews, getApplicationContext(), foodPostReview.owner);
+                recList.setAdapter(adapter);
+                setViewFoodPost();
+                startWaitingFrame(false);
+            }
+            startWaitingFrame(false);
+            super.onPostExecute(response);
+        }
+
     }
 
     void startWaitingFrame(boolean start){

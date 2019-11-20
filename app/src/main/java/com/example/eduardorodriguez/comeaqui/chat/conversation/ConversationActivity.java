@@ -3,6 +3,7 @@ package com.example.eduardorodriguez.comeaqui.chat.conversation;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,6 +24,7 @@ import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PutAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.DateFormatting;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -31,6 +33,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.ExecutionException;
@@ -179,28 +182,44 @@ public class ConversationActivity extends AppCompatActivity {
     }
 
     private void getChatMessages(String chatId){
-        try {
-            new GetAsyncTask(this,"GET", getResources().getString(R.string.server) + "/chat_detail/" + chatId + "/"){
-                @Override
-                protected void onPostExecute(String response) {
-                    if (response != null) {
-                        JsonObject chatJson = new JsonParser().parse(response).getAsJsonObject();
-                        for (JsonElement je: chatJson.get("message_set").getAsJsonArray()){
-                            MessageObject currentMessage = new MessageObject(je.getAsJsonObject());
-
-                            setMessageStatus(currentMessage);
-                            adapter.addMensaje(currentMessage);
-                        }
-                        chat = new ChatObject(chatJson);
-                        setChat();
-                    }
-                    super.onPostExecute(response);
-                }
-            }.execute().get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
+        new GetAsyncTask(getResources().getString(R.string.server) + "/chat_detail/" + chatId + "/").execute();
+    }
+    class GetAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetAsyncTask(String uri){
+            this.uri = uri;
         }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null) {
+                JsonObject chatJson = new JsonParser().parse(response).getAsJsonObject();
+                for (JsonElement je: chatJson.get("message_set").getAsJsonArray()){
+                    MessageObject currentMessage = new MessageObject(je.getAsJsonObject());
+                    setMessageStatus(currentMessage);
+                    adapter.addMensaje(currentMessage);
+                }
+                chat = new ChatObject(chatJson);
+                setChat();
+            }
+            super.onPostExecute(response);
+        }
+
     }
 
     public void setMessageStatus(MessageObject currentMessage){
