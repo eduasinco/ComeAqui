@@ -151,10 +151,8 @@ public class EditFoodPostActivity extends AppCompatActivity implements
                 new String[]{"description", description}
         );
     }
-    class PatchAsyncTask extends AsyncTask<String[], Void, String> {
-        public Bitmap bitmap;
+    private class PatchAsyncTask extends AsyncTask<String[], Void, String> {
         String uri;
-
         public PatchAsyncTask(String uri){
             this.uri = uri;
         }

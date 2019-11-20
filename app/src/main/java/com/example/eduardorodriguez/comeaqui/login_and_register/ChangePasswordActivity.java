@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,10 +16,12 @@ import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.login_and_register.forgot_password.ForgotPasswordActivity;
-import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
+
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -107,31 +110,37 @@ public class ChangePasswordActivity extends AppCompatActivity {
     }
 
     void submit(){
-        try {
+        new PatchAsyncTask(getResources().getString(R.string.server) + "/password_change/").execute(
+                new String[]{"old_password", oldPassword.getText().toString()},
+                new String[]{"new_password", newPassword.getText().toString()}
+                );
+    }
+    private class PatchAsyncTask extends AsyncTask<String[], Void, String> {
+        String uri;
+        public PatchAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected void onPreExecute() {
             passwordSetText.setVisibility(View.GONE);
             progress.setVisibility(View.VISIBLE);
-            new PatchAsyncTask(this,getResources().getString(R.string.server) + "/password_change/"){
-                @Override
-                protected void onPostExecute(JSONObject jo) {
-                    passwordSetText.setVisibility(View.VISIBLE);
-                    goToLogin.setVisibility(View.VISIBLE);
-                    progress.setVisibility(View.GONE);
-                    super.onPostExecute(jo);
-                }
-            }.execute(
-                    new String[]{"old_password", oldPassword.getText().toString(), ""},
-                    new String[]{"new_password", newPassword.getText().toString(), ""}
-                    ).get(10, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.upload(getApplicationContext(), "PATCH", this.uri, params);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
             passwordSetText.setVisibility(View.VISIBLE);
+            goToLogin.setVisibility(View.VISIBLE);
             progress.setVisibility(View.GONE);
-            Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            passwordSetText.setVisibility(View.VISIBLE);
-            progress.setVisibility(View.GONE);
-            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
+            super.onPostExecute(response);
         }
     }
 }

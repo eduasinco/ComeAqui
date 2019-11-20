@@ -8,7 +8,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
-import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
+
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.MyLocation;
@@ -281,16 +281,27 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
     }
 
     private void setUserTimeZone(String timeZone){
-        try {
-            new PatchAsyncTask(getContext(),getResources().getString(R.string.server) + "/edit_profile/"){
-                @Override
-                protected void onPostExecute(JSONObject response) {
-                    super.onPostExecute(response);
-                }
-            }.execute(
-                    new String[]{"time_zone", timeZone, ""}
-            ).get(5, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException | TimeoutException e) {
+        new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/").execute(
+                new String[]{"time_zone", timeZone}
+        );
+    }
+    private class PatchAsyncTask extends AsyncTask<String[], Void, String> {
+        String uri;
+        public PatchAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.upload(getContext(), "PATCH", this.uri, params);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            super.onPostExecute(response);
         }
     }
 

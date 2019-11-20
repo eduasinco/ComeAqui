@@ -20,10 +20,11 @@ import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.EditAcountDetailsActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 
-import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
+
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonParser;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -161,17 +162,36 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
     private void saveProfileImage(Uri imageUri){
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-            if (bitmap != null){
-                PatchAsyncTask putTask = new PatchAsyncTask(this,getResources().getString(R.string.server) + "/edit_profile/");
-                putTask.bitmap = bitmap;
-                if (isBackGound){
-                    putTask.execute(new String[]{"background_photo", "image"}).get(15, TimeUnit.SECONDS);
-                }else {
-                    putTask.execute(new String[]{"profile_photo", "image"}).get(15, TimeUnit.SECONDS);
-                }
+            PatchImageAsyncTask putTask = new PatchImageAsyncTask(getResources().getString(R.string.server) + "/edit_profile/", bitmap);
+            if (isBackGound){
+                putTask.execute("background_photo");
+            } else {
+                putTask.execute("profile_photo");
             }
-        } catch (IOException | InterruptedException | ExecutionException | TimeoutException e) {
+        } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+    class PatchImageAsyncTask extends AsyncTask<String, Void, String> {
+        String uri;
+        Bitmap imageBitmap;
+
+        public PatchImageAsyncTask(String uri, Bitmap imageBitmap){
+            this.uri = uri;
+            this.imageBitmap = imageBitmap;
+        }
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                return ServerAPI.uploadImage(getApplicationContext(),"PATCH", this.uri, params[0], this.imageBitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            super.onPostExecute(response);
         }
     }
 }

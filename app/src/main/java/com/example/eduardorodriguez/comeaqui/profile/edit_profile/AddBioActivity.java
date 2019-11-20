@@ -1,5 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.profile.edit_profile;
 
+import android.os.AsyncTask;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.Button;
@@ -8,8 +9,9 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -51,14 +53,33 @@ public class AddBioActivity extends AppCompatActivity {
     }
 
     private void saveImage(){
-        PatchAsyncTask putTask = new PatchAsyncTask(this,getResources().getString(R.string.server) + "/edit_profile/");
-        try {
-            putTask.execute(
-                    new String[]{"bio", bioEditTextView.getText().toString(), ""}
-            ).get(5, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException | TimeoutException e) {
-            e.printStackTrace();
+        PatchAsyncTask putTask = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
+        putTask.execute(
+                new String[]{"bio", bioEditTextView.getText().toString()}
+        );
+    }
+    private class PatchAsyncTask extends AsyncTask<String[], Void, String> {
+        String uri;
+        public PatchAsyncTask(String uri){
+            this.uri = uri;
         }
-        finish();
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.upload(getApplicationContext(), "PATCH", this.uri, params);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            finish();
+            super.onPostExecute(response);
+        }
     }
 }

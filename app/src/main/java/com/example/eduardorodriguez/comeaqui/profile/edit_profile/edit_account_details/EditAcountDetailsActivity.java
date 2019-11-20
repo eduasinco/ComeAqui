@@ -15,7 +15,7 @@ import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.confirm_email.ConfirmEmailActivity;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
 
-import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
+
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonParser;
 
@@ -113,16 +113,31 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
     }
 
     private void saveData(){
-        PatchAsyncTask putTast = new PatchAsyncTask(this,getResources().getString(R.string.server) + "/edit_profile/");
-        try {
-            putTast.execute(
-                    new String[]{"first_name", firstName.getText().toString(), ""},
-                    new String[]{"last_name", lastName.getText().toString(), ""},
-                    new String[]{"phone_number", phoneNumber.getText().toString(), ""}
-                    ).get(5, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException | TimeoutException e) {
-            e.printStackTrace();
+        PatchAsyncTask putTast = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
+        putTast.execute(
+                new String[]{"first_name", firstName.getText().toString()},
+                new String[]{"last_name", lastName.getText().toString()},
+                new String[]{"phone_number", phoneNumber.getText().toString()}
+        );
+    }
+    private class PatchAsyncTask extends AsyncTask<String[], Void, String> {
+        String uri;
+        public PatchAsyncTask(String uri){
+            this.uri = uri;
         }
-        finish();
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.upload(getApplicationContext(), "PATCH", this.uri, params);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            finish();
+            super.onPostExecute(response);
+        }
     }
 }

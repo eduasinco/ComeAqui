@@ -20,7 +20,7 @@ import com.example.eduardorodriguez.comeaqui.login_and_register.LoginOrRegisterA
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 
-import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
+
 
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
