@@ -30,6 +30,7 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class EditFoodPostActivity extends AppCompatActivity implements
         WordLimitEditTextFragment.OnFragmentInteractionListener,
@@ -137,7 +138,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
         patchPost();
         Bitmap[] bitmapsToPost = Arrays.copyOfRange(imageBitmaps, foodPostDetail.images.size(), imageBitmaps.length);
         PostImagesAsyncTask post = new PostImagesAsyncTask(
-                getResources().getString(R.string.server) + "/food_images/",
+                getResources().getString(R.string.server) + "/add_food_images/" + foodPostDetail.id + "/",
                 bitmapsToPost
         );
         post.execute();
@@ -202,6 +203,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
             super.onPostExecute(response);
         }
     }
+
     class PostImagesAsyncTask extends AsyncTask<String[], Void, String> {
         String uri;
         public Bitmap[] bitmaps;
@@ -213,7 +215,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
         protected String doInBackground(String[]... params) {
             try {
                 for (Bitmap image: this.bitmaps){
-                    ServerAPI.uploadImage(getApplicationContext(), "POST",  this.uri, "image", image);
+                    ServerAPI.uploadImage(getApplicationContext(), "PATCH",  this.uri, "image", image);
                 }
                 return "";
             } catch (IOException e) {

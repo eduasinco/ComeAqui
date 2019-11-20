@@ -53,9 +53,9 @@ public class ServerAPI {
             connection.setRequestProperty("Authorization", "Basic " + credentials);
             connection.connect();
             int responseCode = connection.getResponseCode();
-            if (responseCode != HttpsURLConnection.HTTP_OK) {
-                throw new IOException("HTTP error code: " + responseCode);
-            }
+//            if (responseCode != HttpsURLConnection.HTTP_OK) {
+//                throw new IOException("HTTP error code: " + responseCode);
+//            }
             stream = connection.getInputStream();
             if (stream != null) {
                 result = readStream(stream);
@@ -100,9 +100,9 @@ public class ServerAPI {
             connection.connect();
 
             int responseCode = connection.getResponseCode();
-            if (responseCode != HttpsURLConnection.HTTP_OK) {
-                throw new IOException("HTTP error code: " + responseCode);
-            }
+//            if (responseCode != HttpsURLConnection.HTTP_CREATED) {
+//                throw new IOException("HTTP error code: " + responseCode);
+//            }
             stream = connection.getInputStream();
             if (stream != null) {
                 result = readStream(stream);
@@ -153,9 +153,9 @@ public class ServerAPI {
             connection.connect();
 
             int responseCode = connection.getResponseCode();
-            if (responseCode != HttpsURLConnection.HTTP_OK) {
-                throw new IOException("HTTP error code: " + responseCode);
-            }
+//            if (responseCode != HttpsURLConnection.HTTP_OK) {
+//                throw new IOException("HTTP error code: " + responseCode);
+//            }
             stream = connection.getInputStream();
             if (stream != null) {
                 result = readStream(stream);

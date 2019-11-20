@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
@@ -16,17 +17,17 @@ import androidx.core.content.ContextCompat;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.*;
 
+import com.example.eduardorodriguez.comeaqui.general.EditFoodPostActivity;
 import com.example.eduardorodriguez.comeaqui.map.add_food.AddImagesFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodTimePickerFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.WordLimitEditTextFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
-import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodTypeSelectorFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.place_autocomplete.PlaceAutocompleteFragment;
@@ -34,6 +35,8 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -219,7 +222,6 @@ public class AddFoodActivity extends AppCompatActivity implements
         submit.setOnClickListener(v -> {
             if (validateFrom()){
                 postFood();
-                finish();
             }
         });
     }
@@ -282,63 +284,86 @@ public class AddFoodActivity extends AppCompatActivity implements
     }
 
     void postFood(){
-        try {
+        PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/foods/");
+        post.execute(
+                new String[]{"plate_name", foodName.getText().toString()},
+                new String[]{"address", address},
+                new String[]{"lat", Double.toString(lat)},
+                new String[]{"lng", Double.toString(lng)},
+                new String[]{"max_dinners", Integer.toString(dinners)},
+                new String[]{"time", postTimeString},
+                new String[]{"time_zone", USER.timeZone},
+                new String[]{"price", price_data.toString()},
+                new String[]{"food_type", setTypes()},
+                new String[]{"description", description}
+        );
+    }
+    class PostAsyncTask extends AsyncTask<String[], Void, String> {
+        public Bitmap bitmap;
+        String uri;
+
+        public PostAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected void onPreExecute() {
             showProgress(true);
-            PostAsyncTask post = new PostAsyncTask(this,getResources().getString(R.string.server) + "/foods/"){
-                @Override
-                protected void onPostExecute(String response) {
-                    FoodPost foodPost = new FoodPost(new JsonParser().parse(response).getAsJsonObject());
-                    postImages(foodPost.id);
-                    //sendPostMessage(foodPost);
-                }
-            };
-            post.execute(
-                    new String[]{"plate_name", foodName.getText().toString()},
-                    new String[]{"address", address},
-                    new String[]{"lat", Double.toString(lat)},
-                    new String[]{"lng", Double.toString(lng)},
-                    new String[]{"max_dinners", Integer.toString(dinners)},
-                    new String[]{"time", postTimeString},
-                    new String[]{"time_zone", USER.timeZone},
-                    new String[]{"price", price_data.toString()},
-                    new String[]{"food_type", setTypes()},
-                    new String[]{"description", description}
-            ).get(10, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            showErrorMessage();
-            showProgress(false);
-            Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            showProgress(false);
-            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.upload(getApplicationContext(), "POST", this.uri, params);
+            } catch (IOException e) {
+                showProgress(false);
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (null != response){
+                FoodPost foodPost = new FoodPost(new JsonParser().parse(response).getAsJsonObject());
+                postImages(foodPost.id);
+            }
+            super.onPostExecute(response);
         }
     }
 
     void postImages(int foodPostId){
-        for (Bitmap image: imageBitmaps){
-            showProgress(true);
+        PostImagesAsyncTask post = new PostImagesAsyncTask(
+                getResources().getString(R.string.server) + "/add_food_images/" + foodPostId + "/",
+                imageBitmaps
+        );
+        post.execute();
+    }
+    class PostImagesAsyncTask extends AsyncTask<String, Void, String> {
+        String uri;
+        List<Bitmap> images;
+        public PostImagesAsyncTask(String uri, List<Bitmap> imageBitmaps){
+            this.uri = uri;
+            this.images = imageBitmaps;
+        }
+        @Override
+        protected String doInBackground(String... params) {
             try {
-                PostAsyncTask post = new PostAsyncTask(this,getResources().getString(R.string.server) + "/food_images/"){
-                    @Override
-                    protected void onPostExecute(String response) {
-                        super.onPostExecute(response);
-                    }
-                };
-                post.bitmap = image;
-                post.execute(
-                        new String[]{"post", "" + foodPostId},
-                        new String[]{"image", ""}
-                ).get();
-            } catch (ExecutionException | InterruptedException e) {
+                for (int i = 0; i < this.images.size(); i++){
+                    Bitmap image = this.images.get(i);
+                    ServerAPI.uploadImage(getApplicationContext(), "PATCH",  this.uri, "image", image);
+                }
+                return "";
+            } catch (IOException e) {
                 e.printStackTrace();
-                showErrorMessage();
-                showProgress(false);
-                Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
             }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            showProgress(false);
+            super.onPostExecute(response);
         }
     }
+
     void showErrorMessage(){
         errorMessage.setVisibility(View.VISIBLE);
         getSupportFragmentManager().beginTransaction()
