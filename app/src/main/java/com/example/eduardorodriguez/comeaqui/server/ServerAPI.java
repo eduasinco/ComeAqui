@@ -3,258 +3,297 @@ package com.example.eduardorodriguez.comeaqui.server;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
+
+import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.general.EditFoodPostActivity;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPatch;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.ContentType;
+import org.apache.http.NameValuePair;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ByteArrayBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import org.apache.http.message.BasicNameValuePair;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import static android.content.Context.MODE_PRIVATE;
 
 public class ServerAPI {
 
-    static public String get(Context context, String uri) throws IOException {
-        StringBuilder builder = new StringBuilder();
-        HttpClient client = new DefaultHttpClient();
+    public static String get(Context context, String url) throws IOException {
 
-        String credentials = "";
-        SharedPreferences pref = context.getSharedPreferences("Login", MODE_PRIVATE);
-        if (pref.getBoolean("signed_in", false)) {
-            credentials = pref.getString("cred", "");
-        }
+        String credentials = getCredentials(context);
 
-        HttpGet httpGet = new HttpGet(uri);
-        httpGet.addHeader("Authorization", "Basic " + credentials);
-        httpGet.setHeader("Content-Type", "application/json");
-        HttpResponse response = client.execute(httpGet);
-        StatusLine statusLine = response.getStatusLine();
-        int statusCode = statusLine.getStatusCode();
-        if (statusCode == 200) {
-            HttpEntity entity = response.getEntity();
-            InputStream content = entity.getContent();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
+        InputStream stream = null;
+        HttpURLConnection connection = null;
+        String result = null;
+        try {
+            connection = (HttpURLConnection) new URL(url).openConnection();
+            connection.setReadTimeout(3000);
+            connection.setConnectTimeout(3000);
+            connection.setRequestMethod("GET");
+            connection.setDoInput(true);
+            connection.setRequestProperty("Authorization", "Basic " + credentials);
+            connection.connect();
+            int responseCode = connection.getResponseCode();
+            if (responseCode != HttpsURLConnection.HTTP_OK) {
+                throw new IOException("HTTP error code: " + responseCode);
             }
-            String resp = builder.toString();
-            return resp;
-        } else {
-            return null;
+            stream = connection.getInputStream();
+            if (stream != null) {
+                result = readStream(stream);
+            }
+        } finally {
+            if (stream != null) {
+                stream.close();
+            }
+            if (connection != null) {
+                connection.disconnect();
+            }
         }
+        return result;
     }
 
-    static public String post(Context context, String uri, String[][] params, Bitmap bitmap) throws IOException {
-        String credentials = "";
-        SharedPreferences pref = context.getSharedPreferences("Login", MODE_PRIVATE);
-        if (pref.getBoolean("signed_in", false)) {
-            credentials = pref.getString("cred", "");
-        }
+    public static String upload(Context context, String method, String url, String[][] params) throws IOException {
 
-        HttpPost httpPost = new HttpPost(uri);
-        httpPost.addHeader("Authorization", "Basic " + credentials);
+        String credentials = getCredentials(context);
+        InputStream stream = null;
+        HttpURLConnection connection = null;
+        String result = null;
+        try {
+            connection = (HttpURLConnection) new URL(url).openConnection();
+            connection.setReadTimeout(10000);
+            connection.setConnectTimeout(15000);
+            connection.setRequestMethod(method);
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Authorization", "Basic " + credentials);
 
-        HttpClient httpclient = new DefaultHttpClient();
-        String boundary = "-------------" + System.currentTimeMillis();
+            List<NameValuePair> paramsArr = new ArrayList<>();
+            for (String[] ss: params){
+                paramsArr.add(new BasicNameValuePair(ss[0], ss[1]));
+            }
+            OutputStream os = connection.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(os, "UTF-8"));
+            writer.write(getQuery(paramsArr));
+            writer.flush();
+            writer.close();
+            os.close();
+            connection.connect();
 
-        MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create()
-                .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
-                .setBoundary(boundary);
-
-        for(String[] ss: params){
-            if (ss[0].equals("image") && bitmap != null) {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                byte[] imageBytes = baos.toByteArray();
-                entityBuilder.addPart(ss[0], new ByteArrayBody(imageBytes, "ANDROID.png"));
-            } else {
-                entityBuilder.addPart(ss[0], new StringBody(ss[1], ContentType.TEXT_PLAIN));
+            int responseCode = connection.getResponseCode();
+            if (responseCode != HttpsURLConnection.HTTP_OK) {
+                throw new IOException("HTTP error code: " + responseCode);
+            }
+            stream = connection.getInputStream();
+            if (stream != null) {
+                result = readStream(stream);
+            }
+        } finally {
+            if (stream != null) {
+                stream.close();
+            }
+            if (connection != null) {
+                connection.disconnect();
             }
         }
+        return result;
+    }
 
-        HttpEntity entity = entityBuilder.build();
+    public static String uploadImage(Context context, String method, String url, String param, Bitmap imageBitmap) throws IOException {
+        String credentials = getCredentials(context);
 
-        httpPost.setEntity(entity);
+        String boundary = "-------------" + System.currentTimeMillis();
+        InputStream stream = null;
+        HttpURLConnection connection = null;
+        String result = null;
+        try {
+            connection = (HttpURLConnection) new URL(url).openConnection();
+            connection.setReadTimeout(10000);
+            connection.setConnectTimeout(15000);
+            connection.setRequestMethod(method);
+            connection.setUseCaches(false);
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Authorization", "Basic " + credentials);
+            connection.setRequestProperty("Connection", "Keep-Alive");
 
-        HttpResponse response = httpclient.execute(httpPost);
-        InputStream instream = response.getEntity().getContent();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(instream));
-        StringBuffer stringBuffer = new StringBuffer();
+            MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create()
+                    .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
+                    .setBoundary(boundary);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            byte[] imageBytes = baos.toByteArray();
+            entityBuilder.addPart(param, new ByteArrayBody(imageBytes, "ANDROID.png"));
+            HttpEntity reqEntity = entityBuilder.build();
+            connection.addRequestProperty("Content-length", reqEntity.getContentLength()+"");
+            connection.addRequestProperty(reqEntity.getContentType().getName(), reqEntity.getContentType().getValue());
+
+            OutputStream os = connection.getOutputStream();
+            reqEntity.writeTo(connection.getOutputStream());
+            os.close();
+            connection.connect();
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode != HttpsURLConnection.HTTP_OK) {
+                throw new IOException("HTTP error code: " + responseCode);
+            }
+            stream = connection.getInputStream();
+            if (stream != null) {
+                result = readStream(stream);
+            }
+        } finally {
+            if (stream != null) {
+                stream.close();
+            }
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+        return result;
+    }
+
+    private static String getCredentials(Context context){
+        SharedPreferences pref = context.getSharedPreferences("Login", MODE_PRIVATE);
+        if (pref.getBoolean("signed_in", false)) {
+            return pref.getString("cred", "");
+        }
+        return null;
+    }
+    private static String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException
+    {
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+
+        for (NameValuePair pair : params)
+        {
+            if (first)
+                first = false;
+            else
+                result.append("&");
+
+            result.append(URLEncoder.encode(pair.getName(), "UTF-8"));
+            result.append("=");
+            result.append(URLEncoder.encode(pair.getValue(), "UTF-8"));
+        }
+
+        return result.toString();
+    }
+
+    public static String readStream(InputStream stream) throws IOException {
+        Reader reader = new InputStreamReader(stream, "UTF-8");
+        StringBuffer buffer = new StringBuffer();
         String line;
+        BufferedReader bufferedReader = new BufferedReader(reader);
         while ((line = bufferedReader.readLine()) != null)
         {
-            stringBuffer.append(line);
+            buffer.append(line);
         }
-        return stringBuffer.toString();
-
-    }
-
-    static public String postImage(Context context, String uri, String[][] params, Bitmap bitmap) throws IOException {
-        String credentials = "";
-        SharedPreferences pref = context.getSharedPreferences("Login", MODE_PRIVATE);
-        if (pref.getBoolean("signed_in", false)) {
-            credentials = pref.getString("cred", "");
-        }
-
-        HttpPost httpPost = new HttpPost(uri);
-        httpPost.addHeader("Authorization", "Basic " + credentials);
-
-        HttpClient httpclient = new DefaultHttpClient();
-        String boundary = "-------------" + System.currentTimeMillis();
-
-        MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create()
-                .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
-                .setBoundary(boundary);
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] imageBytes = baos.toByteArray();
-        entityBuilder.addPart("image", new ByteArrayBody(imageBytes, "ANDROID.png"));
-
-        HttpEntity entity = entityBuilder.build();
-        httpPost.setEntity(entity);
-
-        HttpResponse response = httpclient.execute(httpPost);
-        InputStream instream = response.getEntity().getContent();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(instream));
-        StringBuffer stringBuffer = new StringBuffer();
-        String line;
-        while ((line = bufferedReader.readLine()) != null)
-        {
-            stringBuffer.append(line);
-        }
-        return stringBuffer.toString();
-
-    }
-
-    static public String patch(Context context, String uri, String[][] params, Bitmap bitmap) throws IOException {
-        String credentials = "";
-        SharedPreferences pref = context.getSharedPreferences("Login", MODE_PRIVATE);
-        if (pref.getBoolean("signed_in", false)) {
-            credentials = pref.getString("cred", "");
-        }
-
-        HttpPatch httpPatch = new HttpPatch(uri);
-        httpPatch.addHeader("Authorization", "Basic " + credentials);
-
-        HttpClient httpclient = new DefaultHttpClient();
-        String boundary = "-------------" + System.currentTimeMillis();
-
-        MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create()
-                .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
-                .setBoundary(boundary);
-
-        for(String[] ss: params){
-            if (ss[1].equals("image") && bitmap != null) {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                byte[] imageBytes = baos.toByteArray();
-                entityBuilder.addPart(ss[0], new ByteArrayBody(imageBytes, "ANDROID.png"));
-            } else {
-                entityBuilder.addPart(ss[0], new StringBody(ss[1], ContentType.TEXT_PLAIN));
-            }
-        }
-        httpPatch.setEntity(entityBuilder.build());
-        HttpResponse response = httpclient.execute(httpPatch);
-        InputStream instream = response.getEntity().getContent();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(instream));
-        StringBuffer stringBuffer = new StringBuffer();
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            stringBuffer.append(line);
-        }
-        return stringBuffer.toString();
-
-    }
-
-    static public String patchImage(Context context, String uri, Bitmap bitmap) throws IOException {
-        String credentials = "";
-        SharedPreferences pref = context.getSharedPreferences("Login", MODE_PRIVATE);
-        if (pref.getBoolean("signed_in", false)) {
-            credentials = pref.getString("cred", "");
-        }
-
-        HttpPatch httpPatch = new HttpPatch(uri);
-        httpPatch.addHeader("Authorization", "Basic " + credentials);
-
-        HttpClient httpclient = new DefaultHttpClient();
-        String boundary = "-------------" + System.currentTimeMillis();
-
-        MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create()
-                .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
-                .setBoundary(boundary);
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] imageBytes = baos.toByteArray();
-        entityBuilder.addPart("food_photo", new ByteArrayBody(imageBytes, "ANDROID.png"));
-
-        httpPatch.setEntity(entityBuilder.build());
-        HttpResponse response = httpclient.execute(httpPatch);
-        InputStream instream = response.getEntity().getContent();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(instream));
-        StringBuffer stringBuffer = new StringBuffer();
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            stringBuffer.append(line);
-        }
-        return stringBuffer.toString();
-    }
-
-
-    static public String put(Context context, String uri, String[][] params) throws IOException {
-        String credentials = "";
-        SharedPreferences pref = context.getSharedPreferences("Login", MODE_PRIVATE);
-        if (pref.getBoolean("signed_in", false)) {
-            credentials = pref.getString("cred", "");
-        }
-
-        HttpPut httpPut = new HttpPut(uri);
-        httpPut.addHeader("Authorization", "Basic " + credentials);
-
-        HttpClient httpclient = new DefaultHttpClient();
-        String boundary = "-------------" + System.currentTimeMillis();
-        httpPut.setHeader("Content-type","multipart/form-foodPostHashMap; boundary="+boundary);
-
-        MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create()
-                .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
-                .setBoundary(boundary);
-
-        for (String[] ss: params){
-            multipartEntityBuilder.addPart(ss[0], new StringBody(ss[1], ContentType.TEXT_PLAIN));
-        }
-        HttpEntity entity = multipartEntityBuilder.build();
-        httpPut.setEntity(entity);
-        HttpResponse response = httpclient.execute(httpPut);
-        InputStream instream = response.getEntity().getContent();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(instream));
-        StringBuffer stringBuffer = new StringBuffer();
-        String line;
-
-        while ((line = bufferedReader.readLine()) != null) {
-            stringBuffer.append(line);
-        }
-        return stringBuffer.toString();
-
-
+        return buffer.toString();
     }
 }
+
+
+//class PatchAsyncTask extends AsyncTask<String[], Void, String> {
+//    public Bitmap bitmap;
+//    String uri;
+//
+//    public PatchAsyncTask(String uri){
+//        this.uri = uri;
+//    }
+//    @Override
+//    protected void onPreExecute() {
+//        showProgress(true);
+//        super.onPreExecute();
+//    }
+//    @Override
+//    protected String doInBackground(String[]... params) {
+//        try {
+//            return ServerAPI.upload(getApplicationContext(), "PATCH", this.uri, params);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+//    @Override
+//    protected void onPostExecute(String response) {
+//        super.onPostExecute(response);
+//    }
+//}
+//class PatchImagesAsyncTask extends AsyncTask<String[], Void, String> {
+//    String uri;
+//    HashMap<Integer, Bitmap> bitmapHashMap;
+//
+//    public PatchImagesAsyncTask(String uri, HashMap<Integer, Bitmap> bitmapHashMap){
+//        this.uri = uri;
+//        this.bitmapHashMap = bitmapHashMap;
+//    }
+//    @Override
+//    protected String doInBackground(String[]... params) {
+//        try {
+//            for (Integer imageId: bitmapHashMap.keySet()){
+//                ServerAPI.uploadImage(getApplicationContext(),"PATCH", this.uri + imageId + "/", "food_photo", this.bitmapHashMap.get(imageId));
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+//    @Override
+//    protected void onPostExecute(String response) {
+//        showProgress(false);
+//        finish();
+//        super.onPostExecute(response);
+//    }
+//}
+//class PostImagesAsyncTask extends AsyncTask<String[], Void, String> {
+//    String uri;
+//    public Bitmap[] bitmaps;
+//    public PostImagesAsyncTask(String uri, Bitmap[] bitmaps){
+//        this.uri = uri;
+//        this.bitmaps = bitmaps;
+//    }
+//    @Override
+//    protected String doInBackground(String[]... params) {
+//        try {
+//            for (Bitmap image: this.bitmaps){
+//                ServerAPI.uploadImage(getApplicationContext(), "POST",  this.uri, "image", image);
+//            }
+//            return "";
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+//    @Override
+//    protected void onPostExecute(String response) {
+//
+//        HashMap<Integer, Bitmap> bitmapHashMap= new HashMap<>();
+//        for(int i = 0; i < imageBitmaps.length; i++){
+//            if (imageBitmaps[i] != null && i <= foodPostDetail.images.size()-1){
+//                bitmapHashMap.put(foodPostDetail.images.get(i).id, imageBitmaps[i]);
+//            }
+//        }
+//        EditFoodPostActivity.PatchImagesAsyncTask patch = new EditFoodPostActivity.PatchImagesAsyncTask(getResources().getString(R.string.server) + "/edit_image/", bitmapHashMap);
+//        patch.execute();
+//        super.onPostExecute(response);
+//    }
+//}

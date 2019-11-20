@@ -135,16 +135,12 @@ public class EditFoodPostActivity extends AppCompatActivity implements
 
     void edit(){
         patchPost();
-
         Bitmap[] bitmapsToPost = Arrays.copyOfRange(imageBitmaps, foodPostDetail.images.size(), imageBitmaps.length);
         PostImagesAsyncTask post = new PostImagesAsyncTask(
                 getResources().getString(R.string.server) + "/food_images/",
                 bitmapsToPost
         );
-        post.execute(
-                new String[]{"post", "" + foodPostDetail.id},
-                new String[]{"image_count", bitmapsToPost.length + ""}
-        );
+        post.execute();
     }
 
     void patchPost(){
@@ -169,7 +165,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
         @Override
         protected String doInBackground(String[]... params) {
             try {
-                return ServerAPI.patch(getApplicationContext(), this.uri, params, bitmap);
+                return ServerAPI.upload(getApplicationContext(), "PATCH", this.uri, params);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -189,14 +185,10 @@ public class EditFoodPostActivity extends AppCompatActivity implements
             this.bitmapHashMap = bitmapHashMap;
         }
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-        @Override
         protected String doInBackground(String[]... params) {
             try {
                 for (Integer imageId: bitmapHashMap.keySet()){
-                    ServerAPI.patchImage(getApplicationContext(), this.uri + imageId + "/", this.bitmapHashMap.get(imageId));
+                    ServerAPI.uploadImage(getApplicationContext(),"PATCH", this.uri + imageId + "/", "food_photo", this.bitmapHashMap.get(imageId));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -218,14 +210,10 @@ public class EditFoodPostActivity extends AppCompatActivity implements
             this.bitmaps = bitmaps;
         }
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-        @Override
         protected String doInBackground(String[]... params) {
             try {
                 for (Bitmap image: this.bitmaps){
-                    ServerAPI.postImage(getApplicationContext(), this.uri, params, image);
+                    ServerAPI.uploadImage(getApplicationContext(), "POST",  this.uri, "image", image);
                 }
                 return "";
             } catch (IOException e) {
