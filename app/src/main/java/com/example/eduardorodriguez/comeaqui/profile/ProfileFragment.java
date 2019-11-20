@@ -28,7 +28,7 @@ import android.view.*;
 import android.widget.*;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
@@ -66,6 +66,9 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
 
     int userId;
 
+
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
+
     private static final String USER_TO_DISPLAY = "user";
 
     public ProfileFragment() {}
@@ -79,22 +82,21 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        selectImageFromFragment.hideCard();
-        getUser(userId);
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             userId = getArguments().getInt(USER_TO_DISPLAY);
         }
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        selectImageFromFragment.hideCard();
+        getUser(userId);
+    }
 
     public void getUser(int userId) {
-        new GetAsyncTask(getResources().getString(R.string.server) + "/profile_detail/" + userId + "/").execute();
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/profile_detail/" + userId + "/").execute());
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -148,8 +150,9 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         return view;
     }
     public void setProfile(User user){
+        if (!isAdded()) return;
         viewPager.setAdapter(new TestPagerAdapter(getChildFragmentManager()));
-        getFragmentManager().beginTransaction()
+        getChildFragmentManager().beginTransaction()
                 .replace(R.id.profile_rating, RatingFragment.newInstance(user.rating, user.ratingN))
                 .commit();
 
@@ -327,4 +330,11 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         }
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+    }
 }

@@ -28,7 +28,7 @@ import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
-import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
@@ -264,6 +264,10 @@ public class FoodLookActivity extends AppCompatActivity {
                 .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(foodPostDetail.id, 0, 4, 200,0, 0))
                 .commit();
 
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.waiting_frame, WaitFragment.newInstance())
+                .commit();
+
         setPlaceButton();
         setDinners();
     }
@@ -308,9 +312,6 @@ public class FoodLookActivity extends AppCompatActivity {
     void startWaitingFrame(boolean start){
         if (start) {
             waitingFrame.setVisibility(View.VISIBLE);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.waiting_frame, WaitFragment.newInstance())
-                    .commit();
         } else {
             waitingFrame.setVisibility(View.GONE);
         }

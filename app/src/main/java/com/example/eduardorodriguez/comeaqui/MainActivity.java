@@ -28,7 +28,7 @@ import com.example.eduardorodriguez.comeaqui.notification.NotificationsFragment;
 import com.example.eduardorodriguez.comeaqui.order.OrderFragment;
 import com.example.eduardorodriguez.comeaqui.map.MapFragment;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileFragment;
-import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

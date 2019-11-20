@@ -19,7 +19,7 @@ import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.firebase_objects.ChatFirebaseObject;
-import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
@@ -79,8 +79,11 @@ public class ChatFragment extends Fragment{
                              Bundle savedInstanceState) {
         view  = inflater.inflate(R.layout.fragment_chat_list, container, false);
         recyclerView = view.findViewById(R.id.recycler_chat);
-
         waitFrame = view.findViewById(R.id.wait_frame);
+
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.wait_frame, WaitFragment.newInstance())
+                .commit();
         start();
         return view;
     }
@@ -107,7 +110,7 @@ public class ChatFragment extends Fragment{
         new GetAsyncTask(getResources().getString(R.string.server) + "/my_chats/").execute();
     }
 
-    class GetAsyncTask extends AsyncTask<String[], Void, String> {
+    private class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
         public GetAsyncTask(String uri){
             this.uri = uri;
@@ -145,9 +148,6 @@ public class ChatFragment extends Fragment{
     void startWaitingFrame(boolean start){
         if (start) {
             waitFrame.setVisibility(View.VISIBLE);
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.wait_frame, WaitFragment.newInstance())
-                    .commit();
         } else {
             waitFrame.setVisibility(View.GONE);
         }

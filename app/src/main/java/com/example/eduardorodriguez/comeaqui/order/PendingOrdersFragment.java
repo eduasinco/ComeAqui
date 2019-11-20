@@ -16,7 +16,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
-import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonArray;
@@ -55,6 +55,8 @@ public class PendingOrdersFragment extends Fragment {
 
     FrameLayout waitFrame;
     View view;
+
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     boolean pending;
     private static final String PENDING = "pending";
@@ -109,6 +111,10 @@ public class PendingOrdersFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recycler);
         waitFrame = view.findViewById(R.id.wait_frame);
 
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.wait_frame, WaitFragment.newInstance())
+                .commit();
+
         getDataAndSet();
         if(pending)
             start();
@@ -116,7 +122,7 @@ public class PendingOrdersFragment extends Fragment {
     }
 
     void getDataAndSet(){
-        new GetAsyncTask(getResources().getString(R.string.server) + (pending ? "/my_pending_orders/" : "/my_past_orders/")).execute();
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + (pending ? "/my_pending_orders/" : "/my_past_orders/")).execute());
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -154,9 +160,6 @@ public class PendingOrdersFragment extends Fragment {
     void startWaitingFrame(boolean start){
         if (start) {
             waitFrame.setVisibility(View.VISIBLE);
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.wait_frame, WaitFragment.newInstance())
-                    .commit();
         } else {
             waitFrame.setVisibility(View.GONE);
         }
@@ -202,6 +205,9 @@ public class PendingOrdersFragment extends Fragment {
         mListener = null;
         if (null != mWebSocketClient)
             mWebSocketClient.close();
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
     }
 
     public interface OnListFragmentInteractionListener {

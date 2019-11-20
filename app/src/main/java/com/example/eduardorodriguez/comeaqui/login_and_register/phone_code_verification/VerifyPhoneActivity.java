@@ -3,6 +3,7 @@ package com.example.eduardorodriguez.comeaqui.login_and_register.phone_code_veri
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -15,9 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonParser;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -89,38 +92,62 @@ public class VerifyPhoneActivity extends AppCompatActivity {
     }
 
     void submit(){
-        try {
+        new SendCodeAsyncTask(getResources().getString(R.string.server) + "/send_code_to_email/" + emailAdress.getText() + "/").execute();
+    }
+    private class SendCodeAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public SendCodeAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected void onPreExecute() {
             sendCodeButton.setVisibility(View.GONE);
             progress.setVisibility(View.VISIBLE);
-            String response = new GetAsyncTask(this,"GET", getResources().getString(R.string.server) + "/send_code_to_email/" + emailAdress.getText() + "/"){
-                @Override
-                protected void onPostExecute(String response) {
-                    sendCodeButton.setVisibility(View.VISIBLE);
-                    progress.setVisibility(View.GONE);
-                    super.onPostExecute(response);
-                }
-            }.execute().get(10, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
             sendCodeButton.setVisibility(View.VISIBLE);
             progress.setVisibility(View.GONE);
-            Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            sendCodeButton.setVisibility(View.VISIBLE);
-            progress.setVisibility(View.GONE);
-            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
+            super.onPostExecute(response);
         }
     }
 
     void sendCode(){
-        try {
-            String response = new GetAsyncTask(this,"GET", getResources().getString(R.string.server) + "/is_code_valid/" + verificationCode.getText() + "/"){
-                @Override
-                protected void onPostExecute(String response) {
-                    super.onPostExecute(response);
-                }
-            }.execute().get();
+        new CheckCodeAsyncTask(getResources().getString(R.string.server) + "/is_code_valid/" + verificationCode.getText() + "/").execute();
+    }
+    private class CheckCodeAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public CheckCodeAsyncTask(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
             if (response != null){
                 if (new JsonParser().parse(response).getAsJsonObject().get("is_valid").getAsBoolean()){
 
@@ -128,8 +155,8 @@ public class VerifyPhoneActivity extends AppCompatActivity {
                     showValtext(verificationValtext, "Wrong verification code", verificationCode);
                 }
             }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+            super.onPostExecute(response);
         }
+
     }
 }

@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostReview;
-import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonElement;
@@ -34,7 +34,7 @@ public class PostAndReviewsFragment extends Fragment {
 
     RecyclerView recyclerView;
     FrameLayout waitFrame;
-
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -54,12 +54,6 @@ public class PostAndReviewsFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        getPostFromUser();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -75,12 +69,21 @@ public class PostAndReviewsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_user_postandreviews);
         waitFrame = view.findViewById(R.id.wait_frame);
 
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.wait_frame, WaitFragment.newInstance())
+                .commit();
+
         getPostFromUser();
         return view;
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        getPostFromUser();
+    }
 
     void getPostFromUser(){
-        new GetAsyncTask(getResources().getString(R.string.server) + "/user_food_posts_reviews/" + userId + "/").execute();
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/user_food_posts_reviews/" + userId + "/").execute());
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -119,16 +122,19 @@ public class PostAndReviewsFragment extends Fragment {
             startWaitingFrame(false);
             super.onPostExecute(response);
         }
-
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+    }
 
     void startWaitingFrame(boolean start){
         if (start) {
             waitFrame.setVisibility(View.VISIBLE);
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.wait_frame, WaitFragment.newInstance())
-                    .commit();
         } else {
             waitFrame.setVisibility(View.GONE);
         }

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Base64;
@@ -17,16 +18,18 @@ import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.login_and_register.LoginOrRegisterActivity;
 import com.example.eduardorodriguez.comeaqui.objects.User;
-import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.Server;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.MyLocation;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.JsonParser;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -87,29 +90,39 @@ public class PrepareActivity extends AppCompatActivity {
     }
 
     public void initializeUser(){
-        try {
-            new GetAsyncTask(this, "GET", getResources().getString(R.string.server) + "/my_profile/"){
-                @Override
-                protected void onPostExecute(String response) {
-                    if (response != null){
-                        SharedPreferences sp = getSharedPreferences("Login", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sp.edit();
-                        editor.putString("user", response);
-                        editor.apply();
-                        USER = new User(new JsonParser().parse(response).getAsJsonArray().get(0).getAsJsonObject());
-                        getFirebaseToken();
-                    } else {
-                        signOut();
-                    }
-                    super.onPostExecute(response);
-                }
-            }.execute().get(10, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            Toast.makeText(getApplicationContext(), "No internet connections", Toast.LENGTH_LONG).show();
+        new GetAsyncTask( getResources().getString(R.string.server) + "/my_profile/").execute();
+    }
+    private class GetAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetAsyncTask(String uri){
+            this.uri = uri;
         }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                SharedPreferences sp = getSharedPreferences("Login", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("user", response);
+                editor.apply();
+                USER = new User(new JsonParser().parse(response).getAsJsonArray().get(0).getAsJsonObject());
+                getFirebaseToken();
+            } else {
+                signOut();
+            }
+            super.onPostExecute(response);
+        }
+
     }
 
 

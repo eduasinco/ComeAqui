@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -25,14 +26,16 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.review.food_review_look.MyFoodReviewRecyclerViewAdapter;
-import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.ContinueCancelFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.HorizontalImageDisplayFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonParser;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -86,6 +89,10 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
         posterImageView = findViewById(R.id.poster_image);
         waitingFrame = findViewById(R.id.waiting_frame);
 
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.wait_frame, WaitFragment.newInstance())
+                .commit();
+
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if (b != null){
@@ -128,33 +135,46 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
     }
 
     void getOrderDetails(int orderId){
-        try {
-            new GetAsyncTask(this,"GET", getResources().getString(R.string.server) + "/order_detail/" + orderId + "/"){
-                @Override
-                protected void onPostExecute(String response) {
-                    if (response != null) {
-                        order = new OrderObject(new JsonParser().parse(response).getAsJsonObject());
-                        setView();
-                    }
-                    super.onPostExecute(response);
-                }
-            }.execute().get(10, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            startWaitingFrame(false);
-            Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
+        new GetAsyncTask(getResources().getString(R.string.server) + "/order_detail/" + orderId + "/").execute();
+    }
+    private class GetAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetAsyncTask(String uri){
+            this.uri = uri;
         }
+
+        @Override
+        protected void onPreExecute() {
+            startWaitingFrame(true);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null) {
+                order = new OrderObject(new JsonParser().parse(response).getAsJsonObject());
+                setView();
+            }
+            startWaitingFrame(false);
+            super.onPostExecute(response);
+        }
+
     }
 
     void startWaitingFrame(boolean start){
         if (start) {
             waitingFrame.setVisibility(View.VISIBLE);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.wait_frame, WaitFragment.newInstance())
-                    .commit();
+
         } else {
             waitingFrame.setVisibility(View.GONE);
         }

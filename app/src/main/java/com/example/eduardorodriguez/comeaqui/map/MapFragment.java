@@ -137,11 +137,11 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
                 .replace(R.id.map_picker_frame, mapPickerFragment)
                 .commit();
         upperNotificationFragment = UpperNotificationFragment.newInstance();
-        getFragmentManager().beginTransaction()
+        getChildFragmentManager().beginTransaction()
                 .replace(R.id.upper_notification, upperNotificationFragment)
                 .commit();
         mapCardFragment = MapCardFragment.newInstance();
-        getFragmentManager().beginTransaction()
+        getChildFragmentManager().beginTransaction()
                 .replace(R.id.container1, mapCardFragment)
                 .commit();
         mMapView.onResume();

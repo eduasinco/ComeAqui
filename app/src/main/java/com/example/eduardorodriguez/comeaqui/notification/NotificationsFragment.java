@@ -47,6 +47,8 @@ public class NotificationsFragment extends Fragment {
     static NotificationsFragment f;
 
 
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
+
     public NotificationsFragment() {
     }
 
@@ -75,11 +77,10 @@ public class NotificationsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifications_list, container, false);
         f = this;
-
         recyclerView = view.findViewById(R.id.recycler);
         waitFrame = view.findViewById(R.id.wait_frame);
 
-        getFragmentManager().beginTransaction()
+        getChildFragmentManager().beginTransaction()
                 .replace(R.id.wait_frame, WaitFragment.newInstance())
                 .commit();
 
@@ -119,7 +120,7 @@ public class NotificationsFragment extends Fragment {
     }
 
     void getData(){
-        new GetAsyncTask(getResources().getString(R.string.server) + "/my_notifications/").execute();
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_notifications/").execute());
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -156,9 +157,6 @@ public class NotificationsFragment extends Fragment {
     void startWaitingFrame(boolean start){
         if (start) {
             waitFrame.setVisibility(View.VISIBLE);
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.wait_frame, WaitFragment.newInstance())
-                    .commit();
         } else {
             waitFrame.setVisibility(View.GONE);
         }
@@ -204,5 +202,8 @@ public class NotificationsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mWebSocketClient.close();
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
     }
 }

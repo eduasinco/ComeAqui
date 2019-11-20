@@ -32,7 +32,7 @@ public class OrderFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_order, container, false);
 
-        fragmentManager = getFragmentManager();
+        fragmentManager = getChildFragmentManager();
         ViewPager viewPager = view.findViewById(R.id.view_pager);
         viewPager.setAdapter(new TestPagerAdapter(getChildFragmentManager()));
         TabLayout tabLayout = view.findViewById(R.id.tab);

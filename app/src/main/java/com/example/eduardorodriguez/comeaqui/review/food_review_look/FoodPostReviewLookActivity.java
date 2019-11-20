@@ -29,7 +29,7 @@ import com.example.eduardorodriguez.comeaqui.objects.ReviewReplyObject;
 import com.example.eduardorodriguez.comeaqui.objects.ReviewObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
-import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
@@ -123,6 +123,9 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
         if(b != null){
             fpId = b.getInt("foodPostId");
             getReviewsFrompFoodPost(fpId);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.waiting_frame, WaitFragment.newInstance())
+                    .commit();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(fpId, 0, 4, 200,0, 0))
                     .commit();
@@ -256,9 +259,6 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
     void startWaitingFrame(boolean start){
         if (start) {
             waitingFrame.setVisibility(View.VISIBLE);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.waiting_frame, WaitFragment.newInstance())
-                    .commit();
         } else {
             waitingFrame.setVisibility(View.GONE);
         }

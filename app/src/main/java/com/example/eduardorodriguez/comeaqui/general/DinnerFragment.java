@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
-import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonParser;
@@ -64,6 +64,9 @@ public class DinnerFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_dinner_list, container, false);
         recyclerView = view.findViewById(R.id.list);
         waitingFrame = view.findViewById(R.id.waiting_frame);
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.waiting_frame, WaitFragment.newInstance())
+                .commit();
         getFoodPostDetailsAndSet(foodPostId);
         return view;
     }
@@ -116,9 +119,6 @@ public class DinnerFragment extends Fragment {
     void startWaitingFrame(boolean start){
         if (start) {
             waitingFrame.setVisibility(View.VISIBLE);
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.waiting_frame, WaitFragment.newInstance())
-                    .commit();
         } else {
             waitingFrame.setVisibility(View.GONE);
         }

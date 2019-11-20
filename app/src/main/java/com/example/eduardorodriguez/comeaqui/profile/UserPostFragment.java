@@ -10,11 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonArray;
@@ -24,9 +22,6 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public class UserPostFragment extends Fragment {
 
@@ -42,6 +37,7 @@ public class UserPostFragment extends Fragment {
     RecyclerView recyclerView;
     FrameLayout waitFrame;
 
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     public UserPostFragment() {
     }
@@ -88,8 +84,11 @@ public class UserPostFragment extends Fragment {
 
         Context context = view.getContext();
         recyclerView = view.findViewById(R.id.recycler_user_post);
-
         waitFrame = view.findViewById(R.id.wait_frame);
+
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.wait_frame, WaitFragment.newInstance())
+                .commit();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         getPostFromUser(userId);
@@ -98,7 +97,7 @@ public class UserPostFragment extends Fragment {
 
 
     void getPostFromUser(int userId){
-        new GetAsyncTask(getResources().getString(R.string.server) + "/user_food_posts/" + userId + "/").execute();
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/user_food_posts/" + userId + "/").execute());
     }
 
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
@@ -138,9 +137,6 @@ public class UserPostFragment extends Fragment {
     void startWaitingFrame(boolean start){
         if (start) {
             waitFrame.setVisibility(View.VISIBLE);
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.wait_frame, WaitFragment.newInstance())
-                    .commit();
         } else {
             waitFrame.setVisibility(View.GONE);
         }
@@ -149,6 +145,9 @@ public class UserPostFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
     }
 
 }

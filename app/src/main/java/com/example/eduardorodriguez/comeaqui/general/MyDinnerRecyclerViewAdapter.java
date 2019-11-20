@@ -16,7 +16,7 @@ import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActiv
 import com.example.eduardorodriguez.comeaqui.general.DinnerFragment.OnListFragmentInteractionListener;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
-import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+
 import com.google.gson.JsonParser;
 
 import java.util.List;

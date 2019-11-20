@@ -22,7 +22,7 @@ import com.example.eduardorodriguez.comeaqui.login_and_register.LoginOrRegisterA
 import com.example.eduardorodriguez.comeaqui.login_and_register.register.RegisterActivity;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
-import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+
 import com.example.eduardorodriguez.comeaqui.server.PutAsyncTask;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.DateFormatting;

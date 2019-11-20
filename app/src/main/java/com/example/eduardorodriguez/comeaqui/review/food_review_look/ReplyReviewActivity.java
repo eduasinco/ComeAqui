@@ -53,9 +53,11 @@ public class ReplyReviewActivity extends AppCompatActivity {
         Bundle b = intent.getExtras();
         if(b != null && b.get("review") != null){
             reviewObject = (ReviewObject) b.get("review");
-
             setThings();
         }
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.waiting_frame, WaitFragment.newInstance())
+                .commit();
     }
 
     void setThings(){
@@ -94,9 +96,6 @@ public class ReplyReviewActivity extends AppCompatActivity {
     void startWaitingFrame(boolean start){
         if (start) {
             waitingFrame.setVisibility(View.VISIBLE);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.waiting_frame, WaitFragment.newInstance())
-                    .commit();
         } else {
             waitingFrame.setVisibility(View.GONE);
         }

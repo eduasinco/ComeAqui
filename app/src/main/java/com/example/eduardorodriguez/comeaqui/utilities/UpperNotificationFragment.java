@@ -2,6 +2,7 @@ package com.example.eduardorodriguez.comeaqui.utilities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
@@ -21,10 +22,12 @@ import com.example.eduardorodriguez.comeaqui.general.FoodLookActivity;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
-import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 
@@ -167,34 +170,67 @@ public class UpperNotificationFragment extends Fragment {
     }
 
     void getConfirmedOrders(){
-        new GetAsyncTask(getContext(),"GET", getResources().getString(R.string.server) +  "/my_next_confirmed_order/"){
-            @Override
-            protected void onPostExecute(String response) {
-                if (response != null){
-                    JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
-                    if (ja.size() > 0){
-                        orderObject = new OrderObject(ja.get(0).getAsJsonObject());
-                        setOrderCard();
-                    }
-                }
-                super.onPostExecute(response);
+        new GetConfirmedOrdersAsyncTask(getResources().getString(R.string.server) +  "/my_next_confirmed_order/").execute();
+    }
+    private class GetConfirmedOrdersAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetConfirmedOrdersAsyncTask(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        }.execute();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
+                if (ja.size() > 0){
+                    orderObject = new OrderObject(ja.get(0).getAsJsonObject());
+                    setOrderCard();
+                }
+            }
+            super.onPostExecute(response);
+        }
+
     }
     void getConfirmedFoodPosts(){
-        new GetAsyncTask(getContext(),"GET", getResources().getString(R.string.server) +  "/my_next_confirmed_post/"){
-            @Override
-            protected void onPostExecute(String response) {
-                if (response != null){
-                    JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
-                    if (ja.size() > 0){
-                        orderPost = new OrderObject(ja.get(0).getAsJsonObject());
-                        setOrderPost();
-                    }
-                }
-                super.onPostExecute(response);
+        new GetConfirmedPostsAsyncTask(getResources().getString(R.string.server) +  "/my_next_confirmed_post/").execute();
+    }
+    private class GetConfirmedPostsAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        GetConfirmedPostsAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        }.execute();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
+                if (ja.size() > 0){
+                    orderPost = new OrderObject(ja.get(0).getAsJsonObject());
+                    setOrderPost();
+                }
+            }
+            super.onPostExecute(response);
+        }
+
     }
 
     @Override
