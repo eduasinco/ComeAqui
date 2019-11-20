@@ -17,6 +17,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.login_and_register.LoginOrRegisterActivity;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
@@ -74,19 +75,35 @@ public class PrepareActivity extends AppCompatActivity {
 
     private void postTokenToServer(String token){
         String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        try {
-            new PostAsyncTask(this,getResources().getString(R.string.server) + "/fcm/v1/devices/").execute(
-                    new String[]{"dev_id", androidID},
-                    new String[]{"reg_id", token},
-                    new String[]{"name", "" + USER.id}
-            ).get(10, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            Toast.makeText(getApplicationContext(), "No internet connections", Toast.LENGTH_LONG).show();
+        new PostAsyncTask(getResources().getString(R.string.server) + "/fcm/v1/devices/").execute(
+                new String[]{"dev_id", androidID},
+                new String[]{"reg_id", token},
+                new String[]{"name", "" + USER.id}
+        );
+    }
+    private class PostAsyncTask extends AsyncTask<String[], Void, String> {
+        String uri;
+        public PostAsyncTask(String uri){
+            this.uri = uri;
         }
-        goToMain();
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.upload(getApplicationContext(), "POST", this.uri, params);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            goToMain();
+            super.onPostExecute(response);
+        }
     }
 
     public void initializeUser(){

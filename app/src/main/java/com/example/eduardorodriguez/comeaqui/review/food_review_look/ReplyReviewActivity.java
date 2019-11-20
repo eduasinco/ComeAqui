@@ -3,6 +3,7 @@ package com.example.eduardorodriguez.comeaqui.review.food_review_look;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,14 +14,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.ReviewObject;
 import com.example.eduardorodriguez.comeaqui.objects.ReviewReplyObject;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -68,28 +72,39 @@ public class ReplyReviewActivity extends AppCompatActivity {
     }
 
     void postReviewReply(){
-        try {
+        new PostAsyncTask(getResources().getString(R.string.server) + "/create_review_reply/").execute(
+                new String[]{"reply", reply.getText().toString()},
+                new String[]{"review_id", reviewObject.id + ""}
+        );
+    }
+    private class PostAsyncTask extends AsyncTask<String[], Void, String> {
+        String uri;
+        public PostAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected void onPreExecute() {
             startWaitingFrame(true);
-            new PostAsyncTask(this,getResources().getString(R.string.server) + "/create_review_reply/"){
-                @Override
-                protected void onPostExecute(String response) {
-                    JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
-                    ReviewReplyObject reviewObject = new ReviewReplyObject(jo);
-                    finish();
-                    super.onPostExecute(response);
-                }
-            }.execute(
-                    new String[]{"reply", reply.getText().toString()},
-                    new String[]{"review_id", reviewObject.id + ""}
-            ).get(10, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.upload(getApplicationContext(), "POST", this.uri, params);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (null != response){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                ReviewReplyObject reviewObject = new ReviewReplyObject(jo);
+                finish();
+            }
             startWaitingFrame(false);
-            Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            startWaitingFrame(false);
-            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
+            super.onPostExecute(response);
         }
     }
 

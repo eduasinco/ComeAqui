@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
@@ -157,38 +159,46 @@ public class ConfirmEmailActivity extends AppCompatActivity {
     }
 
     void sendCode(){
-        try {
-            sendCodeButton.setVisibility(View.GONE);
-            progress2.setVisibility(View.VISIBLE);
-            new PostAsyncTask(this,getResources().getString(R.string.server) + "/is_code_valid/"){
-                @Override
-                protected void onPostExecute(String response) {
-                    try{
-                        new User(new JsonParser().parse(response).getAsJsonObject());
-                        progress2.setVisibility(View.GONE);
-                        emailSavedMessage.setVisibility(View.VISIBLE);
-
-                    } catch(Exception e){
-                        showValtext(verificationValtext, new JsonParser().parse(response).getAsJsonObject().get("message").getAsString(), verificationCode);
-                        sendCodeButton.setVisibility(View.VISIBLE);
-                        progress2.setVisibility(View.GONE);
-                    }
-                    super.onPostExecute(response);
-                }
-            }.execute(
+       new PostAsyncTask(getResources().getString(R.string.server) + "/is_code_valid/").execute(
                     new String[]{"code", verificationCode.getText().toString()},
                     new String[]{"new_email", emailToSend}
-            ).get(10, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            sendCodeButton.setVisibility(View.VISIBLE);
-            progress2.setVisibility(View.GONE);
-            Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            sendCodeButton.setVisibility(View.VISIBLE);
-            progress2.setVisibility(View.GONE);
-            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
+            );
+    }
+    private class PostAsyncTask extends AsyncTask<String[], Void, String> {
+        public Bitmap bitmap;
+        String uri;
+
+        public PostAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected void onPreExecute() {
+            sendCodeButton.setVisibility(View.GONE);
+            progress2.setVisibility(View.VISIBLE);
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.upload(getApplicationContext(), "POST", this.uri, params);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            try{
+                new User(new JsonParser().parse(response).getAsJsonObject());
+                progress2.setVisibility(View.GONE);
+                emailSavedMessage.setVisibility(View.VISIBLE);
+
+            } catch(Exception e){
+                showValtext(verificationValtext, new JsonParser().parse(response).getAsJsonObject().get("message").getAsString(), verificationCode);
+                sendCodeButton.setVisibility(View.VISIBLE);
+                progress2.setVisibility(View.GONE);
+            }
+            super.onPostExecute(response);
         }
     }
 }

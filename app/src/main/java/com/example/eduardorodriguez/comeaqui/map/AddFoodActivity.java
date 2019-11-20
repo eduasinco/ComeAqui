@@ -298,8 +298,7 @@ public class AddFoodActivity extends AppCompatActivity implements
                 new String[]{"description", description}
         );
     }
-    class PostAsyncTask extends AsyncTask<String[], Void, String> {
-        public Bitmap bitmap;
+    private class PostAsyncTask extends AsyncTask<String[], Void, String> {
         String uri;
 
         public PostAsyncTask(String uri){

@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
@@ -363,19 +365,40 @@ public class FoodLookActivity extends AppCompatActivity {
     }
 
     void createOrder(){
-        PostAsyncTask createOrder = new PostAsyncTask(this,getResources().getString(R.string.server) + "/create_order_and_notification/");
-        try {
-            String response = createOrder.execute(
-                    new String[]{"food_post_id", "" + foodPostDetail.id}
-            ).get(5, TimeUnit.SECONDS);
-            JsonObject jo = new JsonParser().parse(response).getAsJsonObject().get("order").getAsJsonObject();
-            OrderObject orderObject = new OrderObject(jo);
-            goToOrder(orderObject);
-            finish();
-        } catch (ExecutionException | InterruptedException | TimeoutException e) {
-            e.printStackTrace();
-            showErrorMessage();
-            showProgress(false);
+        PostAsyncTask createOrder = new PostAsyncTask(getResources().getString(R.string.server) + "/create_order_and_notification/");
+        createOrder.execute(new String[]{"food_post_id", "" + foodPostDetail.id});
+    }
+    private class PostAsyncTask extends AsyncTask<String[], Void, String> {
+        public Bitmap bitmap;
+        String uri;
+
+        public PostAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected void onPreExecute() {
+            showProgress(true);
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.upload(getApplicationContext(), "POST", this.uri, params);
+            } catch (IOException e) {
+                showProgress(false);
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (null != response){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject().get("order").getAsJsonObject();
+                OrderObject orderObject = new OrderObject(jo);
+                goToOrder(orderObject);
+                finish();
+            }
+            super.onPostExecute(response);
         }
     }
 

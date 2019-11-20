@@ -3,6 +3,8 @@ package com.example.eduardorodriguez.comeaqui.review;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,12 +14,15 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.ReviewObject;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 public class GuestsReviewActivity extends AppCompatActivity implements StarReasonFragment.OnFragmentInteractionListener{
@@ -65,31 +70,43 @@ public class GuestsReviewActivity extends AppCompatActivity implements StarReaso
     }
 
     void submit(){
-        try {
+        new PostAsyncTask(getResources().getString(R.string.server) + "/rate_user/").execute(
+                new String[]{"order_id", "" + orderObject.id},
+                new String[]{"review", review},
+                new String[]{"rating", "" + rating},
+                new String[]{"star_reason", ""}
+        );
+    }
+    private class PostAsyncTask extends AsyncTask<String[], Void, String> {
+        public Bitmap bitmap;
+        String uri;
+
+        public PostAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected void onPreExecute() {
             submitButton.setVisibility(View.GONE);
             progress.setVisibility(View.VISIBLE);
-            new PostAsyncTask(this,getResources().getString(R.string.server) + "/rate_user/"){
-                @Override
-                protected void onPostExecute(String response) {
-                    JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
-                    OrderObject orderObject = new OrderObject(jo);
-                    finish();
-                    super.onPostExecute(response);
-                }
-            }.execute(
-                    new String[]{"order_id", "" + orderObject.id},
-                    new String[]{"review", review},
-                    new String[]{"rating", "" + rating},
-                    new String[]{"star_reason", ""}
-            ).get();
-        } catch (ExecutionException e) {
-            submitButton.setVisibility(View.VISIBLE);
-            progress.setVisibility(View.GONE);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            submitButton.setVisibility(View.VISIBLE);
-            progress.setVisibility(View.GONE);
-            e.printStackTrace();
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.upload(getApplicationContext(), "POST", this.uri, params);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (null != response){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                OrderObject orderObject = new OrderObject(jo);
+                finish();
+            }
+            super.onPostExecute(response);
         }
     }
 

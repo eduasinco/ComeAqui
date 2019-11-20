@@ -1,6 +1,8 @@
 package com.example.eduardorodriguez.comeaqui.map;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodElementFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.R;
@@ -21,7 +24,9 @@ import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
 import com.example.eduardorodriguez.comeaqui.utilities.HorizontalImageDisplayFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
+import com.google.gson.JsonParser;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
@@ -113,12 +118,8 @@ public class MapCardFragment extends Fragment {
             starView.setImageResource(foodPost.favourite ? R.drawable.star_fill: R.drawable.star);
             if (foodPost.favourite) {
                 MapFragment.setMarkerDesign(MapFragment.markerHashMap.get(foodPost.id), true);
-                PostAsyncTask putFavourite = new PostAsyncTask(getContext(), getResources().getString(R.string.server) + "/favourites/");
-                try {
-                    favouriteId = Integer.parseInt(putFavourite.execute(new String[]{"food_post_id", "" + foodPost.id}).get());
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
-                }
+                PostAsyncTask putFavourite = new PostAsyncTask(getResources().getString(R.string.server) + "/favourites/");
+                putFavourite.execute(new String[]{"food_post_id", "" + foodPost.id});
             } else {
                 String uri = getResources().getString(R.string.server) + "/favourite_detail/" + favouriteId + "/";
                 Server deleteFoodPost = new Server(getContext(),"DELETE", uri);
@@ -130,6 +131,35 @@ public class MapCardFragment extends Fragment {
                 MapFragment.setMarkerDesign(MapFragment.markerHashMap.get(foodPost.id), true);
             }
         });
+    }
+
+    private class PostAsyncTask extends AsyncTask<String[], Void, String> {
+        public Bitmap bitmap;
+        String uri;
+
+        public PostAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.upload(getContext(), "POST", this.uri, params);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (null != response){
+                favouriteId = Integer.parseInt(response);
+            }
+            super.onPostExecute(response);
+        }
     }
 
 }

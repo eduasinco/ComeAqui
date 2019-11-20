@@ -2,6 +2,7 @@ package com.example.eduardorodriguez.comeaqui.notification;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.view.View;
@@ -18,6 +19,7 @@ import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.*;
 import com.example.eduardorodriguez.comeaqui.general.StaticMapFragment;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
@@ -239,16 +241,36 @@ public class NotificationLookActivity extends AppCompatActivity {
     }
 
     void confirmOrder(OrderObject order, boolean confirm, Context context){
-        PostAsyncTask orderStatus = new PostAsyncTask(this, context.getString(R.string.server) + "/set_order_status/");
+        PostAsyncTask orderStatus = new PostAsyncTask(context.getString(R.string.server) + "/set_order_status/");
         order.status = confirm ? "CONFIRMED" : "CANCELED";
-        try {
-            orderStatus.execute(
-                    new String[]{"order_id",  order.id + ""},
-                    new String[]{"order_status", order.status}
-            ).get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            showProgress(false);
+        orderStatus.execute(
+                new String[]{"order_id",  order.id + ""},
+                new String[]{"order_status", order.status}
+        );
+    }
+    private class PostAsyncTask extends AsyncTask<String[], Void, String> {
+        String uri;
+        public PostAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected void onPreExecute() {
+            showProgress(true);
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.upload(getApplicationContext(), "POST", this.uri, params);
+            } catch (IOException e) {
+                showProgress(false);
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            super.onPostExecute(response);
         }
     }
 

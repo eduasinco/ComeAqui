@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.general.StaticMapFragment;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.User;
@@ -192,23 +193,37 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
     }
 
     void cancelOrder(){
-        continueCancelFragment.waiting();
         order.status = "CANCELED";
-        try {
-            new PostAsyncTask(this,context.getString(R.string.server) + "/set_order_status/"){
-                @Override
-                protected void onPostExecute(String response) {
-                    super.onPostExecute(response);
-                }
-            }.execute(
-                    new String[]{"order_id",  order.id + ""},
-                    new String[]{"order_status", order.status}
-            ).get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            continueCancelFragment.dessapear();
-        }
+        new PostAsyncTask(context.getString(R.string.server) + "/set_order_status/").execute(
+                new String[]{"order_id",  order.id + ""},
+                new String[]{"order_status", order.status}
+        );
         finish();
+    }
+    private class PostAsyncTask extends AsyncTask<String[], Void, String> {
+        String uri;
+        public PostAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected void onPreExecute() {
+            continueCancelFragment.waiting();
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.upload(getApplicationContext(), "POST", this.uri, params);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            continueCancelFragment.dessapear();
+            super.onPostExecute(response);
+        }
     }
 
     void setView(){
