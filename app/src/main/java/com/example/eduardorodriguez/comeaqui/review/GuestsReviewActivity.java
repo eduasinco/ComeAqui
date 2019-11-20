@@ -17,7 +17,7 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.ReviewObject;
-import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
+
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

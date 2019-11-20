@@ -21,7 +21,7 @@ import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.Server;
-import com.example.eduardorodriguez.comeaqui.server.PostAsyncTask;
+
 import com.example.eduardorodriguez.comeaqui.utilities.HorizontalImageDisplayFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 import com.google.gson.JsonParser;
