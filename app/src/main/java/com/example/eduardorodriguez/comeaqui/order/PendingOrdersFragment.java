@@ -1,5 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.order;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -13,8 +14,10 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -23,6 +26,7 @@ import com.google.gson.JsonParser;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -112,26 +116,41 @@ public class PendingOrdersFragment extends Fragment {
     }
 
     void getDataAndSet(){
-        try {
-            startWaitingFrame(true);
-            new GetAsyncTask(getContext(),"GET", getResources().getString(R.string.server) + (pending ? "/my_pending_orders/" : "/my_past_orders/")){
-                @Override
-                protected void onPostExecute(String s) {
-                    if (s != null)
-                        makeList(new JsonParser().parse(s).getAsJsonArray());
-                    startWaitingFrame(false);
-                    super.onPostExecute(s);
-                }
-            }.execute().get(10, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            startWaitingFrame(false);
-            Toast.makeText(getContext(), "A problem has occurred", Toast.LENGTH_LONG).show();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(), "Not internet connection", Toast.LENGTH_LONG).show();
-        }
+        new GetAsyncTask(getResources().getString(R.string.server) + (pending ? "/my_pending_orders/" : "/my_past_orders/")).execute();
     }
+    class GetAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetAsyncTask(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            startWaitingFrame(true);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null)
+                makeList(new JsonParser().parse(response).getAsJsonArray());
+            startWaitingFrame(false);
+            super.onPostExecute(response);
+        }
+
+    }
+
+
     void startWaitingFrame(boolean start){
         if (start) {
             waitFrame.setVisibility(View.VISIBLE);

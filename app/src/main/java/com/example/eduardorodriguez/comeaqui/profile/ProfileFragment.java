@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Outline;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 
@@ -14,6 +15,7 @@ import com.example.eduardorodriguez.comeaqui.profile.edit_profile.EditProfileAct
 import com.example.eduardorodriguez.comeaqui.profile.post_and_reviews.PostAndReviewsFragment;
 import com.example.eduardorodriguez.comeaqui.profile.settings.SettingsActivity;
 import com.example.eduardorodriguez.comeaqui.server.PatchAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.image_view_pager.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.ProfileImageGalleryFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
@@ -80,10 +82,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
     public void onResume() {
         super.onResume();
         selectImageFromFragment.hideCard();
-        user = getUser(userId);
-        if (null != user){
-            setProfile(user);
-        }
+        getUser(userId);
     }
 
     @Override
@@ -94,20 +93,31 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         }
     }
 
-    public User getUser(int userId) {
-        try {
-            String response = new GetAsyncTask(getContext(), "GET", getResources().getString(R.string.server) + "/profile_detail/" + userId + "/").execute().get(10, TimeUnit.SECONDS);
-            if (response != null){
-                return new User(new JsonParser().parse(response).getAsJsonObject());
-            }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(), "A problem has occurred", Toast.LENGTH_LONG).show();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(), "No internet connection", Toast.LENGTH_LONG).show();
+    public void getUser(int userId) {
+        new GetAsyncTask(getResources().getString(R.string.server) + "/profile_detail/" + userId + "/").execute();
+    }
+    class GetAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        GetAsyncTask(String uri){
+            this.uri = uri;
         }
-        return null;
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                user = new User(new JsonParser().parse(response).getAsJsonObject());
+                setProfile(user);
+            }
+            super.onPostExecute(response);
+        }
     }
 
     @Override
@@ -215,23 +225,29 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
     }
 
     void goToConversationWithUser(User user){
-        try {
-            new GetAsyncTask(getContext(),"GET", getResources().getString(R.string.server) + "/get_or_create_chat/" + user.id + "/"){
-                @Override
-                protected void onPostExecute(String response) {
-                    super.onPostExecute(response);
-                    if (response != null) {
-                        ChatObject chat = new ChatObject(new JsonParser().parse(response).getAsJsonObject());
-                        goToConversationActivity(chat);
-                    }
-                }
-            }.execute().get(10, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(), "A problem has occurred", Toast.LENGTH_LONG).show();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(), "Not internet connection", Toast.LENGTH_LONG).show();
+        new GetConversationAsyncTask(getResources().getString(R.string.server) + "/get_or_create_chat/" + user.id + "/").execute();
+    }
+    class GetConversationAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        GetConversationAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null) {
+                ChatObject chat = new ChatObject(new JsonParser().parse(response).getAsJsonObject());
+                goToConversationActivity(chat);
+            }
+            super.onPostExecute(response);
         }
     }
 
