@@ -22,6 +22,8 @@ import com.google.gson.JsonParser;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import static com.example.eduardorodriguez.comeaqui.App.USER;
+
 public class MyDinnerRecyclerViewAdapter extends RecyclerView.Adapter<MyDinnerRecyclerViewAdapter.ViewHolder> {
 
     private final List<OrderObject> mValues;
@@ -46,6 +48,10 @@ public class MyDinnerRecyclerViewAdapter extends RecyclerView.Adapter<MyDinnerRe
 
         if(!holder.mItem.owner.profile_photo.contains("no-image")) {
             Glide.with(holder.mView.getContext()).load(holder.mItem.owner.profile_photo).into(holder.dinnerImage);
+        }
+
+        if (holder.mItem.owner.id == USER.id){
+            holder.dinnerChat.setVisibility(View.GONE);
         }
 
         holder.dinnerChat.setOnClickListener(v -> {

@@ -24,7 +24,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class DinnersListActivity extends AppCompatActivity implements DinnerFragment.OnListFragmentInteractionListener {
+public class DinnerListActivity extends AppCompatActivity implements DinnerFragment.OnListFragmentInteractionListener {
 
     DinnerFragment fragment;
     @Override
