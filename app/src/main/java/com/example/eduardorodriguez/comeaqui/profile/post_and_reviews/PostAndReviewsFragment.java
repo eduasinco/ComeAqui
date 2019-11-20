@@ -1,4 +1,5 @@
 package com.example.eduardorodriguez.comeaqui.profile.post_and_reviews;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,11 +15,13 @@ import android.widget.Toast;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostReview;
 import com.example.eduardorodriguez.comeaqui.server.GetAsyncTask;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -77,34 +80,48 @@ public class PostAndReviewsFragment extends Fragment {
     }
 
     void getPostFromUser(){
-        try {
-            startWaitingFrame(true);
-            new GetAsyncTask(getContext(),"GET", getResources().getString(R.string.server) + "/user_food_posts_reviews/" + userId + "/"){
-                @Override
-                protected void onPostExecute(String response) {
-                    startWaitingFrame(false);
-                    if (response != null){
-                        ArrayList<FoodPostReview> data = new ArrayList<>();
-                        for (JsonElement pa : new JsonParser().parse(response).getAsJsonArray()) {
-                            JsonObject jo = pa.getAsJsonObject();
-                            FoodPostReview foodPost = new FoodPostReview(jo);
-                            data.add(foodPost);
-                        }
-                        adapter = new MyPostAndReviewsRecyclerViewAdapter(data);
-                        recyclerView.setAdapter(adapter);
-                    }
-                    super.onPostExecute(response);
-                }
-            }.execute().get(10, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            startWaitingFrame(false);
-            Toast.makeText(getContext(), "A problem has occurred", Toast.LENGTH_LONG).show();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(), "Not internet connection", Toast.LENGTH_LONG).show();
-        }
+        new GetAsyncTask(getResources().getString(R.string.server) + "/user_food_posts_reviews/" + userId + "/").execute();
     }
+    class GetAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetAsyncTask(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            startWaitingFrame(false);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                ArrayList<FoodPostReview> data = new ArrayList<>();
+                for (JsonElement pa : new JsonParser().parse(response).getAsJsonArray()) {
+                    JsonObject jo = pa.getAsJsonObject();
+                    FoodPostReview foodPost = new FoodPostReview(jo);
+                    data.add(foodPost);
+                }
+                adapter = new MyPostAndReviewsRecyclerViewAdapter(data);
+                recyclerView.setAdapter(adapter);
+            }
+            startWaitingFrame(false);
+            super.onPostExecute(response);
+        }
+
+    }
+
 
     void startWaitingFrame(boolean start){
         if (start) {

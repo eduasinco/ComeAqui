@@ -3,11 +3,6 @@ package com.example.eduardorodriguez.comeaqui.server;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
-
-import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.general.EditFoodPostActivity;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.entity.mime.HttpMultipartMode;
@@ -28,10 +23,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import static android.content.Context.MODE_PRIVATE;
 
