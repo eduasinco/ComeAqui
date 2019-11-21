@@ -3,15 +3,20 @@ package com.example.eduardorodriguez.comeaqui.chat.conversation;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
@@ -49,7 +54,7 @@ public class ConversationActivity extends AppCompatActivity {
     MessageObject lastMessage = null;
     String lastMessageDate = "";
 
-
+    private ConstraintLayout rootView;
     private CircleImageView fotoPerfil;
     private TextView nombre;
     private RecyclerView rvMensajes;
@@ -57,6 +62,8 @@ public class ConversationActivity extends AppCompatActivity {
     private ImageView btnEnviar;
     private View backView;
     private AdapterMensajes adapter;
+
+    boolean isKeyboardShowing = false;
     WebSocketClient mWebSocketClient;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
@@ -65,6 +72,7 @@ public class ConversationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
 
+        rootView = findViewById(R.id.root_view);
         fotoPerfil = findViewById(R.id.dinner_image);
         nombre = findViewById(R.id.nombre);
         rvMensajes = findViewById(R.id.rvMensajes);
@@ -122,6 +130,24 @@ public class ConversationActivity extends AppCompatActivity {
 
             }
         });
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(
+                () -> {
+                    Rect r = new Rect();
+                    rootView.getWindowVisibleDisplayFrame(r);
+                    int screenHeight = rootView.getRootView().getHeight();
+                    int keypadHeight = screenHeight - r.bottom;
+                    if (keypadHeight > screenHeight * 0.15) {
+                        if (!isKeyboardShowing) {
+                            isKeyboardShowing = true;
+                            setScrollbar();
+                        }
+                    }
+                    else {
+                        if (isKeyboardShowing) {
+                            isKeyboardShowing = false;
+                        }
+                    }
+                });
 
         rvMensajes.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -138,6 +164,8 @@ public class ConversationActivity extends AppCompatActivity {
         });
 
     }
+
+
     private void sendMessage(String message){
         try{
             mWebSocketClient.send("{ \"message\": \"" + message + "\"," +

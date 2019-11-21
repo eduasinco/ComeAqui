@@ -1,34 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".chat.conversation.ConversationActivity">
+
+    <ImageView
+        android:id="@+id/backGround"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:alpha="0.05"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/background_chat" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".chat.conversation.ConversationActivity"
-        android:orientation="vertical">
-    <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" app:srcCompat="@drawable/background_chat"
-            android:id="@+id/backGround" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" android:scaleType="centerCrop" android:alpha="0.05"/>
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".chat.conversation.ConversationActivity"
-            android:orientation="vertical">
+        android:orientation="vertical"
+        tools:context=".chat.conversation.ConversationActivity">
 
         <androidx.cardview.widget.CardView
-                android:elevation="30dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="30dp">
 
             <LinearLayout
-                    android:background="#EBEBEB"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:orientation="horizontal" android:gravity="center_vertical">
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="#EBEBEB"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <ImageButton
                     android:id="@+id/back"
@@ -38,10 +46,10 @@
                     app:srcCompat="@drawable/back_arrow_white" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/dinner_image"
-                        android:layout_width="40sp"
-                        android:layout_height="40sp"
-                        android:src="@drawable/no_profile_photo"/>
+                    android:id="@+id/dinner_image"
+                    android:layout_width="40sp"
+                    android:layout_height="40sp"
+                    android:src="@drawable/no_profile_photo" />
 
                 <TextView
                     android:id="@+id/nombre"
@@ -54,37 +62,44 @@
                     android:textStyle="bold" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
+
         <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvMensajes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-        />
+            android:id="@+id/rvMensajes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
         <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" android:padding="4dp">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="4dp">
+
             <EditText
-                    android:background="@drawable/send_input_text"
-                    android:id="@+id/txtMensaje"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:hint="Escribe un mensaje"
-                    android:layout_weight="1" android:layout_marginEnd="16dp" android:layout_marginStart="16dp"
-                    android:paddingStart="16dp"/>
+                android:id="@+id/txtMensaje"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1"
+                android:background="@drawable/send_input_text"
+                android:hint="Escribe un mensaje"
+                android:paddingStart="16dp" />
 
             <LinearLayout
-                    android:background="@drawable/box_send_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/box_send_icon">
+
                 <ImageView
-                        android:layout_width="45dp"
-                        android:layout_height="45dp"
-                        app:srcCompat="@drawable/send_icon"
-                        android:id="@+id/btnEnviar"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"/>
+                    android:id="@+id/btnEnviar"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/send_icon" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
