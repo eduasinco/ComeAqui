@@ -150,11 +150,10 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         return view;
     }
     public void setProfile(User user){
-        if (!isAdded()) return;
         viewPager.setAdapter(new TestPagerAdapter(getChildFragmentManager()));
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.profile_rating, RatingFragment.newInstance(user.rating, user.ratingN))
-                .commit();
+                .commitAllowingStateLoss();
 
         addProfilePhotoView.setOnClickListener(v -> {
             isBackGound = false;

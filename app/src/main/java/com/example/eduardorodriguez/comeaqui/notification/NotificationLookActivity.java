@@ -87,7 +87,7 @@ public class NotificationLookActivity extends AppCompatActivity {
         waitingFrame = findViewById(R.id.waiting_frame);
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.wait_frame, WaitFragment.newInstance())
+                .replace(R.id.waiting_frame, WaitFragment.newInstance())
                 .commit();
 
         Intent intent = getIntent();
