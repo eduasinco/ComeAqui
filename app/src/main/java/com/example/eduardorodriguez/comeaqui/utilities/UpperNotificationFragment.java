@@ -28,6 +28,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 
@@ -46,6 +47,8 @@ public class UpperNotificationFragment extends Fragment {
     OrderObject orderObject;
     OrderObject orderPost;
     float initialY, dY;
+
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     public UpperNotificationFragment() {}
     public static UpperNotificationFragment newInstance() {
@@ -170,7 +173,7 @@ public class UpperNotificationFragment extends Fragment {
     }
 
     void getConfirmedOrders(){
-        new GetConfirmedOrdersAsyncTask(getResources().getString(R.string.server) +  "/my_next_confirmed_order/").execute();
+        tasks.add(new GetConfirmedOrdersAsyncTask(getResources().getString(R.string.server) +  "/my_next_confirmed_order/").execute());
     }
     private class GetConfirmedOrdersAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -202,7 +205,7 @@ public class UpperNotificationFragment extends Fragment {
 
     }
     void getConfirmedFoodPosts(){
-        new GetConfirmedPostsAsyncTask(getResources().getString(R.string.server) +  "/my_next_confirmed_post/").execute();
+        tasks.add(new GetConfirmedPostsAsyncTask(getResources().getString(R.string.server) +  "/my_next_confirmed_post/").execute());
     }
     private class GetConfirmedPostsAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -236,5 +239,8 @@ public class UpperNotificationFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
     }
 }

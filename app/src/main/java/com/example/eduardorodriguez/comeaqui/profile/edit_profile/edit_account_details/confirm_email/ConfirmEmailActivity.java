@@ -27,6 +27,7 @@ import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -46,6 +47,7 @@ public class ConfirmEmailActivity extends AppCompatActivity {
     LinearLayout wholeSendCode;
 
     String emailToSend;
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +121,7 @@ public class ConfirmEmailActivity extends AppCompatActivity {
         saveEmail.setVisibility(View.GONE);
         progress.setVisibility(View.VISIBLE);
         emailToSend = emailAdress.getText().toString();
-        new GetAsyncTask(getResources().getString(R.string.server) + "/send_code_to_email/" + emailToSend + "/").execute();
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/send_code_to_email/" + emailToSend + "/").execute());
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -159,10 +161,10 @@ public class ConfirmEmailActivity extends AppCompatActivity {
     }
 
     void sendCode(){
-       new PostAsyncTask(getResources().getString(R.string.server) + "/is_code_valid/").execute(
+       tasks.add(new PostAsyncTask(getResources().getString(R.string.server) + "/is_code_valid/").execute(
                     new String[]{"code", verificationCode.getText().toString()},
                     new String[]{"new_email", emailToSend}
-            );
+            ));
     }
     private class PostAsyncTask extends AsyncTask<String[], Void, String> {
         public Bitmap bitmap;

@@ -12,6 +12,7 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -20,6 +21,7 @@ public class AddBioActivity extends AppCompatActivity {
 
     EditText bioEditTextView;
     int MAX_NUMBER_OF_LETTER = 101;
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +56,9 @@ public class AddBioActivity extends AppCompatActivity {
 
     private void saveImage(){
         PatchAsyncTask putTask = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
-        putTask.execute(
+        tasks.add(putTask.execute(
                 new String[]{"bio", bioEditTextView.getText().toString()}
-        );
+        ));
     }
     private class PatchAsyncTask extends AsyncTask<String[], Void, String> {
         String uri;

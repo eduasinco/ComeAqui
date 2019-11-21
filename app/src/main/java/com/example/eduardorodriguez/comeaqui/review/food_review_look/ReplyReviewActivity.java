@@ -25,6 +25,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -40,6 +41,7 @@ public class ReplyReviewActivity extends AppCompatActivity {
     FrameLayout waitingFrame;
 
     ReviewObject reviewObject;
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,10 +74,10 @@ public class ReplyReviewActivity extends AppCompatActivity {
     }
 
     void postReviewReply(){
-        new PostAsyncTask(getResources().getString(R.string.server) + "/create_review_reply/").execute(
+        tasks.add(new PostAsyncTask(getResources().getString(R.string.server) + "/create_review_reply/").execute(
                 new String[]{"reply", reply.getText().toString()},
                 new String[]{"review_id", reviewObject.id + ""}
-        );
+        ));
     }
     private class PostAsyncTask extends AsyncTask<String[], Void, String> {
         String uri;

@@ -21,6 +21,7 @@ import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -34,6 +35,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
     TextView codeDidNotArrive;
     Button sendCodeButton;
     View progress;
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +94,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
     }
 
     void submit(){
-        new SendCodeAsyncTask(getResources().getString(R.string.server) + "/send_code_to_email/" + emailAdress.getText() + "/").execute();
+        tasks.add(new SendCodeAsyncTask(getResources().getString(R.string.server) + "/send_code_to_email/" + emailAdress.getText() + "/").execute());
     }
     private class SendCodeAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -123,7 +125,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
     }
 
     void sendCode(){
-        new CheckCodeAsyncTask(getResources().getString(R.string.server) + "/is_code_valid/" + verificationCode.getText() + "/").execute();
+        tasks.add(new CheckCodeAsyncTask(getResources().getString(R.string.server) + "/is_code_valid/" + verificationCode.getText() + "/").execute());
     }
     private class CheckCodeAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;

@@ -55,6 +55,7 @@ public class ChatFragment extends Fragment{
     FrameLayout waitFrame;
 
     View view;
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     private OnListFragmentInteractionListener mListener;
 
@@ -107,7 +108,7 @@ public class ChatFragment extends Fragment{
     }
 
     void getChatsAndSet(){
-        new GetAsyncTask(getResources().getString(R.string.server) + "/my_chats/").execute();
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_chats/").execute());
     }
 
     private class GetAsyncTask extends AsyncTask<String[], Void, String> {
@@ -195,14 +196,17 @@ public class ChatFragment extends Fragment{
         }
     }
 
+    public interface OnListFragmentInteractionListener {
+        void onListFragmentInteraction(ChatObject item);
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();
         mWebSocketClient.close();
         mListener = null;
-    }
-
-    public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(ChatObject item);
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
     }
 }

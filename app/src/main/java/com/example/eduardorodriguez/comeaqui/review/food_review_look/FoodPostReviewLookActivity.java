@@ -80,6 +80,7 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
 
     int fpId;
     boolean isCollapsed = true;
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     @Override
     protected void onResume() {
@@ -216,7 +217,7 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
 
 
     void getReviewsFrompFoodPost(int foodPostId){
-        new GetAsyncTask(getResources().getString(R.string.server) + "/food_reviews/" + foodPostId + "/").execute();
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/food_reviews/" + foodPostId + "/").execute());
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;

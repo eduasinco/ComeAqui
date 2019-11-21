@@ -24,6 +24,7 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonParser;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -43,6 +44,7 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
 
     boolean isBackGound;
     int userId;
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     @Override
     protected void onResume() {
@@ -125,7 +127,7 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
     }
 
     public User getUser(int userId) {
-        new GetAsyncTask(getResources().getString(R.string.server) + "/profile_detail/" + userId + "/").execute();
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/profile_detail/" + userId + "/").execute());
         return null;
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
@@ -164,9 +166,9 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
             PatchImageAsyncTask putTask = new PatchImageAsyncTask(getResources().getString(R.string.server) + "/edit_profile/", bitmap);
             if (isBackGound){
-                putTask.execute("background_photo");
+                tasks.add(putTask.execute("background_photo"));
             } else {
-                putTask.execute("profile_photo");
+                tasks.add(putTask.execute("profile_photo"));
             }
         } catch (IOException e) {
             e.printStackTrace();

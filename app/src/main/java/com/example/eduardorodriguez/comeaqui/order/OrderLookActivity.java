@@ -37,6 +37,7 @@ import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -66,6 +67,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
     OrderObject order;
 
     Context context;
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
 
     @Override
@@ -136,7 +138,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
     }
 
     void getOrderDetails(int orderId){
-        new GetAsyncTask(getResources().getString(R.string.server) + "/order_detail/" + orderId + "/").execute();
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/order_detail/" + orderId + "/").execute());
     }
     private class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -194,11 +196,10 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
 
     void cancelOrder(){
         order.status = "CANCELED";
-        new PostAsyncTask(context.getString(R.string.server) + "/set_order_status/").execute(
+        tasks.add(new PostAsyncTask(context.getString(R.string.server) + "/set_order_status/").execute(
                 new String[]{"order_id",  order.id + ""},
                 new String[]{"order_status", order.status}
-        );
-        finish();
+        ));
     }
     private class PostAsyncTask extends AsyncTask<String[], Void, String> {
         String uri;
@@ -222,6 +223,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
         @Override
         protected void onPostExecute(String response) {
             continueCancelFragment.dessapear();
+            finish();
             super.onPostExecute(response);
         }
     }

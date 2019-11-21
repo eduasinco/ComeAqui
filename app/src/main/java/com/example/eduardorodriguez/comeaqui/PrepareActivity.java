@@ -31,6 +31,7 @@ import com.google.gson.JsonParser;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -42,6 +43,7 @@ public class PrepareActivity extends AppCompatActivity {
 
     boolean gotTimezone = false;
     String tab;
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +77,11 @@ public class PrepareActivity extends AppCompatActivity {
 
     private void postTokenToServer(String token){
         String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        new PostAsyncTask(getResources().getString(R.string.server) + "/fcm/v1/devices/").execute(
+        tasks.add(new PostAsyncTask(getResources().getString(R.string.server) + "/fcm/v1/devices/").execute(
                 new String[]{"dev_id", androidID},
                 new String[]{"reg_id", token},
                 new String[]{"name", "" + USER.id}
-        );
+        ));
     }
     private class PostAsyncTask extends AsyncTask<String[], Void, String> {
         String uri;
@@ -107,7 +109,7 @@ public class PrepareActivity extends AppCompatActivity {
     }
 
     public void initializeUser(){
-        new GetAsyncTask( getResources().getString(R.string.server) + "/my_profile/").execute();
+        tasks.add(new GetAsyncTask( getResources().getString(R.string.server) + "/my_profile/").execute());
     }
     private class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;

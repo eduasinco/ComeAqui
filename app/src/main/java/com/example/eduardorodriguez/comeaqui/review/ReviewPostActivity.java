@@ -26,6 +26,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -51,6 +52,7 @@ public class ReviewPostActivity extends AppCompatActivity implements StarReasonF
     String review = "";
 
     SubmitButtonStatus buttonStatus = SubmitButtonStatus.NEXT;
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,13 +104,12 @@ public class ReviewPostActivity extends AppCompatActivity implements StarReasonF
 
 
     void submit(){
-
-        new PostAsyncTask(getResources().getString(R.string.server) + "/create_review/").execute(
+        tasks.add(new PostAsyncTask(getResources().getString(R.string.server) + "/create_review/").execute(
                 new String[]{"order_id", "" + orderObject.id},
                 new String[]{"review", review},
                 new String[]{"rating", "" + rating},
                 new String[]{"star_reason", ""}
-        );
+        ));
     }
     private class PostAsyncTask extends AsyncTask<String[], Void, String> {
         String uri;

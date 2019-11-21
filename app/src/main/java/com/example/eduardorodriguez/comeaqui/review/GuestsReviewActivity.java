@@ -23,6 +23,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class GuestsReviewActivity extends AppCompatActivity implements StarReasonFragment.OnFragmentInteractionListener{
@@ -37,6 +38,7 @@ public class GuestsReviewActivity extends AppCompatActivity implements StarReaso
     int rating;
     boolean[] reasonB;
     String review = "";
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,12 +72,12 @@ public class GuestsReviewActivity extends AppCompatActivity implements StarReaso
     }
 
     void submit(){
-        new PostAsyncTask(getResources().getString(R.string.server) + "/rate_user/").execute(
+        tasks.add(new PostAsyncTask(getResources().getString(R.string.server) + "/rate_user/").execute(
                 new String[]{"order_id", "" + orderObject.id},
                 new String[]{"review", review},
                 new String[]{"rating", "" + rating},
                 new String[]{"star_reason", ""}
-        );
+        ));
     }
     private class PostAsyncTask extends AsyncTask<String[], Void, String> {
         public Bitmap bitmap;
@@ -130,4 +132,5 @@ public class GuestsReviewActivity extends AppCompatActivity implements StarReaso
     public void onHasToScrollIfNeeded() {
         scrollView.fullScroll(View.FOCUS_DOWN);
     }
+
 }

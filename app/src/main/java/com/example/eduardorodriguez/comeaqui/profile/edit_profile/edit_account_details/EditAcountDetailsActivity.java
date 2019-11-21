@@ -20,6 +20,7 @@ import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -33,6 +34,8 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
     private TextView phoneNumber;
     private TextView emailAddress;
     private Button changePassword;
+
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     @Override
     protected void onResume() {
@@ -114,11 +117,11 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
 
     private void saveData(){
         PatchAsyncTask putTast = new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/");
-        putTast.execute(
+        tasks.add(putTast.execute(
                 new String[]{"first_name", firstName.getText().toString()},
                 new String[]{"last_name", lastName.getText().toString()},
                 new String[]{"phone_number", phoneNumber.getText().toString()}
-        );
+        ));
     }
     private class PatchAsyncTask extends AsyncTask<String[], Void, String> {
         String uri;

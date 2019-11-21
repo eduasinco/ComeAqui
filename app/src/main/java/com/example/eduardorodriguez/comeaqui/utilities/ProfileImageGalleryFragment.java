@@ -49,6 +49,8 @@ public class ProfileImageGalleryFragment extends Fragment {
 
     int IMAGE_BY_ROW = 3;
 
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
+
     public ProfileImageGalleryFragment() {
         // Required empty public constructor
     }
@@ -104,7 +106,7 @@ public class ProfileImageGalleryFragment extends Fragment {
 
     void getPostFromUser(){
         GetAsyncTask process = new GetAsyncTask(getResources().getString(R.string.server) + "/user_images/" + userId + "/");
-        process.execute();
+        tasks.add(process.execute());
     }
     private class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -207,6 +209,9 @@ public class ProfileImageGalleryFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
     }
 
     public interface OnFragmentInteractionListener {

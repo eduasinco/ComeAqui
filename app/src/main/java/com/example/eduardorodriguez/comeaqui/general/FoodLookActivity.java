@@ -44,6 +44,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -78,6 +79,7 @@ public class FoodLookActivity extends AppCompatActivity {
     Menu collapseMenu;
 
     FoodPostDetail foodPostDetail;
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -275,7 +277,7 @@ public class FoodLookActivity extends AppCompatActivity {
     }
 
     void getFoodPostDetailsAndSet(int foodPostId){
-        new GetAsyncTask(getResources().getString(R.string.server) + "/foods/" + foodPostId + "/").execute();
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/foods/" + foodPostId + "/").execute());
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -366,7 +368,7 @@ public class FoodLookActivity extends AppCompatActivity {
 
     void createOrder(){
         PostAsyncTask createOrder = new PostAsyncTask(getResources().getString(R.string.server) + "/create_order_and_notification/");
-        createOrder.execute(new String[]{"food_post_id", "" + foodPostDetail.id});
+        tasks.add(createOrder.execute(new String[]{"food_post_id", "" + foodPostDetail.id}));
     }
     private class PostAsyncTask extends AsyncTask<String[], Void, String> {
         public Bitmap bitmap;

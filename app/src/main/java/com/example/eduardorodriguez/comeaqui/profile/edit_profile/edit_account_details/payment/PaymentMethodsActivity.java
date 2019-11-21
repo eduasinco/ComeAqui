@@ -25,6 +25,7 @@ public class PaymentMethodsActivity extends AppCompatActivity {
 
     PaymentMethodsAdapter adapter;
     ArrayList<PaymentObject> paymentObjects = new ArrayList<>();
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,7 @@ public class PaymentMethodsActivity extends AppCompatActivity {
 
     void getCardPaymentMethods(){
         GetAsyncTask process = new GetAsyncTask(getResources().getString(R.string.server) + "/my_cards/");
-        process.execute();
+        tasks.add(process.execute());
     }
     private class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -88,4 +89,5 @@ public class PaymentMethodsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
 }

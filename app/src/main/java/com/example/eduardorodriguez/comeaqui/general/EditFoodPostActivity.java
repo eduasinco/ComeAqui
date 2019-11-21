@@ -28,6 +28,7 @@ import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -58,6 +59,8 @@ public class EditFoodPostActivity extends AppCompatActivity implements
     String description;
     String types;
 
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -86,7 +89,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
         Bundle b = intent.getExtras();
         if(b != null) {
             int foodPostId = b.getInt("foodPostId");
-            new GetAsyncTask(getResources().getString(R.string.server) + "/foods/" + foodPostId + "/").execute();
+            tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/foods/" + foodPostId + "/").execute());
         }
 
         getSupportFragmentManager().beginTransaction()
@@ -141,15 +144,15 @@ public class EditFoodPostActivity extends AppCompatActivity implements
                 getResources().getString(R.string.server) + "/add_food_images/" + foodPostDetail.id + "/",
                 bitmapsToPost
         );
-        post.execute();
+        tasks.add(post.execute());
     }
 
     void patchPost(){
-        new PatchAsyncTask(getResources().getString(R.string.server) + "/foods/" + foodPostDetail.id + "/").execute(
+        tasks.add(new PatchAsyncTask(getResources().getString(R.string.server) + "/foods/" + foodPostDetail.id + "/").execute(
                 new String[]{"plate_name", plateName.getText().toString()},
                 new String[]{"food_type", types},
                 new String[]{"description", description}
-        );
+        ));
     }
     private class PatchAsyncTask extends AsyncTask<String[], Void, String> {
         String uri;
@@ -231,7 +234,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
                 }
             }
             PatchImagesAsyncTask patch = new PatchImagesAsyncTask(getResources().getString(R.string.server) + "/edit_image/", bitmapHashMap);
-            patch.execute();
+            tasks.add(patch.execute());
             super.onPostExecute(response);
         }
     }

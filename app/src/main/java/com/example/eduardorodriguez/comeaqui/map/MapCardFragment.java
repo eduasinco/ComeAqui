@@ -27,6 +27,7 @@ import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
@@ -53,7 +54,7 @@ public class MapCardFragment extends Fragment {
         setView();
     }
 
-
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -119,7 +120,7 @@ public class MapCardFragment extends Fragment {
             if (foodPost.favourite) {
                 MapFragment.setMarkerDesign(MapFragment.markerHashMap.get(foodPost.id), true);
                 PostAsyncTask putFavourite = new PostAsyncTask(getResources().getString(R.string.server) + "/favourites/");
-                putFavourite.execute(new String[]{"food_post_id", "" + foodPost.id});
+                tasks.add(putFavourite.execute(new String[]{"food_post_id", "" + foodPost.id}));
             } else {
                 String uri = getResources().getString(R.string.server) + "/favourite_detail/" + favouriteId + "/";
                 Server deleteFoodPost = new Server(getContext(),"DELETE", uri);
@@ -161,5 +162,11 @@ public class MapCardFragment extends Fragment {
             super.onPostExecute(response);
         }
     }
-
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+    }
 }

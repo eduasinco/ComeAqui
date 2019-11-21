@@ -36,6 +36,7 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
@@ -57,7 +58,7 @@ public class ConversationActivity extends AppCompatActivity {
     private View backView;
     private AdapterMensajes adapter;
     WebSocketClient mWebSocketClient;
-
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,7 +183,7 @@ public class ConversationActivity extends AppCompatActivity {
     }
 
     private void getChatMessages(String chatId){
-        new GetAsyncTask(getResources().getString(R.string.server) + "/chat_detail/" + chatId + "/").execute();
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/chat_detail/" + chatId + "/").execute());
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -293,6 +294,6 @@ public class ConversationActivity extends AppCompatActivity {
 
     private void setMessagAsSeen(int messageId){
         PutAsyncTask resetPassword = new PutAsyncTask(this,getResources().getString(R.string.server) + "/mark_message_as_seen/" + messageId + "/");
-        resetPassword.execute();
+        tasks.add(resetPassword.execute());
     }
 }

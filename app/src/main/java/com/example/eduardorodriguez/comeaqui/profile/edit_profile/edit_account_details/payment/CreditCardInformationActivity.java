@@ -21,6 +21,7 @@ import io.card.payment.CardIOActivity;
 import io.card.payment.CreditCard;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class CreditCardInformationActivity extends AppCompatActivity {
@@ -29,6 +30,7 @@ public class CreditCardInformationActivity extends AppCompatActivity {
     EditText expiryDateView;
     EditText cvvView;
     String cardType = "";
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +44,12 @@ public class CreditCardInformationActivity extends AppCompatActivity {
 
         saveCardButtonView.setOnClickListener(v -> {
             PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/card/");
-            post.execute(
+            tasks.add(post.execute(
                         new String[]{"card_number", creditCardView.getText().toString(), ""},
                         new String[]{"expiration_date", expiryDateView.getText().toString(), ""},
                         new String[]{"card_type", cardType, ""},
                         new String[]{"cvv", cvvView.getText().toString(), ""}
-                        );
+                        ));
         });
     }
 

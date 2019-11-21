@@ -37,6 +37,7 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -75,6 +76,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
     public static HashMap<Integer, Marker> markerHashMap = new HashMap<>();
     boolean gotTimezone = false;
 
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     void setMarkers(){
         for (int key : foodPostHashMap.keySet()) {
@@ -204,12 +206,6 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
         }
     }
 
-    @Override
-    public void onDetach() {
-        mWebSocketClient.close();
-        super.onDetach();
-    }
-
     int c  = 0;
     @SuppressLint("RestrictedApi")
     void setMap(GoogleMap mMap){
@@ -276,9 +272,9 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
     }
 
     private void setUserTimeZone(String timeZone){
-        new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/").execute(
+        tasks.add(new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_profile/").execute(
                 new String[]{"time_zone", timeZone}
-        );
+        ));
     }
     private class PatchAsyncTask extends AsyncTask<String[], Void, String> {
         String uri;
@@ -341,7 +337,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
 
     void setMapMarkers(){
         removeAllMarkers();
-        new GetMarkersAsyncTask(getResources().getString(R.string.server) + "/foods/").execute();
+        tasks.add(new GetMarkersAsyncTask(getResources().getString(R.string.server) + "/foods/").execute());
     }
     class GetMarkersAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -367,7 +363,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
     }
 
     void setMapFavouriteMarkers(){
-        new GetFavouriteMarkersAsyncTask(getResources().getString(R.string.server) + "/my_favourites/").execute();
+        tasks.add(new GetFavouriteMarkersAsyncTask(getResources().getString(R.string.server) + "/my_favourites/").execute());
     }
     class GetFavouriteMarkersAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -494,5 +490,13 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
     @Override
     public void refreshFragment(String address) {
         this.pickedAdress = address;
+    }
+    @Override
+    public void onDetach() {
+        mWebSocketClient.close();
+        super.onDetach();
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
     }
 }

@@ -58,6 +58,8 @@ public class HorizontalImageDisplayFragment extends Fragment {
     LinearLayout imageList;
     ConstraintLayout parentView;
 
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
+
     public HorizontalImageDisplayFragment() {}
     public static HorizontalImageDisplayFragment newInstance(int foodPostId, int padding, int gap, int height, int radius, int elevation) {
         HorizontalImageDisplayFragment fragment = new HorizontalImageDisplayFragment();
@@ -160,7 +162,7 @@ public class HorizontalImageDisplayFragment extends Fragment {
     }
 
     void getFoodPostImages(){
-        new GetAsyncTask(getResources().getString(R.string.server) + "/food_images/" + foodPostId + "/").execute();
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/food_images/" + foodPostId + "/").execute());
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;

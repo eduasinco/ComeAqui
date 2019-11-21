@@ -19,8 +19,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.*;
-
-import com.example.eduardorodriguez.comeaqui.general.EditFoodPostActivity;
 import com.example.eduardorodriguez.comeaqui.map.add_food.AddImagesFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodTimePickerFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.WordLimitEditTextFragment;
@@ -35,11 +33,7 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -85,6 +79,8 @@ public class AddFoodActivity extends AppCompatActivity implements
     WordLimitEditTextFragment wordLimitEditTextFragment;
     AddImagesFragment addImageFragment;
     SelectImageFromFragment selectImagesFromFragment;
+
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     private String setTypes(){
         StringBuilder types = new StringBuilder();
@@ -285,7 +281,7 @@ public class AddFoodActivity extends AppCompatActivity implements
 
     void postFood(){
         PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/foods/");
-        post.execute(
+        tasks.add(post.execute(
                 new String[]{"plate_name", foodName.getText().toString()},
                 new String[]{"address", address},
                 new String[]{"lat", Double.toString(lat)},
@@ -296,7 +292,7 @@ public class AddFoodActivity extends AppCompatActivity implements
                 new String[]{"price", price_data.toString()},
                 new String[]{"food_type", setTypes()},
                 new String[]{"description", description}
-        );
+        ));
     }
     private class PostAsyncTask extends AsyncTask<String[], Void, String> {
         String uri;
@@ -334,7 +330,7 @@ public class AddFoodActivity extends AppCompatActivity implements
                 getResources().getString(R.string.server) + "/add_food_images/" + foodPostId + "/",
                 imageBitmaps
         );
-        post.execute();
+        tasks.add(post.execute())
     }
     class PostImagesAsyncTask extends AsyncTask<String, Void, String> {
         String uri;
@@ -359,6 +355,7 @@ public class AddFoodActivity extends AppCompatActivity implements
         @Override
         protected void onPostExecute(String response) {
             showProgress(false);
+            finish();
             super.onPostExecute(response);
         }
     }

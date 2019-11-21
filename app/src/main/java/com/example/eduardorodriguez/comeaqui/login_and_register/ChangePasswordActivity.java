@@ -22,6 +22,7 @@ import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -38,6 +39,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     TextView passwordSetText;
     Button goToLogin;
     View progress;
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,10 +112,10 @@ public class ChangePasswordActivity extends AppCompatActivity {
     }
 
     void submit(){
-        new PatchAsyncTask(getResources().getString(R.string.server) + "/password_change/").execute(
+        tasks.add(new PatchAsyncTask(getResources().getString(R.string.server) + "/password_change/").execute(
                 new String[]{"old_password", oldPassword.getText().toString()},
                 new String[]{"new_password", newPassword.getText().toString()}
-                );
+                ));
     }
     private class PatchAsyncTask extends AsyncTask<String[], Void, String> {
         String uri;

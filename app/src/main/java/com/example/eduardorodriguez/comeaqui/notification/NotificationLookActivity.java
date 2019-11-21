@@ -33,6 +33,7 @@ import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -62,6 +63,7 @@ public class NotificationLookActivity extends AppCompatActivity {
 
     OrderObject orderObject;
 
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +103,7 @@ public class NotificationLookActivity extends AppCompatActivity {
     }
 
     void getOrderObject(int orderId){
-        new GetAsyncTask(context.getResources().getString(R.string.server) + "/order_detail/" + orderId + "/").execute();
+        tasks.add(new GetAsyncTask(context.getResources().getString(R.string.server) + "/order_detail/" + orderId + "/").execute());
     }
     private class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -243,10 +245,10 @@ public class NotificationLookActivity extends AppCompatActivity {
     void confirmOrder(OrderObject order, boolean confirm, Context context){
         PostAsyncTask orderStatus = new PostAsyncTask(context.getString(R.string.server) + "/set_order_status/");
         order.status = confirm ? "CONFIRMED" : "CANCELED";
-        orderStatus.execute(
+        tasks.add(orderStatus.execute(
                 new String[]{"order_id",  order.id + ""},
                 new String[]{"order_status", order.status}
-        );
+        ));
     }
     private class PostAsyncTask extends AsyncTask<String[], Void, String> {
         String uri;

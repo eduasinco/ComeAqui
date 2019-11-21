@@ -227,7 +227,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
     }
 
     void goToConversationWithUser(User user){
-        new GetConversationAsyncTask(getResources().getString(R.string.server) + "/get_or_create_chat/" + user.id + "/").execute();
+        tasks.add(new GetConversationAsyncTask(getResources().getString(R.string.server) + "/get_or_create_chat/" + user.id + "/").execute());
     }
     class GetConversationAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -290,9 +290,9 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
             if (bitmap != null){
                 PatchImageAsyncTask putTask = new PatchImageAsyncTask(getResources().getString(R.string.server) + "/edit_profile/", bitmap);
                 if (isBackGound){
-                    putTask.execute("background_photo");
+                    tasks.add(putTask.execute("background_photo"));
                 }else {
-                    putTask.execute("profile_photo");
+                    tasks.add(putTask.execute("profile_photo"));
                 }
             }
         } catch (IOException e) {
