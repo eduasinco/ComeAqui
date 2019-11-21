@@ -46,13 +46,6 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
     int userId;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        selectImageFromFragment.hideCard();
-        getUser(userId);
-    }
-
     private void setProfile(User user){
         if(user.profile_photo != null && !user.profile_photo.contains("no-image")) Glide.with(this).load(user.profile_photo).into(profileImageView);
         if(user.background_photo != null && !user.background_photo.contains("no-image")) Glide.with(this).load(user.background_photo).into(backgroundImageView);
@@ -86,8 +79,7 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
         Bundle b = intent.getExtras();
         if(b != null){
             userId = b.getInt("userId");
-            User user = getUser(userId);
-            setProfile(user);
+            getUser(userId);
         }
 
         selectImageFromFragment = SelectImageFromFragment.newInstance(false);
@@ -124,6 +116,12 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
         });
 
         backView.setOnClickListener(v -> finish());
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        selectImageFromFragment.hideCard();
+        getUser(userId);
     }
 
     public User getUser(int userId) {

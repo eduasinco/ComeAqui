@@ -76,17 +76,9 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
     ImageView meat;
     ImageView dairy;
 
-    private boolean appBarExpanded = true;
-
     int fpId;
     boolean isCollapsed = true;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getReviewsFrompFoodPost(fpId);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,8 +133,13 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
                 collapsingToolbar.setContentScrimColor(ContextCompat.getColor(this, R.color.colorPrimary));
             }
         });
-
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getReviewsFrompFoodPost(fpId);
+    }
+
 
     void setToolbar(){
         collapsingToolbar.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
@@ -217,12 +214,14 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
 
 
     void getReviewsFrompFoodPost(int foodPostId){
-        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/food_reviews/" + foodPostId + "/").execute());
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/food_reviews/" + foodPostId + "/", this).execute());
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
-        public GetAsyncTask(String uri){
+        private Context context;
+        public GetAsyncTask(String uri, Context context){
             this.uri = uri;
+            this.context = context;
         }
 
         @Override
@@ -246,7 +245,7 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
             if (response != null){
                 foodPostReview = new FoodPostReview(new JsonParser().parse(response).getAsJsonObject());
                 reviews = foodPostReview.reviews;
-                adapter = new MyFoodReviewRecyclerViewAdapter(reviews, getApplicationContext(), foodPostReview.owner);
+                adapter = new MyFoodReviewRecyclerViewAdapter(reviews, context, foodPostReview.owner);
                 recList.setAdapter(adapter);
                 setViewFoodPost();
                 startWaitingFrame(false);
