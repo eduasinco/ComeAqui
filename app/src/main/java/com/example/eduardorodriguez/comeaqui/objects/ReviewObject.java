@@ -1,5 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.objects;
 
+import com.example.eduardorodriguez.comeaqui.utilities.DateFormatting;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -31,6 +32,6 @@ public class ReviewObject implements Serializable {
                 }catch (Exception ignore){}
             }
         }
-        createdAt = jo.get("created_at").getAsString();
+        createdAt = DateFormatting.todayYesterdayWeekDay(jo.get("created_at").getAsString());
     }
 }

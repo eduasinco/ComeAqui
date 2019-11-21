@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import com.example.eduardorodriguez.comeaqui.objects.ReviewObject;
 import com.example.eduardorodriguez.comeaqui.objects.ReviewReplyObject;
 
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
+import com.example.eduardorodriguez.comeaqui.utilities.DateFormatting;
 import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonObject;
@@ -36,9 +38,9 @@ public class ReplyReviewActivity extends AppCompatActivity {
     TextView usernameTime;
     ImageButton close;
     Button post;
+    ProgressBar progressBar;
     EditText reply;
     FrameLayout errorMessage;
-    FrameLayout waitingFrame;
 
     ReviewObject reviewObject;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
@@ -51,9 +53,9 @@ public class ReplyReviewActivity extends AppCompatActivity {
         usernameTime = findViewById(R.id.username_and_time);
         close = findViewById(R.id.close);
         post = findViewById(R.id.post_reply);
+        progressBar = findViewById(R.id.progress_reply);
         reply = findViewById(R.id.reply);
         errorMessage = findViewById(R.id.error_message);
-        waitingFrame = findViewById(R.id.waiting_frame);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -61,9 +63,6 @@ public class ReplyReviewActivity extends AppCompatActivity {
             reviewObject = (ReviewObject) b.get("review");
             setThings();
         }
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.waiting_frame, WaitFragment.newInstance())
-                .commit();
     }
 
     void setThings(){
@@ -112,9 +111,11 @@ public class ReplyReviewActivity extends AppCompatActivity {
 
     void startWaitingFrame(boolean start){
         if (start) {
-            waitingFrame.setVisibility(View.VISIBLE);
+            post.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
         } else {
-            waitingFrame.setVisibility(View.GONE);
+            post.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
         }
     }
 
@@ -126,6 +127,7 @@ public class ReplyReviewActivity extends AppCompatActivity {
                         "Please make sure that you have connection to the internet"))
                 .commit();
     }
+
     @Override
     public void onDestroy() {
         for (AsyncTask task: tasks){

@@ -46,7 +46,7 @@
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_weight="0"
-            android:background="@android:color/white"
+            android:background="@android:color/transparent"
             app:srcCompat="@drawable/ic_three_dots" />
 
     </LinearLayout>
@@ -154,7 +154,7 @@
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0"
-                android:background="@android:color/white"
+                android:background="@android:color/transparent"
                 app:srcCompat="@drawable/ic_three_dots" />
 
         </LinearLayout>
