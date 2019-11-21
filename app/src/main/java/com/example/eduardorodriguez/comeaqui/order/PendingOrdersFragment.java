@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -52,6 +53,7 @@ public class PendingOrdersFragment extends Fragment {
     LinkedHashMap<Integer, OrderObject> data;
     MyPendingOrdersRecyclerViewAdapter orderAdapter;
     WebSocketClient mWebSocketClient;
+    LinearLayout noNotifications;
 
     FrameLayout waitFrame;
     View view;
@@ -79,6 +81,11 @@ public class PendingOrdersFragment extends Fragment {
                 JsonObject jo = pa.getAsJsonObject();
                 OrderObject oo = new OrderObject(jo);
                 data.put(oo.id, oo);
+            }
+            if (data.size() > 0){
+                noNotifications.setVisibility(View.GONE);
+            } else {
+                noNotifications.setVisibility(View.VISIBLE);
             }
             orderAdapter = new MyPendingOrdersRecyclerViewAdapter(new ArrayList<>(data.values()), mListener);
             recyclerView.setAdapter(orderAdapter);
@@ -110,6 +117,7 @@ public class PendingOrdersFragment extends Fragment {
         pullToRefresh = view.findViewById(R.id.pullToRefresh);
         recyclerView = view.findViewById(R.id.recycler);
         waitFrame = view.findViewById(R.id.wait_frame);
+        noNotifications = view.findViewById(R.id.no_orders);
 
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.wait_frame, WaitFragment.newInstance())
@@ -182,6 +190,7 @@ public class PendingOrdersFragment extends Fragment {
                         data.get(orderChanged.id).seen = orderChanged.seen;
                         data.get(orderChanged.id).status = orderChanged.status;
                         orderAdapter.notifyDataSetChanged();
+                        noNotifications.setVisibility(View.GONE);
                     });
                 }
                 @Override

@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.objects.NotificationObject;
@@ -43,6 +44,7 @@ public class NotificationsFragment extends Fragment {
     SwipeController swipeController = null;
     FrameLayout waitFrame;
     WebSocketClient mWebSocketClient;
+    LinearLayout noNotifications;
 
     static NotificationsFragment f;
 
@@ -59,6 +61,11 @@ public class NotificationsFragment extends Fragment {
                 JsonObject jo = pa.getAsJsonObject();
                 NotificationObject oo = new NotificationObject(jo);
                 data.add(oo);
+            }
+            if (data.size() > 0){
+                noNotifications.setVisibility(View.GONE);
+            } else {
+                noNotifications.setVisibility(View.VISIBLE);
             }
             notificationAdapter = new MyNotificationsRecyclerViewAdapter(getContext(), data);
             recyclerView.setAdapter(notificationAdapter);
@@ -79,6 +86,7 @@ public class NotificationsFragment extends Fragment {
         f = this;
         recyclerView = view.findViewById(R.id.recycler);
         waitFrame = view.findViewById(R.id.wait_frame);
+        noNotifications = view.findViewById(R.id.no_notifications);
 
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.wait_frame, WaitFragment.newInstance())
@@ -178,6 +186,7 @@ public class NotificationsFragment extends Fragment {
                         NotificationObject notificationObject = new NotificationObject(new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("notification_added").getAsJsonObject());
                         data.add(0, notificationObject);
                         notificationAdapter.notifyDataSetChanged();
+                        noNotifications.setVisibility(View.GONE);
                     });
                 }
                 @Override
