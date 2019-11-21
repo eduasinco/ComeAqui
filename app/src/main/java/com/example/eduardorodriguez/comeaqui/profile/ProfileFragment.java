@@ -353,8 +353,12 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+    @Override
+    public void onDestroy() {
         for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        super.onDestroy();
     }
 }

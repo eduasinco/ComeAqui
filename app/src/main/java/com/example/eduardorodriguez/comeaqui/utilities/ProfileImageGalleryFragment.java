@@ -209,11 +209,14 @@ public class ProfileImageGalleryFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+    @Override
+    public void onDestroy() {
         for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        super.onDestroy();
     }
-
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

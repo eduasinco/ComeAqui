@@ -289,6 +289,9 @@ public class ConversationActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         mWebSocketClient.close();
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
         super.onDestroy();
     }
 

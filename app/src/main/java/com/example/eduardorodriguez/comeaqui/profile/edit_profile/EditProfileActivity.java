@@ -196,4 +196,11 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
             super.onPostExecute(response);
         }
     }
+    @Override
+    public void onDestroy() {
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        super.onDestroy();
+    }
 }

@@ -145,9 +145,13 @@ public class UserPostFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onDestroy() {
         for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        super.onDestroy();
     }
-
 }

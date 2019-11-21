@@ -205,9 +205,13 @@ public class PendingOrdersFragment extends Fragment {
         mListener = null;
         if (null != mWebSocketClient)
             mWebSocketClient.close();
+    }
+    @Override
+    public void onDestroy() {
         for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        super.onDestroy();
     }
 
     public interface OnListFragmentInteractionListener {

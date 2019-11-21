@@ -145,4 +145,11 @@ public class ChangePasswordActivity extends AppCompatActivity {
             super.onPostExecute(response);
         }
     }
+    @Override
+    public void onDestroy() {
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        super.onDestroy();
+    }
 }

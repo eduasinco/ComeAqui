@@ -373,4 +373,11 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
         profile.putExtra("userId", user.id);
         startActivity(profile);
     }
+    @Override
+    public void onDestroy() {
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        super.onDestroy();
+    }
 }

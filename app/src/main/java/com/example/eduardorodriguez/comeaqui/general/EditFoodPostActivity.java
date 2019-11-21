@@ -327,6 +327,12 @@ public class EditFoodPostActivity extends AppCompatActivity implements
             showProgress(false);
             super.onPostExecute(response);
         }
-
+    }
+    @Override
+    public void onDestroy() {
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        super.onDestroy();
     }
 }

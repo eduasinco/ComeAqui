@@ -272,4 +272,11 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
             cancelOrder();
         }
     }
+    @Override
+    public void onDestroy() {
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        super.onDestroy();
+    }
 }

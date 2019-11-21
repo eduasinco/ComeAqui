@@ -181,4 +181,11 @@ public class ReviewPostActivity extends AppCompatActivity implements StarReasonF
     public void onHasToScrollIfNeeded() {
         scrollView.fullScroll(View.FOCUS_DOWN);
     }
+    @Override
+    public void onDestroy() {
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        super.onDestroy();
+    }
 }

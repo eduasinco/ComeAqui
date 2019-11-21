@@ -127,9 +127,13 @@ public class PostAndReviewsFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+    @Override
+    public void onDestroy() {
         for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        super.onDestroy();
     }
 
     void startWaitingFrame(boolean start){

@@ -281,4 +281,11 @@ public class NotificationLookActivity extends AppCompatActivity {
         k.putExtra("userId", userId);
         startActivity(k);
     }
+    @Override
+    public void onDestroy() {
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        super.onDestroy();
+    }
 }

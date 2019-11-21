@@ -422,4 +422,11 @@ public class FoodLookActivity extends AppCompatActivity {
                         "Please make sure that you have connection to the internet"))
                 .commit();
     }
+    @Override
+    public void onDestroy() {
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        super.onDestroy();
+    }
 }

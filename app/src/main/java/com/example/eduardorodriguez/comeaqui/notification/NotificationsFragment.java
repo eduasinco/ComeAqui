@@ -202,8 +202,12 @@ public class NotificationsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mWebSocketClient.close();
+    }
+    @Override
+    public void onDestroy() {
         for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        super.onDestroy();
     }
 }

@@ -330,7 +330,7 @@ public class AddFoodActivity extends AppCompatActivity implements
                 getResources().getString(R.string.server) + "/add_food_images/" + foodPostId + "/",
                 imageBitmaps
         );
-        tasks.add(post.execute())
+        tasks.add(post.execute());
     }
     class PostImagesAsyncTask extends AsyncTask<String, Void, String> {
         String uri;
@@ -460,6 +460,14 @@ public class AddFoodActivity extends AppCompatActivity implements
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public void onDestroy() {
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        super.onDestroy();
     }
 }
 

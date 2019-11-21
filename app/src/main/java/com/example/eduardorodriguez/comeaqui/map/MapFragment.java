@@ -477,8 +477,11 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
         mMapView.onDestroy();
+        super.onDestroy();
     }
 
     @Override
@@ -495,8 +498,5 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
     public void onDetach() {
         mWebSocketClient.close();
         super.onDetach();
-        for (AsyncTask task: tasks){
-            if (task != null) task.cancel(true);
-        }
     }
 }

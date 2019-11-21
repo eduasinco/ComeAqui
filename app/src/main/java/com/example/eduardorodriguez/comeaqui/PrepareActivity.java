@@ -163,4 +163,11 @@ public class PrepareActivity extends AppCompatActivity {
         Intent bactToLogin = new Intent(this, LoginOrRegisterActivity.class);
         startActivity(bactToLogin);
     }
+    @Override
+    public void onDestroy() {
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        super.onDestroy();
+    }
 }

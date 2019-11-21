@@ -89,5 +89,11 @@ public class PaymentMethodsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
+    @Override
+    public void onDestroy() {
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        super.onDestroy();
+    }
 }

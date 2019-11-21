@@ -205,8 +205,13 @@ public class ChatFragment extends Fragment{
         super.onDetach();
         mWebSocketClient.close();
         mListener = null;
+    }
+
+    @Override
+    public void onDestroy() {
         for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        super.onDestroy();
     }
 }
