@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.MainActivity;
@@ -53,6 +54,7 @@ public class ChatFragment extends Fragment{
 
     RecyclerView recyclerView;
     FrameLayout waitFrame;
+    LinearLayout noMessages;
 
     View view;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
@@ -81,6 +83,7 @@ public class ChatFragment extends Fragment{
         view  = inflater.inflate(R.layout.fragment_chat_list, container, false);
         recyclerView = view.findViewById(R.id.recycler_chat);
         waitFrame = view.findViewById(R.id.wait_frame);
+        noMessages = view.findViewById(R.id.no_messages);
 
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.wait_frame, WaitFragment.newInstance())
@@ -99,6 +102,11 @@ public class ChatFragment extends Fragment{
                 ChatObject chat = new ChatObject(jo);
                 data.add(chat);
                 chatObjectHashMap.put(chat.id, chat);
+            }
+            if (data.size() > 0){
+                noMessages.setVisibility(View.GONE);
+            } else{
+                noMessages.setVisibility(View.VISIBLE);
             }
             adapter = new MyChatRecyclerViewAdapter(data, mListener);
             recyclerView.setAdapter(adapter);
@@ -178,6 +186,7 @@ public class ChatFragment extends Fragment{
                             data.add(0, chatObject);
                             chatObjectHashMap.put(chatObject.id , chatObject);
                         }
+                        noMessages.setVisibility(View.GONE);
                         adapter.notifyDataSetChanged();
                     });
                 }
