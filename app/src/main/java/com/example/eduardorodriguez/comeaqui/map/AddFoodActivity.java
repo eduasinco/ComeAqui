@@ -20,7 +20,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.*;
 import com.example.eduardorodriguez.comeaqui.map.add_food.AddImagesFragment;
-import com.example.eduardorodriguez.comeaqui.map.add_food.FoodTimePickerFragment;
+import com.example.eduardorodriguez.comeaqui.map.add_food.FoodDateTimePickerFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.WordLimitEditTextFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
@@ -42,7 +42,7 @@ public class AddFoodActivity extends AppCompatActivity implements
         SelectImageFromFragment.OnFragmentInteractionListener,
         ErrorMessageFragment.OnFragmentInteractionListener,
         FoodTypeSelectorFragment.OnFragmentInteractionListener,
-        FoodTimePickerFragment.OnFragmentInteractionListener,
+        FoodDateTimePickerFragment.OnFragmentInteractionListener,
         WordLimitEditTextFragment.OnFragmentInteractionListener,
         AddImagesFragment.OnFragmentInteractionListener{
     EditText foodName;
@@ -75,7 +75,7 @@ public class AddFoodActivity extends AppCompatActivity implements
 
     PlaceAutocompleteFragment placeAutocompleteFragment;
     FoodTypeSelectorFragment foodTypeSelectorFragment;
-    FoodTimePickerFragment foodTimePickerFragment;
+    FoodDateTimePickerFragment foodTimePickerFragment;
     WordLimitEditTextFragment wordLimitEditTextFragment;
     AddImagesFragment addImageFragment;
     SelectImageFromFragment selectImagesFromFragment;
@@ -129,7 +129,7 @@ public class AddFoodActivity extends AppCompatActivity implements
 
             placeAutocompleteFragment = PlaceAutocompleteFragment.newInstance(address);
             foodTypeSelectorFragment = FoodTypeSelectorFragment.newInstance();
-            foodTimePickerFragment = FoodTimePickerFragment.newInstance();
+            foodTimePickerFragment = FoodDateTimePickerFragment.newInstance();
             wordLimitEditTextFragment = WordLimitEditTextFragment.newInstance();
             addImageFragment = AddImagesFragment.newInstance();
             selectImagesFromFragment = SelectImageFromFragment.newInstance(false);

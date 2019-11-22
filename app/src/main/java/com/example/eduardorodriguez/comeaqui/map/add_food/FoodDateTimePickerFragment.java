@@ -11,11 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.utilities.DateFormatting;
 
 import java.text.DateFormat;
@@ -26,13 +26,13 @@ import java.util.TimeZone;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
-public class FoodTimePickerFragment extends Fragment {
+public class FoodDateTimePickerFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
     Button nowButton;
     Button scheduleButton;
-    TimePicker timePicker;
+    LinearLayout timePicker;
     TextView timeTextView;
     View buttonTimeArray;
 
@@ -40,9 +40,9 @@ public class FoodTimePickerFragment extends Fragment {
     String postTimeString;
     int MINUTES = 30;
 
-    public FoodTimePickerFragment() {}
-    public static FoodTimePickerFragment newInstance() {
-        return new FoodTimePickerFragment();
+    public FoodDateTimePickerFragment() {}
+    public static FoodDateTimePickerFragment newInstance() {
+        return new FoodDateTimePickerFragment();
     }
 
     @Override
@@ -96,36 +96,34 @@ public class FoodTimePickerFragment extends Fragment {
     }
 
     void setTimePickerLogic(){
-        timePicker.setOnTimeChangedListener((arg0, arg1, arg2) -> {
-            scheduleButton.setBackgroundColor(Color.TRANSPARENT);
-            nowButton.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.text_input_shape));
+        scheduleButton.setBackgroundColor(Color.TRANSPARENT);
+        nowButton.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.text_input_shape));
 
 
-            try {
-                Date now = new Date(System.currentTimeMillis());
-                Date todayDate = DateFormatting.startOfToday(USER.timeZone);
+        try {
+            Date now = new Date(System.currentTimeMillis());
+            Date todayDate = DateFormatting.startOfToday(USER.timeZone);
 
-                Date postTimeDate = new Date(todayDate.getTime() + (arg0.getHour()*60 + arg0.getMinute())*60*1000);
-                DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
-                format.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date postTimeDate = new Date(todayDate.getTime() + (12*60)*60*1000);
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
+            format.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-                Date now_plus_time_picked = new Date(now.getTime() + MINUTES *60*1000);
-                DateFormat formatter = new SimpleDateFormat("h:mm a");
-                if (now_plus_time_picked.getTime() > postTimeDate.getTime()){
-                    formatter.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
-                    String dateFormatted = formatter.format(now_plus_time_picked);
-                    timeTextView.setText("Please pick a time greater than " + dateFormatted);
-                } else {
-                    formatter.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
-                    String dateFormatted = formatter.format(postTimeDate);
-                    timeTextView.setText("Today at: " + dateFormatted);
-                    postTimeString = format.format(postTimeDate);
-                    mListener.onFragmentInteraction(postTimeString);
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
+            Date now_plus_time_picked = new Date(now.getTime() + MINUTES *60*1000);
+            DateFormat formatter = new SimpleDateFormat("h:mm a");
+            if (now_plus_time_picked.getTime() > postTimeDate.getTime()){
+                formatter.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
+                String dateFormatted = formatter.format(now_plus_time_picked);
+                timeTextView.setText("Please pick a time greater than " + dateFormatted);
+            } else {
+                formatter.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
+                String dateFormatted = formatter.format(postTimeDate);
+                timeTextView.setText("Today at: " + dateFormatted);
+                postTimeString = format.format(postTimeDate);
+                mListener.onFragmentInteraction(postTimeString);
             }
-        });
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     void showTimePicker(boolean show){

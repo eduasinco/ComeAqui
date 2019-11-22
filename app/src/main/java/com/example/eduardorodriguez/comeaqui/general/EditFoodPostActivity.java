@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.map.add_food.AddImagesFragment;
-import com.example.eduardorodriguez.comeaqui.map.add_food.FoodTimePickerFragment;
+import com.example.eduardorodriguez.comeaqui.map.add_food.FoodDateTimePickerFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodTypeSelectorFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.WordLimitEditTextFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 public class EditFoodPostActivity extends AppCompatActivity implements
         WordLimitEditTextFragment.OnFragmentInteractionListener,
@@ -47,7 +46,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
     ProgressBar editProgress;
 
     FoodTypeSelectorFragment foodTypeSelectorFragment;
-    FoodTimePickerFragment foodTimePickerFragment;
+    FoodDateTimePickerFragment foodTimePickerFragment;
     WordLimitEditTextFragment wordLimitEditTextFragment;
     AddImagesFragment addImageFragment;
     SelectImageFromFragment selectImageFromLayout;
@@ -80,7 +79,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
         editProgress = findViewById(R.id.edit_progress);
 
         foodTypeSelectorFragment = FoodTypeSelectorFragment.newInstance();
-        foodTimePickerFragment = FoodTimePickerFragment.newInstance();
+        foodTimePickerFragment = FoodDateTimePickerFragment.newInstance();
         wordLimitEditTextFragment = WordLimitEditTextFragment.newInstance();
         addImageFragment = AddImagesFragment.newInstance();
         selectImageFromLayout = SelectImageFromFragment.newInstance(false);
