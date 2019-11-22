@@ -44,6 +44,7 @@ public class ProfileImageGalleryFragment extends Fragment {
     View view;
     LinearLayout imageListLayout;
     LinearLayout currentHorizontalLayout;
+    LinearLayout noMedia;
 
     DisplayMetrics displayMetrics;
 
@@ -81,6 +82,7 @@ public class ProfileImageGalleryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_profile_image_gallery, container, false);
+        noMedia = view.findViewById(R.id.no_media);
         count = 0;
         displayMetrics = view.getContext().getResources().getDisplayMetrics();
         initializeFirstLayout();
@@ -135,7 +137,11 @@ public class ProfileImageGalleryFragment extends Fragment {
 
     void makeList(JsonArray jsonArray){
         ArrayList<String> imageUrls = new ArrayList<>();
-
+        if (jsonArray.size() > 0){
+            noMedia.setVisibility(View.GONE);
+        } else {
+            noMedia.setVisibility(View.VISIBLE);
+        }
         for (int i = 0; i <jsonArray.size(); i++){
             JsonElement pa = jsonArray.get(i);
             JsonObject jo = pa.getAsJsonObject();

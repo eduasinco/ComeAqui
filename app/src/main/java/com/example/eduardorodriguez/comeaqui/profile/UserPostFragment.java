@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.R;
@@ -36,6 +37,7 @@ public class UserPostFragment extends Fragment {
 
     RecyclerView recyclerView;
     FrameLayout waitFrame;
+    LinearLayout noPosts;
 
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
@@ -49,6 +51,11 @@ public class UserPostFragment extends Fragment {
             JsonObject jo = pa.getAsJsonObject();
             FoodPost foodPost = new FoodPost(jo);
             data.add(foodPost);
+        }
+        if (data.size() > 0){
+            noPosts.setVisibility(View.GONE);
+        } else {
+            noPosts.setVisibility(View.VISIBLE);
         }
         recyclerView.setAdapter(this.adapter);
         adapter.addNewRow(data);
@@ -85,6 +92,7 @@ public class UserPostFragment extends Fragment {
         Context context = view.getContext();
         recyclerView = view.findViewById(R.id.recycler_user_post);
         waitFrame = view.findViewById(R.id.wait_frame);
+        noPosts = view.findViewById(R.id.no_posts);
 
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.wait_frame, WaitFragment.newInstance())

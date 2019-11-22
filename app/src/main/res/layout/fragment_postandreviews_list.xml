@@ -30,4 +30,32 @@
 
     </FrameLayout>
 
+    <LinearLayout
+        android:id="@+id/no_posts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView26"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginBottom="16dp"
+            app:srcCompat="@drawable/no_posts" />
+
+        <TextView
+            android:id="@+id/textView26"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="No posts yet"
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

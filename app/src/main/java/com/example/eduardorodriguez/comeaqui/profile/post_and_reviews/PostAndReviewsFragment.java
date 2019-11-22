@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.R;
@@ -34,6 +35,7 @@ public class PostAndReviewsFragment extends Fragment {
 
     RecyclerView recyclerView;
     FrameLayout waitFrame;
+    LinearLayout noPosts;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     /**
@@ -68,6 +70,7 @@ public class PostAndReviewsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_postandreviews_list, container, false);
         recyclerView = view.findViewById(R.id.recycler_user_postandreviews);
         waitFrame = view.findViewById(R.id.wait_frame);
+        noPosts = view.findViewById(R.id.no_posts);
 
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.wait_frame, WaitFragment.newInstance())
@@ -115,6 +118,11 @@ public class PostAndReviewsFragment extends Fragment {
                     JsonObject jo = pa.getAsJsonObject();
                     FoodPostReview foodPost = new FoodPostReview(jo);
                     data.add(foodPost);
+                }
+                if (data.size() > 0){
+                    noPosts.setVisibility(View.GONE);
+                } else {
+                    noPosts.setVisibility(View.VISIBLE);
                 }
                 adapter = new MyPostAndReviewsRecyclerViewAdapter(data);
                 recyclerView.setAdapter(adapter);
