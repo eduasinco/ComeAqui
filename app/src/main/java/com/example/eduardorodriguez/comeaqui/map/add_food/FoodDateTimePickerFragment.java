@@ -20,10 +20,12 @@ import android.widget.TextView;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.map.DatePickerFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.DateFormatting;
 
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.Format;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -138,7 +140,7 @@ public class FoodDateTimePickerFragment extends Fragment {
                     date.setText(currentDateString);
                 }
                 if (endMilli == null){
-                    endMilli = TimeUnit.HOURS.toMillis(10) + TimeUnit.MINUTES.toMillis(00);
+                    endMilli = TimeUnit.HOURS.toMillis(22) + TimeUnit.MINUTES.toMillis(00);
                     endTime.setText("10:00 PM");
                 }
                 startMilli = TimeUnit.HOURS.toMillis(selectedHour) + TimeUnit.MINUTES.toMillis(selectedMinute);
@@ -170,7 +172,7 @@ public class FoodDateTimePickerFragment extends Fragment {
                     date.setText(currentDateString);
                 }
                 if (startMilli == null){
-                    startMilli = TimeUnit.HOURS.toMillis(7) + TimeUnit.MINUTES.toMillis(30);
+                    startMilli = TimeUnit.HOURS.toMillis(19) + TimeUnit.MINUTES.toMillis(30);
                     startTime.setText("7:30 PM");
                 }
                 endMilli = TimeUnit.HOURS.toMillis(selectedHour) + TimeUnit.MINUTES.toMillis(selectedMinute);
@@ -206,11 +208,11 @@ public class FoodDateTimePickerFragment extends Fragment {
         date.setText(currentDateString);
 
         if (startMilli == null){
-            startMilli = TimeUnit.HOURS.toMillis(7) + TimeUnit.MINUTES.toMillis(30);
+            startMilli = TimeUnit.HOURS.toMillis(19) + TimeUnit.MINUTES.toMillis(30);
             startTime.setText("7:30 PM");
         }
         if (endMilli == null){
-            endMilli = TimeUnit.HOURS.toMillis(10) + TimeUnit.MINUTES.toMillis(00);
+            endMilli = TimeUnit.HOURS.toMillis(22) + TimeUnit.MINUTES.toMillis(00);
             endTime.setText("10:00 PM");
         }
         checkDateAndSend(
@@ -218,6 +220,8 @@ public class FoodDateTimePickerFragment extends Fragment {
                 new Date(datePicked.getTime() + endMilli)
         );
     }
+
+
 
     private void checkDateAndSend(Date startDate, Date endDate){
         Date now = new Date(System.currentTimeMillis());
@@ -238,6 +242,7 @@ public class FoodDateTimePickerFragment extends Fragment {
             String dateFormatted = formatter.format(startDate);
             timeTextView.setText(dateFormatted);
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
+            format.setTimeZone(TimeZone.getTimeZone("UTC"));
             mListener.onFragmentInteraction(format.format(startDate), format.format(newEndDate));
         }
     }

@@ -33,9 +33,7 @@ import com.example.eduardorodriguez.comeaqui.utilities.place_autocomplete.PlaceA
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
@@ -68,7 +66,8 @@ public class AddFoodActivity extends AppCompatActivity implements
     ArrayList<Bitmap> imageBitmaps;
     int imageIndex;
     int dinners = 0;
-    String postTimeString;
+    String startTime;
+    String endTime;
     double lat;
     double lng;
     String address;
@@ -254,7 +253,7 @@ public class AddFoodActivity extends AppCompatActivity implements
             errorText = errorText + "You have to set a dinners number \n";
             isValid = false;
         }
-        if (postTimeString == null || postTimeString.equals("")){
+        if (startTime == null || startTime.equals("")){
             foodTimePickerFragment.setErrorBackground();
             errorText = errorText + "Please choose a valid meal start_time \n";
             isValid = false;
@@ -291,7 +290,8 @@ public class AddFoodActivity extends AppCompatActivity implements
                 new String[]{"lat", Double.toString(lat)},
                 new String[]{"lng", Double.toString(lng)},
                 new String[]{"max_dinners", Integer.toString(dinners)},
-                new String[]{"start_time", postTimeString},
+                new String[]{"start_time", startTime},
+                new String[]{"end_time", startTime},
                 new String[]{"time_zone", USER.timeZone},
                 new String[]{"price", price_data.toString()},
                 new String[]{"food_type", setTypes()},
@@ -458,7 +458,8 @@ public class AddFoodActivity extends AppCompatActivity implements
 
     @Override
     public void onFragmentInteraction(String startDate, String endDate) {
-        this.postTimeString = startDate;
+        this.startTime = startDate;
+        this.endTime = endDate;
     }
 
     @Override
