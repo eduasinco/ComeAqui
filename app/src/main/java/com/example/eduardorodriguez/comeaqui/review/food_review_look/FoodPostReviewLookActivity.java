@@ -2,6 +2,7 @@ package com.example.eduardorodriguez.comeaqui.review.food_review_look;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -53,7 +54,7 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
     private CollapsingToolbarLayout collapsingToolbar;
     private AppBarLayout appBarLayout;
     private RecyclerView recList;
-    private Menu collapseMenu;
+    private ConstraintLayout noComments;
 
     private ArrayList<ReviewObject> reviews;
     private MyFoodReviewRecyclerViewAdapter adapter;
@@ -96,6 +97,7 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
         cardButtonView = findViewById(R.id.cardButton);
         postRating = findViewById(R.id.food_post_review_rating);
         waitingFrame = findViewById(R.id.waiting_frame);
+        noComments = findViewById(R.id.no_comments);
 
         vegetarian = findViewById(R.id.vegetarian);
         vegan = findViewById(R.id.vegan);
@@ -153,7 +155,6 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        this.collapseMenu = menu;
         getMenuInflater().inflate(R.menu.main_menu, menu);
         setCollapseLogic();
         return true;
@@ -245,6 +246,11 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
             if (response != null){
                 foodPostReview = new FoodPostReview(new JsonParser().parse(response).getAsJsonObject());
                 reviews = foodPostReview.reviews;
+                if (reviews.size() > 0){
+                    noComments.setVisibility(View.GONE);
+                } else {
+                    noComments.setVisibility(View.VISIBLE);
+                }
                 adapter = new MyFoodReviewRecyclerViewAdapter(reviews, context, foodPostReview.owner);
                 recList.setAdapter(adapter);
                 setViewFoodPost();
