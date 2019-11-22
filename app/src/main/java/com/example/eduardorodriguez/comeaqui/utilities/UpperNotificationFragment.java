@@ -1,6 +1,5 @@
 package com.example.eduardorodriguez.comeaqui.utilities;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,7 +18,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.general.FoodLookActivity;
-import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
 
@@ -29,7 +27,6 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 
 public class UpperNotificationFragment extends Fragment {
@@ -111,7 +108,7 @@ public class UpperNotificationFragment extends Fragment {
             title.setText("Meal with " +  orderObject.poster.first_name + orderObject.poster.last_name);
             username.setText(orderObject.poster.username);
             plateName.setText( orderObject.post.plate_name);
-            time.setText(orderObject.post.time);
+            time.setText(orderObject.post.start_time);
             if(!orderObject.poster.profile_photo.contains("no-image")) {
                 Glide.with(getActivity()).load(orderObject.poster.profile_photo).into(posterImage);
             }
@@ -123,7 +120,7 @@ public class UpperNotificationFragment extends Fragment {
     void setOrderPost(){
         if (orderPost != null){
             postCard.setVisibility(View.VISIBLE);
-            time2.setText(orderPost.post.time);
+            time2.setText(orderPost.post.start_time);
         } else {
             postCard.setVisibility(View.GONE);
         }

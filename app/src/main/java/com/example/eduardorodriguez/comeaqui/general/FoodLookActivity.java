@@ -19,11 +19,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
@@ -46,8 +44,6 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -244,7 +240,7 @@ public class FoodLookActivity extends AppCompatActivity {
         descriptionView.setText(foodPostDetail.description);
         posterLocationView.setText(foodPostDetail.address);
         priceView.setText(foodPostDetail.price + "$");
-        timeView.setText(foodPostDetail.time);
+        timeView.setText(foodPostDetail.start_time);
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("type", foodPostDetail.type);

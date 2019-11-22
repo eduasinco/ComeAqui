@@ -152,7 +152,7 @@
                     android:layout_height="54dp"
                     android:focusableInTouchMode="true"
                     android:gravity="bottom|center"
-                    android:text="Time"
+                    android:text="Date"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="24sp"
                     app:layout_constraintHorizontal_bias="0.0"

@@ -1,28 +1,34 @@
 package com.example.eduardorodriguez.comeaqui.map.add_food;
 
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.utilities.DateFormatting;
+import com.example.eduardorodriguez.comeaqui.map.DatePickerFragment;
 
+import java.sql.Time;
 import java.text.DateFormat;
-import java.text.ParseException;
+import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -34,10 +40,17 @@ public class FoodDateTimePickerFragment extends Fragment {
     Button scheduleButton;
     LinearLayout timePicker;
     TextView timeTextView;
+    EditText date;
+    EditText startTime;
+    EditText endTime;
     View buttonTimeArray;
 
+    Date datePicked;
+    Long startMilli;
+    Long endMilli;
+
     boolean isNow = false;
-    String postTimeString;
+    String startDateString;
     int MINUTES = 30;
 
     public FoodDateTimePickerFragment() {}
@@ -64,6 +77,9 @@ public class FoodDateTimePickerFragment extends Fragment {
         timePicker = view.findViewById(R.id.timePicker);
         timeTextView = view.findViewById(R.id.time_text);
         buttonTimeArray = view.findViewById(R.id.button_array_time);
+        date = view.findViewById(R.id.date);
+        startTime = view.findViewById(R.id.start_time);
+        endTime = view.findViewById(R.id.end_time);
 
         setButtonsLogic();
         setTimePickerLogic();
@@ -76,8 +92,8 @@ public class FoodDateTimePickerFragment extends Fragment {
             Date postTimeDate = new Date(System.currentTimeMillis() + MINUTES * 60 * 1000);
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
             format.setTimeZone(TimeZone.getTimeZone("UTC"));
-            postTimeString = format.format(postTimeDate);
-            mListener.onFragmentInteraction(postTimeString);
+            startDateString = format.format(postTimeDate);
+            // mListener.onFragmentInteraction(startDateString);
 
             isNow = true;
             timeTextView.setText("Now (the post will be visible during " + MINUTES + " minutes from now)");
@@ -87,7 +103,7 @@ public class FoodDateTimePickerFragment extends Fragment {
         });
 
         scheduleButton.setOnClickListener(v -> {
-            mListener.onFragmentInteraction("");
+            mListener.onFragmentInteraction("", "");
             timeTextView.setText("-- --");
             nowButton.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.text_input_shape));
             scheduleButton.setBackgroundColor(Color.TRANSPARENT);
@@ -99,30 +115,130 @@ public class FoodDateTimePickerFragment extends Fragment {
         scheduleButton.setBackgroundColor(Color.TRANSPARENT);
         nowButton.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.text_input_shape));
 
+        date.setOnClickListener(v -> {
+            DialogFragment datePicker = new DatePickerFragment();
+            datePicker.show(getFragmentManager(), "date picker");
+        });
 
-        try {
-            Date now = new Date(System.currentTimeMillis());
-            Date todayDate = DateFormatting.startOfToday(USER.timeZone);
+        startTime.setOnClickListener(v -> {
+            Calendar mcurrentTime = Calendar.getInstance();
+            int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+            int minute = mcurrentTime.get(Calendar.MINUTE);
 
-            Date postTimeDate = new Date(todayDate.getTime() + (12*60)*60*1000);
+            TimePickerDialog mTimePicker;
+            mTimePicker = new TimePickerDialog(getContext(), (timePicker, selectedHour, selectedMinute) ->{
+                if (datePicked == null){
+                    Calendar c = Calendar.getInstance();
+                    c.set(Calendar.HOUR_OF_DAY, 0);
+                    c.set(Calendar.MINUTE, 0);
+                    c.set(Calendar.SECOND, 0);
+                    c.set(Calendar.MILLISECOND, 0);
+                    datePicked = c.getTime();
+                    String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(datePicked);
+                    date.setText(currentDateString);
+                }
+                if (endMilli == null){
+                    endMilli = TimeUnit.HOURS.toMillis(10) + TimeUnit.MINUTES.toMillis(00);
+                    endTime.setText("10:00 PM");
+                }
+                startMilli = TimeUnit.HOURS.toMillis(selectedHour) + TimeUnit.MINUTES.toMillis(selectedMinute);
+                startTime.setText(getTime(selectedHour, selectedMinute));
+                checkDateAndSend(
+                        new Date(datePicked.getTime() + startMilli),
+                        new Date(datePicked.getTime() + endMilli)
+                );
+            }, hour, minute, false);
+            mTimePicker.setTitle("Start start_time");
+            mTimePicker.show();
+        });
+
+        endTime.setOnClickListener(v -> {
+            Calendar mcurrentTime = Calendar.getInstance();
+            int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+            int minute = mcurrentTime.get(Calendar.MINUTE);
+
+            TimePickerDialog mTimePicker;
+            mTimePicker = new TimePickerDialog(getContext(), (timePicker, selectedHour, selectedMinute) ->{
+                if (datePicked == null){
+                    Calendar c = Calendar.getInstance();
+                    c.set(Calendar.HOUR_OF_DAY, 0);
+                    c.set(Calendar.MINUTE, 0);
+                    c.set(Calendar.SECOND, 0);
+                    c.set(Calendar.MILLISECOND, 0);
+                    datePicked = c.getTime();
+                    String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(datePicked);
+                    date.setText(currentDateString);
+                }
+                if (startMilli == null){
+                    startMilli = TimeUnit.HOURS.toMillis(7) + TimeUnit.MINUTES.toMillis(30);
+                    startTime.setText("7:30 PM");
+                }
+                endMilli = TimeUnit.HOURS.toMillis(selectedHour) + TimeUnit.MINUTES.toMillis(selectedMinute);
+                endTime.setText(getTime(selectedHour, selectedMinute));
+                checkDateAndSend(
+                        new Date(datePicked.getTime() + startMilli),
+                        new Date(datePicked.getTime() + endMilli)
+                );
+
+            }, hour, minute, false);
+            mTimePicker.setTitle("End start_time");
+            mTimePicker.show();
+        });
+    }
+
+    private String getTime(int hr,int min) {
+        Time tme = new Time(hr,min,0);
+        Format formatter = new SimpleDateFormat("h:mm a");
+        return formatter.format(tme);
+    }
+
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth){
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        datePicked = c.getTime();
+        String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(datePicked);
+        date.setText(currentDateString);
+
+        if (startMilli == null){
+            startMilli = TimeUnit.HOURS.toMillis(7) + TimeUnit.MINUTES.toMillis(30);
+            startTime.setText("7:30 PM");
+        }
+        if (endMilli == null){
+            endMilli = TimeUnit.HOURS.toMillis(10) + TimeUnit.MINUTES.toMillis(00);
+            endTime.setText("10:00 PM");
+        }
+        checkDateAndSend(
+                new Date(datePicked.getTime() + startMilli),
+                new Date(datePicked.getTime() + endMilli)
+        );
+    }
+
+    private void checkDateAndSend(Date startDate, Date endDate){
+        Date now = new Date(System.currentTimeMillis());
+        Date newEndDate;
+        if (endDate.getTime() < startDate.getTime()){
+            newEndDate = new Date(endDate.getTime() + TimeUnit.DAYS.toMillis(1));
+        } else {
+            newEndDate = endDate;
+        }
+        if (System.currentTimeMillis() > startDate.getTime()){
+            DateFormat formatter = new SimpleDateFormat("HH:mm a");
+            formatter.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
+            String dateFormatted = formatter.format(now);
+            timeTextView.setText("Please pick a start_time greater than today at " + dateFormatted);
+        } else {
+            DateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm a");
+            formatter.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
+            String dateFormatted = formatter.format(startDate);
+            timeTextView.setText(dateFormatted);
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
-            format.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-            Date now_plus_time_picked = new Date(now.getTime() + MINUTES *60*1000);
-            DateFormat formatter = new SimpleDateFormat("h:mm a");
-            if (now_plus_time_picked.getTime() > postTimeDate.getTime()){
-                formatter.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
-                String dateFormatted = formatter.format(now_plus_time_picked);
-                timeTextView.setText("Please pick a time greater than " + dateFormatted);
-            } else {
-                formatter.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
-                String dateFormatted = formatter.format(postTimeDate);
-                timeTextView.setText("Today at: " + dateFormatted);
-                postTimeString = format.format(postTimeDate);
-                mListener.onFragmentInteraction(postTimeString);
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
+            mListener.onFragmentInteraction(format.format(startDate), format.format(newEndDate));
         }
     }
 
@@ -155,6 +271,6 @@ public class FoodDateTimePickerFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(String postTimeString);
+        void onFragmentInteraction(String startDateTime, String endDateTime);
     }
 }

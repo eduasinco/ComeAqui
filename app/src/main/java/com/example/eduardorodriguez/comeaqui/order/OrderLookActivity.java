@@ -4,29 +4,22 @@ import android.content.Context;
 import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.general.StaticMapFragment;
-import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
-import com.example.eduardorodriguez.comeaqui.review.food_review_look.MyFoodReviewRecyclerViewAdapter;
 
 
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
@@ -38,11 +31,6 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
-import static com.example.eduardorodriguez.comeaqui.App.USER;
 
 public class OrderLookActivity extends AppCompatActivity implements ContinueCancelFragment.OnFragmentInteractionListener {
 
@@ -237,7 +225,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
         price.setText("$" + order.post.price);
         subtotalView.setText("$" + order.post.price);
         totalPriceView.setText("$" + order.post.price);
-        mealTimeView.setText(order.post.time);
+        mealTimeView.setText(order.post.start_time);
         orderStatus.setText(order.status);
 
         if (order.status.equals("CONFIRMED")){

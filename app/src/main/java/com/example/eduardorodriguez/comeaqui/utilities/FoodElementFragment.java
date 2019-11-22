@@ -60,7 +60,7 @@ public class FoodElementFragment extends Fragment {
 
         postNameView.setText(foodPost.plate_name);
         postPrice.setText(foodPost.price + "$");
-        postTime.setText(foodPost.time);
+        postTime.setText(foodPost.start_time);
         posterDescriptionView.setText(foodPost.description);
 
         getChildFragmentManager().beginTransaction()

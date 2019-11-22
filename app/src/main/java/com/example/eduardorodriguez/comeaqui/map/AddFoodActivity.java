@@ -1,6 +1,7 @@
 package com.example.eduardorodriguez.comeaqui.map;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -32,12 +33,15 @@ import com.example.eduardorodriguez.comeaqui.utilities.place_autocomplete.PlaceA
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
 public class AddFoodActivity extends AppCompatActivity implements
+        DatePickerDialog.OnDateSetListener,
         PlaceAutocompleteFragment.OnFragmentInteractionListener,
         SelectImageFromFragment.OnFragmentInteractionListener,
         ErrorMessageFragment.OnFragmentInteractionListener,
@@ -252,7 +256,7 @@ public class AddFoodActivity extends AppCompatActivity implements
         }
         if (postTimeString == null || postTimeString.equals("")){
             foodTimePickerFragment.setErrorBackground();
-            errorText = errorText + "Please choose a valid meal time \n";
+            errorText = errorText + "Please choose a valid meal start_time \n";
             isValid = false;
         }
         if (USER.timeZone == null || USER.timeZone.equals("")){
@@ -287,13 +291,19 @@ public class AddFoodActivity extends AppCompatActivity implements
                 new String[]{"lat", Double.toString(lat)},
                 new String[]{"lng", Double.toString(lng)},
                 new String[]{"max_dinners", Integer.toString(dinners)},
-                new String[]{"time", postTimeString},
+                new String[]{"start_time", postTimeString},
                 new String[]{"time_zone", USER.timeZone},
                 new String[]{"price", price_data.toString()},
                 new String[]{"food_type", setTypes()},
                 new String[]{"description", description}
         ));
     }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        foodTimePickerFragment.onDateSet(view, year, month, dayOfMonth);
+    }
+
     private class PostAsyncTask extends AsyncTask<String[], Void, String> {
         String uri;
 
@@ -447,8 +457,8 @@ public class AddFoodActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onFragmentInteraction(String postTimeString) {
-        this.postTimeString = postTimeString;
+    public void onFragmentInteraction(String startDate, String endDate) {
+        this.postTimeString = startDate;
     }
 
     @Override

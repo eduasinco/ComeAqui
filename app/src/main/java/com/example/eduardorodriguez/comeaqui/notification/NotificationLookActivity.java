@@ -2,8 +2,6 @@ package com.example.eduardorodriguez.comeaqui.notification;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.Button;
@@ -12,14 +10,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.*;
 import com.example.eduardorodriguez.comeaqui.general.StaticMapFragment;
-import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
@@ -28,15 +24,11 @@ import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.HorizontalImageDisplayFragment;
-import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -155,7 +147,7 @@ public class NotificationLookActivity extends AppCompatActivity {
         descriptionView.setText(orderObject.post.description);
         posterLocationView.setText(orderObject.post.address);
         priceView.setText("$" + orderObject.post.price);
-        timeView.setText(orderObject.post.time);
+        timeView.setText(orderObject.post.start_time);
         rating.setText(String.format("%.01f", orderObject.poster.rating));
 
         switch (orderObject.status){
