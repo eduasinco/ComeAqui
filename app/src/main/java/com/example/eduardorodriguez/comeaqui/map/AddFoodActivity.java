@@ -130,7 +130,7 @@ public class AddFoodActivity extends AppCompatActivity implements
             lat = b.getDouble("lat");
             lng = b.getDouble("lng");
 
-            placeAutocompleteFragment = PlaceAutocompleteFragment.newInstance(address);
+            placeAutocompleteFragment = PlaceAutocompleteFragment.newInstance(address, false);
             foodTypeSelectorFragment = FoodTypeSelectorFragment.newInstance();
             foodTimePickerFragment = FoodDateTimePickerFragment.newInstance();
             wordLimitEditTextFragment = WordLimitEditTextFragment.newInstance();
@@ -430,7 +430,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onPlacesAutocomplete(String address, double lat, double lng) {
+    public void onListPlaceChosen(String address, double lat, double lng) {
         this.address = address;
         this.lat = lat;
         this.lng = lng;
@@ -440,6 +440,12 @@ public class AddFoodActivity extends AppCompatActivity implements
     public void onPlacesAutocompleteChangeText() {
         this.isAddressValid = false;
     }
+
+    @Override
+    public void closeButtonPressed() {}
+
+    @Override
+    public void searchButtonClicked() {}
 
     @Override
     public void onFragmentInteraction() {

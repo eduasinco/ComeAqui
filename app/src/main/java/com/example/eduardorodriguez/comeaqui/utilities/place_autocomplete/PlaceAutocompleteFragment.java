@@ -1,6 +1,7 @@
 package com.example.eduardorodriguez.comeaqui.utilities.place_autocomplete;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
@@ -15,14 +16,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.Server;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -30,26 +34,36 @@ import java.util.concurrent.TimeUnit;
 
 public class PlaceAutocompleteFragment extends Fragment {
     private static final String ADDRESS = "address";
+    private static final String WITH_CLOSE = "close";
     private String address;
+    private boolean withClose;
     private OnFragmentInteractionListener mListener;
 
 
+    View view;
     EditText addressView;
     TextView loadingView;
     RecyclerView recyclerView;
     View wholePlaceACView;
+    ImageButton searchbutton;
+    ImageButton closeButton;
+
+    boolean placeClicked = false;
 
     MyPlacesAutocompleteRecyclerViewAdapter adapter;
     private static ArrayList<String[]> data;
 
     static long last_text_edit = 0;
 
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
+
     public PlaceAutocompleteFragment() {}
 
-    public static PlaceAutocompleteFragment newInstance(String address) {
+    public static PlaceAutocompleteFragment newInstance(String address, boolean withClose) {
         PlaceAutocompleteFragment fragment = new PlaceAutocompleteFragment();
         Bundle args = new Bundle();
         args.putString(ADDRESS, address);
+        args.putBoolean(WITH_CLOSE, withClose);
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,6 +73,15 @@ public class PlaceAutocompleteFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             address = getArguments().getString(ADDRESS);
+            withClose = getArguments().getBoolean(WITH_CLOSE);
+        }
+    }
+
+    public void showList(boolean show){
+        if (show && !placeClicked){
+            recyclerView.setVisibility(View.VISIBLE);
+        } else{
+            recyclerView.setVisibility(View.GONE);
         }
     }
 
@@ -73,14 +96,22 @@ public class PlaceAutocompleteFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_place_autocomplete, container, false);
+        view = inflater.inflate(R.layout.fragment_place_autocomplete, container, false);
         addressView = view.findViewById(R.id.address);
         loadingView = view.findViewById(R.id.loading_places);
         recyclerView = view.findViewById(R.id.places_list);
         wholePlaceACView = view.findViewById(R.id.wholePlaceACView);
+        searchbutton = view.findViewById(R.id.search_button);
+        closeButton = view.findViewById(R.id.close_button);
 
         loadingView.setVisibility(View.GONE);
         addressView.setText(address);
+
+        if (withClose){
+            closeButton.setVisibility(View.VISIBLE);
+        } else {
+            closeButton.setVisibility(View.GONE);
+        }
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -88,6 +119,8 @@ public class PlaceAutocompleteFragment extends Fragment {
         adapter = new MyPlacesAutocompleteRecyclerViewAdapter(data, this, mListener);
         recyclerView.setAdapter(adapter);
 
+        searchbutton.setOnClickListener(v -> mListener.searchButtonClicked());
+        closeButton.setOnClickListener(v -> mListener.closeButtonPressed());
         detectTypingAndSetLocationPrediction();
         return view;
     }
@@ -124,7 +157,8 @@ public class PlaceAutocompleteFragment extends Fragment {
             recyclerView.setVisibility(View.GONE);
         } else {
             loadingView.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
+            if (!placeClicked)
+                recyclerView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -132,23 +166,43 @@ public class PlaceAutocompleteFragment extends Fragment {
         loadingView.setText("Loading...");
         String uri = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + addressView.getText().toString() +
                 "&types=geocode&language=en&key=" + getResources().getString(R.string.google_key);
-        try {
-            new Server(getContext(),"GET", uri){
-                @Override
-                protected void onPostExecute(String response) {
-                    super.onPostExecute(response);
-                    if (response != null) {
-                        makeList(response);
-                        showLoading(false);
-                    } else {
-                        loadingView.setText("No results");
-                    }
-                }
-            }.execute().get(15, TimeUnit.SECONDS);
-        } catch (Exception e) {
-            e.printStackTrace();
-            showLoading(false);
+        showLoading(true);
+        tasks.add(new GetAsyncTask(uri).execute());
+    }
+    private class GetAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetAsyncTask(String uri){
+            this.uri = uri;
         }
+
+        @Override
+        protected void onPreExecute() {
+            showLoading(true);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null) {
+                makeList(response);
+                showLoading(false);
+            } else {
+                loadingView.setText("No results");
+            }
+            showLoading(false);
+            super.onPostExecute(response);
+        }
+
     }
 
     private void detectTypingAndSetLocationPrediction(){
@@ -170,9 +224,11 @@ public class PlaceAutocompleteFragment extends Fragment {
             public void onTextChanged ( final CharSequence s, int start, int before,
                                         int count){
                 //You need to remove this to run only once
+
+                showList(true);
                 mListener.onPlacesAutocompleteChangeText();
                 handler.removeCallbacks(input_finish_checker);
-                showLoading(true);
+                placeClicked = false;
             }
             @Override
             public void afterTextChanged ( final Editable s){
@@ -193,9 +249,14 @@ public class PlaceAutocompleteFragment extends Fragment {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            if (getParentFragment() instanceof OnFragmentInteractionListener) {
+                mListener = (OnFragmentInteractionListener) getParentFragment();
+            } else {
+                throw new RuntimeException(context.toString()
+                        + " must implement OnFragmentInteractionListener");
+            }
         }
+
     }
 
     public void setAddress(String text, String id){
@@ -208,9 +269,19 @@ public class PlaceAutocompleteFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onDestroy() {
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        super.onDestroy();
+    }
+
     public interface OnFragmentInteractionListener {
-        void onPlacesAutocomplete(String address, double lat, double lng);
+        void onListPlaceChosen(String address, double lat, double lng);
         void onPlacesAutocompleteChangeText();
+        void closeButtonPressed();
+        void searchButtonClicked();
     }
 
 }

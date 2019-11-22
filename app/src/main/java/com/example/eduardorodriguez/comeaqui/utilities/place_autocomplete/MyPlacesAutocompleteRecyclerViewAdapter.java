@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.Server;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -50,8 +48,9 @@ public class MyPlacesAutocompleteRecyclerViewAdapter extends RecyclerView.Adapte
             f.setAddress(holder.mItem[0], holder.mItem[1]);
             JsonObject jsonLocation = getPlacesDetailFromGoogle(holder.mItem[1]);
             if (jsonLocation != null){
-                mListener.onPlacesAutocomplete(holder.mItem[0], jsonLocation.get("lat").getAsDouble(), jsonLocation.get("lng").getAsDouble());
+                mListener.onListPlaceChosen(holder.mItem[0], jsonLocation.get("lat").getAsDouble(), jsonLocation.get("lng").getAsDouble());
                 f.setErrorBackground(false);
+                f.placeClicked = true;
             }
         });
     }

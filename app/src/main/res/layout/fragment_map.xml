@@ -99,6 +99,13 @@
 
     </FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/search_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
     <ImageView
         android:id="@+id/cancel_post"
         android:layout_width="50dp"

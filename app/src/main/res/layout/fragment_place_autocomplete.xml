@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,17 +11,40 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/text_input_shape"
-        android:orientation="vertical"
-        android:padding="8dp">
+        android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/address"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/white_transparent"
-            android:ems="10"
-            android:hint="Address"
-            android:inputType="textPersonName" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/search_button"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:background="@android:color/transparent"
+                android:src="@drawable/search" />
+
+            <EditText
+                android:id="@+id/address"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@color/white_transparent"
+                android:ems="10"
+                android:hint="Address"
+                android:inputType="textPersonName" />
+
+            <ImageButton
+                android:id="@+id/close_button"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:background="@android:color/transparent"
+                android:src="@android:drawable/ic_menu_close_clear_cancel" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/loading_places"
@@ -32,7 +56,9 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/places_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingEnd="8dp">
 
         </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>

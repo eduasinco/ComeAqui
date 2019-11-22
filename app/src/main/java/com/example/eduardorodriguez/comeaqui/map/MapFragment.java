@@ -7,6 +7,8 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
+import com.example.eduardorodriguez.comeaqui.map.search_location.SearchLocationFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 
 import com.example.eduardorodriguez.comeaqui.server.Server;
@@ -22,7 +24,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+
 import com.example.eduardorodriguez.comeaqui.R;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
@@ -51,7 +53,9 @@ import static com.example.eduardorodriguez.comeaqui.App.USER;
  * to handle interaction events.
  * create an instance of this fragment.
  */
-public class MapFragment extends Fragment implements MapPickerFragment.OnFragmentInteractionListener {
+public class MapFragment extends Fragment implements
+        MapPickerFragment.OnFragmentInteractionListener,
+        SearchLocationFragment.OnFragmentInteractionListener {
     MapView mMapView;
     static View view;
     private static GoogleMap googleMap;
@@ -62,13 +66,15 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
     MapPickerFragment mapPickerFragment;
     MapCardFragment mapCardFragment;
     UpperNotificationFragment upperNotificationFragment;
+    SearchLocationFragment searchLocationFragment;
 
     FloatingActionButton myFab;
     FloatingActionButton centerButton;
-    ImageView cancelPostView;
 
     double lng;
     double lat;
+    Double lngToSearch;
+    Double latToSearch;
     LatLng pickedLocation;
     String pickedAdress = "";
 
@@ -126,7 +132,6 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
         mMapView = view.findViewById(R.id.mapView);
         myFab = view.findViewById(R.id.fab);
         centerButton = view.findViewById(R.id.center_map);
-        cancelPostView = view.findViewById(R.id.cancel_post);
         mMapView.onCreate(savedInstanceState);
 
         mapPickerFragment = MapPickerFragment.newInstance();
@@ -141,6 +146,11 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.container1, mapCardFragment)
                 .commit();
+        searchLocationFragment = SearchLocationFragment.newInstance("", "");
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.search_frame, searchLocationFragment)
+                .commit();
+
         mMapView.onResume();
         fabCount = 0;
         try {
@@ -148,7 +158,6 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
         } catch (Exception e) {
             e.printStackTrace();
         }
-        cancelPostView.setOnClickListener(v -> cancelPost());
         myFab.setOnClickListener(v -> fabFunctionality());
         centerButton.setOnClickListener(v -> centerMap());
         mMapView.getMapAsync(mMap -> setMap(mMap));
@@ -161,7 +170,7 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
     public void onResume() {
         super.onResume();
         mMapView.onResume();
-        cancelPost();
+        cancelMapPicker();
     }
 
     public void listenToPosts(){
@@ -258,7 +267,6 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
         googleMap.setOnMarkerClickListener(marker -> {
             myFab.setVisibility(View.GONE);
             centerButton.setVisibility(View.GONE);
-            cancelPostView.setVisibility(View.VISIBLE);
 
             final int key = (int) (marker.getTag());
             touchedMarkers.add(key);
@@ -276,6 +284,8 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
                 new String[]{"time_zone", timeZone}
         ));
     }
+
+
     private class PatchAsyncTask extends AsyncTask<String[], Void, String> {
         String uri;
         public PatchAsyncTask(String uri){
@@ -393,6 +403,8 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
             if (mapPickerFragment.abled){
                 mapPickerFragment.setAddressTextVisible(false);
                 mapPickerFragment.moveMapPicker(true);
+                mapCardFragment.moveCardUp(false);
+                searchLocationFragment.showList(false);
             }
         });
         googleMap.setOnCameraIdleListener(() -> {
@@ -406,11 +418,11 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
 
     void fabFunctionality(){
         mapPickerFragment.apearMapPicker(true);
+        searchLocationFragment.showSearchBox(true);
         mapPickerFragment.getLocationFromGoogle(pickedLocation);
         if (fabCount == 0){
             markersVisibility(false);
             fabCount = 1;
-            cancelPostView.setVisibility(View.VISIBLE);
             switchFabImage(true);
         } else if (fabCount == 1) {
             Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
@@ -425,18 +437,21 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
     }
 
     @SuppressLint("RestrictedApi")
-    void cancelPost(){
+    void cancelMapPicker(){
         if (currentBigMarker != null){
             setMarkerDesign(currentBigMarker, false);
         }
         markersVisibility(true);
         switchFabImage(false);
         fabCount = 0;
-        cancelPostView.setVisibility(View.GONE);
         myFab.setVisibility(View.VISIBLE);
         centerButton.setVisibility(View.VISIBLE);
         mapPickerFragment.apearMapPicker(false);
-        mapCardFragment.moveCardUp(false);
+        searchLocationFragment.showSearchBox(false);
+    }
+
+    void closeSearch(){
+        searchLocationFragment.showSearchBox(false);
     }
 
     void switchFabImage(boolean toPlus){
@@ -462,6 +477,34 @@ public class MapFragment extends Fragment implements MapPickerFragment.OnFragmen
                 .zoom(15)
                 .build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+
+    @Override
+    public void onListPlaceChosen(String address, double lat, double lng) {
+        latToSearch = lat;
+        lngToSearch = lng;
+        searchLocationFragment.showList(false);
+    }
+
+    @Override
+    public void onPlacesAutocompleteChangeText() {
+
+    }
+
+    @Override
+    public void closeButtonPressed() {
+        cancelMapPicker();
+    }
+
+    @Override
+    public void searchButtonClicked() {
+        if (lngToSearch != null && lngToSearch != null) {
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(latToSearch, lngToSearch))
+                    .zoom(15)
+                    .build();
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
     }
 
     @Override
