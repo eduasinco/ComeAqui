@@ -240,7 +240,7 @@ public class FoodLookActivity extends AppCompatActivity {
         descriptionView.setText(foodPostDetail.description);
         posterLocationView.setText(foodPostDetail.address);
         priceView.setText(foodPostDetail.price + "$");
-        timeView.setText(foodPostDetail.start_time);
+        timeView.setText(foodPostDetail.time_to_show);
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("type", foodPostDetail.type);

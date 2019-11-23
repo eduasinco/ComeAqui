@@ -108,7 +108,7 @@ public class UpperNotificationFragment extends Fragment {
             title.setText("Meal with " +  orderObject.poster.first_name + orderObject.poster.last_name);
             username.setText(orderObject.poster.username);
             plateName.setText( orderObject.post.plate_name);
-            time.setText(orderObject.post.start_time);
+            time.setText(orderObject.post.time_to_show);
             if(!orderObject.poster.profile_photo.contains("no-image")) {
                 Glide.with(getActivity()).load(orderObject.poster.profile_photo).into(posterImage);
             }
@@ -120,7 +120,7 @@ public class UpperNotificationFragment extends Fragment {
     void setOrderPost(){
         if (orderPost != null){
             postCard.setVisibility(View.VISIBLE);
-            time2.setText(orderPost.post.start_time);
+            time2.setText(orderPost.post.time_to_show);
         } else {
             postCard.setVisibility(View.GONE);
         }

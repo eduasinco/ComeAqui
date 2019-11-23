@@ -9,6 +9,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,23 +39,15 @@ import static com.example.eduardorodriguez.comeaqui.App.USER;
 public class FoodDateTimePickerFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-
-    Button nowButton;
-    Button scheduleButton;
     LinearLayout timePicker;
     TextView timeTextView;
     EditText date;
     EditText startTime;
     EditText endTime;
-    View buttonTimeArray;
 
     Date datePicked;
     Long startMilli;
     Long endMilli;
-
-    boolean isNow = false;
-    String startDateString;
-    int MINUTES = 30;
 
     public FoodDateTimePickerFragment() {}
     public static FoodDateTimePickerFragment newInstance() {
@@ -66,50 +60,45 @@ public class FoodDateTimePickerFragment extends Fragment {
     }
 
     public void setErrorBackground(){
-        nowButton.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.text_input_shape_error));
-        scheduleButton.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.text_input_shape_error));
+        if (date.getText().toString().isEmpty())
+            date.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.text_input_shape_error));
+        if (startTime.getText().toString().isEmpty())
+            startTime.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.text_input_shape_error));
+        if (endTime.getText().toString().isEmpty())
+            endTime.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.text_input_shape_error));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_food_time_picker, container, false);
-        nowButton = view.findViewById(R.id.anytime_button);
-        scheduleButton = view.findViewById(R.id.schedule_button);
         timePicker = view.findViewById(R.id.timePicker);
         timeTextView = view.findViewById(R.id.time_text);
-        buttonTimeArray = view.findViewById(R.id.button_array_time);
         date = view.findViewById(R.id.date);
         startTime = view.findViewById(R.id.start_time);
         endTime = view.findViewById(R.id.end_time);
 
-        setButtonsLogic();
         setTimePickerLogic();
+        getRidOfErrors();
         return view;
     }
 
+    void getRidOfErrors(){
+        getRidOfError(date);
+        getRidOfError(startTime);
+        getRidOfError(endTime);
+    }
 
-    void setButtonsLogic(){
-        nowButton.setOnClickListener(v -> {
-            Date postTimeDate = new Date(System.currentTimeMillis() + MINUTES * 60 * 1000);
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
-            format.setTimeZone(TimeZone.getTimeZone("UTC"));
-            startDateString = format.format(postTimeDate);
-            // mListener.onFragmentInteraction(startDateString);
-
-            isNow = true;
-            timeTextView.setText("Now (the post will be visible during " + MINUTES + " minutes from now)");
-            nowButton.setBackgroundColor(Color.TRANSPARENT);
-            scheduleButton.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.text_input_shape));
-            showTimePicker(false);
-        });
-
-        scheduleButton.setOnClickListener(v -> {
-            mListener.onFragmentInteraction("", "");
-            timeTextView.setText("-- --");
-            nowButton.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.text_input_shape));
-            scheduleButton.setBackgroundColor(Color.TRANSPARENT);
-            showTimePicker(true);
+    void getRidOfError(EditText view){
+        view.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged (CharSequence s,int start, int count, int after){ }
+            @Override
+            public void onTextChanged ( final CharSequence s, int start, int before, int count){
+                view.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.text_input_shape));
+            }
+            @Override
+            public void afterTextChanged ( final Editable s){}
         });
     }
 
@@ -147,7 +136,7 @@ public class FoodDateTimePickerFragment extends Fragment {
                         new Date(datePicked.getTime() + endMilli)
                 );
             }, hour, minute, false);
-            mTimePicker.setTitle("Start start_time");
+            mTimePicker.setTitle("Start time");
             mTimePicker.show();
         });
 
@@ -180,7 +169,7 @@ public class FoodDateTimePickerFragment extends Fragment {
                 );
 
             }, hour, minute, false);
-            mTimePicker.setTitle("End start_time");
+            mTimePicker.setTitle("End time");
             mTimePicker.show();
         });
     }
@@ -228,11 +217,11 @@ public class FoodDateTimePickerFragment extends Fragment {
         } else {
             newEndDate = endDate;
         }
-        if (System.currentTimeMillis() > startDate.getTime()){
+        if (System.currentTimeMillis() > newEndDate.getTime()){
             DateFormat formatter = new SimpleDateFormat("HH:mm a");
             formatter.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
             String dateFormatted = formatter.format(now);
-            timeTextView.setText("Please pick a start_time greater than today at " + dateFormatted);
+            timeTextView.setText("Please pick a end time greater than today at " + dateFormatted);
         } else {
             DateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm a");
             formatter.setTimeZone(TimeZone.getTimeZone(USER.timeZone));

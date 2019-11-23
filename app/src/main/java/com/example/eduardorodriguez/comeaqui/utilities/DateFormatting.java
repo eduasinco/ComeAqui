@@ -32,12 +32,12 @@ public class DateFormatting {
         }
         return null;
     }
-    public static String hPost(String dateString){
+    public static String hPost(String startDate, String endDate){
         try {
             // https://stackoverflow.com/questions/32113211/saving-model-instance-with-datetimefield-in-django-admin-loses-microsecond-resol
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
             format.setTimeZone(TimeZone.getTimeZone("UTC"));
-            Date date = format.parse(dateString);
+            Date date = format.parse(startDate);
 
             DateFormat df = new SimpleDateFormat("h:mm a");
             df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
@@ -87,17 +87,20 @@ public class DateFormatting {
         return null;
     }
 
-    public static String happenedTodayYesterdayWeekDay(String dateString){
+    public static String hhmmHappenedNowTodayYesterdayWeekDay(String dateString, String endDateString){
         try {
             Date date;
+            Date endDate;
             try {
                 date = convertToDate(dateString);
+                endDate = convertToDate(endDateString);
             } catch (ParseException e) {
                 try {
                     // https://stackoverflow.com/questions/32113211/saving-model-instance-with-datetimefield-in-django-admin-loses-microsecond-resol
                     DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
                     format.setTimeZone(TimeZone.getTimeZone("UTC"));
                     date = format.parse(dateString);
+                    endDate = format.parse(endDateString);
                 } catch (ParseException e2) {
                     return null;
                 }
@@ -112,8 +115,8 @@ public class DateFormatting {
             if (now < date.getTime()) {
                 DateFormat df = new SimpleDateFormat("h:mm aa");
                 df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
-                return df.format(date);
-            } else if(now < date.getTime() + TimeUnit.HOURS.toMillis(1)){
+                return df.format(date) + " - " + df.format(endDate);
+            } else if (date.getTime() <= now && now < endDate.getTime()){
                 return "HAPPENING NOW";
             } else if (differenceToDate <= differenceToStartOrDay) {
                 return "HAPPENED TODAY";

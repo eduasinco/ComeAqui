@@ -42,7 +42,7 @@ public class MyPostAndReviewsRecyclerViewAdapter extends RecyclerView.Adapter<My
 
         holder.postNameView.setText(foodPost.plate_name);
         holder.postPrice.setText(foodPost.price + "$");
-        holder.postTime.setText(foodPost.start_time);
+        holder.postTime.setText(foodPost.time_to_show);
         holder.posterDescriptionView.setText(foodPost.description);
 
         if (foodPost.images.size() > 0) {

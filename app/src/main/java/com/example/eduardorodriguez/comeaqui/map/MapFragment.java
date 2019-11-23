@@ -403,7 +403,6 @@ public class MapFragment extends Fragment implements
             if (mapPickerFragment.abled){
                 mapPickerFragment.setAddressTextVisible(false);
                 mapPickerFragment.moveMapPicker(true);
-                mapCardFragment.moveCardUp(false);
                 searchLocationFragment.showList(false);
             }
         });
@@ -484,6 +483,17 @@ public class MapFragment extends Fragment implements
         latToSearch = lat;
         lngToSearch = lng;
         searchLocationFragment.showList(false);
+    }
+
+    void cancelPost(){
+        if (currentBigMarker != null){
+            setMarkerDesign(currentBigMarker, false);
+        }
+        markersVisibility(true);
+        switchFabImage(false);
+        myFab.setVisibility(View.VISIBLE);
+        centerButton.setVisibility(View.VISIBLE);
+        mapCardFragment.moveCardUp(false);
     }
 
     @Override

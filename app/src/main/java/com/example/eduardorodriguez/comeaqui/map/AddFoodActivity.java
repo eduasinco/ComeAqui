@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -58,7 +57,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     ScrollView scrollView;
     FrameLayout errorMessage;
     TextView validationError;
-    LinearLayout dinnerArray;
+    EditText dinnerPicker;
     private View mProgressView;
 
 
@@ -66,7 +65,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     boolean[] pressed = {false, false, false, false, false, false, false};
     ArrayList<Bitmap> imageBitmaps;
     int imageIndex;
-    int dinners = 0;
+    long dinners = 0;
     String startTime;
     String endTime;
     double lat;
@@ -120,7 +119,8 @@ public class AddFoodActivity extends AppCompatActivity implements
         mProgressView = findViewById(R.id.post_progress);
         errorMessage = findViewById(R.id.error_message_frame);
         validationError = findViewById(R.id.validation_error);
-        dinnerArray = findViewById(R.id.dinner_array);
+
+        dinnerPicker = findViewById(R.id.dinners);
 
         context = getApplicationContext();
 
@@ -163,10 +163,9 @@ public class AddFoodActivity extends AppCompatActivity implements
                     .commit();
         }
 
-        setPlateName();
+        setTextInputs();
         setFoodName();
         setPriceSeekBar();
-        setDinerButtons();
         setSubmit();
 
         scrollView.getViewTreeObserver().addOnScrollChangedListener(() -> {
@@ -182,7 +181,7 @@ public class AddFoodActivity extends AppCompatActivity implements
         selectImagesFromFragment.hideCard();
     }
 
-    void setPlateName(){
+    void setTextInputs(){
         foodName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged (CharSequence s,int start, int count, int after){ }
@@ -193,29 +192,19 @@ public class AddFoodActivity extends AppCompatActivity implements
             @Override
             public void afterTextChanged ( final Editable s){}
         });
-    }
 
-    void setDinerButtons(){
-        Button diner1 = findViewById(R.id.dinner0);
-        Button diner2 = findViewById(R.id.dinner1);
-        Button diner3 = findViewById(R.id.dinner2);
-        Button diner4 = findViewById(R.id.dinner3);
-
-        Button[] dinersViews = new Button[]{diner1, diner2, diner3, diner4};
-        for (int i = 0; i < dinersViews.length; i++){
-            int finalI = i;
-            Button button = dinersViews[i];
-            button.setOnClickListener(v -> {
-                dinnerArray.setBackground(ContextCompat.getDrawable(getApplication(), R.drawable.text_input_shape));
-                dinners = finalI + 1;
-                button.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryLighter));
-                for (Button button2: dinersViews){
-                    if (button2 != button){
-                        button2.setBackgroundColor(Color.TRANSPARENT);
-                    }
-                }
-            });
-        }
+        dinnerPicker.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged (CharSequence s,int start, int count, int after){ }
+            @Override
+            public void onTextChanged ( final CharSequence s, int start, int before, int count){
+                dinnerPicker.setBackground(ContextCompat.getDrawable(getApplication(), R.drawable.text_input_shape));
+                if (s.toString().length() > 0)
+                    dinners = Long.parseLong(s.toString());
+            }
+            @Override
+            public void afterTextChanged ( final Editable s){}
+        });
     }
 
     private void hideKeyboard(){
@@ -258,7 +247,7 @@ public class AddFoodActivity extends AppCompatActivity implements
             isValid = false;
         }
         if (dinners == 0){
-            dinnerArray.setBackground(ContextCompat.getDrawable(getApplication(), R.drawable.text_input_shape_error));
+            dinnerPicker.setBackground(ContextCompat.getDrawable(getApplication(), R.drawable.text_input_shape_error));
             errorText = errorText + "You have to set a dinners number \n";
             isValid = false;
         }
@@ -298,9 +287,9 @@ public class AddFoodActivity extends AppCompatActivity implements
                 new String[]{"address", address},
                 new String[]{"lat", Double.toString(lat)},
                 new String[]{"lng", Double.toString(lng)},
-                new String[]{"max_dinners", Integer.toString(dinners)},
+                new String[]{"max_dinners", dinners + ""},
                 new String[]{"start_time", startTime},
-                new String[]{"end_time", startTime},
+                new String[]{"end_time", endTime},
                 new String[]{"time_zone", USER.timeZone},
                 new String[]{"price", price_data.toString()},
                 new String[]{"food_type", setTypes()},

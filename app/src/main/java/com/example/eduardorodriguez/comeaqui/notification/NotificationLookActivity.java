@@ -147,7 +147,7 @@ public class NotificationLookActivity extends AppCompatActivity {
         descriptionView.setText(orderObject.post.description);
         posterLocationView.setText(orderObject.post.address);
         priceView.setText("$" + orderObject.post.price);
-        timeView.setText(orderObject.post.start_time);
+        timeView.setText(orderObject.post.time_to_show);
         rating.setText(String.format("%.01f", orderObject.poster.rating));
 
         switch (orderObject.status){
