@@ -57,8 +57,10 @@
             android:id="@+id/places_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
-            android:paddingEnd="8dp">
+            android:paddingLeft="24dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="24dp"
+            android:visibility="gone">
 
         </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>

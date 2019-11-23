@@ -113,6 +113,7 @@ public class PlaceAutocompleteFragment extends Fragment {
             closeButton.setVisibility(View.GONE);
         }
 
+
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);

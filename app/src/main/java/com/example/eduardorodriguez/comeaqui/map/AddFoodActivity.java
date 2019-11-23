@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.example.eduardorodriguez.comeaqui.map.add_food.AddImagesFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodDateTimePickerFragment;
@@ -214,6 +215,14 @@ public class AddFoodActivity extends AppCompatActivity implements
                     }
                 }
             });
+        }
+    }
+
+    private void hideKeyboard(){
+        View view = getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 

@@ -114,9 +114,6 @@ public class FoodDateTimePickerFragment extends Fragment {
     }
 
     void setTimePickerLogic(){
-        scheduleButton.setBackgroundColor(Color.TRANSPARENT);
-        nowButton.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.text_input_shape));
-
         date.setOnClickListener(v -> {
             DialogFragment datePicker = new DatePickerFragment();
             datePicker.show(getFragmentManager(), "date picker");
