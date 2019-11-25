@@ -55,7 +55,8 @@ import static com.example.eduardorodriguez.comeaqui.App.USER;
  */
 public class MapFragment extends Fragment implements
         MapPickerFragment.OnFragmentInteractionListener,
-        SearchLocationFragment.OnFragmentInteractionListener {
+        SearchLocationFragment.OnFragmentInteractionListener,
+        MapCardFragment.OnFragmentInteractionListener{
     MapView mMapView;
     static View view;
     private static GoogleMap googleMap;
@@ -437,19 +438,12 @@ public class MapFragment extends Fragment implements
 
     @SuppressLint("RestrictedApi")
     void cancelMapPicker(){
-        if (currentBigMarker != null){
-            setMarkerDesign(currentBigMarker, false);
-        }
         markersVisibility(true);
         switchFabImage(false);
         fabCount = 0;
         myFab.setVisibility(View.VISIBLE);
         centerButton.setVisibility(View.VISIBLE);
         mapPickerFragment.apearMapPicker(false);
-        searchLocationFragment.showSearchBox(false);
-    }
-
-    void closeSearch(){
         searchLocationFragment.showSearchBox(false);
     }
 
@@ -476,6 +470,15 @@ public class MapFragment extends Fragment implements
                 .zoom(15)
                 .build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+
+    @Override
+    public void onCardClosed() {
+        if (currentBigMarker != null){
+            setMarkerDesign(currentBigMarker, false);
+        }
+        myFab.setVisibility(View.VISIBLE);
+        centerButton.setVisibility(View.VISIBLE);
     }
 
     @Override

@@ -33,7 +33,7 @@ public class SearchFragment extends Fragment {
 
     private EditText searchTextView;
 
-    private SearchFragment.OnFragmentInteractionListener mListener;
+    private OnFragmentInteractionListener mListener;
 
     public SearchFragment() {}
 

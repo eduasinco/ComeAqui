@@ -1,5 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.map;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -25,6 +26,7 @@ import com.example.eduardorodriguez.comeaqui.server.Server;
 
 import com.example.eduardorodriguez.comeaqui.utilities.HorizontalImageDisplayFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.SearchFragment;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
@@ -43,6 +45,8 @@ public class MapCardFragment extends Fragment {
     FoodPost foodPost;
 
     int favouriteId;
+
+    private OnFragmentInteractionListener mListener;
 
     public MapCardFragment() {}
 
@@ -87,13 +91,14 @@ public class MapCardFragment extends Fragment {
                                 .start();
                     break;
                 case MotionEvent.ACTION_UP:
-                    if (v.getY() - initialY > v.getHeight() / 4){
+                    if (v.getY() - initialY > v.getHeight() / 3){
                         v.animate()
                                 .y(v.getBottom())
-                                .setDuration(100).withEndAction(() -> {
+                                .setDuration(100).withEndAction((
+                        ) -> {
                             v.setVisibility(View.GONE);
-                        })
-                                .start();
+                            mListener.onCardClosed();
+                        }).start();
                     } else {
                         v.animate()
                                 .y(initialY)
@@ -200,6 +205,20 @@ public class MapCardFragment extends Fragment {
             }
             super.onPostExecute(response);
         }
+    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (getParentFragment() instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) getParentFragment();
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onCardClosed();
     }
     @Override
     public void onDetach() {
