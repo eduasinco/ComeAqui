@@ -485,16 +485,6 @@ public class MapFragment extends Fragment implements
         searchLocationFragment.showList(false);
     }
 
-    void cancelPost(){
-        if (currentBigMarker != null){
-            setMarkerDesign(currentBigMarker, false);
-        }
-        markersVisibility(true);
-        switchFabImage(false);
-        myFab.setVisibility(View.VISIBLE);
-        centerButton.setVisibility(View.VISIBLE);
-        mapCardFragment.moveCardUp(false);
-    }
 
     @Override
     public void onPlacesAutocompleteChangeText() {
