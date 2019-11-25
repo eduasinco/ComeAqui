@@ -93,6 +93,12 @@ public class FoodElementFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        showProgress(false);
+    }
+
     void showProgress(boolean show){
         if (show){
             cardButtonProgress.setVisibility(View.VISIBLE);
