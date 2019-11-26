@@ -48,7 +48,7 @@ public class OrderFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            Fragment[] tabFragment = {PendingOrdersFragment.newInstance(true), PendingOrdersFragment.newInstance(false)};
+            Fragment[] tabFragment = {GuestingFragment.newInstance(), HostingFragment.newInstance()};
             return tabFragment[position];
         }
 
@@ -59,7 +59,7 @@ public class OrderFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            String[] titles = {"pending orders", "past orders"};
+            String[] titles = {"Guesting", "Hosting"};
             return titles[position];
         }
     }

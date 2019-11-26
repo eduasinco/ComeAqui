@@ -12,18 +12,18 @@ import android.widget.TextView;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
-import com.example.eduardorodriguez.comeaqui.order.PendingOrdersFragment.OnListFragmentInteractionListener;
+import com.example.eduardorodriguez.comeaqui.order.GuestingFragment.OnListFragmentInteractionListener;
 import com.example.eduardorodriguez.comeaqui.utilities.DateFormatting;
 
 import java.util.List;
 
 
-public class MyPendingOrdersRecyclerViewAdapter extends RecyclerView.Adapter<MyPendingOrdersRecyclerViewAdapter.ViewHolder> {
+public class MyGuestingRecyclerViewAdapter extends RecyclerView.Adapter<MyGuestingRecyclerViewAdapter.ViewHolder> {
 
     private final List<OrderObject> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyPendingOrdersRecyclerViewAdapter(List<OrderObject> items, OnListFragmentInteractionListener listener) {
+    public MyGuestingRecyclerViewAdapter(List<OrderObject> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }

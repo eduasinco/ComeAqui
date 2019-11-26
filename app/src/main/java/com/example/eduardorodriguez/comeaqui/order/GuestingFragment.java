@@ -10,12 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
@@ -32,9 +30,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 import static com.example.eduardorodriguez.comeaqui.R.layout.fragment_pendingorders_list;
@@ -45,13 +40,13 @@ import static com.example.eduardorodriguez.comeaqui.R.layout.fragment_pendingord
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class PendingOrdersFragment extends Fragment {
+public class GuestingFragment extends Fragment {
 
     RecyclerView recyclerView;
 
     SwipeRefreshLayout pullToRefresh;
     LinkedHashMap<Integer, OrderObject> data;
-    MyPendingOrdersRecyclerViewAdapter orderAdapter;
+    MyGuestingRecyclerViewAdapter orderAdapter;
     WebSocketClient mWebSocketClient;
     LinearLayout noNotifications;
 
@@ -60,16 +55,13 @@ public class PendingOrdersFragment extends Fragment {
 
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
-    boolean pending;
-    private static final String PENDING = "pending";
     private OnListFragmentInteractionListener mListener;
 
-    public PendingOrdersFragment() {}
+    public GuestingFragment() {}
 
-    public static PendingOrdersFragment newInstance(boolean pending) {
-        PendingOrdersFragment fragment = new PendingOrdersFragment();
+    public static GuestingFragment newInstance() {
+        GuestingFragment fragment = new GuestingFragment();
         Bundle args = new Bundle();
-        args.putBoolean(PENDING, pending);
         fragment.setArguments(args);
         return fragment;
     }
@@ -87,7 +79,7 @@ public class PendingOrdersFragment extends Fragment {
             } else {
                 noNotifications.setVisibility(View.VISIBLE);
             }
-            orderAdapter = new MyPendingOrdersRecyclerViewAdapter(new ArrayList<>(data.values()), mListener);
+            orderAdapter = new MyGuestingRecyclerViewAdapter(new ArrayList<>(data.values()), mListener);
             recyclerView.setAdapter(orderAdapter);
         } catch (Exception e){
             e.printStackTrace();
@@ -102,10 +94,6 @@ public class PendingOrdersFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            pending = getArguments().getBoolean(PENDING);
-        }
     }
 
     @Override
@@ -124,13 +112,12 @@ public class PendingOrdersFragment extends Fragment {
                 .commit();
 
         getDataAndSet();
-        if(pending)
-            start();
+        start();
         return view;
     }
 
     void getDataAndSet(){
-        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + (pending ? "/my_pending_orders/" : "/my_past_orders/")).execute());
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_guesting/").execute());
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
