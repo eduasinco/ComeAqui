@@ -14,8 +14,9 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/post_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="16dp"
             android:layout_weight="0"
             android:visibility="visible"
             app:srcCompat="@drawable/food_post" />
@@ -46,7 +47,8 @@
                 android:layout_marginTop="8dp"
                 android:text="You still have some steps to finish"
                 android:textAppearance="?attr/textAppearanceListItem"
-                android:textColor="@color/canceled" />
+                android:textColor="@color/canceled"
+                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
 

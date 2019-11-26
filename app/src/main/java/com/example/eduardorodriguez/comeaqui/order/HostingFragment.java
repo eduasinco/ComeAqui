@@ -1,5 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.order;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -37,7 +38,7 @@ public class HostingFragment extends Fragment {
     LinkedHashMap<Integer, FoodPost> data;
     MyHostingRecyclerViewAdapter hostingAdapter;
     WebSocketClient mWebSocketClient;
-    LinearLayout noNotifications;
+    LinearLayout noHosting;
 
     FrameLayout waitFrame;
     View view;
@@ -61,9 +62,9 @@ public class HostingFragment extends Fragment {
                 data.put(oo.id, oo);
             }
             if (data.size() > 0){
-                noNotifications.setVisibility(View.GONE);
+                noHosting.setVisibility(View.GONE);
             } else {
-                noNotifications.setVisibility(View.VISIBLE);
+                noHosting.setVisibility(View.VISIBLE);
             }
             hostingAdapter = new MyHostingRecyclerViewAdapter(new ArrayList<>(data.values()), mListener);
             recyclerView.setAdapter(hostingAdapter);
@@ -82,6 +83,7 @@ public class HostingFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_hosting_list, container, false);
         recyclerView = view.findViewById(R.id.hosting_list);
+        noHosting = view.findViewById(R.id.no_hosting);
         waitFrame = view.findViewById(R.id.wait_frame);
 
         getChildFragmentManager().beginTransaction()
@@ -92,7 +94,7 @@ public class HostingFragment extends Fragment {
     }
 
     void getDataAndSet(){
-        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_guesting/").execute());
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_hostings/").execute());
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -135,16 +137,16 @@ public class HostingFragment extends Fragment {
     }
 
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnListFragmentInteractionListener) {
-//            mListener = (OnListFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnListFragmentInteractionListener");
-//        }
-//    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (getParentFragment() instanceof OnListFragmentInteractionListener) {
+            mListener = (OnListFragmentInteractionListener) getParentFragment();
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnListFragmentInteractionListener");
+        }
+    }
 
     @Override
     public void onDetach() {
@@ -154,7 +156,16 @@ public class HostingFragment extends Fragment {
             mWebSocketClient.close();
     }
 
+    @Override
+    public void onDestroy() {
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        super.onDestroy();
+    }
+
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(FoodPost item);
+        void goToPostLook(FoodPost item);
+        void goToPostEdit(FoodPost item);
     }
 }

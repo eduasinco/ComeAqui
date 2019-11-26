@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.general.FoodLookActivity;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
 
@@ -42,7 +43,7 @@ public class UpperNotificationFragment extends Fragment {
     LinearLayout allCards;
 
     OrderObject orderObject;
-    OrderObject orderPost;
+    FoodPost nextFoodPost;
     float initialY, dY;
 
     ArrayList<AsyncTask> tasks = new ArrayList<>();
@@ -84,7 +85,7 @@ public class UpperNotificationFragment extends Fragment {
 
         postCard.setOnClickListener(v -> {
             Intent foodLook = new Intent(getContext(), FoodLookActivity.class);
-            foodLook.putExtra("foodPostId", orderPost.post.id);
+            foodLook.putExtra("foodPostId", nextFoodPost.id);
             startActivity(foodLook);
         });
         return view;
@@ -117,10 +118,10 @@ public class UpperNotificationFragment extends Fragment {
         }
     }
 
-    void setOrderPost(){
-        if (orderPost != null){
+    void setNextFoodPost(){
+        if (nextFoodPost != null){
             postCard.setVisibility(View.VISIBLE);
-            time2.setText(orderPost.post.time_to_show);
+            time2.setText(nextFoodPost.time_to_show);
         } else {
             postCard.setVisibility(View.GONE);
         }
@@ -224,8 +225,8 @@ public class UpperNotificationFragment extends Fragment {
             if (response != null){
                 JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
                 if (ja.size() > 0){
-                    orderPost = new OrderObject(ja.get(0).getAsJsonObject());
-                    setOrderPost();
+                    nextFoodPost = new FoodPost(ja.get(0).getAsJsonObject());
+                    setNextFoodPost();
                 }
             }
             super.onPostExecute(response);

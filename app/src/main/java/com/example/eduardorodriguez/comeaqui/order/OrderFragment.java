@@ -1,6 +1,11 @@
 package com.example.eduardorodriguez.comeaqui.order;
 
+import android.content.Intent;
 import android.os.Bundle;
+
+import com.example.eduardorodriguez.comeaqui.general.FoodLookActivity;
+import com.example.eduardorodriguez.comeaqui.map.AddFoodActivity;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -12,7 +17,7 @@ import android.view.ViewGroup;
 
 import com.example.eduardorodriguez.comeaqui.R;
 
-public class OrderFragment extends Fragment {
+public class OrderFragment extends Fragment implements HostingFragment.OnListFragmentInteractionListener{
 
     FragmentManager fragmentManager;
 
@@ -38,6 +43,20 @@ public class OrderFragment extends Fragment {
         TabLayout tabLayout = view.findViewById(R.id.tab);
         tabLayout.setupWithViewPager(viewPager);
         return view;
+    }
+
+    @Override
+    public void goToPostLook(FoodPost foodPost) {
+        Intent foodLook = new Intent(getContext(), FoodLookActivity.class);
+        foodLook.putExtra("foodPostId", foodPost.id);
+        getContext().startActivity(foodLook);
+    }
+
+    @Override
+    public void goToPostEdit(FoodPost foodPost) {
+        Intent foodLook = new Intent(getContext(), AddFoodActivity.class);
+        foodLook.putExtra("foodPostId", foodPost.id);
+        getContext().startActivity(foodLook);
     }
 
     static class TestPagerAdapter extends FragmentPagerAdapter {

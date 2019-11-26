@@ -42,8 +42,11 @@ public class MyHostingRecyclerViewAdapter extends RecyclerView.Adapter<MyHosting
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
 
-        if (!holder.mItem.start_time.isEmpty()){
-            holder.mealTime.setText(holder.mItem.start_time);
+        if (!holder.mItem.plate_name.isEmpty()){
+            holder.mealTitle.setText(holder.mItem.plate_name);
+        }
+        if (!holder.mItem.time_to_show.isEmpty()){
+            holder.mealTime.setText(holder.mItem.time_to_show);
         }
 
         if (checkIfInfoMissing(holder.mItem)){
@@ -56,7 +59,11 @@ public class MyHostingRecyclerViewAdapter extends RecyclerView.Adapter<MyHosting
 
         holder.mView.setOnClickListener(v -> {
             if (null != mListener) {
-                mListener.onListFragmentInteraction(holder.mItem);
+                if (checkIfInfoMissing(holder.mItem)){
+                    mListener.goToPostEdit(holder.mItem);
+                } else {
+                    mListener.goToPostLook(holder.mItem);
+                }
             }
         });
     }
