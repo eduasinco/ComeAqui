@@ -11,22 +11,19 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
+import com.example.eduardorodriguez.comeaqui.objects.SavedFoodPost;
 import com.example.eduardorodriguez.comeaqui.order.HostingFragment.OnListFragmentInteractionListener;
 import com.example.eduardorodriguez.comeaqui.order.dummy.DummyContent.DummyItem;
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
+
 public class MyHostingRecyclerViewAdapter extends RecyclerView.Adapter<MyHostingRecyclerViewAdapter.ViewHolder> {
 
-    private final List<FoodPost> mValues;
+    private final List<SavedFoodPost> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyHostingRecyclerViewAdapter(List<FoodPost> items, OnListFragmentInteractionListener listener) {
+    public MyHostingRecyclerViewAdapter(List<SavedFoodPost> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }

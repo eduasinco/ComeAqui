@@ -24,6 +24,7 @@ import com.example.eduardorodriguez.comeaqui.map.add_food.AddImagesFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodDateTimePickerFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.WordLimitEditTextFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
+import com.example.eduardorodriguez.comeaqui.objects.SavedFoodPost;
 import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
@@ -35,6 +36,7 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -58,6 +60,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     FrameLayout errorMessage;
     TextView validationError;
     EditText dinnerPicker;
+    ImageButton options;
     private View mProgressView;
 
 
@@ -75,6 +78,8 @@ public class AddFoodActivity extends AppCompatActivity implements
 
     boolean isAddressValid = true;
     Context context;
+
+    boolean firstSave = true;
 
     PlaceAutocompleteFragment placeAutocompleteFragment;
     FoodTypeSelectorFragment foodTypeSelectorFragment;
@@ -119,6 +124,7 @@ public class AddFoodActivity extends AppCompatActivity implements
         mProgressView = findViewById(R.id.post_progress);
         errorMessage = findViewById(R.id.error_message_frame);
         validationError = findViewById(R.id.validation_error);
+        options = findViewById(R.id.options);
 
         dinnerPicker = findViewById(R.id.dinners);
 
@@ -172,6 +178,7 @@ public class AddFoodActivity extends AppCompatActivity implements
             foodName.clearFocus();
         });
 
+        setOptionsMenu();
         backView.setOnClickListener(v -> finish());
     }
 
@@ -218,7 +225,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     void setSubmit(){
         submit.setOnClickListener(v -> {
             if (validateFrom()){
-                postFood();
+                postFood("POST", true);
             }
         });
     }
@@ -280,33 +287,51 @@ public class AddFoodActivity extends AppCompatActivity implements
         return isValid;
     }
 
-    void postFood(){
-        PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/foods/");
+    void setOptionsMenu(){
+        options.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(this, options);
+            popupMenu.getMenu().add("Save");
+
+            popupMenu.setOnMenuItemClickListener(item -> {
+                setOptionsActions(item.getTitle().toString());
+                return true;
+            });
+            popupMenu.show();
+        });
+    }
+
+    void setOptionsActions(String title){
+        switch (title){
+            case "Save":
+                postFood(firstSave ? "POST" : "PATCH", false);
+                break;
+        }
+    }
+
+    void postFood(String method, boolean visible){
+        UploadPost post = new UploadPost(getResources().getString(R.string.server) + "/foods/", method);
         tasks.add(post.execute(
                 new String[]{"plate_name", foodName.getText().toString()},
                 new String[]{"address", address},
                 new String[]{"lat", Double.toString(lat)},
                 new String[]{"lng", Double.toString(lng)},
                 new String[]{"max_dinners", dinners + ""},
-                new String[]{"start_time", startTime},
-                new String[]{"end_time", endTime},
+                new String[]{"start_time", startTime == null ? "" : startTime},
+                new String[]{"end_time", endTime == null ? "" : endTime},
                 new String[]{"time_zone", USER.timeZone},
-                new String[]{"price", price_data.toString()},
+                new String[]{"price", price_data == null ? "" : price_data.toString()},
                 new String[]{"food_type", setTypes()},
-                new String[]{"description", description}
+                new String[]{"description", description},
+                new String[]{"visible", visible + ""}
         ));
     }
-
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        foodTimePickerFragment.onDateSet(view, year, month, dayOfMonth);
-    }
-
-    private class PostAsyncTask extends AsyncTask<String[], Void, String> {
+    private class UploadPost extends AsyncTask<String[], Void, String> {
         String uri;
+        String method;
 
-        public PostAsyncTask(String uri){
+        public UploadPost(String uri, String method){
             this.uri = uri;
+            this.method = method;
         }
         @Override
         protected void onPreExecute() {
@@ -316,9 +341,8 @@ public class AddFoodActivity extends AppCompatActivity implements
         @Override
         protected String doInBackground(String[]... params) {
             try {
-                return ServerAPI.upload(getApplicationContext(), "POST", this.uri, params);
+                return ServerAPI.upload(getApplicationContext(), this.method, this.uri, params);
             } catch (IOException e) {
-                showProgress(false);
                 e.printStackTrace();
             }
             return null;
@@ -326,13 +350,13 @@ public class AddFoodActivity extends AppCompatActivity implements
         @Override
         protected void onPostExecute(String response) {
             if (null != response){
-                FoodPost foodPost = new FoodPost(new JsonParser().parse(response).getAsJsonObject());
+                SavedFoodPost foodPost = new SavedFoodPost(new JsonParser().parse(response).getAsJsonObject());
                 postImages(foodPost.id);
             }
+            showProgress(false);
             super.onPostExecute(response);
         }
     }
-
     void postImages(int foodPostId){
         PostImagesAsyncTask post = new PostImagesAsyncTask(
                 getResources().getString(R.string.server) + "/add_food_images/" + foodPostId + "/",
@@ -366,6 +390,11 @@ public class AddFoodActivity extends AppCompatActivity implements
             finish();
             super.onPostExecute(response);
         }
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        foodTimePickerFragment.onDateSet(view, year, month, dayOfMonth);
     }
 
     void showErrorMessage(){

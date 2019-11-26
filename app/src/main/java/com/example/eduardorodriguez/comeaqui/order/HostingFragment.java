@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
+import com.example.eduardorodriguez.comeaqui.objects.SavedFoodPost;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonArray;
@@ -35,7 +36,7 @@ public class HostingFragment extends Fragment {
     RecyclerView recyclerView;
 
     SwipeRefreshLayout pullToRefresh;
-    LinkedHashMap<Integer, FoodPost> data;
+    LinkedHashMap<Integer, SavedFoodPost> data;
     MyHostingRecyclerViewAdapter hostingAdapter;
     WebSocketClient mWebSocketClient;
     LinearLayout noHosting;
@@ -58,7 +59,7 @@ public class HostingFragment extends Fragment {
             data = new LinkedHashMap<>();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
-                FoodPost oo = new FoodPost(jo);
+                SavedFoodPost oo = new SavedFoodPost(jo);
                 data.put(oo.id, oo);
             }
             if (data.size() > 0){

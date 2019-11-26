@@ -25,6 +25,8 @@ public class FoodPost implements Serializable {
     public int favouriteId;
     public float rating;
 
+    FoodPost(){}
+
     public FoodPost(JsonObject jo){
         id = jo.get("id").getAsInt();
         plate_name = jo.get("plate_name").getAsString();
