@@ -28,6 +28,7 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
 
@@ -262,6 +263,7 @@ public class PlaceAutocompleteFragment extends Fragment {
 
     public void setAddress(String text, String id){
         addressView.setText(text);
+        placeClicked = true;
     }
 
     @Override

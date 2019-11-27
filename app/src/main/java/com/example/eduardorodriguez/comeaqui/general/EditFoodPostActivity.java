@@ -215,7 +215,8 @@ public class EditFoodPostActivity extends AppCompatActivity implements
         protected String doInBackground(String[]... params) {
             try {
                 for (Bitmap image: this.bitmaps){
-                    ServerAPI.uploadImage(getApplicationContext(), "PATCH",  this.uri, "image", image);
+                    if (image != null)
+                        ServerAPI.uploadImage(getApplicationContext(), "PATCH",  this.uri, "image", image);
                 }
                 return "";
             } catch (IOException e) {

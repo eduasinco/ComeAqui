@@ -22,6 +22,7 @@ public class SavedFoodPost extends FoodPost {
         lat = jo.get("lat").getAsFloat();
         lng = jo.get("lng").getAsFloat();
         address = jo.get("address") instanceof JsonNull ? "" : jo.get("address").getAsString();
+        address_id = jo.get("address_id") instanceof JsonNull ? "" : jo.get("address_id").getAsString();
         rating = jo.get("rating").getAsInt();
         owner = new User(jo.get("owner").getAsJsonObject());
 

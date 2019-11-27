@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
+import com.example.eduardorodriguez.comeaqui.general.EditFoodPostActivity;
 import com.example.eduardorodriguez.comeaqui.map.add_food.AddImagesFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodDateTimePickerFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.WordLimitEditTextFragment;
@@ -37,6 +38,9 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.http.PATCH;
@@ -117,6 +121,7 @@ public class AddFoodActivity extends AppCompatActivity implements
                 R.array.order_choices, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         imageBitmaps = new ArrayList<>();
+        imageBitmaps.addAll(Arrays.asList(new Bitmap[]{null, null, null}));
 
         foodName = findViewById(R.id.plateName);
         price = findViewById(R.id.priceText);
@@ -197,14 +202,21 @@ public class AddFoodActivity extends AppCompatActivity implements
             foodName.setText(foodPostDetail.plate_name);
         if (!foodPostDetail.price.isEmpty())
             price.setText(foodPostDetail.price + "$");
-        if (foodPostDetail.max_dinners != 0)
+        if (foodPostDetail.max_dinners != 0) {
             // dinnerPicker.setText(foodPostDetail.max_dinners);
-        if (!foodPostDetail.address.isEmpty() && !foodPostDetail.address_id.isEmpty())
+        }
+        if (foodPostDetail.address != null && !foodPostDetail.address.isEmpty() && foodPostDetail.address_id != null && !foodPostDetail.address_id.isEmpty()){
             placeAutocompleteFragment.setAddress(foodPostDetail.address, foodPostDetail.address_id);
+            address = foodPostDetail.address;
+            address_id = foodPostDetail.address_id;
+        }
         if (!foodPostDetail.type.isEmpty())
             foodTypeSelectorFragment.setTypes(foodPostDetail.type);
-        if (!foodPostDetail.start_time.isEmpty() && !foodPostDetail.end_time.isEmpty())
+        if (!foodPostDetail.start_time.isEmpty() && !foodPostDetail.end_time.isEmpty()) {
             foodTimePickerFragment.setDateTime(foodPostDetail.start_time, foodPostDetail.end_time);
+            startTime = foodPostDetail.start_time;
+            endTime = foodPostDetail.end_time;
+        }
         if (!foodPostDetail.description.isEmpty())
             wordLimitEditTextFragment.setText(foodPostDetail.description);
         addImageFragment.initializeImages(foodPostDetail.images);
@@ -442,6 +454,13 @@ public class AddFoodActivity extends AppCompatActivity implements
                 new String[]{"description", description},
                 new String[]{"visible", "false"}
         ));
+
+        List<Bitmap> bitmapsToPost = imageBitmaps.subList(foodPostDetail.images.size(), imageBitmaps.size());
+        PostImagesAsyncTask postI = new PostImagesAsyncTask(
+                getResources().getString(R.string.server) + "/add_food_images/" + foodPostDetail.id + "/",
+                bitmapsToPost
+        );
+        tasks.add(postI.execute());
     }
 
     void postImages(int foodPostId){
@@ -463,9 +482,44 @@ public class AddFoodActivity extends AppCompatActivity implements
             try {
                 for (int i = 0; i < this.images.size(); i++){
                     Bitmap image = this.images.get(i);
-                    ServerAPI.uploadImage(getApplicationContext(), "PATCH",  this.uri, "image", image);
+                    if (null != image)
+                        ServerAPI.uploadImage(getApplicationContext(), "PATCH",  this.uri, "image", image);
                 }
                 return "";
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            showProgress(false);
+            HashMap<Integer, Bitmap> bitmapHashMap= new HashMap<>();
+            for(int i = 0; i < imageBitmaps.size(); i++){
+                if (imageBitmaps.get(i) != null && i <= foodPostDetail.images.size()-1){
+                    bitmapHashMap.put(foodPostDetail.images.get(i).id, imageBitmaps.get(i));
+                }
+            }
+            PatchImagesAsyncTask patch = new PatchImagesAsyncTask(getResources().getString(R.string.server) + "/edit_image/", bitmapHashMap);
+            tasks.add(patch.execute());
+            super.onPostExecute(response);
+        }
+    }
+
+    class PatchImagesAsyncTask extends AsyncTask<String[], Void, String> {
+        String uri;
+        HashMap<Integer, Bitmap> bitmapHashMap;
+
+        public PatchImagesAsyncTask(String uri, HashMap<Integer, Bitmap> bitmapHashMap){
+            this.uri = uri;
+            this.bitmapHashMap = bitmapHashMap;
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                for (Integer imageId: bitmapHashMap.keySet()){
+                    ServerAPI.uploadImage(getApplicationContext(),"PATCH", this.uri + imageId + "/", "food_photo", this.bitmapHashMap.get(imageId));
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

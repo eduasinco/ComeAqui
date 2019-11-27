@@ -15,9 +15,15 @@ public class DateFormatting {
     static String[] WEEK_DAYS = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"};
 
     public static Date convertToDate(String dateString) throws ParseException {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'");
-        format.setTimeZone(TimeZone.getTimeZone("UTC"));
-        return format.parse(dateString);
+        try {
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'");
+            format.setTimeZone(TimeZone.getTimeZone("UTC"));
+            return format.parse(dateString);
+        } catch (Exception e){
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            format.setTimeZone(TimeZone.getTimeZone("UTC"));
+            return format.parse(dateString);
+        }
     }
 
     public static String h(String dateString){
