@@ -89,6 +89,29 @@ public class FoodDateTimePickerFragment extends Fragment {
         getRidOfError(endTime);
     }
 
+    public void setDateTime(String start_time, String end_time){
+        if (!start_time.isEmpty()){
+            try {
+                Date startDate = DateFormatting.convertToDate(start_time);
+                String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(startDate.getTime());
+                date.setText(currentDateString);
+                startTime.setText(DateFormatting.h(start_time));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        if (!end_time.isEmpty()){
+            try {
+                Date endDate = DateFormatting.convertToDate(end_time);
+                String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(endDate.getTime());
+                date.setText(currentDateString);
+                endTime.setText(DateFormatting.h(end_time));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     void getRidOfError(EditText view){
         view.addTextChangedListener(new TextWatcher() {
             @Override

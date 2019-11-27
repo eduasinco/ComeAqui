@@ -44,6 +44,7 @@ public class MyHostingRecyclerViewAdapter extends RecyclerView.Adapter<MyHosting
         }
         if (!holder.mItem.time_to_show.isEmpty()){
             holder.mealTime.setText(holder.mItem.time_to_show);
+            holder.mealTitle.setVisibility(View.VISIBLE);
         }
 
         if (checkIfInfoMissing(holder.mItem)){

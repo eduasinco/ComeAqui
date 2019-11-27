@@ -18,6 +18,7 @@ public class FoodPost implements Serializable {
     public String start_time;
     public String end_time;
     public String address;
+    public String address_id;
     public ArrayList<FoodPostImageObject> images;
     public float lat;
     public float lng;

@@ -481,7 +481,7 @@ public class MapFragment extends Fragment implements
     }
 
     @Override
-    public void onListPlaceChosen(String address, double lat, double lng) {
+    public void onListPlaceChosen(String address, double lat, double lng, String address_id) {
         latToSearch = lat;
         lngToSearch = lng;
         searchLocationFragment.showList(false);

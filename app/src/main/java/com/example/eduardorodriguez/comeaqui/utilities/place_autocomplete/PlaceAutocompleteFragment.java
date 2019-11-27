@@ -279,7 +279,7 @@ public class PlaceAutocompleteFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void onListPlaceChosen(String address, double lat, double lng);
+        void onListPlaceChosen(String address, double lat, double lng, String placeId);
         void onPlacesAutocompleteChangeText();
         void closeButtonPressed();
         void searchButtonClicked();

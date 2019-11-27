@@ -20,10 +20,13 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
+
+import com.example.eduardorodriguez.comeaqui.general.FoodLookActivity;
 import com.example.eduardorodriguez.comeaqui.map.add_food.AddImagesFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodDateTimePickerFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.WordLimitEditTextFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.objects.SavedFoodPost;
 import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.R;
@@ -74,12 +77,15 @@ public class AddFoodActivity extends AppCompatActivity implements
     double lat;
     double lng;
     String address;
+    String address_id;
     String description = "";
 
     boolean isAddressValid = true;
     Context context;
 
     boolean firstSave = true;
+    
+    FoodPost foodPostDetail;
 
     PlaceAutocompleteFragment placeAutocompleteFragment;
     FoodTypeSelectorFragment foodTypeSelectorFragment;
@@ -167,6 +173,11 @@ public class AddFoodActivity extends AppCompatActivity implements
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.select_image_from, selectImagesFromFragment)
                     .commit();
+
+            if (b.getSerializable("foodPostId") != null){
+                int foodPostId =  b.getInt("foodPost");
+                getFoodPostDetailsAndSet(foodPostId);
+            }
         }
 
         setTextInputs();
@@ -180,6 +191,17 @@ public class AddFoodActivity extends AppCompatActivity implements
 
         setOptionsMenu();
         backView.setOnClickListener(v -> finish());
+    }
+
+    void setFoodPostIfItHas() {
+        foodName.setText(foodPostDetail.plate_name);
+        price.setText(foodPostDetail.price);
+        dinnerPicker.setText(foodPostDetail.max_dinners);
+        placeAutocompleteFragment.setAddress(foodPostDetail.address, foodPostDetail.address_id);
+        foodTypeSelectorFragment.setTypes(foodPostDetail.type);
+        foodTimePickerFragment.setDateTime(foodPostDetail.start_time, foodPostDetail.end_time);
+        wordLimitEditTextFragment.setText(foodPostDetail.description);
+        addImageFragment.initializeImages(foodPostDetail.images);
     }
 
     @Override
@@ -307,12 +329,47 @@ public class AddFoodActivity extends AppCompatActivity implements
                 break;
         }
     }
+    void getFoodPostDetailsAndSet(int foodPostId){
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/foods/" + foodPostId + "/").execute());
+    }
+    class GetAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetAsyncTask(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                foodPostDetail = new FoodPostDetail(new JsonParser().parse(response).getAsJsonObject());
+                setFoodPostIfItHas();
+            }
+            super.onPostExecute(response);
+        }
+
+    }
 
     void postFood(String method, boolean visible){
         UploadPost post = new UploadPost(getResources().getString(R.string.server) + "/foods/", method);
         tasks.add(post.execute(
                 new String[]{"plate_name", foodName.getText().toString()},
                 new String[]{"address", address},
+                new String[]{"address_id", address_id},
                 new String[]{"lat", Double.toString(lat)},
                 new String[]{"lng", Double.toString(lng)},
                 new String[]{"max_dinners", dinners + ""},
@@ -457,8 +514,9 @@ public class AddFoodActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onListPlaceChosen(String address, double lat, double lng) {
+    public void onListPlaceChosen(String address, double lat, double lng, String address_id) {
         this.address = address;
+        this.address_id = address_id;
         this.lat = lat;
         this.lng = lng;
         this.isAddressValid = true;

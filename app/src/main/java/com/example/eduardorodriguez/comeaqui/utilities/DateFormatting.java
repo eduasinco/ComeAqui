@@ -14,7 +14,7 @@ import static com.example.eduardorodriguez.comeaqui.App.USER;
 public class DateFormatting {
     static String[] WEEK_DAYS = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"};
 
-    private static Date convertToDate(String dateString) throws ParseException {
+    public static Date convertToDate(String dateString) throws ParseException {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'");
         format.setTimeZone(TimeZone.getTimeZone("UTC"));
         return format.parse(dateString);
