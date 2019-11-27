@@ -95,7 +95,7 @@ public class FoodDateTimePickerFragment extends Fragment {
                 Date startDate = DateFormatting.convertToDate(start_time);
                 String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(startDate.getTime());
                 date.setText(currentDateString);
-                startTime.setText(DateFormatting.h(start_time));
+                startTime.setText(DateFormatting.hPost(start_time));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -105,7 +105,7 @@ public class FoodDateTimePickerFragment extends Fragment {
                 Date endDate = DateFormatting.convertToDate(end_time);
                 String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(endDate.getTime());
                 date.setText(currentDateString);
-                endTime.setText(DateFormatting.h(end_time));
+                endTime.setText(DateFormatting.hPost(end_time));
             } catch (ParseException e) {
                 e.printStackTrace();
             }

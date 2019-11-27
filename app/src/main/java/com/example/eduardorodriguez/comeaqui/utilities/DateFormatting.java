@@ -32,7 +32,7 @@ public class DateFormatting {
         }
         return null;
     }
-    public static String hPost(String startDate, String endDate){
+    public static String hPost(String startDate){
         try {
             // https://stackoverflow.com/questions/32113211/saving-model-instance-with-datetimefield-in-django-admin-loses-microsecond-resol
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");

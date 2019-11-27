@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
-import com.example.eduardorodriguez.comeaqui.general.FoodLookActivity;
 import com.example.eduardorodriguez.comeaqui.map.add_food.AddImagesFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodDateTimePickerFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.WordLimitEditTextFragment;
@@ -39,7 +38,8 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+
+import retrofit2.http.PATCH;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -79,12 +79,11 @@ public class AddFoodActivity extends AppCompatActivity implements
     String address;
     String address_id;
     String description = "";
+    boolean visible = false;
 
     boolean isAddressValid = true;
     Context context;
 
-    boolean firstSave = true;
-    
     FoodPost foodPostDetail;
 
     PlaceAutocompleteFragment placeAutocompleteFragment;
@@ -175,7 +174,7 @@ public class AddFoodActivity extends AppCompatActivity implements
                     .commit();
 
             if (b.getSerializable("foodPostId") != null){
-                int foodPostId =  b.getInt("foodPost");
+                int foodPostId =  b.getInt("foodPostId");
                 getFoodPostDetailsAndSet(foodPostId);
             }
         }
@@ -194,13 +193,20 @@ public class AddFoodActivity extends AppCompatActivity implements
     }
 
     void setFoodPostIfItHas() {
-        foodName.setText(foodPostDetail.plate_name);
-        price.setText(foodPostDetail.price);
-        dinnerPicker.setText(foodPostDetail.max_dinners);
-        placeAutocompleteFragment.setAddress(foodPostDetail.address, foodPostDetail.address_id);
-        foodTypeSelectorFragment.setTypes(foodPostDetail.type);
-        foodTimePickerFragment.setDateTime(foodPostDetail.start_time, foodPostDetail.end_time);
-        wordLimitEditTextFragment.setText(foodPostDetail.description);
+        if (!foodPostDetail.plate_name.isEmpty())
+            foodName.setText(foodPostDetail.plate_name);
+        if (!foodPostDetail.price.isEmpty())
+            price.setText(foodPostDetail.price + "$");
+        if (foodPostDetail.max_dinners != 0)
+            // dinnerPicker.setText(foodPostDetail.max_dinners);
+        if (!foodPostDetail.address.isEmpty() && !foodPostDetail.address_id.isEmpty())
+            placeAutocompleteFragment.setAddress(foodPostDetail.address, foodPostDetail.address_id);
+        if (!foodPostDetail.type.isEmpty())
+            foodTypeSelectorFragment.setTypes(foodPostDetail.type);
+        if (!foodPostDetail.start_time.isEmpty() && !foodPostDetail.end_time.isEmpty())
+            foodTimePickerFragment.setDateTime(foodPostDetail.start_time, foodPostDetail.end_time);
+        if (!foodPostDetail.description.isEmpty())
+            wordLimitEditTextFragment.setText(foodPostDetail.description);
         addImageFragment.initializeImages(foodPostDetail.images);
     }
 
@@ -247,7 +253,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     void setSubmit(){
         submit.setOnClickListener(v -> {
             if (validateFrom()){
-                postFood("POST", true);
+                postFood();
             }
         });
     }
@@ -325,7 +331,11 @@ public class AddFoodActivity extends AppCompatActivity implements
     void setOptionsActions(String title){
         switch (title){
             case "Save":
-                postFood(firstSave ? "POST" : "PATCH", false);
+                if (foodPostDetail == null){
+                    postFood();
+                } else {
+                    patchFood(foodPostDetail.id);
+                }
                 break;
         }
     }
@@ -356,7 +366,7 @@ public class AddFoodActivity extends AppCompatActivity implements
         @Override
         protected void onPostExecute(String response) {
             if (response != null){
-                foodPostDetail = new FoodPostDetail(new JsonParser().parse(response).getAsJsonObject());
+                foodPostDetail = new SavedFoodPost(new JsonParser().parse(response).getAsJsonObject());
                 setFoodPostIfItHas();
             }
             super.onPostExecute(response);
@@ -364,12 +374,12 @@ public class AddFoodActivity extends AppCompatActivity implements
 
     }
 
-    void postFood(String method, boolean visible){
-        UploadPost post = new UploadPost(getResources().getString(R.string.server) + "/foods/", method);
+    void postFood(){
+        UploadPost post = new UploadPost(getResources().getString(R.string.server) + "/foods/", "POST");
         tasks.add(post.execute(
                 new String[]{"plate_name", foodName.getText().toString()},
-                new String[]{"address", address},
-                new String[]{"address_id", address_id},
+                new String[]{"address", address == null ? "" : address},
+                new String[]{"address_id", address_id == null ? "" : address_id},
                 new String[]{"lat", Double.toString(lat)},
                 new String[]{"lng", Double.toString(lng)},
                 new String[]{"max_dinners", dinners + ""},
@@ -379,7 +389,7 @@ public class AddFoodActivity extends AppCompatActivity implements
                 new String[]{"price", price_data == null ? "" : price_data.toString()},
                 new String[]{"food_type", setTypes()},
                 new String[]{"description", description},
-                new String[]{"visible", visible + ""}
+                new String[]{"visible",  "true"}
         ));
     }
     private class UploadPost extends AsyncTask<String[], Void, String> {
@@ -398,7 +408,7 @@ public class AddFoodActivity extends AppCompatActivity implements
         @Override
         protected String doInBackground(String[]... params) {
             try {
-                return ServerAPI.upload(getApplicationContext(), this.method, this.uri, params);
+                return ServerAPI.upload(getApplicationContext(), method, this.uri, params);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -414,6 +424,26 @@ public class AddFoodActivity extends AppCompatActivity implements
             super.onPostExecute(response);
         }
     }
+
+    void patchFood(int foodPostId){
+        UploadPost post = new UploadPost(getResources().getString(R.string.server) + "/foods/" + foodPostId + "/", "PATCH");
+        tasks.add(post.execute(
+                new String[]{"plate_name", foodName.getText().toString()},
+                new String[]{"address", address == null ? "" : address},
+                new String[]{"address_id", address_id == null ? "" : address_id},
+                new String[]{"lat", Double.toString(lat)},
+                new String[]{"lng", Double.toString(lng)},
+                new String[]{"max_dinners", dinners + ""},
+                new String[]{"start_time", startTime == null ? "" : startTime},
+                new String[]{"end_time", endTime == null ? "" : endTime},
+                new String[]{"time_zone", USER.timeZone},
+                new String[]{"price", price_data == null ? "" : price_data.toString()},
+                new String[]{"food_type", setTypes()},
+                new String[]{"description", description},
+                new String[]{"visible", "false"}
+        ));
+    }
+
     void postImages(int foodPostId){
         PostImagesAsyncTask post = new PostImagesAsyncTask(
                 getResources().getString(R.string.server) + "/add_food_images/" + foodPostId + "/",
