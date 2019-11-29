@@ -21,12 +21,10 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
-import com.example.eduardorodriguez.comeaqui.general.EditFoodPostActivity;
 import com.example.eduardorodriguez.comeaqui.map.add_food.AddImagesFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodDateTimePickerFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.WordLimitEditTextFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
-import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.objects.SavedFoodPost;
 import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.R;
@@ -39,11 +37,9 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import retrofit2.http.PATCH;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -264,6 +260,7 @@ public class AddFoodActivity extends AppCompatActivity implements
 
     void setSubmit(){
         submit.setOnClickListener(v -> {
+            visible = true;
             if (validateFrom()){
                 postFood();
             }
@@ -343,6 +340,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     void setOptionsActions(String title){
         switch (title){
             case "Save":
+                visible = false;
                 if (foodPostDetail == null){
                     postFood();
                 } else {
@@ -351,6 +349,34 @@ public class AddFoodActivity extends AppCompatActivity implements
                 break;
         }
     }
+
+    void patchFood(int foodPostId){
+        UploadPost post = new UploadPost(getResources().getString(R.string.server) + "/foods/" + foodPostId + "/", "PATCH");
+        tasks.add(
+                post.execute(
+                        new String[]{"plate_name", foodName.getText().toString()},
+                        new String[]{"address", address == null ? "" : address},
+                        new String[]{"address_id", address_id == null ? "" : address_id},
+                        new String[]{"lat", Double.toString(lat)},
+                        new String[]{"lng", Double.toString(lng)},
+                        new String[]{"max_dinners", dinners + ""},
+                        new String[]{"start_time", startTime == null ? "" : startTime},
+                        new String[]{"end_time", endTime == null ? "" : endTime},
+                        new String[]{"time_zone", USER.timeZone},
+                        new String[]{"price", price_data == null ? "" : price_data.toString()},
+                        new String[]{"food_type", setTypes()},
+                        new String[]{"description", description},
+                        new String[]{"visible", "false"}
+                )
+        );
+        List<Bitmap> bitmapsToPost = imageBitmaps.subList(foodPostDetail.images.size(), imageBitmaps.size());
+        PostImagesAsyncTask postI = new PostImagesAsyncTask(
+                getResources().getString(R.string.server) + "/add_food_images/" + foodPostDetail.id + "/",
+                bitmapsToPost
+        );
+        tasks.add(postI.execute());
+    }
+
     void getFoodPostDetailsAndSet(int foodPostId){
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/foods/" + foodPostId + "/").execute());
     }
@@ -401,7 +427,7 @@ public class AddFoodActivity extends AppCompatActivity implements
                 new String[]{"price", price_data == null ? "" : price_data.toString()},
                 new String[]{"food_type", setTypes()},
                 new String[]{"description", description},
-                new String[]{"visible",  "true"}
+                new String[]{"visible",  visible ? "true": "false"}
         ));
     }
     private class UploadPost extends AsyncTask<String[], Void, String> {
@@ -435,32 +461,6 @@ public class AddFoodActivity extends AppCompatActivity implements
             showProgress(false);
             super.onPostExecute(response);
         }
-    }
-
-    void patchFood(int foodPostId){
-        UploadPost post = new UploadPost(getResources().getString(R.string.server) + "/foods/" + foodPostId + "/", "PATCH");
-        tasks.add(post.execute(
-                new String[]{"plate_name", foodName.getText().toString()},
-                new String[]{"address", address == null ? "" : address},
-                new String[]{"address_id", address_id == null ? "" : address_id},
-                new String[]{"lat", Double.toString(lat)},
-                new String[]{"lng", Double.toString(lng)},
-                new String[]{"max_dinners", dinners + ""},
-                new String[]{"start_time", startTime == null ? "" : startTime},
-                new String[]{"end_time", endTime == null ? "" : endTime},
-                new String[]{"time_zone", USER.timeZone},
-                new String[]{"price", price_data == null ? "" : price_data.toString()},
-                new String[]{"food_type", setTypes()},
-                new String[]{"description", description},
-                new String[]{"visible", "false"}
-        ));
-
-        List<Bitmap> bitmapsToPost = imageBitmaps.subList(foodPostDetail.images.size(), imageBitmaps.size());
-        PostImagesAsyncTask postI = new PostImagesAsyncTask(
-                getResources().getString(R.string.server) + "/add_food_images/" + foodPostDetail.id + "/",
-                bitmapsToPost
-        );
-        tasks.add(postI.execute());
     }
 
     void postImages(int foodPostId){

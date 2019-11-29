@@ -25,6 +25,7 @@ public class FoodPost implements Serializable {
     public boolean favourite = false;
     public int favouriteId;
     public float rating;
+    public boolean visible;
 
     FoodPost(){}
 
@@ -43,6 +44,7 @@ public class FoodPost implements Serializable {
         address = jo.get("address").getAsString();
         address_id = jo.get("address_id").getAsString();
         rating = jo.get("rating").getAsInt();
+        visible = jo.get("visible").getAsBoolean();
         owner = new User(jo.get("owner").getAsJsonObject());
 
         images = new ArrayList<>();

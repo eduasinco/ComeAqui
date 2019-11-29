@@ -57,10 +57,10 @@ public class MyHostingRecyclerViewAdapter extends RecyclerView.Adapter<MyHosting
 
         holder.mView.setOnClickListener(v -> {
             if (null != mListener) {
-                if (checkIfInfoMissing(holder.mItem)){
-                    mListener.goToPostEdit(holder.mItem);
-                } else {
+                if (holder.mItem.visible){
                     mListener.goToPostLook(holder.mItem);
+                } else {
+                    mListener.goToPostEdit(holder.mItem);
                 }
             }
         });
