@@ -51,7 +51,6 @@ public class EditFoodPostActivity extends AppCompatActivity implements
     AddImagesFragment addImageFragment;
     SelectImageFromFragment selectImageFromLayout;
 
-    Bitmap[] imageBitmaps = new Bitmap[3];
     int imageIndex;
     FoodPostDetail foodPostDetail;
 
@@ -81,7 +80,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
         foodTypeSelectorFragment = FoodTypeSelectorFragment.newInstance();
         foodTimePickerFragment = FoodDateTimePickerFragment.newInstance();
         wordLimitEditTextFragment = WordLimitEditTextFragment.newInstance();
-        addImageFragment = AddImagesFragment.newInstance();
+        addImageFragment = AddImagesFragment.newInstance(foodPostDetail.id);
         selectImageFromLayout = SelectImageFromFragment.newInstance(false);
 
         Intent intent = getIntent();
@@ -138,12 +137,8 @@ public class EditFoodPostActivity extends AppCompatActivity implements
 
     void edit(){
         patchPost();
-        Bitmap[] bitmapsToPost = Arrays.copyOfRange(imageBitmaps, foodPostDetail.images.size(), imageBitmaps.length);
-        PostImagesAsyncTask post = new PostImagesAsyncTask(
-                getResources().getString(R.string.server) + "/add_food_images/" + foodPostDetail.id + "/",
-                bitmapsToPost
-        );
-        tasks.add(post.execute());
+        showProgress(true);
+        addImageFragment.uploadImages();
     }
 
     void patchPost(){
@@ -177,67 +172,6 @@ public class EditFoodPostActivity extends AppCompatActivity implements
             super.onPostExecute(response);
         }
     }
-    class PatchImagesAsyncTask extends AsyncTask<String[], Void, String> {
-        String uri;
-        HashMap<Integer, Bitmap> bitmapHashMap;
-
-        public PatchImagesAsyncTask(String uri, HashMap<Integer, Bitmap> bitmapHashMap){
-            this.uri = uri;
-            this.bitmapHashMap = bitmapHashMap;
-        }
-        @Override
-        protected String doInBackground(String[]... params) {
-            try {
-                for (Integer imageId: bitmapHashMap.keySet()){
-                    ServerAPI.uploadImage(getApplicationContext(),"PATCH", this.uri + imageId + "/", "food_photo", this.bitmapHashMap.get(imageId));
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(String response) {
-            showProgress(false);
-            finish();
-            super.onPostExecute(response);
-        }
-    }
-
-    class PostImagesAsyncTask extends AsyncTask<String[], Void, String> {
-        String uri;
-        public Bitmap[] bitmaps;
-        public PostImagesAsyncTask(String uri, Bitmap[] bitmaps){
-            this.uri = uri;
-            this.bitmaps = bitmaps;
-        }
-        @Override
-        protected String doInBackground(String[]... params) {
-            try {
-                for (Bitmap image: this.bitmaps){
-                    if (image != null)
-                        ServerAPI.uploadImage(getApplicationContext(), "PATCH",  this.uri, "image", image);
-                }
-                return "";
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(String response) {
-
-            HashMap<Integer, Bitmap> bitmapHashMap= new HashMap<>();
-            for(int i = 0; i < imageBitmaps.length; i++){
-                if (imageBitmaps[i] != null && i <= foodPostDetail.images.size()-1){
-                    bitmapHashMap.put(foodPostDetail.images.get(i).id, imageBitmaps[i]);
-                }
-            }
-            PatchImagesAsyncTask patch = new PatchImagesAsyncTask(getResources().getString(R.string.server) + "/edit_image/", bitmapHashMap);
-            tasks.add(patch.execute());
-            super.onPostExecute(response);
-        }
-    }
 
     boolean validateFrom(){
         boolean isValid = true;
@@ -267,20 +201,19 @@ public class EditFoodPostActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onImageUploadFinished() {
+        showProgress(false);
+    }
+
+    @Override
     public void onFragmentInteraction(boolean[] pressed) {
         types = setTypes(pressed);
     }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
-        try {
-            selectImageFromLayout.hideCard();
-            Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-            imageBitmaps[imageIndex] = bm;
-            addImageFragment.addImage(uri, imageIndex);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        selectImageFromLayout.hideCard();
+        addImageFragment.addImage(uri);
     }
 
     private String setTypes(boolean[] pressed){
@@ -322,7 +255,6 @@ public class EditFoodPostActivity extends AppCompatActivity implements
             if (response != null){
                 foodPostDetail = new FoodPostDetail(new JsonParser().parse(response).getAsJsonObject());
                 setViewDetails();
-                addImageFragment.initializeImages(foodPostDetail.images);
             }
             showProgress(false);
             super.onPostExecute(response);

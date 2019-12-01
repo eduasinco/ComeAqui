@@ -3,6 +3,8 @@ package com.example.eduardorodriguez.comeaqui.server;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.entity.mime.HttpMultipartMode;
@@ -162,6 +164,7 @@ public class ServerAPI {
         }
         return result;
     }
+
 
     private static String getCredentials(Context context){
         SharedPreferences pref = context.getSharedPreferences("Login", MODE_PRIVATE);
