@@ -246,7 +246,7 @@ public class AddImagesFragment extends Fragment {
             final int finalI = i;
             imageViews[i].setOnClickListener(v -> {
                 indexClicked = finalI;
-                mListener.onAddImage(indexClicked);
+                mListener.onAddImage();
             });
             i++;
         }
@@ -254,7 +254,7 @@ public class AddImagesFragment extends Fragment {
             final int finalI = i;
             imageViews[i].setOnClickListener(v ->{
                 indexClicked = finalI;
-                mListener.onAddImage(indexClicked);
+                mListener.onAddImage();
             });
             addImageViews[i].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.add_image_icon));
         }
@@ -286,7 +286,7 @@ public class AddImagesFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void onAddImage(int index);
+        void onAddImage();
         void onImageUploadFinished();
     }
 }

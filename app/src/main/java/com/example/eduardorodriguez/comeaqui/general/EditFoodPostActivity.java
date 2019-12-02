@@ -51,7 +51,6 @@ public class EditFoodPostActivity extends AppCompatActivity implements
     AddImagesFragment addImageFragment;
     SelectImageFromFragment selectImageFromLayout;
 
-    int imageIndex;
     FoodPostDetail foodPostDetail;
 
     String description;
@@ -196,8 +195,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onAddImage(int index) {
-        imageIndex = index;
+    public void onAddImage() {
         selectImageFromLayout.showCard();
     }
 

@@ -77,7 +77,17 @@ public class MapFragment extends Fragment implements
     Double lngToSearch;
     Double latToSearch;
     LatLng pickedLocation;
-    String pickedAdress = "";
+
+    private String formatted_address = "";
+    private String place_id;
+    private Double lat_picked;
+    private Double lng_picked;
+    private String street_n;
+    private String route;
+    private String administrative_area_level_2;
+    private String administrative_area_level_1;
+    private String country;
+    private String postal_code;
 
     static Set<Integer> touchedMarkers = new HashSet<>();
     public static HashMap<Integer, Marker> markerHashMap = new HashMap<>();
@@ -285,6 +295,20 @@ public class MapFragment extends Fragment implements
         ));
     }
 
+    @Override
+    public void refreshFragment(String address, String place_id, Double lat, Double lng, String street_n, String route, String administrative_area_level_2, String administrative_area_level_1, String country, String postal_code) {
+        this.formatted_address = address;
+        this.place_id = place_id;
+        this.lat_picked = lat;
+        this.lng_picked = lng;
+        this.street_n = street_n;
+        this.route = route;
+        this.administrative_area_level_2 = administrative_area_level_2;
+        this.administrative_area_level_1 = administrative_area_level_1;
+        this.country = country;
+        this.postal_code = postal_code;
+    }
+
 
     private class PatchAsyncTask extends AsyncTask<String[], Void, String> {
         String uri;
@@ -425,9 +449,16 @@ public class MapFragment extends Fragment implements
             switchFabImage(true);
         } else if (fabCount == 1) {
             Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
-            addFood.putExtra("address" , pickedAdress);
-            addFood.putExtra("lat" , pickedLocation.latitude);
-            addFood.putExtra("lng" , pickedLocation.longitude);
+            addFood.putExtra("formatted_address" , formatted_address);
+            addFood.putExtra("place_id" , place_id);
+            addFood.putExtra("lat" , lat_picked);
+            addFood.putExtra("lng" , lng_picked);
+            addFood.putExtra("street_n" , street_n);
+            addFood.putExtra("route" , route);
+            addFood.putExtra("administrative_area_level_2" , administrative_area_level_2);
+            addFood.putExtra("administrative_area_level_1" , administrative_area_level_1);
+            addFood.putExtra("country" , country);
+            addFood.putExtra("postal_code" , postal_code);
             getActivity().startActivity(addFood);
         } else {
             fabCount = 2;
@@ -481,7 +512,7 @@ public class MapFragment extends Fragment implements
     }
 
     @Override
-    public void onListPlaceChosen(String address, double lat, double lng, String address_id) {
+    public void onListPlaceChosen(String address, String place_id, Double lat, Double lng, String street_n, String route, String administrative_area_level_2, String administrative_area_level_1, String country, String postal_code) {
         latToSearch = lat;
         lngToSearch = lng;
         searchLocationFragment.showList(false);
@@ -535,10 +566,6 @@ public class MapFragment extends Fragment implements
         mMapView.onLowMemory();
     }
 
-    @Override
-    public void refreshFragment(String address) {
-        this.pickedAdress = address;
-    }
     @Override
     public void onDetach() {
         mWebSocketClient.close();

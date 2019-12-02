@@ -67,7 +67,7 @@ public class MyHostingRecyclerViewAdapter extends RecyclerView.Adapter<MyHosting
     }
 
     boolean checkIfInfoMissing(FoodPost foodPost){
-        return foodPost.start_time.isEmpty() || foodPost.end_time.isEmpty() || foodPost.address.isEmpty() || foodPost.address.isEmpty() || foodPost.price.isEmpty();
+        return foodPost.start_time.isEmpty() || foodPost.end_time.isEmpty() || foodPost.formatted_address.isEmpty() || foodPost.formatted_address.isEmpty() || foodPost.price.isEmpty();
     }
 
     @Override

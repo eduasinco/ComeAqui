@@ -76,10 +76,27 @@ public class MapPickerFragment extends Fragment {
                     JsonObject joo = new JsonParser().parse(response).getAsJsonObject();
                     JsonArray jsonArray = joo.get("results").getAsJsonArray();
                     if (jsonArray.size() > 0) {
-                        String address = jsonArray.get(0).getAsJsonObject().get("formatted_address").getAsString();
+                        JsonObject jo = jsonArray.get(0).getAsJsonObject();
+                        JsonArray addss_components = jo.get("address_components").getAsJsonArray();
+                        String address = jo.get("formatted_address").getAsString();
+                        String place_id = jo.get("place_id").getAsString();
+                        JsonObject jsonLocation = jo.get("geometry").getAsJsonObject().get("location").getAsJsonObject();
+                        Double lat = jsonLocation.get("lat").getAsDouble();
+                        Double lng = jsonLocation.get("lng").getAsDouble();
                         pickedAdress.setText(address);
                         if (!address.equals(LOADING)){
-                            mListener.refreshFragment(address);
+                            mListener.refreshFragment(
+                                    address,
+                                    place_id,
+                                    lat,
+                                    lng,
+                                    addss_components.get(0).getAsJsonObject().get("long_name").getAsString(),
+                                    addss_components.get(1).getAsJsonObject().get("long_name").getAsString(),
+                                    addss_components.get(2).getAsJsonObject().get("long_name").getAsString(),
+                                    addss_components.get(3).getAsJsonObject().get("long_name").getAsString(),
+                                    addss_components.get(4).getAsJsonObject().get("long_name").getAsString(),
+                                    addss_components.get(5).getAsJsonObject().get("long_name").getAsString()
+                            );
                         }
                     }
                 }
@@ -131,6 +148,6 @@ public class MapPickerFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void refreshFragment(String address);
+        void refreshFragment(String address, String place_id, Double lat, Double lng, String street_n, String route, String administrative_area_level_2, String administrative_area_level_1, String country, String postal_code);
     }
 }

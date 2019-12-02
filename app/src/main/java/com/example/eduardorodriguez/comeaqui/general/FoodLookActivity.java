@@ -238,7 +238,7 @@ public class FoodLookActivity extends AppCompatActivity {
         usernameView.setText("@" + foodPostDetail.owner.username);
         plateNameView.setText(foodPostDetail.plate_name);
         descriptionView.setText(foodPostDetail.description);
-        posterLocationView.setText(foodPostDetail.address);
+        posterLocationView.setText(foodPostDetail.formatted_address);
         priceView.setText(foodPostDetail.price + "$");
         timeView.setText(foodPostDetail.time_to_show);
 

@@ -281,7 +281,7 @@ public class PlaceAutocompleteFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void onListPlaceChosen(String address, double lat, double lng, String placeId);
+        void onListPlaceChosen(String address, String place_id, Double lat, Double lng, String street_n, String route, String administrative_area_level_2, String administrative_area_level_1, String country, String postal_code);
         void onPlacesAutocompleteChangeText();
         void closeButtonPressed();
         void searchButtonClicked();

@@ -221,7 +221,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
         posterUsername.setText(order.poster.username);
         posterNameView.setText(order.poster.first_name + " " + order.poster.last_name);
         posterDescription.setText(order.post.description);
-        posterLocationView.setText(order.post.address);
+        posterLocationView.setText(order.post.formatted_address);
         price.setText("$" + order.post.price);
         subtotalView.setText("$" + order.post.price);
         totalPriceView.setText("$" + order.post.price);

@@ -107,8 +107,8 @@ public class SearchLocationFragment extends Fragment implements PlaceAutocomplet
     }
 
     @Override
-    public void onListPlaceChosen(String address, double lat, double lng, String address_id) {
-        mListener.onListPlaceChosen(address, lat, lng, address_id);
+    public void onListPlaceChosen(String address, String place_id, Double lat, Double lng, String street_n, String route, String administrative_area_level_2, String administrative_area_level_1, String country, String postal_code) {
+        mListener.onListPlaceChosen(address, place_id, lat, lng, street_n, route, administrative_area_level_2, administrative_area_level_1, country, postal_code);
     }
 
     @Override

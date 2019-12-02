@@ -62,18 +62,26 @@ public class AddFoodActivity extends AppCompatActivity implements
     private View mProgressView;
 
 
-    Float price_data;
-    boolean[] pressed = {false, false, false, false, false, false, false};
-    int imageIndex;
     long dinners = 0;
     String startTime;
     String endTime;
-    double lat;
-    double lng;
-    String address;
-    String address_id;
+
+    String formatted_address;
+    private String place_id;
+    private Double lat_picked;
+    private Double lng_picked;
+    private String street_n;
+    private String route;
+    private String administrative_area_level_2;
+    private String administrative_area_level_1;
+    private String country;
+    private String postal_code;
+
+    Float price_data;
+    boolean[] pressed = {false, false, false, false, false, false, false};
     String description = "";
     boolean visible = false;
+
 
     boolean isAddressValid = true;
     Context context;
@@ -131,15 +139,22 @@ public class AddFoodActivity extends AppCompatActivity implements
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if(b != null){
-            address = b.getString("address");
-            lat = b.getDouble("lat");
-            lng = b.getDouble("lng");
+            formatted_address = b.getString("formatted_address");
+            place_id = b.getString("place_id");
+            lat_picked = b.getDouble("lat");
+            lng_picked = b.getDouble("lng");
+            street_n = b.getString("street_n");
+            route = b.getString("route");
+            administrative_area_level_2 = b.getString("administrative_area_level_2");
+            administrative_area_level_1 = b.getString("administrative_area_level_1");
+            country = b.getString("country");
+            postal_code = b.getString("postal_code");
 
             if (b.getSerializable("foodPostId") != null){
                 foodPostId =  b.getInt("foodPostId");
             }
 
-            placeAutocompleteFragment = PlaceAutocompleteFragment.newInstance(address, false);
+            placeAutocompleteFragment = PlaceAutocompleteFragment.newInstance(formatted_address, false);
             foodTypeSelectorFragment = FoodTypeSelectorFragment.newInstance();
             foodTimePickerFragment = FoodDateTimePickerFragment.newInstance();
             wordLimitEditTextFragment = WordLimitEditTextFragment.newInstance();
@@ -202,10 +217,10 @@ public class AddFoodActivity extends AppCompatActivity implements
         if (foodPostDetail.max_dinners != 0) {
             // dinnerPicker.setText(foodPostDetail.max_dinners);
         }
-        if (foodPostDetail.address != null && !foodPostDetail.address.isEmpty() && foodPostDetail.address_id != null && !foodPostDetail.address_id.isEmpty()){
-            placeAutocompleteFragment.setAddress(foodPostDetail.address, foodPostDetail.address_id);
-            address = foodPostDetail.address;
-            address_id = foodPostDetail.address_id;
+        if (foodPostDetail.formatted_address != null && !foodPostDetail.formatted_address.isEmpty() && foodPostDetail.place_id != null && !foodPostDetail.place_id.isEmpty()){
+            placeAutocompleteFragment.setAddress(foodPostDetail.formatted_address, foodPostDetail.place_id);
+            formatted_address = foodPostDetail.formatted_address;
+            place_id = foodPostDetail.place_id;
         }
         if (!foodPostDetail.type.isEmpty())
             foodTypeSelectorFragment.setTypes(foodPostDetail.type);
@@ -349,10 +364,10 @@ public class AddFoodActivity extends AppCompatActivity implements
         post
                 .execute(
                 new String[]{"plate_name", foodName.getText().toString()},
-                new String[]{"address", address == null ? "" : address},
-                new String[]{"address_id", address_id == null ? "" : address_id},
-                new String[]{"lat", Double.toString(lat)},
-                new String[]{"lng", Double.toString(lng)},
+                new String[]{"address", formatted_address == null ? "" : formatted_address},
+                new String[]{"place_id", place_id == null ? "" : place_id},
+                new String[]{"lat", Double.toString(lat_picked)},
+                new String[]{"lng", Double.toString(lng_picked)},
                 new String[]{"max_dinners", dinners + ""},
                 new String[]{"start_time", startTime == null ? "" : startTime},
                 new String[]{"end_time", endTime == null ? "" : endTime},
@@ -403,10 +418,16 @@ public class AddFoodActivity extends AppCompatActivity implements
         UploadPost post = new UploadPost(getResources().getString(R.string.server) + "/foods/", "POST");
         tasks.add(post.execute(
                 new String[]{"plate_name", foodName.getText().toString()},
-                new String[]{"address", address == null ? "" : address},
-                new String[]{"address_id", address_id == null ? "" : address_id},
-                new String[]{"lat", Double.toString(lat)},
-                new String[]{"lng", Double.toString(lng)},
+                new String[]{"address", formatted_address == null ? "" : formatted_address},
+                new String[]{"place_id", place_id == null ? "" : place_id},
+                new String[]{"street_n", street_n == null ? "" : street_n},
+                new String[]{"route", route == null ? "" : route},
+                new String[]{"administrative_area_level_2", administrative_area_level_2 == null ? "" : administrative_area_level_2},
+                new String[]{"administrative_area_level_1", administrative_area_level_1 == null ? "" : administrative_area_level_1},
+                new String[]{"country", country == null ? "" : country},
+                new String[]{"postal_code", postal_code == null ? "" : postal_code},
+                new String[]{"lat", Double.toString(lat_picked)},
+                new String[]{"lng", Double.toString(lng_picked)},
                 new String[]{"max_dinners", dinners + ""},
                 new String[]{"start_time", startTime == null ? "" : startTime},
                 new String[]{"end_time", endTime == null ? "" : endTime},
@@ -505,11 +526,17 @@ public class AddFoodActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onListPlaceChosen(String address, double lat, double lng, String address_id) {
-        this.address = address;
-        this.address_id = address_id;
-        this.lat = lat;
-        this.lng = lng;
+    public void onListPlaceChosen(String address, String place_id, Double lat, Double lng, String street_n, String route, String administrative_area_level_2, String administrative_area_level_1, String country, String postal_code) {
+        this.formatted_address = address;
+        this.place_id = place_id;
+        this.lat_picked = lat;
+        this.lng_picked = lng;
+        this.street_n = street_n;
+        this.route = route;
+        this.administrative_area_level_2 = administrative_area_level_2;
+        this.administrative_area_level_1 = administrative_area_level_1;
+        this.country = country;
+        this.postal_code = postal_code;
         this.isAddressValid = true;
     }
     @Override
@@ -545,8 +572,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onAddImage(int index) {
-        imageIndex = index;
+    public void onAddImage() {
         selectImagesFromFragment.showCard();
     }
 
