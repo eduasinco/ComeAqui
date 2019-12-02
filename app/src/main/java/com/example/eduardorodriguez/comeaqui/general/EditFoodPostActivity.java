@@ -80,7 +80,6 @@ public class EditFoodPostActivity extends AppCompatActivity implements
         foodTypeSelectorFragment = FoodTypeSelectorFragment.newInstance();
         foodTimePickerFragment = FoodDateTimePickerFragment.newInstance();
         wordLimitEditTextFragment = WordLimitEditTextFragment.newInstance();
-        addImageFragment = AddImagesFragment.newInstance(foodPostDetail.id);
         selectImageFromLayout = SelectImageFromFragment.newInstance(false);
 
         Intent intent = getIntent();
@@ -99,10 +98,6 @@ public class EditFoodPostActivity extends AppCompatActivity implements
                 .commit();
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.add_images_frame, addImageFragment)
-                .commit();
-
-        getSupportFragmentManager().beginTransaction()
                 .replace(R.id.select_image_from, selectImageFromLayout)
                 .commit();
 
@@ -117,6 +112,12 @@ public class EditFoodPostActivity extends AppCompatActivity implements
         foodTypeSelectorFragment.setTypes(foodPostDetail.type);
         time.setText(foodPostDetail.time_to_show);
         price.setText(foodPostDetail.price + "$");
+
+        addImageFragment = AddImagesFragment.newInstance(foodPostDetail.id);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.add_images_frame, addImageFragment)
+                .commit();
+
     }
 
     void showProgress(boolean show){

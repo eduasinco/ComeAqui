@@ -101,9 +101,11 @@ public class AddImagesFragment extends Fragment {
 
     public static AddImagesFragment newInstance(Integer foodPostId) {
         AddImagesFragment fragment = new AddImagesFragment();
-        Bundle args = new Bundle();
-        args.putInt(FOOD_POST_ID, foodPostId);
-        fragment.setArguments(args);
+        if(null != foodPostId){
+            Bundle args = new Bundle();
+            args.putInt(FOOD_POST_ID, foodPostId);
+            fragment.setArguments(args);
+        }
         return fragment;
     }
 
@@ -130,6 +132,7 @@ public class AddImagesFragment extends Fragment {
                 view.findViewById(R.id.add_image_1),
                 view.findViewById(R.id.add_image_2)
         };
+        setImageAbailable();
         return view;
     }
 

@@ -170,7 +170,9 @@ public class AddFoodActivity extends AppCompatActivity implements
                     .replace(R.id.add_images_frame, addImageFragment)
                     .commit();
 
-            getFoodPostDetailsAndSet(foodPostId);
+            if (foodPostId != null){
+                getFoodPostDetailsAndSet(foodPostId);
+            }
         }
 
         setTextInputs();
