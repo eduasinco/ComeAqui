@@ -77,6 +77,7 @@ public class AddFoodActivity extends AppCompatActivity implements
 
     boolean isAddressValid = true;
     Context context;
+    Integer foodPostId;
 
     FoodPost foodPostDetail;
 
@@ -134,10 +135,8 @@ public class AddFoodActivity extends AppCompatActivity implements
             lat = b.getDouble("lat");
             lng = b.getDouble("lng");
 
-            Integer foodPostId = null;
             if (b.getSerializable("foodPostId") != null){
                 foodPostId =  b.getInt("foodPostId");
-                getFoodPostDetailsAndSet(foodPostId);
             }
 
             placeAutocompleteFragment = PlaceAutocompleteFragment.newInstance(address, false);
@@ -170,6 +169,8 @@ public class AddFoodActivity extends AppCompatActivity implements
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.add_images_frame, addImageFragment)
                     .commit();
+
+            getFoodPostDetailsAndSet(foodPostId);
         }
 
         setTextInputs();
@@ -183,6 +184,12 @@ public class AddFoodActivity extends AppCompatActivity implements
 
         setOptionsMenu();
         backView.setOnClickListener(v -> finish());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        selectImagesFromFragment.hideCard();
     }
 
     void setFoodPostIfItHas() {
@@ -207,12 +214,6 @@ public class AddFoodActivity extends AppCompatActivity implements
         }
         if (!foodPostDetail.description.isEmpty())
             wordLimitEditTextFragment.setText(foodPostDetail.description);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        selectImagesFromFragment.hideCard();
     }
 
     void setTextInputs(){

@@ -112,8 +112,7 @@ public class AddImagesFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             getFoodPostDetailsAndSet(getArguments().getInt(FOOD_POST_ID));
-        } else {
-        }
+        } else {}
     }
 
     @Override
