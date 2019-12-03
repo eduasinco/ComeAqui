@@ -40,8 +40,8 @@
 
         <ImageView
             android:id="@+id/imageView22"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_marginBottom="16dp"
             app:srcCompat="@drawable/no_orders" />
 
