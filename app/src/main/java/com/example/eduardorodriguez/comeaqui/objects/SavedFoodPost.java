@@ -41,5 +41,6 @@ public class SavedFoodPost extends FoodPost {
 
         rating = jo.get("rating").getAsInt();
         owner = new User(jo.get("owner").getAsJsonObject());
+        visible = jo.get("visible").getAsBoolean();
     }
 }

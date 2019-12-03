@@ -95,7 +95,7 @@ public class HostingFragment extends Fragment {
     }
 
     void getDataAndSet(){
-        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_hostings/").execute());
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_hosting/").execute());
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
