@@ -118,19 +118,26 @@ public class DateFormatting {
             long differenceToDate = now - date.getTime();
             long differenceToStartOrDay = now - startOfDay;
 
-
-            if (now + TimeUnit.DAYS.toMillis(30) < date.getTime()){
+            if (now < date.getTime() - TimeUnit.DAYS.toMillis(30)){
                 int n = (int) Math.abs(differenceToDate / TimeUnit.DAYS.toMillis(30));
                 return "IN " + n + " MONTH";
-            }else if (now + TimeUnit.DAYS.toMillis(7) < date.getTime()){
+            }else if (now < date.getTime() - TimeUnit.DAYS.toMillis(7)){
                 int n = (int) Math.abs(differenceToDate / TimeUnit.DAYS.toMillis(7));
                 return "IN " + n + " WEEKS";
-            } else if (now < date.getTime()) {
+            }else if (now < date.getTime() - TimeUnit.DAYS.toMillis(2)){
                 Calendar c = Calendar.getInstance();
                 c.setTime(date);
                 DateFormat df = new SimpleDateFormat("h:mm aa");
                 df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
                 return WEEK_DAYS[c.get(Calendar.DAY_OF_WEEK) - 1] + " " + df.format(date) + " - " + df.format(endDate);
+            }else if (now < date.getTime() - TimeUnit.DAYS.toMillis(1)){
+                DateFormat df = new SimpleDateFormat("h:mm aa");
+                df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
+                return "TOMORROW " + df.format(date) + " - " + df.format(endDate);
+            } else if (now < date.getTime()) {
+                DateFormat df = new SimpleDateFormat("h:mm aa");
+                df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
+                return "TODAY " + df.format(date) + " - " + df.format(endDate);
             } else if (date.getTime() <= now && now < endDate.getTime()){
                 return "HAPPENING NOW";
             } else if (differenceToDate <= differenceToStartOrDay) {
