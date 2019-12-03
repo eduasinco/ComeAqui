@@ -22,12 +22,16 @@ import java.util.List;
 
 public class MySearchFoodRecyclerViewAdapter extends RecyclerView.Adapter<MySearchFoodRecyclerViewAdapter.ViewHolder> {
 
-    private final List<FoodPost> mValues;
+    private List<FoodPost> mValues;
     private final OnListFragmentInteractionListener mListener;
 
     public MySearchFoodRecyclerViewAdapter(List<FoodPost> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
+    }
+
+    public void addData(ArrayList<FoodPost> data){
+        this.mValues = data;
     }
 
     @Override

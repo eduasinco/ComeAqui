@@ -7,21 +7,8 @@
     android:layout_height="match_parent"
     android:background="@color/grey_light">
 
-    <FrameLayout
-        android:id="@+id/search_box"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </FrameLayout>
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/list"
+        android:id="@+id/food_search_list"
         android:name="com.example.eduardorodriguez.comeaqui.map.search_food.SearchFoodFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -29,7 +16,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_box"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
         tools:listitem="@layout/fragment_searchfood" />
 
     <FrameLayout
@@ -70,6 +57,114 @@
             android:text="No posts yet"
             android:textColor="@android:color/black"
             android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <FrameLayout
+            android:id="@+id/search_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp">
+
+        </FrameLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/food_filters"
+                    android:gravity="center"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="All"
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/sort"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/food_filters"
+                    android:gravity="center"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="sort"
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/price_range"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/food_filters"
+                    android:gravity="center"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="Price Range"
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/food_filters"
+                    android:gravity="center"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="Distance from location"
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/dietary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/food_filters"
+                    android:gravity="center"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="Dietary"
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

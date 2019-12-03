@@ -18,6 +18,7 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.place_autocomplete.PlaceAutocompleteFragment;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -25,12 +26,10 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
-public class SearchFoodFragment extends Fragment {
-
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    private int mColumnCount = 1;
+public class SearchFoodFragment extends Fragment implements PlaceAutocompleteFragment.OnFragmentInteractionListener{
     private OnListFragmentInteractionListener mListener;
 
     private ArrayList<FoodPost> foodPosts;
@@ -41,25 +40,19 @@ public class SearchFoodFragment extends Fragment {
     FrameLayout waitFrame;
     LinearLayout noPostsFound;
 
+    PlaceAutocompleteFragment placeAutocompleteFragment;
+
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     public SearchFoodFragment() {}
 
-    public static SearchFoodFragment newInstance(int columnCount) {
-        SearchFoodFragment fragment = new SearchFoodFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
+    public static SearchFoodFragment newInstance() {
+        return new SearchFoodFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
     }
 
     @Override
@@ -67,8 +60,7 @@ public class SearchFoodFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_searchfood_list, container, false);
 
-        Context context = view.getContext();
-        recyclerView = view.findViewById(R.id.recycler_user_post);
+        recyclerView = view.findViewById(R.id.food_search_list);
         waitFrame = view.findViewById(R.id.wait_frame);
         noPostsFound = view.findViewById(R.id.no_posts);
 
@@ -76,7 +68,15 @@ public class SearchFoodFragment extends Fragment {
                 .replace(R.id.wait_frame, WaitFragment.newInstance())
                 .commit();
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        placeAutocompleteFragment = PlaceAutocompleteFragment.newInstance("", true);
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.search_box, placeAutocompleteFragment)
+                .commit();
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new MySearchFoodRecyclerViewAdapter(foodPosts, mListener);
+        recyclerView.setAdapter(adapter);
+
         getPostFromUser("");
         return view;
     }
@@ -94,15 +94,16 @@ public class SearchFoodFragment extends Fragment {
             } else{
                 noPostsFound.setVisibility(View.VISIBLE);
             }
-            adapter = new MySearchFoodRecyclerViewAdapter(foodPosts, mListener);
-            recyclerView.setAdapter(adapter);
+            adapter.addData(foodPosts);
+            adapter.notifyDataSetChanged();
         } catch (Exception e){
             e.printStackTrace();
         }
     }
 
     void getPostFromUser(String query){
-        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/user_food_posts/" + query + "/").execute());
+        query = "query=" + query;
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/food_query/" + query + "/").execute());
     }
 
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
@@ -147,6 +148,26 @@ public class SearchFoodFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onListPlaceChosen(String address, String place_id, Double lat, Double lng, HashMap<String, String> address_elements) {
+
+    }
+
+    @Override
+    public void onPlacesAutocompleteChangeText() {
+
+    }
+
+    @Override
+    public void closeButtonPressed() {
+
+    }
+
+    @Override
+    public void searchButtonClicked() {
+
+    }
+
 
     @Override
     public void onDestroy() {
@@ -176,5 +197,6 @@ public class SearchFoodFragment extends Fragment {
 
     public interface OnListFragmentInteractionListener {
         void onListFragmentInteraction(FoodPost item);
+        void close();
     }
 }

@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.example.eduardorodriguez.comeaqui.map.map_picker.MapPickerFragment;
+import com.example.eduardorodriguez.comeaqui.map.search_food.SearchFoodFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 
 import com.example.eduardorodriguez.comeaqui.server.Server;
@@ -55,6 +56,7 @@ import static com.example.eduardorodriguez.comeaqui.App.USER;
  */
 public class MapFragment extends Fragment implements
         MapPickerFragment.OnFragmentInteractionListener,
+        SearchFoodFragment.OnListFragmentInteractionListener,
         MapCardFragment.OnFragmentInteractionListener{
     MapView mMapView;
     static View view;
@@ -66,6 +68,7 @@ public class MapFragment extends Fragment implements
     MapPickerFragment mapPickerFragment;
     MapCardFragment mapCardFragment;
     UpperNotificationFragment upperNotificationFragment;
+    SearchFoodFragment searchFoodFragment;
 
     FloatingActionButton myFab;
     FloatingActionButton centerButton;
@@ -150,6 +153,11 @@ public class MapFragment extends Fragment implements
         mapCardFragment = MapCardFragment.newInstance();
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.container1, mapCardFragment)
+                .commit();
+
+        searchFoodFragment = SearchFoodFragment.newInstance();
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.search_food_frame, searchFoodFragment)
                 .commit();
 
         mMapView.onResume();
@@ -292,6 +300,16 @@ public class MapFragment extends Fragment implements
         this.lat_picked = lat;
         this.lng_picked = lng;
         this.address_elements = address_elements;
+    }
+
+    @Override
+    public void onListFragmentInteraction(FoodPost item) {
+
+    }
+
+    @Override
+    public void close() {
+
     }
 
 
