@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.profile;
+package com.example.eduardorodriguez.comeaqui.profile.user_posts;
 
 import android.content.Intent;
 

@@ -6,16 +6,14 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.View;
-import android.widget.FrameLayout;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.EditAcountDetailsActivity;
 import com.example.eduardorodriguez.comeaqui.R;
@@ -25,10 +23,6 @@ import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public class EditProfileActivity extends AppCompatActivity implements SelectImageFromFragment.OnFragmentInteractionListener{
 

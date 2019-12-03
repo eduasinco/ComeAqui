@@ -4,11 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,14 +21,12 @@ import com.example.eduardorodriguez.comeaqui.map.add_food.FoodDateTimePickerFrag
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodTypeSelectorFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.WordLimitEditTextFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
-import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 
 public class EditFoodPostActivity extends AppCompatActivity implements
         WordLimitEditTextFragment.OnFragmentInteractionListener,

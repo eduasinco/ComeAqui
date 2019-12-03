@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.profile;
+package com.example.eduardorodriguez.comeaqui.utilities;
 
 import android.Manifest;
 import android.app.AlertDialog;

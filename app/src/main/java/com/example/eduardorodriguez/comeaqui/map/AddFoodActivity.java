@@ -24,7 +24,7 @@ import com.example.eduardorodriguez.comeaqui.map.add_food.FoodDateTimePickerFrag
 import com.example.eduardorodriguez.comeaqui.map.add_food.WordLimitEditTextFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.SavedFoodPost;
-import com.example.eduardorodriguez.comeaqui.profile.SelectImageFromFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;

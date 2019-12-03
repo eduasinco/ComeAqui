@@ -15,7 +15,9 @@ import com.example.eduardorodriguez.comeaqui.profile.edit_profile.EditProfileAct
 import com.example.eduardorodriguez.comeaqui.profile.post_and_reviews.PostAndReviewsFragment;
 import com.example.eduardorodriguez.comeaqui.profile.settings.SettingsActivity;
 
+import com.example.eduardorodriguez.comeaqui.profile.user_posts.UserPostFragment;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
+import com.example.eduardorodriguez.comeaqui.utilities.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.image_view_pager.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.ProfileImageGalleryFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
@@ -33,9 +35,6 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
