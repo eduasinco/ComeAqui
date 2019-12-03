@@ -2,7 +2,7 @@ package com.example.eduardorodriguez.comeaqui.objects;
 
 class ImageStringProcessor {
 
-    public static String server = "http://10.0.0.1:65100";
+    public static String server = "http://10.0.0.40:65100";
 
     static String processString(String imageString){
 

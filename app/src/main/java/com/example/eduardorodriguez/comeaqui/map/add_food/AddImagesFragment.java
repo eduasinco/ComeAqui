@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,7 +67,8 @@ public class AddImagesFragment extends Fragment {
         setImageAbailable();
     }
 
-    public void initializeFoodPost(){
+    public void initializeFoodPost(FoodPost foodPostDetail){
+        this.foodPostDetail = foodPostDetail;
         for (int i = 0; i < foodPostDetail.images.size(); i++){
             if(!foodPostDetail.images.get(i).image.contains("no-image")){
                 tasks.add(new GetImageBitmap(foodPostDetail.images.get(i).image).execute());
@@ -162,8 +164,7 @@ public class AddImagesFragment extends Fragment {
         @Override
         protected void onPostExecute(String response) {
             if (response != null){
-                foodPostDetail = new SavedFoodPost(new JsonParser().parse(response).getAsJsonObject());
-                initializeFoodPost();
+                initializeFoodPost(new SavedFoodPost(new JsonParser().parse(response).getAsJsonObject()));
                 setImageAbailable();
             }
             super.onPostExecute(response);
@@ -189,10 +190,10 @@ public class AddImagesFragment extends Fragment {
         @Override
         protected String doInBackground(String... params) {
             try {
-                for (int i = 0; i < this.images.size(); i++){
-                    Bitmap image = this.images.get(i);
-                    if (null != image)
-                        ServerAPI.uploadImage(getContext(), "PATCH",  this.uri, "image", image);
+                for (Bitmap image : this.images) {
+                    if (null != image) {
+                        ServerAPI.uploadImage(getContext(), "PATCH", this.uri, "image", image);
+                    }
                 }
                 return "";
             } catch (IOException e) {

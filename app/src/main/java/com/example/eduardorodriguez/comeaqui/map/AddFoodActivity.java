@@ -271,7 +271,11 @@ public class AddFoodActivity extends AppCompatActivity implements
         submit.setOnClickListener(v -> {
             visible = true;
             if (validateFrom()){
-                postFood();
+                if (foodPostDetail == null){
+                    postFood();
+                } else {
+                    patchFood(foodPostDetail.id);
+                }
             }
         });
     }
@@ -361,21 +365,26 @@ public class AddFoodActivity extends AppCompatActivity implements
 
     void patchFood(int foodPostId){
         UploadPost post = new UploadPost(getResources().getString(R.string.server) + "/foods/" + foodPostId + "/", "PATCH");
-        post
-                .execute(
-                new String[]{"plate_name", foodName.getText().toString()},
-                new String[]{"address", formatted_address == null ? "" : formatted_address},
-                new String[]{"place_id", place_id == null ? "" : place_id},
-                new String[]{"lat", Double.toString(lat_picked)},
-                new String[]{"lng", Double.toString(lng_picked)},
-                new String[]{"max_dinners", dinners + ""},
-                new String[]{"start_time", startTime == null ? "" : startTime},
-                new String[]{"end_time", endTime == null ? "" : endTime},
-                new String[]{"time_zone", USER.timeZone},
-                new String[]{"price", price_data == null ? "" : price_data.toString()},
-                new String[]{"food_type", setTypes()},
-                new String[]{"description", description},
-                new String[]{"visible", "false"}
+        post.execute(
+            new String[]{"plate_name", foodName.getText().toString()},
+            new String[]{"formatted_address", formatted_address == null ? "" : formatted_address},
+            new String[]{"place_id", place_id == null ? "" : place_id},
+            new String[]{"street_n", street_n == null ? "" : street_n},
+            new String[]{"route", route == null ? "" : route},
+            new String[]{"administrative_area_level_2", administrative_area_level_2 == null ? "" : administrative_area_level_2},
+            new String[]{"administrative_area_level_1", administrative_area_level_1 == null ? "" : administrative_area_level_1},
+            new String[]{"country", country == null ? "" : country},
+            new String[]{"postal_code", postal_code == null ? "" : postal_code},
+            new String[]{"lat", Double.toString(lat_picked)},
+            new String[]{"lng", Double.toString(lng_picked)},
+            new String[]{"max_dinners", dinners + ""},
+            new String[]{"start_time", startTime == null ? "" : startTime},
+            new String[]{"end_time", endTime == null ? "" : endTime},
+            new String[]{"time_zone", USER.timeZone},
+            new String[]{"price", price_data == null ? "" : price_data.toString()},
+            new String[]{"food_type", setTypes()},
+            new String[]{"description", description},
+            new String[]{"visible",  visible ? "true": "false"}
         );
         showProgress(true);
         addImageFragment.uploadImages();
@@ -418,7 +427,7 @@ public class AddFoodActivity extends AppCompatActivity implements
         UploadPost post = new UploadPost(getResources().getString(R.string.server) + "/foods/", "POST");
         tasks.add(post.execute(
                 new String[]{"plate_name", foodName.getText().toString()},
-                new String[]{"address", formatted_address == null ? "" : formatted_address},
+                new String[]{"formatted_address", formatted_address == null ? "" : formatted_address},
                 new String[]{"place_id", place_id == null ? "" : place_id},
                 new String[]{"street_n", street_n == null ? "" : street_n},
                 new String[]{"route", route == null ? "" : route},
@@ -462,7 +471,11 @@ public class AddFoodActivity extends AppCompatActivity implements
         }
         @Override
         protected void onPostExecute(String response) {
-            showProgress(false);
+            if (response != null){
+                foodPostDetail = new SavedFoodPost(new JsonParser().parse(response).getAsJsonObject());
+                addImageFragment.initializeFoodPost(foodPostDetail);
+                addImageFragment.uploadImages();
+            }
             super.onPostExecute(response);
         }
     }

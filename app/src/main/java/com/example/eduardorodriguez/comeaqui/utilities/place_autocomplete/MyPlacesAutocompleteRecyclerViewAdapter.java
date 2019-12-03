@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.Server;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -46,9 +47,26 @@ public class MyPlacesAutocompleteRecyclerViewAdapter extends RecyclerView.Adapte
         holder.contentView.setText(holder.mItem[0]);
         holder.mView.setOnClickListener(v -> {
             f.setAddress(holder.mItem[0], holder.mItem[1]);
-            JsonObject jsonLocation = getPlacesDetailFromGoogle(holder.mItem[1]);
-            if (jsonLocation != null){
-                mListener.onListPlaceChosen(holder.mItem[0], jsonLocation.get("lat").getAsDouble(), jsonLocation.get("lng").getAsDouble(), holder.mItem[1]);
+            JsonObject jo = getPlacesDetailFromGoogle(holder.mItem[1]);
+            if (jo != null){
+                JsonArray addss_components = jo.get("address_components").getAsJsonArray();
+                String address = jo.get("formatted_address").getAsString();
+                String place_id = jo.get("place_id").getAsString();
+                JsonObject jsonLocation = jo.get("geometry").getAsJsonObject().get("location").getAsJsonObject();
+                Double lat = jsonLocation.get("lat").getAsDouble();
+                Double lng = jsonLocation.get("lng").getAsDouble();
+                mListener.onListPlaceChosen(
+                        address,
+                        place_id,
+                        lat,
+                        lng,
+                        addss_components.get(0).getAsJsonObject().get("long_name").getAsString(),
+                        addss_components.get(1).getAsJsonObject().get("long_name").getAsString(),
+                        addss_components.get(2).getAsJsonObject().get("long_name").getAsString(),
+                        addss_components.get(3).getAsJsonObject().get("long_name").getAsString(),
+                        addss_components.get(4).getAsJsonObject().get("long_name").getAsString(),
+                        addss_components.get(5).getAsJsonObject().get("long_name").getAsString()
+                );
                 f.setErrorBackground(false);
                 f.placeClicked = true;
             }
@@ -62,7 +80,7 @@ public class MyPlacesAutocompleteRecyclerViewAdapter extends RecyclerView.Adapte
             String jsonString = gAPI.execute().get(15, TimeUnit.SECONDS);
             if (jsonString != null) {
                 JsonObject joo = new JsonParser().parse(jsonString).getAsJsonObject();
-                JsonObject jsonLocation = joo.get("result").getAsJsonObject().get("geometry").getAsJsonObject().get("location").getAsJsonObject();
+                JsonObject jsonLocation = joo.get("result").getAsJsonObject();
                 return jsonLocation;
 
             }
