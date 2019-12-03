@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.example.eduardorodriguez.comeaqui.map.map_picker.MapPickerFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 
 import com.example.eduardorodriguez.comeaqui.server.Server;

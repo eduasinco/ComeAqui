@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.map;
+package com.example.eduardorodriguez.comeaqui.map.map_picker;
 
 import android.content.Context;
 import android.os.Bundle;
