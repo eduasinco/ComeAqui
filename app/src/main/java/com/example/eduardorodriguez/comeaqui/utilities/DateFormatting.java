@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -78,9 +79,9 @@ public class DateFormatting {
             } else if (differenceToStartOrDay + TimeUnit.DAYS.toMillis(1) >= differenceToDate && differenceToDate > differenceToStartOrDay) {
                 return "YESTERDAY";
             } else if (differenceToStartOrDay + TimeUnit.DAYS.toMillis(7) >= differenceToDate && differenceToDate > differenceToStartOrDay + TimeUnit.DAYS.toMillis(1)) {
-                Calendar c = Calendar.getInstance();
-                c.setTime(date);
-                return WEEK_DAYS[c.get(Calendar.DAY_OF_WEEK) - 1];
+                DateFormat dayNumberFormat = new SimpleDateFormat("u");
+                dayNumberFormat.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
+                return WEEK_DAYS[Integer.parseInt(dayNumberFormat.format(date)) - 1];
             } else{
                 String pattern = "MM/dd/yyyy";
                 DateFormat df = new SimpleDateFormat(pattern);
@@ -125,11 +126,11 @@ public class DateFormatting {
                 int n = (int) Math.abs(differenceToDate / TimeUnit.DAYS.toMillis(7));
                 return "IN " + n + " WEEKS";
             }else if (now < date.getTime() - TimeUnit.DAYS.toMillis(2)){
-                Calendar c = Calendar.getInstance();
-                c.setTime(date);
                 DateFormat df = new SimpleDateFormat("h:mm aa");
                 df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
-                return WEEK_DAYS[c.get(Calendar.DAY_OF_WEEK) - 1] + " " + df.format(date) + " - " + df.format(endDate);
+                DateFormat dayNumberFormat = new SimpleDateFormat("u");
+                dayNumberFormat.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
+                return WEEK_DAYS[Integer.parseInt(dayNumberFormat.format(date)) - 1] + " " + df.format(date) + " - " + df.format(endDate);
             }else if (now < date.getTime() - TimeUnit.DAYS.toMillis(1)){
                 DateFormat df = new SimpleDateFormat("h:mm aa");
                 df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
