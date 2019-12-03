@@ -202,6 +202,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
     @Override
     public void onImageUploadFinished() {
         showProgress(false);
+        finish();
     }
 
     @Override

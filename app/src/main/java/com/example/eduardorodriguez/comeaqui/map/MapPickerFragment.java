@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.Server;
+import com.example.eduardorodriguez.comeaqui.utilities.place_autocomplete.PlaceAutocompleteFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -22,7 +23,7 @@ import com.google.gson.JsonParser;
 
 import java.util.HashMap;
 
-public class MapPickerFragment extends Fragment {
+public class MapPickerFragment extends Fragment implements PlaceAutocompleteFragment.OnFragmentInteractionListener{
 
     private OnFragmentInteractionListener mListener;
 
@@ -31,6 +32,8 @@ public class MapPickerFragment extends Fragment {
     ImageView shadowPoint;
     public TextView pickedAdress;
     ConstraintLayout mapPickerPanView;
+
+    PlaceAutocompleteFragment placeAutocompleteFragment;
 
     public boolean abled;
     String LOADING = "Loading...";
@@ -56,6 +59,12 @@ public class MapPickerFragment extends Fragment {
         hande = view.findViewById(R.id.handle);
         shadowPoint = view.findViewById(R.id.shadow_point);
         pickedAdress = view.findViewById(R.id.pickedAdress);
+
+        placeAutocompleteFragment = PlaceAutocompleteFragment.newInstance("", true);
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.search_frame, placeAutocompleteFragment)
+                .commit();
+
         return view;
     }
 
@@ -108,8 +117,13 @@ public class MapPickerFragment extends Fragment {
         }.execute();
     }
 
+    public void showList(boolean show){
+        placeAutocompleteFragment.showList(show);
+    }
+
     public void apearMapPicker(boolean apear){
         abled = apear;
+        placeAutocompleteFragment.showSearchBox(apear);
         shadowPoint.setVisibility(apear ? View.VISIBLE: View.INVISIBLE);
         mapPickerPanView.setVisibility(apear ? View.VISIBLE: View.INVISIBLE);
         hande.setVisibility(apear ? View.VISIBLE: View.INVISIBLE);
@@ -150,7 +164,28 @@ public class MapPickerFragment extends Fragment {
         mListener = null;
     }
 
-    public interface OnFragmentInteractionListener {
+    @Override
+    public void onListPlaceChosen(String address, String place_id, Double lat, Double lng, HashMap<String, String> address_elements) {
+        mListener.onListPlaceChosen(address, place_id, lat, lng, address_elements);
+    }
+
+
+    @Override
+    public void onPlacesAutocompleteChangeText() {
+
+    }
+
+    @Override
+    public void closeButtonPressed() {
+        mListener.closeButtonPressed();
+    }
+
+    @Override
+    public void searchButtonClicked() {
+        mListener.searchButtonClicked();
+    }
+
+    public interface OnFragmentInteractionListener extends PlaceAutocompleteFragment.OnFragmentInteractionListener{
         void refreshFragment(String address, String place_id, Double lat, Double lng, HashMap<String, String> address_elements);
     }
 }

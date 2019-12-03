@@ -8,7 +8,6 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import com.example.eduardorodriguez.comeaqui.map.search_location.SearchLocationFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 
 import com.example.eduardorodriguez.comeaqui.server.Server;
@@ -55,7 +54,6 @@ import static com.example.eduardorodriguez.comeaqui.App.USER;
  */
 public class MapFragment extends Fragment implements
         MapPickerFragment.OnFragmentInteractionListener,
-        SearchLocationFragment.OnFragmentInteractionListener,
         MapCardFragment.OnFragmentInteractionListener{
     MapView mMapView;
     static View view;
@@ -67,7 +65,6 @@ public class MapFragment extends Fragment implements
     MapPickerFragment mapPickerFragment;
     MapCardFragment mapCardFragment;
     UpperNotificationFragment upperNotificationFragment;
-    SearchLocationFragment searchLocationFragment;
 
     FloatingActionButton myFab;
     FloatingActionButton centerButton;
@@ -152,10 +149,6 @@ public class MapFragment extends Fragment implements
         mapCardFragment = MapCardFragment.newInstance();
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.container1, mapCardFragment)
-                .commit();
-        searchLocationFragment = SearchLocationFragment.newInstance("", "");
-        getChildFragmentManager().beginTransaction()
-                .replace(R.id.search_frame, searchLocationFragment)
                 .commit();
 
         mMapView.onResume();
@@ -418,7 +411,7 @@ public class MapFragment extends Fragment implements
             if (mapPickerFragment.abled){
                 mapPickerFragment.setAddressTextVisible(false);
                 mapPickerFragment.moveMapPicker(true);
-                searchLocationFragment.showList(false);
+                mapPickerFragment.showList(false);
             }
         });
         googleMap.setOnCameraIdleListener(() -> {
@@ -432,7 +425,6 @@ public class MapFragment extends Fragment implements
 
     void fabFunctionality(){
         mapPickerFragment.apearMapPicker(true);
-        searchLocationFragment.showSearchBox(true);
         mapPickerFragment.getLocationFromGoogle(pickedLocation);
         if (fabCount == 0){
             markersVisibility(false);
@@ -460,7 +452,6 @@ public class MapFragment extends Fragment implements
         myFab.setVisibility(View.VISIBLE);
         centerButton.setVisibility(View.VISIBLE);
         mapPickerFragment.apearMapPicker(false);
-        searchLocationFragment.showSearchBox(false);
     }
 
     void switchFabImage(boolean toPlus){
@@ -488,6 +479,7 @@ public class MapFragment extends Fragment implements
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void onCardClosed() {
         if (currentBigMarker != null){
@@ -502,7 +494,7 @@ public class MapFragment extends Fragment implements
         latToSearch = lat;
         lngToSearch = lng;
         this.address_elements = address_elements;
-        searchLocationFragment.showList(false);
+        mapPickerFragment.showList(false);
     }
 
 

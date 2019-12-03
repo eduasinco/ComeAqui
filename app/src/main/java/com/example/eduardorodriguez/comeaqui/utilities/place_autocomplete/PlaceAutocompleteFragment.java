@@ -15,6 +15,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -79,7 +81,19 @@ public class PlaceAutocompleteFragment extends Fragment {
         }
     }
 
+    public void showSearchBox(boolean show){
+        if (show){
+            wholePlaceACView.setVisibility(View.VISIBLE);
+        } else {
+            hideKeyboard();
+            wholePlaceACView.setVisibility(View.GONE);
+        }
+    }
+
     public void showList(boolean show){
+        if (!show){
+            hideKeyboard();
+        }
         if (show && !placeClicked){
             recyclerView.setVisibility(View.VISIBLE);
         } else{
@@ -99,6 +113,8 @@ public class PlaceAutocompleteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_place_autocomplete, container, false);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
         addressView = view.findViewById(R.id.address);
         loadingView = view.findViewById(R.id.loading_places);
         recyclerView = view.findViewById(R.id.places_list);
@@ -240,7 +256,7 @@ public class PlaceAutocompleteFragment extends Fragment {
                     last_text_edit = System.currentTimeMillis();
                     handler.postDelayed(input_finish_checker, delay);
                 } else {
-
+                    showList(false);
                 }
             }
         });
@@ -265,6 +281,14 @@ public class PlaceAutocompleteFragment extends Fragment {
     public void setAddress(String text, String id){
         addressView.setText(text);
         placeClicked = true;
+    }
+
+    private void hideKeyboard(){
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     @Override
