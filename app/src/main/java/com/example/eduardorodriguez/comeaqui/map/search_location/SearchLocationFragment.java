@@ -15,6 +15,8 @@ import android.widget.FrameLayout;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.utilities.place_autocomplete.PlaceAutocompleteFragment;
 
+import java.util.HashMap;
+
 public class SearchLocationFragment extends Fragment implements PlaceAutocompleteFragment.OnFragmentInteractionListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -107,8 +109,8 @@ public class SearchLocationFragment extends Fragment implements PlaceAutocomplet
     }
 
     @Override
-    public void onListPlaceChosen(String address, String place_id, Double lat, Double lng, String street_n, String route, String administrative_area_level_2, String administrative_area_level_1, String country, String postal_code) {
-        mListener.onListPlaceChosen(address, place_id, lat, lng, street_n, route, administrative_area_level_2, administrative_area_level_1, country, postal_code);
+    public void onListPlaceChosen(String address, String place_id, Double lat, Double lng, HashMap<String, String> address_elements) {
+        mListener.onListPlaceChosen(address, place_id, lat, lng, address_elements);
     }
 
     @Override

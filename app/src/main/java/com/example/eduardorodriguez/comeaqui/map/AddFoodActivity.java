@@ -34,6 +34,7 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
@@ -70,12 +71,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     private String place_id;
     private Double lat_picked;
     private Double lng_picked;
-    private String street_n;
-    private String route;
-    private String administrative_area_level_2;
-    private String administrative_area_level_1;
-    private String country;
-    private String postal_code;
+    private HashMap<String, String> address_elements;
 
     Float price_data;
     boolean[] pressed = {false, false, false, false, false, false, false};
@@ -143,12 +139,7 @@ public class AddFoodActivity extends AppCompatActivity implements
             place_id = b.getString("place_id");
             lat_picked = b.getDouble("lat");
             lng_picked = b.getDouble("lng");
-            street_n = b.getString("street_n");
-            route = b.getString("route");
-            administrative_area_level_2 = b.getString("administrative_area_level_2");
-            administrative_area_level_1 = b.getString("administrative_area_level_1");
-            country = b.getString("country");
-            postal_code = b.getString("postal_code");
+            address_elements = (HashMap<String, String>) b.getSerializable("address_elements");
 
             if (b.getSerializable("foodPostId") != null){
                 foodPostId =  b.getInt("foodPostId");
@@ -369,12 +360,12 @@ public class AddFoodActivity extends AppCompatActivity implements
             new String[]{"plate_name", foodName.getText().toString()},
             new String[]{"formatted_address", formatted_address == null ? "" : formatted_address},
             new String[]{"place_id", place_id == null ? "" : place_id},
-            new String[]{"street_n", street_n == null ? "" : street_n},
-            new String[]{"route", route == null ? "" : route},
-            new String[]{"administrative_area_level_2", administrative_area_level_2 == null ? "" : administrative_area_level_2},
-            new String[]{"administrative_area_level_1", administrative_area_level_1 == null ? "" : administrative_area_level_1},
-            new String[]{"country", country == null ? "" : country},
-            new String[]{"postal_code", postal_code == null ? "" : postal_code},
+            new String[]{"street_n", address_elements.containsKey("street_number") ? "" : address_elements.get("street_number")},
+            new String[]{"route", address_elements.containsKey("route") ? "" : address_elements.get("route")},
+            new String[]{"administrative_area_level_2", address_elements.containsKey("administrative_area_level_2") ? "" : address_elements.get("administrative_area_level_2")},
+            new String[]{"administrative_area_level_1", address_elements.containsKey("administrative_area_level_1") ? "" : address_elements.get("administrative_area_level_1")},
+            new String[]{"country", address_elements.containsKey("country") ? "" : address_elements.get("country")},
+            new String[]{"postal_code", address_elements.containsKey("postal_code") ? "" : address_elements.get("postal_code")},
             new String[]{"lat", Double.toString(lat_picked)},
             new String[]{"lng", Double.toString(lng_picked)},
             new String[]{"max_dinners", dinners + ""},
@@ -429,12 +420,12 @@ public class AddFoodActivity extends AppCompatActivity implements
                 new String[]{"plate_name", foodName.getText().toString()},
                 new String[]{"formatted_address", formatted_address == null ? "" : formatted_address},
                 new String[]{"place_id", place_id == null ? "" : place_id},
-                new String[]{"street_n", street_n == null ? "" : street_n},
-                new String[]{"route", route == null ? "" : route},
-                new String[]{"administrative_area_level_2", administrative_area_level_2 == null ? "" : administrative_area_level_2},
-                new String[]{"administrative_area_level_1", administrative_area_level_1 == null ? "" : administrative_area_level_1},
-                new String[]{"country", country == null ? "" : country},
-                new String[]{"postal_code", postal_code == null ? "" : postal_code},
+                new String[]{"street_n", address_elements.containsKey("street_number") ? "" : address_elements.get("street_number")},
+                new String[]{"route", address_elements.containsKey("route") ? "" : address_elements.get("route")},
+                new String[]{"administrative_area_level_2", address_elements.containsKey("administrative_area_level_2") ? "" : address_elements.get("administrative_area_level_2")},
+                new String[]{"administrative_area_level_1", address_elements.containsKey("administrative_area_level_1") ? "" : address_elements.get("administrative_area_level_1")},
+                new String[]{"country", address_elements.containsKey("country") ? "" : address_elements.get("country")},
+                new String[]{"postal_code", address_elements.containsKey("postal_code") ? "" : address_elements.get("postal_code")},
                 new String[]{"lat", Double.toString(lat_picked)},
                 new String[]{"lng", Double.toString(lng_picked)},
                 new String[]{"max_dinners", dinners + ""},
@@ -539,17 +530,12 @@ public class AddFoodActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onListPlaceChosen(String address, String place_id, Double lat, Double lng, String street_n, String route, String administrative_area_level_2, String administrative_area_level_1, String country, String postal_code) {
+    public void onListPlaceChosen(String address, String place_id, Double lat, Double lng, HashMap<String, String> address_elements) {
         this.formatted_address = address;
         this.place_id = place_id;
         this.lat_picked = lat;
         this.lng_picked = lng;
-        this.street_n = street_n;
-        this.route = route;
-        this.administrative_area_level_2 = administrative_area_level_2;
-        this.administrative_area_level_1 = administrative_area_level_1;
-        this.country = country;
-        this.postal_code = postal_code;
+        this.address_elements = address_elements;
         this.isAddressValid = true;
     }
     @Override

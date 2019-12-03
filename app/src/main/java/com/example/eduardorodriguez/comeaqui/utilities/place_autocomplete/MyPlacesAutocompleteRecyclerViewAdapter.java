@@ -8,11 +8,13 @@ import android.widget.TextView;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -55,17 +57,17 @@ public class MyPlacesAutocompleteRecyclerViewAdapter extends RecyclerView.Adapte
                 JsonObject jsonLocation = jo.get("geometry").getAsJsonObject().get("location").getAsJsonObject();
                 Double lat = jsonLocation.get("lat").getAsDouble();
                 Double lng = jsonLocation.get("lng").getAsDouble();
+
+                HashMap<String, String> address_elements = new HashMap<>();
+                for (JsonElement je: addss_components){
+                    address_elements.put(je.getAsJsonObject().get("types").getAsJsonArray().get(0).getAsString(), je.getAsJsonObject().get("long_name").getAsString());
+                }
                 mListener.onListPlaceChosen(
                         address,
                         place_id,
                         lat,
                         lng,
-                        addss_components.get(0).getAsJsonObject().get("long_name").getAsString(),
-                        addss_components.get(1).getAsJsonObject().get("long_name").getAsString(),
-                        addss_components.get(2).getAsJsonObject().get("long_name").getAsString(),
-                        addss_components.get(3).getAsJsonObject().get("long_name").getAsString(),
-                        addss_components.get(4).getAsJsonObject().get("long_name").getAsString(),
-                        addss_components.get(5).getAsJsonObject().get("long_name").getAsString()
+                        address_elements
                 );
                 f.setErrorBackground(false);
                 f.placeClicked = true;

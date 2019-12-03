@@ -28,6 +28,7 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
@@ -281,7 +282,7 @@ public class PlaceAutocompleteFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void onListPlaceChosen(String address, String place_id, Double lat, Double lng, String street_n, String route, String administrative_area_level_2, String administrative_area_level_1, String country, String postal_code);
+        void onListPlaceChosen(String address, String place_id, Double lat, Double lng, HashMap<String, String> address_elements);
         void onPlacesAutocompleteChangeText();
         void closeButtonPressed();
         void searchButtonClicked();

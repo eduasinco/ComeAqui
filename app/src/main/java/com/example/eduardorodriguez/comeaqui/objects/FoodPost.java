@@ -2,6 +2,7 @@ package com.example.eduardorodriguez.comeaqui.objects;
 
 import com.example.eduardorodriguez.comeaqui.utilities.DateFormatting;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -49,12 +50,12 @@ public class FoodPost implements Serializable {
         place_id = jo.get("place_id").getAsString();
         lat = jo.get("lat").getAsDouble();
         lng = jo.get("lng").getAsDouble();
-        street_n = jo.get("street_n").getAsString();
-        route = jo.get("route").getAsString();
-        administrative_area_level_2 = jo.get("administrative_area_level_2").getAsString();
-        administrative_area_level_1 = jo.get("administrative_area_level_1").getAsString();
-        country = jo.get("country").getAsString();
-        postal_code = jo.get("postal_code").getAsString();
+        street_n = jo.get("street_n") instanceof JsonNull ? "" : jo.get("street_n").getAsString();
+        route = jo.get("route") instanceof JsonNull ? "" : jo.get("route").getAsString();
+        administrative_area_level_2 = jo.get("administrative_area_level_2") instanceof JsonNull ? "" : jo.get("administrative_area_level_2").getAsString();
+        administrative_area_level_1 = jo.get("administrative_area_level_1") instanceof JsonNull ? "" : jo.get("administrative_area_level_1").getAsString();
+        country = jo.get("country") instanceof JsonNull ? "" : jo.get("country").getAsString();
+        postal_code = jo.get("postal_code") instanceof JsonNull ? "" : jo.get("postal_code").getAsString();
 
         max_dinners = jo.get("max_dinners").getAsInt();
         start_time = jo.get("start_time").getAsString();

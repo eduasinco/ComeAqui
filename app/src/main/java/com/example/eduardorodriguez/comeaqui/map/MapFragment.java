@@ -82,12 +82,8 @@ public class MapFragment extends Fragment implements
     private String place_id;
     private Double lat_picked;
     private Double lng_picked;
-    private String street_n;
-    private String route;
-    private String administrative_area_level_2;
-    private String administrative_area_level_1;
-    private String country;
-    private String postal_code;
+    private HashMap<String, String> address_elements;
+
 
     static Set<Integer> touchedMarkers = new HashSet<>();
     public static HashMap<Integer, Marker> markerHashMap = new HashMap<>();
@@ -296,17 +292,12 @@ public class MapFragment extends Fragment implements
     }
 
     @Override
-    public void refreshFragment(String address, String place_id, Double lat, Double lng, String street_n, String route, String administrative_area_level_2, String administrative_area_level_1, String country, String postal_code) {
+    public void refreshFragment(String address, String place_id, Double lat, Double lng, HashMap<String, String> address_elements) {
         this.formatted_address = address;
         this.place_id = place_id;
         this.lat_picked = lat;
         this.lng_picked = lng;
-        this.street_n = street_n;
-        this.route = route;
-        this.administrative_area_level_2 = administrative_area_level_2;
-        this.administrative_area_level_1 = administrative_area_level_1;
-        this.country = country;
-        this.postal_code = postal_code;
+        this.address_elements = address_elements;
     }
 
 
@@ -453,12 +444,7 @@ public class MapFragment extends Fragment implements
             addFood.putExtra("place_id" , place_id);
             addFood.putExtra("lat" , lat_picked);
             addFood.putExtra("lng" , lng_picked);
-            addFood.putExtra("street_n" , street_n);
-            addFood.putExtra("route" , route);
-            addFood.putExtra("administrative_area_level_2" , administrative_area_level_2);
-            addFood.putExtra("administrative_area_level_1" , administrative_area_level_1);
-            addFood.putExtra("country" , country);
-            addFood.putExtra("postal_code" , postal_code);
+            addFood.putExtra("address_elements", address_elements);
             getActivity().startActivity(addFood);
         } else {
             fabCount = 2;
@@ -512,9 +498,10 @@ public class MapFragment extends Fragment implements
     }
 
     @Override
-    public void onListPlaceChosen(String address, String place_id, Double lat, Double lng, String street_n, String route, String administrative_area_level_2, String administrative_area_level_1, String country, String postal_code) {
+    public void onListPlaceChosen(String address, String place_id, Double lat, Double lng, HashMap<String, String> address_elements) {
         latToSearch = lat;
         lngToSearch = lng;
+        this.address_elements = address_elements;
         searchLocationFragment.showList(false);
     }
 

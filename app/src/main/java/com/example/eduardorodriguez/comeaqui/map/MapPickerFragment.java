@@ -16,8 +16,11 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import java.util.HashMap;
 
 public class MapPickerFragment extends Fragment {
 
@@ -83,6 +86,11 @@ public class MapPickerFragment extends Fragment {
                         JsonObject jsonLocation = jo.get("geometry").getAsJsonObject().get("location").getAsJsonObject();
                         Double lat = jsonLocation.get("lat").getAsDouble();
                         Double lng = jsonLocation.get("lng").getAsDouble();
+
+                        HashMap<String, String> address_elements = new HashMap<>();
+                        for (JsonElement je: addss_components){
+                            address_elements.put(je.getAsJsonObject().get("types").getAsJsonArray().get(0).getAsString(), je.getAsJsonObject().get("long_name").getAsString());
+                        }
                         pickedAdress.setText(address);
                         if (!address.equals(LOADING)){
                             mListener.refreshFragment(
@@ -90,12 +98,7 @@ public class MapPickerFragment extends Fragment {
                                     place_id,
                                     lat,
                                     lng,
-                                    addss_components.get(0).getAsJsonObject().get("long_name").getAsString(),
-                                    addss_components.get(1).getAsJsonObject().get("long_name").getAsString(),
-                                    addss_components.get(2).getAsJsonObject().get("long_name").getAsString(),
-                                    addss_components.get(3).getAsJsonObject().get("long_name").getAsString(),
-                                    addss_components.get(4).getAsJsonObject().get("long_name").getAsString(),
-                                    addss_components.get(5).getAsJsonObject().get("long_name").getAsString()
+                                    address_elements
                             );
                         }
                     }
@@ -148,6 +151,6 @@ public class MapPickerFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void refreshFragment(String address, String place_id, Double lat, Double lng, String street_n, String route, String administrative_area_level_2, String administrative_area_level_1, String country, String postal_code);
+        void refreshFragment(String address, String place_id, Double lat, Double lng, HashMap<String, String> address_elements);
     }
 }
