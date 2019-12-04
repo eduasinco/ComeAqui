@@ -1,10 +1,11 @@
 package com.example.eduardorodriguez.comeaqui.map.search_food.filter_fragment;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.LinearLayout;
 
 import com.example.eduardorodriguez.comeaqui.R;
@@ -24,18 +26,21 @@ import static com.example.eduardorodriguez.comeaqui.R.color.secondary_text_defau
 
 public class FilterFragment extends Fragment implements
         FoodTypeSelectorFragment.OnFragmentInteractionListener,
-        FoodDateTimePickerFragment.OnFragmentInteractionListener
+        FoodDateTimePickerFragment.OnFragmentInteractionListener,
+        DatePickerDialog.OnDateSetListener
 {
-    private static final String FILTER = "filter";
     private int filter;
 
     private OnFragmentInteractionListener mListener;
 
+    private ConstraintLayout wholeView;
+    private LinearLayout cardView;
     private LinearLayout sortWhole;
     private LinearLayout priceWhole;
     private LinearLayout mealTimeWhole;
     private LinearLayout distanceWhole;
     private LinearLayout dietaryWhole;
+    private Button applyFilterButton;
 
     private LinearLayout[] sortOptions;
     private Button[] priceOptions;
@@ -43,26 +48,21 @@ public class FilterFragment extends Fragment implements
     private int sortOption;
     private int priceOption;
     private int distance;
+    private String startTime;
+    private String endTime;
     private String dietary;
 
     FoodDateTimePickerFragment foodTimePickerFragment;
 
     public FilterFragment() {}
 
-    public static FilterFragment newInstance(int filter) {
-        FilterFragment fragment = new FilterFragment();
-        Bundle args = new Bundle();
-        args.putInt(FILTER, filter);
-        fragment.setArguments(args);
-        return fragment;
+    public static FilterFragment newInstance() {
+        return new FilterFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            filter = getArguments().getInt(FILTER);
-        }
     }
 
     @Override
@@ -70,11 +70,15 @@ public class FilterFragment extends Fragment implements
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_filter, container, false);
 
+        wholeView = view.findViewById(R.id.whole);
+        cardView = view.findViewById(R.id.card_view);
         sortWhole = view.findViewById(R.id.sort_whole);
         priceWhole = view.findViewById(R.id.price_whole);
         mealTimeWhole = view.findViewById(R.id.meal_time_whole);
         distanceWhole = view.findViewById(R.id.distance_whole);
         dietaryWhole = view.findViewById(R.id.dietary_whole);
+        applyFilterButton = view.findViewById(R.id.apply_filter_button);
+
         sortOptions = new LinearLayout[]{
                 view.findViewById(R.id.sort0),
                 view.findViewById(R.id.sort1),
@@ -87,14 +91,52 @@ public class FilterFragment extends Fragment implements
         };
         foodTimePickerFragment = FoodDateTimePickerFragment.newInstance();
         getChildFragmentManager().beginTransaction()
-                .replace(R.id.food_time_picker_frame, foodTimePickerFragment)
+                .replace(R.id.date_frame, foodTimePickerFragment)
                 .commit();
 
-        Button applyFilterButton = view.findViewById(R.id.apply_filter_button);
-        applyFilterButton.setOnClickListener(v -> sendFilterOptions());
         setSortButtons();
         setPirceButtons();
+
+        wholeView.setOnTouchListener((v, event) -> {
+            showFilter(false, 0);
+            return false;
+        });
+
+        view.findViewById(R.id.close).setOnClickListener(v -> {
+            showFilter(false, 0);
+        });
+
+        applyFilterButton.setOnClickListener(v -> sendFilterOptions());
         return view;
+    }
+
+    public void showFilter(boolean show, int filter){
+        this.filter = filter;
+        int move = cardView.getMeasuredHeight() + ((ConstraintLayout.LayoutParams) cardView.getLayoutParams()).bottomMargin * 2;
+        if (show) {
+            wholeView.setBackground(ContextCompat.getDrawable(getContext(), R.color.grey_trans));
+            wholeView.setVisibility(View.VISIBLE);
+            View[] filters = new View[]{sortWhole, priceWhole, mealTimeWhole, distanceWhole, dietaryWhole};
+            for (View f : filters) {
+                f.setVisibility(View.GONE);
+            }
+            if (filter > 4) {
+                for (View f : filters) {
+                    f.setVisibility(View.VISIBLE);
+                }
+            } else {
+                filters[filter].setVisibility(View.VISIBLE);
+            }
+
+            cardView.setVisibility(View.VISIBLE);
+            cardView.setTranslationY(move);
+            cardView.animate().translationY(0).setDuration(move / 2);
+        } else {
+            cardView.animate().translationY(move).setDuration(move / 2).withEndAction(() -> {
+                wholeView.setBackgroundColor(Color.TRANSPARENT);
+                wholeView.setVisibility(View.GONE);
+            });
+        }
     }
 
     void sendFilterOptions(){
@@ -106,18 +148,23 @@ public class FilterFragment extends Fragment implements
                 mListener.onPrice(priceOption);
                 break;
             case 2:
-                mListener.onDistance(distance);
+                mListener.onMealTime(startTime, endTime);
                 break;
             case 3:
-                mListener.onDietary(dietary);
+                mListener.onDistance(distance);
                 break;
             case 4:
+                mListener.onDietary(dietary);
+                break;
+            case 5:
                 mListener.onSort(sortOption);
                 mListener.onPrice(priceOption);
                 mListener.onDistance(distance);
                 mListener.onDietary(dietary);
                 break;
         }
+        mListener.onApplyFilterClicked();
+        wholeView.setVisibility(View.GONE);
     }
 
     void setSortButtons(){
@@ -186,15 +233,21 @@ public class FilterFragment extends Fragment implements
 
     @Override
     public void onFragmentInteraction(String startDateTime, String endDateTime) {
-        mListener.onFragmentInteraction(startDateTime, endDateTime);
+        this.startTime = startDateTime;
+        this.endTime= endDateTime;
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        foodTimePickerFragment.onDateSet(view, year, month, dayOfMonth);
     }
 
     public interface OnFragmentInteractionListener {
-        void onApplyClicked();
+        void onApplyFilterClicked();
         void onSort(int option);
         void onPrice(int option);
+        void onMealTime(String startDateTime, String endDateTime);
         void onDistance(int distance);
         void onDietary(String dietary);
-        void onFragmentInteraction(String startDateTime, String endDateTime);
     }
 }

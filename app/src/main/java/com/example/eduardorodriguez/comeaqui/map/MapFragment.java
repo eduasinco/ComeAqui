@@ -243,7 +243,7 @@ public class MapFragment extends Fragment implements
                 searchFoodFragment = SearchFoodFragment.newInstance(lat, lng);
                 getChildFragmentManager().beginTransaction()
                         .replace(R.id.search_food_frame, searchFoodFragment)
-                        .commit();
+                        .commitAllowingStateLoss();
 
                 if (!gotTimezone){
                     System.out.println(++c);

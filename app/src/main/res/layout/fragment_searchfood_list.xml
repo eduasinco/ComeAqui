@@ -48,6 +48,7 @@
                 </FrameLayout>
 
                 <HorizontalScrollView
+                    android:id="@+id/filter_scroll"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_marginTop="8dp"
@@ -66,7 +67,7 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_weight="1"
-                            android:background="@drawable/food_filters"
+                            android:background="@drawable/food_filters_light"
                             android:gravity="center"
                             android:paddingStart="16dp"
                             android:paddingEnd="16dp"
@@ -80,7 +81,7 @@
                             android:layout_height="match_parent"
                             android:layout_marginEnd="8dp"
                             android:layout_weight="1"
-                            android:background="@drawable/food_filters"
+                            android:background="@drawable/food_filters_light"
                             android:gravity="center"
                             android:paddingStart="16dp"
                             android:paddingEnd="16dp"
@@ -89,12 +90,12 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/price_range"
+                            android:id="@+id/price"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_marginEnd="8dp"
                             android:layout_weight="1"
-                            android:background="@drawable/food_filters"
+                            android:background="@drawable/food_filters_light"
                             android:gravity="center"
                             android:paddingStart="16dp"
                             android:paddingEnd="16dp"
@@ -108,7 +109,7 @@
                             android:layout_height="match_parent"
                             android:layout_marginEnd="8dp"
                             android:layout_weight="1"
-                            android:background="@drawable/food_filters"
+                            android:background="@drawable/food_filters_light"
                             android:gravity="center"
                             android:paddingStart="16dp"
                             android:paddingEnd="16dp"
@@ -122,7 +123,7 @@
                             android:layout_height="match_parent"
                             android:layout_marginEnd="8dp"
                             android:layout_weight="1"
-                            android:background="@drawable/food_filters"
+                            android:background="@drawable/food_filters_light"
                             android:gravity="center"
                             android:paddingStart="16dp"
                             android:paddingEnd="16dp"
@@ -136,13 +137,25 @@
                             android:layout_height="match_parent"
                             android:layout_marginEnd="8dp"
                             android:layout_weight="1"
-                            android:background="@drawable/food_filters"
+                            android:background="@drawable/food_filters_light"
                             android:gravity="center"
                             android:paddingStart="16dp"
                             android:paddingEnd="16dp"
                             android:text="Dietary"
                             android:textColor="@android:color/black"
                             android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/dellete_all"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:text="@string/delete_all"
+                            android:textColor="@color/colorPrimary" />
 
                     </LinearLayout>
                 </HorizontalScrollView>

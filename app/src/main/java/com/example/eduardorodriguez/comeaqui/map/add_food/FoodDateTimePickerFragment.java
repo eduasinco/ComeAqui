@@ -273,8 +273,12 @@ public class FoodDateTimePickerFragment extends Fragment {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            if (getParentFragment() instanceof OnFragmentInteractionListener) {
+                mListener = (OnFragmentInteractionListener) getParentFragment();
+            } else {
+                throw new RuntimeException(context.toString()
+                        + " must implement OnFragmentInteractionListener");
+            }
         }
     }
 
