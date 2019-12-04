@@ -37,8 +37,6 @@ public class SearchFoodFragment extends Fragment implements PlaceAutocompleteFra
 
 
     RecyclerView recyclerView;
-    FrameLayout waitFrame;
-    LinearLayout noPostsFound;
 
     PlaceAutocompleteFragment placeAutocompleteFragment;
 
@@ -61,12 +59,6 @@ public class SearchFoodFragment extends Fragment implements PlaceAutocompleteFra
         View view = inflater.inflate(R.layout.fragment_searchfood_list, container, false);
 
         recyclerView = view.findViewById(R.id.food_search_list);
-        waitFrame = view.findViewById(R.id.wait_frame);
-        noPostsFound = view.findViewById(R.id.no_posts);
-
-        getChildFragmentManager().beginTransaction()
-                .replace(R.id.wait_frame, WaitFragment.newInstance())
-                .commit();
 
         placeAutocompleteFragment = PlaceAutocompleteFragment.newInstance("", true);
         getChildFragmentManager().beginTransaction()
@@ -89,11 +81,6 @@ public class SearchFoodFragment extends Fragment implements PlaceAutocompleteFra
                 FoodPost chat = new FoodPost(jo);
                 foodPosts.add(chat);
             }
-            if (foodPosts.size() > 0){
-                noPostsFound.setVisibility(View.GONE);
-            } else{
-                noPostsFound.setVisibility(View.VISIBLE);
-            }
             adapter.addData(foodPosts);
             adapter.notifyDataSetChanged();
         } catch (Exception e){
@@ -114,7 +101,6 @@ public class SearchFoodFragment extends Fragment implements PlaceAutocompleteFra
 
         @Override
         protected void onPreExecute() {
-            startWaitingFrame(false);
             super.onPreExecute();
         }
 
@@ -134,19 +120,11 @@ public class SearchFoodFragment extends Fragment implements PlaceAutocompleteFra
                 makeList(new JsonParser().parse(response).getAsJsonArray());
                 super.onPostExecute(response);
             }
-            startWaitingFrame(false);
             super.onPostExecute(response);
         }
 
     }
 
-    void startWaitingFrame(boolean start){
-        if (start) {
-            waitFrame.setVisibility(View.VISIBLE);
-        } else {
-            waitFrame.setVisibility(View.GONE);
-        }
-    }
 
     @Override
     public void onListPlaceChosen(String address, String place_id, Double lat, Double lng, HashMap<String, String> address_elements) {

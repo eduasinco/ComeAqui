@@ -7,164 +7,137 @@
     android:layout_height="match_parent"
     android:background="@color/grey_light">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/food_search_list"
-        android:name="com.example.eduardorodriguez.comeaqui.map.search_food.SearchFoodFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layoutManager="LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
-        tools:listitem="@layout/fragment_searchfood" />
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
 
-    <FrameLayout
-        android:id="@+id/wait_frame"
+
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent">
 
-    </FrameLayout>
-
-    <LinearLayout
-        android:id="@+id/no_posts"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/imageView26"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/food_search_list"
+            android:name="com.example.eduardorodriguez.comeaqui.map.search_food.SearchFoodFragment"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginBottom="16dp"
-            app:srcCompat="@drawable/no_posts" />
+            android:layout_height="match_parent"
+            app:layoutManager="LinearLayoutManager"
+            tools:listitem="@layout/fragment_searchfood"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-        <TextView
-            android:id="@+id/textView26"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="No posts yet"
-            android:textColor="@android:color/black"
-            android:textSize="12sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <FrameLayout
-            android:id="@+id/search_box"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp">
-
-        </FrameLayout>
-
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:scrollbars="none">
+            android:background="@android:color/transparent">
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                    android:id="@+id/linearLayout5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:orientation="vertical"
+                    app:layout_scrollFlags="scroll|enterAlways">
 
-                <TextView
-                    android:id="@+id/all"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/food_filters"
-                    android:gravity="center"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:text="All"
-                    android:textColor="@android:color/black"
-                    android:textStyle="bold" />
+                    <FrameLayout
+                        android:id="@+id/search_box"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp">
 
-                <TextView
-                    android:id="@+id/sort"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/food_filters"
-                    android:gravity="center"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:text="sort"
-                    android:textColor="@android:color/black"
-                    android:textStyle="bold" />
+                    </FrameLayout>
 
-                <TextView
-                    android:id="@+id/price_range"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/food_filters"
-                    android:gravity="center"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:text="Price Range"
-                    android:textColor="@android:color/black"
-                    android:textStyle="bold" />
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:scrollbars="none">
 
-                <TextView
-                    android:id="@+id/distance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/food_filters"
-                    android:gravity="center"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:text="Distance from location"
-                    android:textColor="@android:color/black"
-                    android:textStyle="bold" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/dietary"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/food_filters"
-                    android:gravity="center"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:text="Dietary"
-                    android:textColor="@android:color/black"
-                    android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/all"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/food_filters"
+                                android:gravity="center"
+                                android:paddingStart="16dp"
+                                android:paddingEnd="16dp"
+                                android:text="All"
+                                android:textColor="@android:color/black"
+                                android:textStyle="bold" />
 
-            </LinearLayout>
-        </HorizontalScrollView>
+                            <TextView
+                                android:id="@+id/sort"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginEnd="8dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/food_filters"
+                                android:gravity="center"
+                                android:paddingStart="16dp"
+                                android:paddingEnd="16dp"
+                                android:text="sort"
+                                android:textColor="@android:color/black"
+                                android:textStyle="bold" />
 
-    </LinearLayout>
+                            <TextView
+                                android:id="@+id/price_range"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginEnd="8dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/food_filters"
+                                android:gravity="center"
+                                android:paddingStart="16dp"
+                                android:paddingEnd="16dp"
+                                android:text="Price Range"
+                                android:textColor="@android:color/black"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/distance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginEnd="8dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/food_filters"
+                                android:gravity="center"
+                                android:paddingStart="16dp"
+                                android:paddingEnd="16dp"
+                                android:text="Distance from location"
+                                android:textColor="@android:color/black"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/dietary"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginEnd="8dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/food_filters"
+                                android:gravity="center"
+                                android:paddingStart="16dp"
+                                android:paddingEnd="16dp"
+                                android:text="Dietary"
+                                android:textColor="@android:color/black"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+                    </HorizontalScrollView>
+
+                </LinearLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
