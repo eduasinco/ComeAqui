@@ -155,11 +155,6 @@ public class MapFragment extends Fragment implements
                 .replace(R.id.container1, mapCardFragment)
                 .commit();
 
-        searchFoodFragment = SearchFoodFragment.newInstance();
-        getChildFragmentManager().beginTransaction()
-                .replace(R.id.search_food_frame, searchFoodFragment)
-                .commit();
-
         mMapView.onResume();
         fabCount = 0;
         try {
@@ -244,6 +239,11 @@ public class MapFragment extends Fragment implements
                 // For zooming automatically to the location of the marker
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(pickedLocation).zoom(15).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                searchFoodFragment = SearchFoodFragment.newInstance(lat, lng);
+                getChildFragmentManager().beginTransaction()
+                        .replace(R.id.search_food_frame, searchFoodFragment)
+                        .commit();
 
                 if (!gotTimezone){
                     System.out.println(++c);

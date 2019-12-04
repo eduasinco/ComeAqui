@@ -19,8 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="LinearLayoutManager"
-            tools:listitem="@layout/fragment_searchfood"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:listitem="@layout/fragment_searchfood" />
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar"
@@ -30,114 +30,139 @@
             android:background="@android:color/transparent">
 
             <LinearLayout
-                    android:id="@+id/linearLayout5"
+                android:id="@+id/linearLayout5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:orientation="vertical"
+                app:layout_scrollFlags="scroll|enterAlways">
+
+                <FrameLayout
+                    android:id="@+id/search_box"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/white"
-                    android:orientation="vertical"
-                    app:layout_scrollFlags="scroll|enterAlways">
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp">
 
-                    <FrameLayout
-                        android:id="@+id/search_box"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp">
+                </FrameLayout>
 
-                    </FrameLayout>
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:scrollbars="none">
 
-                    <HorizontalScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:scrollbars="none">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
 
-                        <LinearLayout
+                        <TextView
+                            android:id="@+id/all"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:orientation="horizontal">
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/food_filters"
+                            android:gravity="center"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:text="All"
+                            android:textColor="@android:color/black"
+                            android:textStyle="bold" />
 
-                            <TextView
-                                android:id="@+id/all"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_marginStart="8dp"
-                                android:layout_marginEnd="8dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/food_filters"
-                                android:gravity="center"
-                                android:paddingStart="16dp"
-                                android:paddingEnd="16dp"
-                                android:text="All"
-                                android:textColor="@android:color/black"
-                                android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/sort"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/food_filters"
+                            android:gravity="center"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:text="sort"
+                            android:textColor="@android:color/black"
+                            android:textStyle="bold" />
 
-                            <TextView
-                                android:id="@+id/sort"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_marginEnd="8dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/food_filters"
-                                android:gravity="center"
-                                android:paddingStart="16dp"
-                                android:paddingEnd="16dp"
-                                android:text="sort"
-                                android:textColor="@android:color/black"
-                                android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/price_range"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/food_filters"
+                            android:gravity="center"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:text="Price Range"
+                            android:textColor="@android:color/black"
+                            android:textStyle="bold" />
 
-                            <TextView
-                                android:id="@+id/price_range"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_marginEnd="8dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/food_filters"
-                                android:gravity="center"
-                                android:paddingStart="16dp"
-                                android:paddingEnd="16dp"
-                                android:text="Price Range"
-                                android:textColor="@android:color/black"
-                                android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/meal_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/food_filters"
+                            android:gravity="center"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:text="Meal Time"
+                            android:textColor="@android:color/black"
+                            android:textStyle="bold" />
 
-                            <TextView
-                                android:id="@+id/distance"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_marginEnd="8dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/food_filters"
-                                android:gravity="center"
-                                android:paddingStart="16dp"
-                                android:paddingEnd="16dp"
-                                android:text="Distance from location"
-                                android:textColor="@android:color/black"
-                                android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/distance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/food_filters"
+                            android:gravity="center"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:text="Distance from location"
+                            android:textColor="@android:color/black"
+                            android:textStyle="bold" />
 
-                            <TextView
-                                android:id="@+id/dietary"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_marginEnd="8dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/food_filters"
-                                android:gravity="center"
-                                android:paddingStart="16dp"
-                                android:paddingEnd="16dp"
-                                android:text="Dietary"
-                                android:textColor="@android:color/black"
-                                android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/dietary"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/food_filters"
+                            android:gravity="center"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:text="Dietary"
+                            android:textColor="@android:color/black"
+                            android:textStyle="bold" />
 
-                        </LinearLayout>
-                    </HorizontalScrollView>
+                    </LinearLayout>
+                </HorizontalScrollView>
 
-                </LinearLayout>
+            </LinearLayout>
 
         </com.google.android.material.appbar.AppBarLayout>
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <FrameLayout
+        android:id="@+id/filter_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
