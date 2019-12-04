@@ -217,7 +217,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/textView49"
+                        android:id="@+id/distance_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -225,7 +225,7 @@
                         android:textSize="18sp" />
 
                     <SeekBar
-                        android:id="@+id/seekBar2"
+                        android:id="@+id/distance_seekbar"
                         android:layout_width="match_parent"
                         android:layout_height="50dp" />
                 </LinearLayout>

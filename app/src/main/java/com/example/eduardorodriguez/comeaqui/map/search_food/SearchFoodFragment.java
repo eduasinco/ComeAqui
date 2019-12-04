@@ -51,22 +51,28 @@ public class SearchFoodFragment extends Fragment implements
     private MySearchFoodRecyclerViewAdapter adapter;
 
 
-    RecyclerView recyclerView;
-    HorizontalScrollView filterScroll;
-    TextView allButton;
-    TextView sortButton;
-    TextView mealTimeButton;
-    TextView priceButton;
-    TextView distanceButton;
-    TextView dietaryButton;
-    TextView delleteAllButton;
+    private RecyclerView recyclerView;
+    private HorizontalScrollView filterScroll;
+    private TextView allButton;
+    private TextView sortButton;
+    private TextView mealTimeButton;
+    private TextView priceButton;
+    private TextView distanceButton;
+    private TextView dietaryButton;
+    private TextView delleteAllButton;
 
+    private boolean[] onFilters = new boolean[]{false, false, false, false, false, false};
     int INITIAL_DISTANCE = 5000;
-    int distance = INITIAL_DISTANCE;
+
+    private int sortOption;
+    private int priceOption;
+    private int distance = INITIAL_DISTANCE;
+    private String startTime;
+    private String endTime;
+    private String dietary;
 
     PlaceAutocompleteFragment placeAutocompleteFragment;
     FilterFragment filterFragment;
-    StringBuilder query = new StringBuilder();
 
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
@@ -111,7 +117,7 @@ public class SearchFoodFragment extends Fragment implements
                 .replace(R.id.search_box, placeAutocompleteFragment)
                 .commit();
 
-        filterFragment = FilterFragment.newInstance();
+        filterFragment = FilterFragment.newInstance(INITIAL_DISTANCE);
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.filter_frame, filterFragment)
                 .commit();
@@ -120,8 +126,8 @@ public class SearchFoodFragment extends Fragment implements
         adapter = new MySearchFoodRecyclerViewAdapter(foodPosts, mListener);
         recyclerView.setAdapter(adapter);
 
-        getDistanceIntoQuery(distance);
         showFilterLogic();
+        getDistanceIntoQuery(distance);
         getFilteredPosts();
 
         delleteAllButton.setOnClickListener(v -> {
@@ -155,13 +161,13 @@ public class SearchFoodFragment extends Fragment implements
         }
     }
 
-    void getDistanceIntoQuery(int distance){
+    String getDistanceIntoQuery(int distance){
         this.distance = distance;
         LatLng right = SphericalUtil.computeOffset(new LatLng(lat, lng), distance, 0);
         LatLng top = SphericalUtil.computeOffset(new LatLng(lat, lng), distance, 90);
         LatLng left = SphericalUtil.computeOffset(new LatLng(lat, lng), distance, 180);
         LatLng down = SphericalUtil.computeOffset(new LatLng(lat, lng), distance, 270);
-        query.insert(0,"distance=" + right.latitude + "," + top.longitude + "," + left.latitude + "," + down.longitude);
+        return "distance=" + right.latitude + "," + top.longitude + "," + left.latitude + "," + down.longitude;
     }
 
     void darkenFilterButton(boolean darken, TextView button){
@@ -184,8 +190,44 @@ public class SearchFoodFragment extends Fragment implements
         darkenFilterButton(false, distanceButton);
         darkenFilterButton(false, dietaryButton);
 
+        for (int i = 0; i < onFilters.length; i++){
+            onFilters[i] = false;
+        }
+
+        this.distance = INITIAL_DISTANCE;
         getDistanceIntoQuery(INITIAL_DISTANCE);
         getFilteredPosts();
+    }
+
+    String createQuery(){
+        StringBuilder query = new StringBuilder();
+        if (onFilters[0]){
+            query.append("&sort=").append(sortOption);
+        }
+        if (onFilters[1]){
+            query.append("&price=").append(priceOption);
+        }
+        if (onFilters[2]){
+            query.append("&start_date=").append(startTime);
+            query.append("&end_date=").append(endTime);
+        }
+        if (onFilters[3]){
+            query.insert(0, getDistanceIntoQuery(distance));
+        } else {
+            query.insert(0, getDistanceIntoQuery(INITIAL_DISTANCE));
+        }
+        if (onFilters[4]){
+            query.append("&dietary=").append(dietary);
+        }
+        if (onFilters[5]){
+            query.append("&sort=").append(sortOption);
+            query.append("&price=").append(priceOption);
+            query.append("&start_date=").append(startTime);
+            query.append("&end_date=").append(endTime);
+            query.insert(0, getDistanceIntoQuery(distance));
+            query.append("&dietary=").append(dietary);
+        }
+        return query.toString();
     }
 
     @Override
@@ -196,32 +238,38 @@ public class SearchFoodFragment extends Fragment implements
 
     @Override
     public void onSort(int option) {
-        query.append("&sort=" + option);
+        sortOption = option;
+        onFilters[0] = true;
         darkenFilterButton(true, sortButton);
     }
 
     @Override
     public void onPrice(int option) {
-        query.append("&price=" + option);
+        priceOption = option;
+        onFilters[1] = true;
         darkenFilterButton(true, priceButton);
     }
 
     @Override
     public void onMealTime(String startDateTime, String endDateTime) {
-        query.append("&start_date=" + startDateTime);
-        query.append("&end_date=" + endDateTime);
+        startTime = startDateTime;
+        endTime = endDateTime;
+        onFilters[2] = true;
+
         darkenFilterButton(true, mealTimeButton);
     }
 
     @Override
     public void onDistance(int distance) {
-        getDistanceIntoQuery(distance);
+        this.distance = distance;
+        onFilters[3] = true;
         darkenFilterButton(true, distanceButton);
     }
 
     @Override
     public void onDietary(String dietary) {
-        query.append("&dietary=" + dietary);
+        this.dietary = dietary;
+        onFilters[4] = true;
         darkenFilterButton(true, dietaryButton);
     }
 
@@ -229,8 +277,7 @@ public class SearchFoodFragment extends Fragment implements
         for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
-        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/food_query/" + query.toString() + "/").execute());
-        query = new StringBuilder();
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/food_query/" + createQuery() + "/").execute());
     }
 
     @Override

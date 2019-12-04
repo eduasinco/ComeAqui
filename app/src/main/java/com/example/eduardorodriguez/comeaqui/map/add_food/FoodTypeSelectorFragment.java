@@ -65,7 +65,6 @@ public class FoodTypeSelectorFragment extends Fragment {
 
     void setFoodTypes(){
         vegetarian.setOnClickListener(v -> {
-            mListener.onFragmentInteraction(pressed);
             if(!pressed[4] && !pressed[5]){
                 pressed[0] = !pressed[0];
             }
@@ -73,9 +72,9 @@ public class FoodTypeSelectorFragment extends Fragment {
                 vegetarian.setImageResource(R.drawable.vegetarianfill);
             else
                 vegetarian.setImageResource(R.drawable.vegetarian);
+            mListener.onFragmentInteraction(pressed);
         });
         vegan.setOnClickListener(v -> {
-            mListener.onFragmentInteraction(pressed);
             if(!pressed[4] && !pressed[5] && !pressed[6]){
                 pressed[1] = !pressed[1];
             }
@@ -83,26 +82,26 @@ public class FoodTypeSelectorFragment extends Fragment {
                 vegan.setImageResource(R.drawable.veganfill);
             else
                 vegan.setImageResource(R.drawable.vegan);
+            mListener.onFragmentInteraction(pressed);
         });
         cereal.setOnClickListener(v -> {
-            mListener.onFragmentInteraction(pressed);
             pressed[2] = !pressed[2];
             if(pressed[2])
                 cereal.setImageResource(R.drawable.cerealfill);
             else
                 cereal.setImageResource(R.drawable.cereal);
+            mListener.onFragmentInteraction(pressed);
         });
         spicy.setOnClickListener(v -> {
-            mListener.onFragmentInteraction(pressed);
             pressed[3] = !pressed[3];
             if(pressed[3])
                 spicy.setImageResource(R.drawable.spicyfill);
             else
                 spicy.setImageResource(R.drawable.spicy);
+            mListener.onFragmentInteraction(pressed);
         });
 
         fish.setOnClickListener(v -> {
-            mListener.onFragmentInteraction(pressed);
             if(!pressed[0] && !pressed[1]){
                 pressed[4] = !pressed[4];
             }
@@ -110,9 +109,9 @@ public class FoodTypeSelectorFragment extends Fragment {
                 fish.setImageResource(R.drawable.fishfill);
             else
                 fish.setImageResource(R.drawable.fish);
+            mListener.onFragmentInteraction(pressed);
         });
         meat.setOnClickListener(v -> {
-            mListener.onFragmentInteraction(pressed);
             if(!pressed[0] && !pressed[1]){
                 pressed[5] = !pressed[5];
             }
@@ -120,9 +119,9 @@ public class FoodTypeSelectorFragment extends Fragment {
                 meat.setImageResource(R.drawable.meatfill);
             else
                 meat.setImageResource(R.drawable.meat);
+            mListener.onFragmentInteraction(pressed);
         });
         dairy.setOnClickListener(v -> {
-            mListener.onFragmentInteraction(pressed);
             if(!pressed[1]){
                 pressed[6] = !pressed[6];
             }
@@ -130,6 +129,7 @@ public class FoodTypeSelectorFragment extends Fragment {
                 dairy.setImageResource(R.drawable.dairyfill);
             else
                 dairy.setImageResource(R.drawable.dairy);
+            mListener.onFragmentInteraction(pressed);
         });
     }
     void initializeTypeViews(){
@@ -155,8 +155,12 @@ public class FoodTypeSelectorFragment extends Fragment {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            if (getParentFragment() instanceof OnFragmentInteractionListener) {
+                mListener = (OnFragmentInteractionListener) getParentFragment();
+            } else {
+                throw new RuntimeException(context.toString()
+                        + " must implement OnFragmentInteractionListener");
+            }
         }
     }
 

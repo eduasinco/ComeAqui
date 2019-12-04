@@ -15,10 +15,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodDateTimePickerFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodTypeSelectorFragment;
+import com.example.eduardorodriguez.comeaqui.map.search_food.SearchFoodFragment;
 
 import static com.example.eduardorodriguez.comeaqui.R.color.colorPrimaryLight;
 import static com.example.eduardorodriguez.comeaqui.R.color.grey_light;
@@ -29,6 +32,9 @@ public class FilterFragment extends Fragment implements
         FoodDateTimePickerFragment.OnFragmentInteractionListener,
         DatePickerDialog.OnDateSetListener
 {
+    private static final String INITIAL_DISTANCE = "distance";
+    private int initial_distance;
+
     private int filter;
 
     private OnFragmentInteractionListener mListener;
@@ -42,6 +48,9 @@ public class FilterFragment extends Fragment implements
     private LinearLayout dietaryWhole;
     private Button applyFilterButton;
 
+    private TextView distanceText;
+    private SeekBar distanceSeekbar;
+
     private LinearLayout[] sortOptions;
     private Button[] priceOptions;
 
@@ -53,16 +62,24 @@ public class FilterFragment extends Fragment implements
     private String dietary;
 
     FoodDateTimePickerFragment foodTimePickerFragment;
+    FoodTypeSelectorFragment foodTypeSelectorFragment;
 
     public FilterFragment() {}
 
-    public static FilterFragment newInstance() {
+    public static FilterFragment newInstance(int initial_distance) {
+        FilterFragment fragment = new FilterFragment();
+        Bundle args = new Bundle();
+        args.putInt(INITIAL_DISTANCE, initial_distance);
+        fragment.setArguments(args);
         return new FilterFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            initial_distance = getArguments().getInt(INITIAL_DISTANCE);
+        }
     }
 
     @Override
@@ -79,6 +96,11 @@ public class FilterFragment extends Fragment implements
         dietaryWhole = view.findViewById(R.id.dietary_whole);
         applyFilterButton = view.findViewById(R.id.apply_filter_button);
 
+        distanceText = view.findViewById(R.id.distance_text);
+        distanceText.setText(initial_distance + "m");
+        distanceSeekbar = view.findViewById(R.id.distance_seekbar);
+        setPriceSeekBar();
+
         sortOptions = new LinearLayout[]{
                 view.findViewById(R.id.sort0),
                 view.findViewById(R.id.sort1),
@@ -94,9 +116,13 @@ public class FilterFragment extends Fragment implements
                 .replace(R.id.date_frame, foodTimePickerFragment)
                 .commit();
 
+        foodTypeSelectorFragment = FoodTypeSelectorFragment.newInstance();
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.dietary_frame, foodTypeSelectorFragment)
+                .commit();
+
         setSortButtons();
         setPirceButtons();
-
         wholeView.setOnTouchListener((v, event) -> {
             showFilter(false, 0);
             return false;
@@ -137,6 +163,23 @@ public class FilterFragment extends Fragment implements
                 wholeView.setVisibility(View.GONE);
             });
         }
+    }
+
+    void setPriceSeekBar(){
+        distanceSeekbar.setMax(10000);
+        distanceSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
+                distance = progress;
+                String priceText = distance + "m";
+                distanceText.setText(priceText);
+                seekBar.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.text_input_shape));
+            }
+        });
     }
 
     void sendFilterOptions(){
