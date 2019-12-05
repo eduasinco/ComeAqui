@@ -71,7 +71,7 @@ public class MapFragment extends Fragment implements
     UpperNotificationFragment upperNotificationFragment;
     SearchFoodFragment searchFoodFragment;
 
-    private ImageButton searchButotn;
+    private FloatingActionButton searchButton;
     FloatingActionButton myFab;
     FloatingActionButton centerButton;
 
@@ -139,7 +139,7 @@ public class MapFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_map, container, false);
-        searchButotn = view.findViewById(R.id.search_button);
+        searchButton = view.findViewById(R.id.search_button);
         mMapView = view.findViewById(R.id.mapView);
         myFab = view.findViewById(R.id.fab);
         centerButton = view.findViewById(R.id.center_map);
@@ -171,7 +171,7 @@ public class MapFragment extends Fragment implements
             e.printStackTrace();
         }
 
-        searchButotn.setOnClickListener(v -> {
+        searchButton.setOnClickListener(v -> {
             showSearch();
         });
 
@@ -188,6 +188,10 @@ public class MapFragment extends Fragment implements
         searchFoodFragment.showSearchList(true);
         myFab.setVisibility(View.GONE);
         centerButton.setVisibility(View.GONE);
+        searchButton.setVisibility(View.GONE);
+        if (currentBigMarker != null){
+            setMarkerDesign(currentBigMarker, false);
+        }
     }
 
     @Override
@@ -327,6 +331,7 @@ public class MapFragment extends Fragment implements
     @SuppressLint("RestrictedApi")
     @Override
     public void closeSearch() {
+        searchButton.setVisibility(View.VISIBLE);
         myFab.setVisibility(View.VISIBLE);
         centerButton.setVisibility(View.VISIBLE);
     }
@@ -467,6 +472,7 @@ public class MapFragment extends Fragment implements
             markersVisibility(false);
             fabCount = 1;
             switchFabImage(true);
+            searchButton.setVisibility(View.GONE);
         } else if (fabCount == 1) {
             Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
             addFood.putExtra("formatted_address" , formatted_address);
@@ -488,6 +494,7 @@ public class MapFragment extends Fragment implements
         fabCount = 0;
         myFab.setVisibility(View.VISIBLE);
         centerButton.setVisibility(View.VISIBLE);
+        searchButton.setVisibility(View.VISIBLE);
         mapPickerFragment.apearMapPicker(false);
     }
 
@@ -525,6 +532,7 @@ public class MapFragment extends Fragment implements
         myFab.setVisibility(View.VISIBLE);
         centerButton.setVisibility(View.VISIBLE);
     }
+
 
     @Override
     public void onListPlaceChosen(String address, String place_id, Double lat, Double lng, HashMap<String, String> address_elements) {
