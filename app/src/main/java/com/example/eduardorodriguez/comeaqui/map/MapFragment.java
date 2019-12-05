@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.google.android.gms.maps.*;
@@ -70,6 +71,7 @@ public class MapFragment extends Fragment implements
     UpperNotificationFragment upperNotificationFragment;
     SearchFoodFragment searchFoodFragment;
 
+    private ImageButton searchButotn;
     FloatingActionButton myFab;
     FloatingActionButton centerButton;
 
@@ -137,6 +139,7 @@ public class MapFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_map, container, false);
+        searchButotn = view.findViewById(R.id.search_button);
         mMapView = view.findViewById(R.id.mapView);
         myFab = view.findViewById(R.id.fab);
         centerButton = view.findViewById(R.id.center_map);
@@ -167,12 +170,24 @@ public class MapFragment extends Fragment implements
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        searchButotn.setOnClickListener(v -> {
+            showSearch();
+        });
+
         myFab.setOnClickListener(v -> fabFunctionality());
         centerButton.setOnClickListener(v -> centerMap());
         mMapView.getMapAsync(mMap -> setMap(mMap));
         setMapMarkers();
         listenToPosts();
         return view;
+    }
+
+    @SuppressLint("RestrictedApi")
+    void showSearch(){
+        searchFoodFragment.showSearchList(true);
+        myFab.setVisibility(View.GONE);
+        centerButton.setVisibility(View.GONE);
     }
 
     @Override
@@ -309,9 +324,11 @@ public class MapFragment extends Fragment implements
 
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void closeSearch() {
-
+        myFab.setVisibility(View.VISIBLE);
+        centerButton.setVisibility(View.VISIBLE);
     }
 
     private class PatchAsyncTask extends AsyncTask<String[], Void, String> {

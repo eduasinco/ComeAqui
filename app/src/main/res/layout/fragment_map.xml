@@ -5,6 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent" android:id="@+id/whole">
+
     <com.mikhaellopez.circularimageview.CircularImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -37,7 +38,7 @@
         android:layout_marginBottom="16dp"
         android:clickable="true"
         android:tint="#FFFFFF"
-        android:visibility="gone"
+        android:visibility="visible"
         app:backgroundTint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/upper_notification"
@@ -51,11 +52,22 @@
         android:layout_marginBottom="16dp"
         android:clickable="true"
         android:tint="#FFFFFF"
-        android:visibility="gone"
+        android:visibility="visible"
         app:backgroundTint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/add_food" />
+
+    <ImageButton
+        android:id="@+id/search_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/close_map" />
 
     <FrameLayout
         android:id="@+id/container1"

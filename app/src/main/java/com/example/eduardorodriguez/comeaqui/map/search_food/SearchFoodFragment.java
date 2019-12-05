@@ -53,7 +53,6 @@ public class SearchFoodFragment extends Fragment implements
 
 
     private CoordinatorLayout cardView;
-    private ImageButton searchButotn;
     private RecyclerView recyclerView;
     private HorizontalScrollView filterScroll;
     private TextView allButton;
@@ -104,7 +103,6 @@ public class SearchFoodFragment extends Fragment implements
         recyclerView = view.findViewById(R.id.food_search_list);
 
         cardView = view.findViewById(R.id.card_view);
-        searchButotn = view.findViewById(R.id.search_button);
         filterScroll = view.findViewById(R.id.filter_scroll);
         allButton = view.findViewById(R.id.all);
         sortButton = view.findViewById(R.id.sort);
@@ -130,9 +128,6 @@ public class SearchFoodFragment extends Fragment implements
 
         showFilterLogic();
 
-        searchButotn.setOnClickListener(v -> {
-            showSearchList(true);
-        });
         delleteAllButton.setOnClickListener(v -> {
             deleteAllFilter();
         });
@@ -142,15 +137,13 @@ public class SearchFoodFragment extends Fragment implements
     public void showSearchList(boolean show){
         int move = cardView.getMeasuredHeight() + ((ConstraintLayout.LayoutParams) cardView.getLayoutParams()).bottomMargin * 2;
         if (show) {
-            searchButotn.setVisibility(View.GONE);
             cardView.setTranslationY(move);
             cardView.setVisibility(View.VISIBLE);
             cardView.animate().translationY(0).setDuration(move / 4).withEndAction(() -> {
                 getFilteredPosts();
             });
         } else {
-            searchButotn.setVisibility(View.VISIBLE);
-            cardView.animate().translationY(move).setDuration(move / 4);
+            cardView.animate().translationY(move).setDuration(move / 4).withEndAction(() -> mListener.closeSearch());
         }
     }
 
