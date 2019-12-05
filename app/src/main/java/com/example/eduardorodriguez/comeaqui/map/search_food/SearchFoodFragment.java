@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
@@ -340,17 +341,29 @@ public class SearchFoodFragment extends Fragment implements
 
     }
 
+    private void hideKeyboard(){
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
 
     @Override
     public void onListPlaceChosen(String address, String place_id, Double lat, Double lng, HashMap<String, String> address_elements) {
         this.lat = lat;
         this.lng = lng;
+
+        hideKeyboard();
+        getDistanceIntoQuery(distance);
+        getFilteredPosts();
     }
 
     @Override
     public void searchButtonClicked() {
         getDistanceIntoQuery(distance);
         getFilteredPosts();
+        hideKeyboard();
     }
 
     @Override
@@ -361,6 +374,7 @@ public class SearchFoodFragment extends Fragment implements
     @Override
     public void closeButtonPressed() {
         showSearchList(false);
+        hideKeyboard();
     }
 
 

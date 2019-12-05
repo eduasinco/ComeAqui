@@ -540,6 +540,18 @@ public class MapFragment extends Fragment implements
         lngToSearch = lng;
         this.address_elements = address_elements;
         mapPickerFragment.showList(false);
+
+        goToSearchedPlace();
+    }
+
+    void goToSearchedPlace(){
+        if (lngToSearch != null && lngToSearch != null) {
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(latToSearch, lngToSearch))
+                    .zoom(15)
+                    .build();
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
     }
 
 
@@ -555,13 +567,7 @@ public class MapFragment extends Fragment implements
 
     @Override
     public void searchButtonClicked() {
-        if (lngToSearch != null && lngToSearch != null) {
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(latToSearch, lngToSearch))
-                    .zoom(15)
-                    .build();
-            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        }
+        goToSearchedPlace();
     }
 
     @Override

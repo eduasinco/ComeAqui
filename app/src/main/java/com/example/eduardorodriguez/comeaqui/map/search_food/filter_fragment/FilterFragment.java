@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -132,6 +133,7 @@ public class FilterFragment extends Fragment implements
             showFilter(false, 0);
         });
 
+        setCardMovement();
         applyFilterButton.setOnClickListener(v -> sendFilterOptions());
         return view;
     }
@@ -163,6 +165,45 @@ public class FilterFragment extends Fragment implements
                 wholeView.setVisibility(View.GONE);
             });
         }
+    }
+
+    float initialY, dY;
+    void setCardMovement(){
+        cardView.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    dY = v.getY() - event.getRawY();
+                    initialY = v.getY();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    if(event.getRawY() + dY > initialY)
+                        v.animate()
+                                .y(event.getRawY() + dY)
+                                .setDuration(0)
+                                .start();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    if (v.getY() - initialY > v.getHeight() / 3){
+                        v.animate()
+                                .y(v.getBottom())
+                                .setDuration(100).withEndAction((
+                        ) ->
+                        {
+                            wholeView.setVisibility(View.GONE);
+                            v.setVisibility(View.GONE);
+                        }).start();
+                    } else {
+                        v.animate()
+                                .y(initialY)
+                                .setDuration(100)
+                                .start();
+                    }
+                    break;
+                default:
+                    return false;
+            }
+            return true;
+        });
     }
 
     void setPriceSeekBar(){
