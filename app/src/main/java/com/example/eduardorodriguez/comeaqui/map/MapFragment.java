@@ -155,6 +155,11 @@ public class MapFragment extends Fragment implements
                 .replace(R.id.container1, mapCardFragment)
                 .commit();
 
+        searchFoodFragment = SearchFoodFragment.newInstance();
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.search_food_frame, searchFoodFragment)
+                .commitAllowingStateLoss();
+
         mMapView.onResume();
         fabCount = 0;
         try {
@@ -235,15 +240,12 @@ public class MapFragment extends Fragment implements
                 lng = location.getLongitude();
                 lat = location.getLatitude();
 
+                searchFoodFragment.setLocation(lat, lng);
+
                 pickedLocation = new LatLng(lat, lng);
                 // For zooming automatically to the location of the marker
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(pickedLocation).zoom(15).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-                searchFoodFragment = SearchFoodFragment.newInstance(lat, lng);
-                getChildFragmentManager().beginTransaction()
-                        .replace(R.id.search_food_frame, searchFoodFragment)
-                        .commitAllowingStateLoss();
 
                 if (!gotTimezone){
                     System.out.println(++c);
@@ -308,10 +310,9 @@ public class MapFragment extends Fragment implements
     }
 
     @Override
-    public void close() {
+    public void closeSearch() {
 
     }
-
 
     private class PatchAsyncTask extends AsyncTask<String[], Void, String> {
         String uri;

@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,6 +17,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -40,8 +43,6 @@ public class SearchFoodFragment extends Fragment implements
         PlaceAutocompleteFragment.OnFragmentInteractionListener,
         FilterFragment.OnFragmentInteractionListener
 {
-    private static final String LAT = "lat";
-    private static final String LNG = "lng";
     private double lat;
     private double lng;
 
@@ -51,6 +52,8 @@ public class SearchFoodFragment extends Fragment implements
     private MySearchFoodRecyclerViewAdapter adapter;
 
 
+    private CoordinatorLayout cardView;
+    private ImageButton searchButotn;
     private RecyclerView recyclerView;
     private HorizontalScrollView filterScroll;
     private TextView allButton;
@@ -78,22 +81,19 @@ public class SearchFoodFragment extends Fragment implements
 
     public SearchFoodFragment() {}
 
-    public static SearchFoodFragment newInstance(double lat, double lng) {
-        SearchFoodFragment fragment = new SearchFoodFragment();
-        Bundle args = new Bundle();
-        args.putDouble(LAT, lat);
-        args.putDouble(LNG, lng);
-        fragment.setArguments(args);
-        return fragment;
+    public static SearchFoodFragment newInstance() {
+        return new SearchFoodFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            lat = getArguments().getDouble(LAT);
-            lng = getArguments().getDouble(LNG);
-        }
+    }
+
+    public void setLocation(double lat, double lng){
+        this.lat = lat;
+        this.lng = lng;
+        getDistanceIntoQuery(INITIAL_DISTANCE);
     }
 
     @Override
@@ -103,6 +103,8 @@ public class SearchFoodFragment extends Fragment implements
 
         recyclerView = view.findViewById(R.id.food_search_list);
 
+        cardView = view.findViewById(R.id.card_view);
+        searchButotn = view.findViewById(R.id.search_button);
         filterScroll = view.findViewById(R.id.filter_scroll);
         allButton = view.findViewById(R.id.all);
         sortButton = view.findViewById(R.id.sort);
@@ -127,13 +129,29 @@ public class SearchFoodFragment extends Fragment implements
         recyclerView.setAdapter(adapter);
 
         showFilterLogic();
-        getDistanceIntoQuery(distance);
-        getFilteredPosts();
 
+        searchButotn.setOnClickListener(v -> {
+            showSearchList(true);
+        });
         delleteAllButton.setOnClickListener(v -> {
             deleteAllFilter();
         });
         return view;
+    }
+
+    public void showSearchList(boolean show){
+        int move = cardView.getMeasuredHeight() + ((ConstraintLayout.LayoutParams) cardView.getLayoutParams()).bottomMargin * 2;
+        if (show) {
+            searchButotn.setVisibility(View.GONE);
+            cardView.setTranslationY(move);
+            cardView.setVisibility(View.VISIBLE);
+            cardView.animate().translationY(0).setDuration(move / 4).withEndAction(() -> {
+                getFilteredPosts();
+            });
+        } else {
+            searchButotn.setVisibility(View.VISIBLE);
+            cardView.animate().translationY(move).setDuration(move / 4);
+        }
     }
 
     void showFilterLogic(){
@@ -227,7 +245,18 @@ public class SearchFoodFragment extends Fragment implements
             query.insert(0, getDistanceIntoQuery(distance));
             query.append("&dietary=").append(dietary);
         }
+
+        checkShowDeleteAll();
         return query.toString();
+    }
+
+    void checkShowDeleteAll(){
+        delleteAllButton.setVisibility(View.GONE);
+        for (boolean b: onFilters){
+            if (b){
+                delleteAllButton.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     @Override
@@ -338,7 +367,7 @@ public class SearchFoodFragment extends Fragment implements
 
     @Override
     public void closeButtonPressed() {
-        mListener.close();
+        showSearchList(false);
     }
 
 
@@ -370,6 +399,6 @@ public class SearchFoodFragment extends Fragment implements
 
     public interface OnListFragmentInteractionListener {
         void onListFragmentInteraction(FoodPost item);
-        void close();
+        void closeSearch();
     }
 }

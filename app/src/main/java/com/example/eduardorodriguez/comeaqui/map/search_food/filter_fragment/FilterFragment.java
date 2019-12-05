@@ -156,9 +156,9 @@ public class FilterFragment extends Fragment implements
 
             cardView.setVisibility(View.VISIBLE);
             cardView.setTranslationY(move);
-            cardView.animate().translationY(0).setDuration(move / 2);
+            cardView.animate().translationY(0).setDuration(move / 4);
         } else {
-            cardView.animate().translationY(move).setDuration(move / 2).withEndAction(() -> {
+            cardView.animate().translationY(move).setDuration(move / 4).withEndAction(() -> {
                 wholeView.setBackgroundColor(Color.TRANSPARENT);
                 wholeView.setVisibility(View.GONE);
             });
@@ -207,7 +207,7 @@ public class FilterFragment extends Fragment implements
                 break;
         }
         mListener.onApplyFilterClicked();
-        wholeView.setVisibility(View.GONE);
+        showFilter(false, 0);
     }
 
     void setSortButtons(){

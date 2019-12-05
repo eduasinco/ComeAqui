@@ -27,6 +27,7 @@ public class MapPickerFragment extends Fragment implements PlaceAutocompleteFrag
 
     private OnFragmentInteractionListener mListener;
 
+    ConstraintLayout wholeView;
     ImageView shadow;
     ImageView hande;
     ImageView shadowPoint;
@@ -54,6 +55,7 @@ public class MapPickerFragment extends Fragment implements PlaceAutocompleteFrag
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map_picker, container, false);
+        wholeView = view.findViewById(R.id.whole);
         mapPickerPanView = view.findViewById(R.id.map_picker_pan);
         shadow = view.findViewById(R.id.shadow);
         hande = view.findViewById(R.id.handle);
@@ -64,7 +66,7 @@ public class MapPickerFragment extends Fragment implements PlaceAutocompleteFrag
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.search_frame, placeAutocompleteFragment)
                 .commit();
-
+        wholeView.setVisibility(View.INVISIBLE);
         return view;
     }
 
@@ -128,6 +130,7 @@ public class MapPickerFragment extends Fragment implements PlaceAutocompleteFrag
         mapPickerPanView.setVisibility(apear ? View.VISIBLE: View.INVISIBLE);
         hande.setVisibility(apear ? View.VISIBLE: View.INVISIBLE);
         shadow.setVisibility(apear ? View.VISIBLE: View.INVISIBLE);
+        wholeView.setVisibility(apear ? View.VISIBLE: View.INVISIBLE);
     }
 
     public void moveMapPicker(boolean up){
