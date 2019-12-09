@@ -118,11 +118,6 @@ public class SearchFoodFragment extends Fragment implements
                 .replace(R.id.search_box, placeAutocompleteFragment)
                 .commit();
 
-        filterFragment = FilterFragment.newInstance(INITIAL_DISTANCE);
-        getChildFragmentManager().beginTransaction()
-                .replace(R.id.filter_frame, filterFragment)
-                .commit();
-
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new MySearchFoodRecyclerViewAdapter(foodPosts, mListener);
         recyclerView.setAdapter(adapter);
@@ -153,7 +148,10 @@ public class SearchFoodFragment extends Fragment implements
         for (int i = 0; i < filters.length; i++){
             final int finalI = i;
             filters[i].setOnClickListener(v -> {
-                filterFragment.showFilter(true, finalI);
+                filterFragment = FilterFragment.newInstance(INITIAL_DISTANCE, finalI);
+                getChildFragmentManager().beginTransaction()
+                        .replace(R.id.filter_frame, filterFragment)
+                        .commit();
             });
         }
     }
@@ -305,7 +303,7 @@ public class SearchFoodFragment extends Fragment implements
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        filterFragment.showFilter(false, 0);
+        filterFragment.showFilter(false);
         return false;
     }
 

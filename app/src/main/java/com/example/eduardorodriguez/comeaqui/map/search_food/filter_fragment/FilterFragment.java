@@ -5,8 +5,11 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -15,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -34,14 +38,15 @@ public class FilterFragment extends Fragment implements
         DatePickerDialog.OnDateSetListener
 {
     private static final String INITIAL_DISTANCE = "distance";
+    private static final String FILTER = "filter";
     private int initial_distance;
 
     private int filter;
 
     private OnFragmentInteractionListener mListener;
 
-    private ConstraintLayout wholeView;
-    private LinearLayout cardView;
+    private CoordinatorLayout wholeView;
+    private NestedScrollView cardView;
     private LinearLayout sortWhole;
     private LinearLayout priceWhole;
     private LinearLayout mealTimeWhole;
@@ -67,12 +72,13 @@ public class FilterFragment extends Fragment implements
 
     public FilterFragment() {}
 
-    public static FilterFragment newInstance(int initial_distance) {
+    public static FilterFragment newInstance(int initial_distance, int filter) {
         FilterFragment fragment = new FilterFragment();
         Bundle args = new Bundle();
         args.putInt(INITIAL_DISTANCE, initial_distance);
+        args.putInt(FILTER, filter);
         fragment.setArguments(args);
-        return new FilterFragment();
+        return fragment;
     }
 
     @Override
@@ -80,6 +86,7 @@ public class FilterFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             initial_distance = getArguments().getInt(INITIAL_DISTANCE);
+            filter = getArguments().getInt(FILTER);
         }
     }
 
@@ -122,25 +129,25 @@ public class FilterFragment extends Fragment implements
                 .replace(R.id.dietary_frame, foodTypeSelectorFragment)
                 .commit();
 
+        showFilter(true);
+
         setSortButtons();
         setPirceButtons();
         wholeView.setOnTouchListener((v, event) -> {
-            showFilter(false, 0);
+            showFilter(false);
             return false;
         });
 
         view.findViewById(R.id.close).setOnClickListener(v -> {
-            showFilter(false, 0);
+            showFilter(false);
         });
 
-        setCardMovement();
         applyFilterButton.setOnClickListener(v -> sendFilterOptions());
         return view;
     }
 
-    public void showFilter(boolean show, int filter){
-        this.filter = filter;
-        int move = cardView.getMeasuredHeight() + ((ConstraintLayout.LayoutParams) cardView.getLayoutParams()).bottomMargin * 2;
+    public void showFilter(boolean show){
+        int move = cardView.getMeasuredHeight() + ((CoordinatorLayout.LayoutParams) cardView.getLayoutParams()).bottomMargin * 2;
         if (show) {
             wholeView.setBackground(ContextCompat.getDrawable(getContext(), R.color.grey_trans));
             wholeView.setVisibility(View.VISIBLE);
@@ -165,45 +172,6 @@ public class FilterFragment extends Fragment implements
                 wholeView.setVisibility(View.GONE);
             });
         }
-    }
-
-    float initialY, dY;
-    void setCardMovement(){
-        cardView.setOnTouchListener((v, event) -> {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    dY = v.getY() - event.getRawY();
-                    initialY = v.getY();
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    if(event.getRawY() + dY > initialY)
-                        v.animate()
-                                .y(event.getRawY() + dY)
-                                .setDuration(0)
-                                .start();
-                    break;
-                case MotionEvent.ACTION_UP:
-                    if (v.getY() - initialY > v.getHeight() / 3){
-                        v.animate()
-                                .y(v.getBottom())
-                                .setDuration(100).withEndAction((
-                        ) ->
-                        {
-                            wholeView.setVisibility(View.GONE);
-                            v.setVisibility(View.GONE);
-                        }).start();
-                    } else {
-                        v.animate()
-                                .y(initialY)
-                                .setDuration(100)
-                                .start();
-                    }
-                    break;
-                default:
-                    return false;
-            }
-            return true;
-        });
     }
 
     void setPriceSeekBar(){
@@ -248,7 +216,7 @@ public class FilterFragment extends Fragment implements
                 break;
         }
         mListener.onApplyFilterClicked();
-        showFilter(false, 0);
+        showFilter(false);
     }
 
     void setSortButtons(){

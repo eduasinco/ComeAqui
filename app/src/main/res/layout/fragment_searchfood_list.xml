@@ -23,7 +23,8 @@
             android:layout_height="match_parent"
             app:layoutManager="LinearLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:listitem="@layout/fragment_searchfood" />
+            tools:listitem="@layout/fragment_searchfood"
+             />
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar"
