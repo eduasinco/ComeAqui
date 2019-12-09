@@ -135,7 +135,7 @@ public class FilterFragment extends Fragment implements
         setPirceButtons();
         wholeView.setOnTouchListener((v, event) -> {
             showFilter(false);
-            return false;
+            return true;
         });
 
         view.findViewById(R.id.close).setOnClickListener(v -> {

@@ -91,7 +91,7 @@ public class SlideHideBehavior extends CoordinatorLayout.Behavior<View> {
     public boolean onNestedFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, @NonNull View target, float velocityX, float velocityY, boolean consumed) {
         System.out.println("VELOCITY: " + velocityY);
         if (cardDragDistance < 0 && velocityY <= -3000) {
-            // restartAnimator(child, child.getHeight(), coordinatorLayout);
+            restartAnimator(child, coordinatorLayout.getHeight(), true, coordinatorLayout);
         }
         return false;
     }
