@@ -3,12 +3,14 @@ package com.example.eduardorodriguez.comeaqui.map;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -19,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.behaviors.DragDownHideBehavior;
+import com.example.eduardorodriguez.comeaqui.general.FoodLookActivity;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodElementFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
@@ -45,6 +48,10 @@ public class MapCardFragment extends Fragment implements DragDownHideBehavior.On
     ImageView starView;
     CardView cardView;
     FoodPost foodPost;
+
+    FoodElementFragment fEFragment;
+
+    boolean validPress = true;
 
     int favouriteId;
 
@@ -73,7 +80,6 @@ public class MapCardFragment extends Fragment implements DragDownHideBehavior.On
         posterImageView = view.findViewById(R.id.poster_image);
         cardView = view.findViewById(R.id.map_card);
 
-
         DragDownHideBehavior.setListener(this);
         // setCardMovement();
         return view;
@@ -91,8 +97,9 @@ public class MapCardFragment extends Fragment implements DragDownHideBehavior.On
     }
 
     void setView(){
+        fEFragment = FoodElementFragment.newInstance(foodPost);
         getChildFragmentManager().beginTransaction()
-                .replace(R.id.container2, FoodElementFragment.newInstance(foodPost))
+                .replace(R.id.container2, fEFragment)
                 .commit();
 
         getChildFragmentManager().beginTransaction()
@@ -102,6 +109,8 @@ public class MapCardFragment extends Fragment implements DragDownHideBehavior.On
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(foodPost.id, 0, 4, 100, 0, 0))
                 .commit();
+
+        setClickLogic();
 
         favouriteId = foodPost.favouriteId;
 
@@ -120,6 +129,32 @@ public class MapCardFragment extends Fragment implements DragDownHideBehavior.On
         Intent k = new Intent(getContext(), ProfileViewActivity.class);
         k.putExtra("userId", foodPost.owner.id);
         startActivity(k);
+    }
+
+    void setClickLogic(){
+        cardView.setOnClickListener( v -> {
+            if (validPress) {
+                fEFragment.showProgress(true);
+                Intent foodLook = new Intent(getContext(), FoodLookActivity.class);
+                foodLook.putExtra("foodPostId", foodPost.id);
+                getContext().startActivity(foodLook);
+            }
+        });
+        cardView.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    validPress = true;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    validPress = false;
+                    break;
+                case MotionEvent.ACTION_UP:
+                    break;
+                default:
+                    return false;
+            }
+            return false;
+        });
     }
 
 

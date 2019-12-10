@@ -24,7 +24,6 @@ public class FoodElementFragment extends Fragment {
     View cardButtonView;
     View cardButtonProgress;
 
-    boolean validPress = true;
 
     boolean annuleFoodLook = false;
 
@@ -69,34 +68,6 @@ public class FoodElementFragment extends Fragment {
                 .replace(R.id.food_types, FoodTypeFragment.newInstance(foodPost.type))
                 .commit();
 
-
-        cardButtonView.setOnClickListener( v -> {
-            if (validPress) {
-                showProgress(true);
-                Intent foodLook = new Intent(getContext(), FoodLookActivity.class);
-                foodLook.putExtra("foodPostId", foodPost.id);
-                getContext().startActivity(foodLook);
-            }
-        });
-        cardButtonView.setOnTouchListener((v, event) -> {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    cardButtonView.setBackgroundColor(Color.TRANSPARENT);
-                    validPress = true;
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    cardButtonView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.box_stroke));
-                    validPress = false;
-                    break;
-                case MotionEvent.ACTION_UP:
-                    cardButtonView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.box_stroke));
-                    break;
-                default:
-                    return false;
-            }
-            return false;
-        });
-
         return view;
     }
 
@@ -106,7 +77,7 @@ public class FoodElementFragment extends Fragment {
         showProgress(false);
     }
 
-    void showProgress(boolean show){
+    public void showProgress(boolean show){
         if (show){
             cardButtonProgress.setVisibility(View.VISIBLE);
             cardButtonView.setVisibility(View.INVISIBLE);
