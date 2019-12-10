@@ -208,11 +208,32 @@ public class AddFoodActivity extends AppCompatActivity implements
         if (foodPostDetail.max_dinners != 0) {
             // dinnerPicker.setText(foodPostDetail.max_dinners);
         }
-        if (foodPostDetail.formatted_address != null && !foodPostDetail.formatted_address.isEmpty() && foodPostDetail.place_id != null && !foodPostDetail.place_id.isEmpty()){
+        if (foodPostDetail.formatted_address != null && !foodPostDetail.formatted_address.isEmpty() && foodPostDetail.place_id != null && !foodPostDetail.place_id.isEmpty()) {
             placeAutocompleteFragment.setAddress(foodPostDetail.formatted_address, foodPostDetail.place_id);
             formatted_address = foodPostDetail.formatted_address;
             place_id = foodPostDetail.place_id;
         }
+
+        address_elements = new HashMap<>();
+        if (foodPostDetail.street_n != null && !foodPostDetail.street_n.isEmpty()){
+            address_elements.put("street_number", foodPostDetail.street_n);
+        }
+        if (foodPostDetail.route != null && !foodPostDetail.route.isEmpty()){
+            address_elements.put("route", foodPostDetail.route);
+        }
+        if (foodPostDetail.administrative_area_level_2 != null && !foodPostDetail.administrative_area_level_2.isEmpty()){
+            address_elements.put("administrative_area_level_2", foodPostDetail.administrative_area_level_2);
+        }
+        if (foodPostDetail.administrative_area_level_1 != null && !foodPostDetail.administrative_area_level_1.isEmpty()){
+            address_elements.put("administrative_area_level_1", foodPostDetail.administrative_area_level_1);
+        }
+        if (foodPostDetail.country != null && !foodPostDetail.country.isEmpty()){
+            address_elements.put("country", foodPostDetail.country);
+        }
+        if (foodPostDetail.postal_code != null && !foodPostDetail.postal_code.isEmpty()){
+            address_elements.put("postal_code", foodPostDetail.postal_code);
+        }
+
         if (!foodPostDetail.type.isEmpty())
             foodTypeSelectorFragment.setTypes(foodPostDetail.type);
         if (!foodPostDetail.start_time.isEmpty() && !foodPostDetail.end_time.isEmpty()) {
@@ -352,12 +373,12 @@ public class AddFoodActivity extends AppCompatActivity implements
             new String[]{"plate_name", foodName.getText().toString()},
             new String[]{"formatted_address", formatted_address == null ? "" : formatted_address},
             new String[]{"place_id", place_id == null ? "" : place_id},
-            new String[]{"street_n", address_elements.containsKey("street_number") ? "" : address_elements.get("street_number")},
-            new String[]{"route", address_elements.containsKey("route") ? "" : address_elements.get("route")},
-            new String[]{"administrative_area_level_2", address_elements.containsKey("administrative_area_level_2") ? "" : address_elements.get("administrative_area_level_2")},
-            new String[]{"administrative_area_level_1", address_elements.containsKey("administrative_area_level_1") ? "" : address_elements.get("administrative_area_level_1")},
-            new String[]{"country", address_elements.containsKey("country") ? "" : address_elements.get("country")},
-            new String[]{"postal_code", address_elements.containsKey("postal_code") ? "" : address_elements.get("postal_code")},
+            new String[]{"street_n", address_elements.containsKey("street_number") ? address_elements.get("street_number") : ""},
+            new String[]{"route", address_elements.containsKey("route") ? address_elements.get("route"): ""},
+            new String[]{"administrative_area_level_2", address_elements.containsKey("administrative_area_level_2") ? address_elements.get("administrative_area_level_2"): ""},
+            new String[]{"administrative_area_level_1", address_elements.containsKey("administrative_area_level_1") ? address_elements.get("administrative_area_level_1"): ""},
+            new String[]{"country", address_elements.containsKey("country") ? address_elements.get("country"): ""},
+            new String[]{"postal_code", address_elements.containsKey("postal_code") ? address_elements.get("postal_code"): ""},
             new String[]{"lat", Double.toString(lat_picked)},
             new String[]{"lng", Double.toString(lng_picked)},
             new String[]{"max_dinners", dinners + ""},
@@ -412,12 +433,12 @@ public class AddFoodActivity extends AppCompatActivity implements
                 new String[]{"plate_name", foodName.getText().toString()},
                 new String[]{"formatted_address", formatted_address == null ? "" : formatted_address},
                 new String[]{"place_id", place_id == null ? "" : place_id},
-                new String[]{"street_n", address_elements.containsKey("street_number") ? "" : address_elements.get("street_number")},
-                new String[]{"route", address_elements.containsKey("route") ? "" : address_elements.get("route")},
-                new String[]{"administrative_area_level_2", address_elements.containsKey("administrative_area_level_2") ? "" : address_elements.get("administrative_area_level_2")},
-                new String[]{"administrative_area_level_1", address_elements.containsKey("administrative_area_level_1") ? "" : address_elements.get("administrative_area_level_1")},
-                new String[]{"country", address_elements.containsKey("country") ? "" : address_elements.get("country")},
-                new String[]{"postal_code", address_elements.containsKey("postal_code") ? "" : address_elements.get("postal_code")},
+                new String[]{"street_n", address_elements.containsKey("street_number") ? address_elements.get("street_number"): ""},
+                new String[]{"route", address_elements.containsKey("route") ? address_elements.get("route"): ""},
+                new String[]{"administrative_area_level_2", address_elements.containsKey("administrative_area_level_2") ? address_elements.get("administrative_area_level_2"): ""},
+                new String[]{"administrative_area_level_1", address_elements.containsKey("administrative_area_level_1") ? address_elements.get("administrative_area_level_1"): ""},
+                new String[]{"country", address_elements.containsKey("country") ? address_elements.get("country"): ""},
+                new String[]{"postal_code", address_elements.containsKey("postal_code") ? address_elements.get("postal_code"): ""},
                 new String[]{"lat", Double.toString(lat_picked)},
                 new String[]{"lng", Double.toString(lng_picked)},
                 new String[]{"max_dinners", dinners + ""},
