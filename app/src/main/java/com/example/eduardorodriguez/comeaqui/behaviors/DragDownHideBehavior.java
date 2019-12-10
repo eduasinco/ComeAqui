@@ -31,9 +31,7 @@ public class DragDownHideBehavior extends CoordinatorLayout.Behavior<View> {
     @Override
     public boolean onLayoutChild(@NonNull CoordinatorLayout parent, @NonNull final View child, int layoutDirection) {
 
-        child.post(() -> {
-            initialY = (int) child.getY();
-        });
+        initialY = child.getTop();
 
         child.setOnTouchListener(new View.OnTouchListener() {
             @Override
