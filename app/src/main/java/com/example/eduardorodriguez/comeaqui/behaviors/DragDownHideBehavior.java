@@ -12,13 +12,15 @@ import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.ViewCompat;
 
+import com.example.eduardorodriguez.comeaqui.R;
+
 public class DragDownHideBehavior extends CoordinatorLayout.Behavior<View> {
 
-    private int mInitialOffset;
     private int cardDragDistance;
     private ObjectAnimator mAnimator;
-    
+
     float initialY, dY;
+    float IMAGE_SCROLL_ZISE = 228;
 
     public DragDownHideBehavior() {
     }
@@ -27,15 +29,24 @@ public class DragDownHideBehavior extends CoordinatorLayout.Behavior<View> {
     }
 
     @Override
-    public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, @NonNull View directTargetChild, @NonNull View target, int axes, int type) {
-        return axes == ViewCompat.SCROLL_AXIS_VERTICAL;
-    }
-
-    @Override
     public boolean onLayoutChild(@NonNull CoordinatorLayout parent, @NonNull final View child, int layoutDirection) {
 
         child.post(() -> {
-            mInitialOffset = (int) child.getY();
+            initialY = (int) child.getY();
+        });
+
+        child.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                //System.out.println("Card Drag:" + cardDragDistance + " Child Height: " + v.getHeight() / 2 + " Child Y: " + child.getY() + " Offset:" + mInitialOffset);
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_UP:
+                        movementLogic(v);
+                        break;
+                }
+
+                return false;
+            }
         });
 
         return super.onLayoutChild(parent, child, layoutDirection);
@@ -43,32 +54,43 @@ public class DragDownHideBehavior extends CoordinatorLayout.Behavior<View> {
 
     @Override
     public boolean onInterceptTouchEvent(@NonNull CoordinatorLayout parent, @NonNull View child, @NonNull MotionEvent ev) {
+        return touchLogic(child, ev);
+    }
+
+    @Override
+    public boolean onTouchEvent(@NonNull CoordinatorLayout parent, @NonNull View child, @NonNull MotionEvent ev) {
+        return touchLogic(child, ev);
+    }
+
+    float lastX, lastY;
+    private boolean touchLogic(View child, MotionEvent ev){
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 dY = child.getY() - ev.getRawY();
-                initialY = child.getY();
+                lastX = ev.getX();
+                lastY = ev.getY();
+
+                System.out.println(lastY + "," + child.getY());
                 break;
             case MotionEvent.ACTION_MOVE:
-                System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-                if(ev.getRawY() + dY > initialY)
+                final float curX = ev.getX();
+                if(ev.getRawY() + dY > initialY) {
                     child.animate()
                             .y(ev.getRawY() + dY)
-                            .setDuration(0).start();
-                break;
-            case MotionEvent.ACTION_UP:
-                if (child.getY() - initialY > child.getHeight() / 3){
-                    child.animate()
-                            .y(child.getBottom())
-                            .setDuration(100).withEndAction((
-                    ) -> {
-                        child.setVisibility(View.GONE);
-                    }).start();
-                } else {
-                    child.animate()
-                            .y(initialY)
-                            .setDuration(100)
+                            .setDuration(0)
                             .start();
                 }
+
+                if (curX != lastX){
+                    if(child.getY() == initialY){
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                movementLogic(child);
                 break;
             default:
                 return false;
@@ -76,40 +98,41 @@ public class DragDownHideBehavior extends CoordinatorLayout.Behavior<View> {
         return false;
     }
 
-    @Override
-    public boolean onTouchEvent(@NonNull CoordinatorLayout parent, @NonNull View child, @NonNull MotionEvent ev) {
-        switch (ev.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                dY = child.getY() - ev.getRawY();
-                initialY = child.getY();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-                if(ev.getRawY() + dY > initialY)
-                    child.animate()
-                            .y(ev.getRawY() + dY)
-                            .setDuration(0)
-                            .start();
-                break;
-            case MotionEvent.ACTION_UP:
-                if (child.getY() - initialY > child.getHeight() / 3){
-                    child.animate()
-                            .y(child.getBottom())
-                            .setDuration(100).withEndAction((
-                    ) -> {
-                        child.setVisibility(View.GONE);
-                    }).start();
-                } else {
-                    child.animate()
-                            .y(initialY)
-                            .setDuration(100)
-                            .start();
-                }
-                break;
-            default:
-                return false;
+    private void movementLogic(View child){
+        if (child.getY() - initialY > child.getHeight() / 2){
+            child.animate()
+                    .y(child.getBottom() * 2)
+                    .setDuration(100).withEndAction((
+            ) -> {
+                child.setVisibility(View.GONE);
+            }).start();
+        } else {
+            child.animate()
+                    .y(initialY)
+                    .setDuration(100)
+                    .start();
         }
-        return false;
+    }
+
+    @Override
+    public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, @NonNull View directTargetChild, @NonNull View target, int axes, int type) {
+        return true;
+    }
+
+    @Override
+    public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, @NonNull View target, int type) {
+        movementLogic(child);
+    }
+
+
+    @Override
+    public void onNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, @NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
+        System.out.println(dxConsumed + "," + dxUnconsumed);
+    }
+
+    @Override
+    public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, @NonNull View target, float velocityX, float velocityY) {
+        return true;
     }
 
 

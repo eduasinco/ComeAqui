@@ -11,9 +11,11 @@ import androidx.fragment.app.Fragment;
 
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -57,6 +59,7 @@ public class HorizontalImageDisplayFragment extends Fragment {
 
     LinearLayout imageList;
     ConstraintLayout parentView;
+    HorizontalScrollView hScrollView;
 
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
@@ -104,6 +107,7 @@ public class HorizontalImageDisplayFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_horizontal_image_display, container, false);
         imageList = view.findViewById(R.id.images_list);
         parentView = view.findViewById(R.id.parent_view);
+        hScrollView = view.findViewById(R.id.h_scroll_view);
         return view;
     }
     void setImages(){
@@ -123,7 +127,9 @@ public class HorizontalImageDisplayFragment extends Fragment {
             final int fi = i;
             if(!io.image.contains("no-image")) {
                 Glide.with(getContext()).load(io.image).into(imageView);
-                imageView.setOnClickListener(v -> goToImageLook(fi));
+                imageView.setOnClickListener(v -> {
+                    goToImageLook(fi);
+                });
             }
         }
     }
