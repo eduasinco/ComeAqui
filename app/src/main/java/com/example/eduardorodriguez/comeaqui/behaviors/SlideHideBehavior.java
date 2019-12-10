@@ -43,12 +43,16 @@ public class SlideHideBehavior extends CoordinatorLayout.Behavior<View> {
 
         child.post(() -> {
             mInitialOffset = (int) child.getY();
+            child.setY(parent.getBottom());
+            child.setVisibility(View.VISIBLE);
+            parent.setVisibility(View.VISIBLE);
+            child.animate().y(mInitialOffset).setDuration(child.getHeight() / 4);
         });
 
         child.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                System.out.println("Card Drag:" + cardDragDistance + " Child Height: " + v.getHeight() / 2 + " Child Y: " + child.getY() + " Offset:" + mInitialOffset);
+                //System.out.println("Card Drag:" + cardDragDistance + " Child Height: " + v.getHeight() / 2 + " Child Y: " + child.getY() + " Offset:" + mInitialOffset);
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_UP:
                         if (-cardDragDistance > v.getHeight() / 2) {
@@ -65,6 +69,7 @@ public class SlideHideBehavior extends CoordinatorLayout.Behavior<View> {
 
         return super.onLayoutChild(parent, child, layoutDirection);
     }
+
 
     @Override
     public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
@@ -89,7 +94,6 @@ public class SlideHideBehavior extends CoordinatorLayout.Behavior<View> {
 
     @Override
     public boolean onNestedFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, @NonNull View target, float velocityX, float velocityY, boolean consumed) {
-        System.out.println("VELOCITY: " + velocityY);
         if (cardDragDistance < 0 && velocityY <= -3000) {
             restartAnimator(child, coordinatorLayout.getHeight(), true, coordinatorLayout);
         }
@@ -97,7 +101,7 @@ public class SlideHideBehavior extends CoordinatorLayout.Behavior<View> {
     }
 
     private int scroll(View child, int dy, int minOffset) {
-        final int initialOffset = child.getTop();
+        final int initialOffset = (int) child.getY();
         //Clamped new position - initial position = offset change
         int delta = clamp(initialOffset - dy, minOffset) - initialOffset;
         child.offsetTopAndBottom(delta);

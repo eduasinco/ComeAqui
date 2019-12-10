@@ -150,7 +150,6 @@ public class FilterFragment extends Fragment implements
         int move = cardView.getMeasuredHeight() + ((CoordinatorLayout.LayoutParams) cardView.getLayoutParams()).bottomMargin * 2;
         if (show) {
             wholeView.setBackground(ContextCompat.getDrawable(getContext(), R.color.grey_trans));
-            wholeView.setVisibility(View.VISIBLE);
             View[] filters = new View[]{sortWhole, priceWhole, mealTimeWhole, distanceWhole, dietaryWhole};
             for (View f : filters) {
                 f.setVisibility(View.GONE);
@@ -162,10 +161,6 @@ public class FilterFragment extends Fragment implements
             } else {
                 filters[filter].setVisibility(View.VISIBLE);
             }
-
-            cardView.setVisibility(View.VISIBLE);
-            cardView.setTranslationY(move);
-            cardView.animate().translationY(0).setDuration(move / 4);
         } else {
             cardView.animate().translationY(move).setDuration(move / 4).withEndAction(() -> {
                 wholeView.setBackgroundColor(Color.TRANSPARENT);

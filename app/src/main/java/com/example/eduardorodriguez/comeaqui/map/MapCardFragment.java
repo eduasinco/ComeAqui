@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -71,50 +72,12 @@ public class MapCardFragment extends Fragment {
         posterImageView = view.findViewById(R.id.poster_image);
         cardView = view.findViewById(R.id.map_card);
 
-        setCardMovement();
+        // setCardMovement();
         return view;
     }
 
-    float initialY, dY;
-    void setCardMovement(){
-        cardView.setOnTouchListener((v, event) -> {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    dY = v.getY() - event.getRawY();
-                    initialY = v.getY();
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    if(event.getRawY() + dY > initialY)
-                        v.animate()
-                                .y(event.getRawY() + dY)
-                                .setDuration(0)
-                                .start();
-                    break;
-                case MotionEvent.ACTION_UP:
-                    if (v.getY() - initialY > v.getHeight() / 3){
-                        v.animate()
-                                .y(v.getBottom())
-                                .setDuration(100).withEndAction((
-                        ) -> {
-                            v.setVisibility(View.GONE);
-                            mListener.onCardClosed();
-                        }).start();
-                    } else {
-                        v.animate()
-                                .y(initialY)
-                                .setDuration(100)
-                                .start();
-                    }
-                    break;
-                default:
-                    return false;
-            }
-            return true;
-        });
-    }
-
     public void moveCardUp(boolean up){
-        int move = cardView.getMeasuredHeight() + ((ConstraintLayout.LayoutParams) cardView.getLayoutParams()).bottomMargin * 2;
+        int move = cardView.getMeasuredHeight() + ((CoordinatorLayout.LayoutParams) cardView.getLayoutParams()).bottomMargin * 2;
         if (up) {
             cardView.setVisibility(View.VISIBLE);
             cardView.setTranslationY(move);
