@@ -186,9 +186,6 @@ public class MapFragment extends Fragment implements
     @SuppressLint("RestrictedApi")
     void showSearch(){
         searchFoodFragment.showSearchList(true);
-        myFab.setVisibility(View.GONE);
-        centerButton.setVisibility(View.GONE);
-        searchButton.setVisibility(View.GONE);
         if (currentBigMarker != null){
             setMarkerDesign(currentBigMarker, false);
         }
@@ -294,8 +291,6 @@ public class MapFragment extends Fragment implements
 
 
         googleMap.setOnMarkerClickListener(marker -> {
-            myFab.setVisibility(View.GONE);
-            centerButton.setVisibility(View.GONE);
 
             final int key = (int) (marker.getTag());
             touchedMarkers.add(key);
@@ -331,9 +326,7 @@ public class MapFragment extends Fragment implements
     @SuppressLint("RestrictedApi")
     @Override
     public void closeSearch() {
-        searchButton.setVisibility(View.VISIBLE);
-        myFab.setVisibility(View.VISIBLE);
-        centerButton.setVisibility(View.VISIBLE);
+
     }
 
     private class PatchAsyncTask extends AsyncTask<String[], Void, String> {
@@ -465,6 +458,7 @@ public class MapFragment extends Fragment implements
         });
     }
 
+    @SuppressLint("RestrictedApi")
     void fabFunctionality(){
         mapPickerFragment.apearMapPicker(true);
         mapPickerFragment.getLocationFromGoogle(pickedLocation);
@@ -472,7 +466,6 @@ public class MapFragment extends Fragment implements
             markersVisibility(false);
             fabCount = 1;
             switchFabImage(true);
-            searchButton.setVisibility(View.GONE);
         } else if (fabCount == 1) {
             Intent addFood = new Intent(getActivity(), AddFoodActivity.class);
             addFood.putExtra("formatted_address" , formatted_address);
@@ -492,9 +485,6 @@ public class MapFragment extends Fragment implements
         markersVisibility(true);
         switchFabImage(false);
         fabCount = 0;
-        myFab.setVisibility(View.VISIBLE);
-        centerButton.setVisibility(View.VISIBLE);
-        searchButton.setVisibility(View.VISIBLE);
         mapPickerFragment.apearMapPicker(false);
     }
 
@@ -529,8 +519,6 @@ public class MapFragment extends Fragment implements
         if (currentBigMarker != null){
             setMarkerDesign(currentBigMarker, false);
         }
-        myFab.setVisibility(View.VISIBLE);
-        centerButton.setVisibility(View.VISIBLE);
     }
 
 

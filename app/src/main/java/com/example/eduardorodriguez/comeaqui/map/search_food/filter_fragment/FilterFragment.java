@@ -169,7 +169,7 @@ public class FilterFragment extends Fragment implements
             }
 
             wholeView.setVisibility(View.VISIBLE);
-            background.animate().alpha(1).setDuration(1000);
+            background.animate().alpha(1).setDuration(250);
         } else {
             cardView.animate().translationY(move).setDuration(move / 4);
             background.animate().alpha(0).setDuration(move / 4).withEndAction(() -> {

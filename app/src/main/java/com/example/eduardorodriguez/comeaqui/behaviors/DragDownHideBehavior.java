@@ -100,7 +100,7 @@ public class DragDownHideBehavior extends CoordinatorLayout.Behavior<View> {
     }
 
     private void movementLogic(View child){
-        if (child.getY() - initialY > child.getHeight() / 2){
+        if (child.getY() - initialY > child.getHeight() / 3){
             child.animate()
                     .y(child.getBottom() * 2)
                     .setDuration(100).withEndAction((
