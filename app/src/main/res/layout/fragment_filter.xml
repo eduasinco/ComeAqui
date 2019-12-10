@@ -5,9 +5,18 @@
     android:id="@+id/whole"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey"
-    android:visibility="visible"
+    android:background="@android:color/transparent"
+    android:visibility="invisible"
     tools:context=".map.search_food.filter_fragment.FilterFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0"
+        android:background="@color/grey_trans"
+        android:clickable="false"
+        android:visibility="visible" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/card_view"
@@ -16,7 +25,7 @@
         android:layout_gravity="bottom"
         android:background="@android:color/white"
         android:orientation="vertical"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_behavior=".behaviors.SlideHideBehavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">

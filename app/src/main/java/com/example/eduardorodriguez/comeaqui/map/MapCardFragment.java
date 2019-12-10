@@ -145,7 +145,7 @@ public class MapCardFragment extends Fragment implements DragDownHideBehavior.On
     }
 
     @Override
-    public void onClose() {
+    public void onCloseBehavior() {
         mListener.onCardClosed();
     }
 

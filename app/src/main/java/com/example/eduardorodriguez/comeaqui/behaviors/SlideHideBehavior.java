@@ -12,8 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.ViewCompat;
 
-import com.google.android.material.internal.CheckableImageButton;
-
 import static androidx.core.view.ViewCompat.TYPE_NON_TOUCH;
 
 public class SlideHideBehavior extends CoordinatorLayout.Behavior<View> {
@@ -27,11 +25,18 @@ public class SlideHideBehavior extends CoordinatorLayout.Behavior<View> {
     private int mScrollingDirection;
 
 
+    private static OnBehaviorListener mListener;
+
     public SlideHideBehavior() {
     }
     public SlideHideBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
+
+    public static void setListener(OnBehaviorListener listener){
+        mListener = listener;
+    }
+
 
     @Override
     public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, @NonNull View directTargetChild, @NonNull View target, int axes, int type) {
@@ -138,7 +143,7 @@ public class SlideHideBehavior extends CoordinatorLayout.Behavior<View> {
             public void onAnimationEnd(Animator animation) {
                 cardDragDistance = 0;
                 if (close){
-                    parent.setBackgroundColor(Color.TRANSPARENT);
+                    mListener.onCloseBehavior();
                 }
             }
 
@@ -151,5 +156,9 @@ public class SlideHideBehavior extends CoordinatorLayout.Behavior<View> {
 
             }
         });
+    }
+
+    public interface OnBehaviorListener {
+        void onCloseBehavior();
     }
 }

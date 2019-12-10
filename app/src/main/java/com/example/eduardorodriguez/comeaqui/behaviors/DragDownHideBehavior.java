@@ -10,9 +10,6 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.view.ViewCompat;
-
-import com.example.eduardorodriguez.comeaqui.R;
 
 public class DragDownHideBehavior extends CoordinatorLayout.Behavior<View> {
 
@@ -109,7 +106,7 @@ public class DragDownHideBehavior extends CoordinatorLayout.Behavior<View> {
                     .setDuration(100).withEndAction((
             ) -> {
                 child.setVisibility(View.GONE);
-                mListener.onClose();
+                mListener.onCloseBehavior();
             }).start();
         } else {
             child.animate()
@@ -177,6 +174,6 @@ public class DragDownHideBehavior extends CoordinatorLayout.Behavior<View> {
     }
 
     public interface OnBehaviorListener {
-        void onClose();
+        void onCloseBehavior();
     }
 }

@@ -24,6 +24,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.behaviors.SlideHideBehavior;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodDateTimePickerFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodTypeSelectorFragment;
 import com.example.eduardorodriguez.comeaqui.map.search_food.SearchFoodFragment;
@@ -35,7 +36,8 @@ import static com.example.eduardorodriguez.comeaqui.R.color.secondary_text_defau
 public class FilterFragment extends Fragment implements
         FoodTypeSelectorFragment.OnFragmentInteractionListener,
         FoodDateTimePickerFragment.OnFragmentInteractionListener,
-        DatePickerDialog.OnDateSetListener
+        DatePickerDialog.OnDateSetListener,
+        SlideHideBehavior.OnBehaviorListener
 {
     private static final String INITIAL_DISTANCE = "distance";
     private static final String FILTER = "filter";
@@ -46,6 +48,7 @@ public class FilterFragment extends Fragment implements
     private OnFragmentInteractionListener mListener;
 
     private CoordinatorLayout wholeView;
+    private View background;
     private NestedScrollView cardView;
     private LinearLayout sortWhole;
     private LinearLayout priceWhole;
@@ -96,6 +99,7 @@ public class FilterFragment extends Fragment implements
         View view = inflater.inflate(R.layout.fragment_filter, container, false);
 
         wholeView = view.findViewById(R.id.whole);
+        background = view.findViewById(R.id.background);
         cardView = view.findViewById(R.id.card_view);
         sortWhole = view.findViewById(R.id.sort_whole);
         priceWhole = view.findViewById(R.id.price_whole);
@@ -129,6 +133,9 @@ public class FilterFragment extends Fragment implements
                 .replace(R.id.dietary_frame, foodTypeSelectorFragment)
                 .commit();
 
+        SlideHideBehavior.setListener(this);
+
+
         showFilter(true);
 
         setSortButtons();
@@ -149,7 +156,6 @@ public class FilterFragment extends Fragment implements
     public void showFilter(boolean show){
         int move = cardView.getMeasuredHeight() + ((CoordinatorLayout.LayoutParams) cardView.getLayoutParams()).bottomMargin * 2;
         if (show) {
-            wholeView.setBackground(ContextCompat.getDrawable(getContext(), R.color.grey_trans));
             View[] filters = new View[]{sortWhole, priceWhole, mealTimeWhole, distanceWhole, dietaryWhole};
             for (View f : filters) {
                 f.setVisibility(View.GONE);
@@ -161,10 +167,13 @@ public class FilterFragment extends Fragment implements
             } else {
                 filters[filter].setVisibility(View.VISIBLE);
             }
+
+            wholeView.setVisibility(View.VISIBLE);
+            background.animate().alpha(1).setDuration(1000);
         } else {
-            cardView.animate().translationY(move).setDuration(move / 4).withEndAction(() -> {
-                wholeView.setBackgroundColor(Color.TRANSPARENT);
-                wholeView.setVisibility(View.GONE);
+            cardView.animate().translationY(move).setDuration(move / 4);
+            background.animate().alpha(0).setDuration(move / 4).withEndAction(() -> {
+                wholeView.setVisibility(View.INVISIBLE);
             });
         }
     }
@@ -287,6 +296,13 @@ public class FilterFragment extends Fragment implements
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         foodTimePickerFragment.onDateSet(view, year, month, dayOfMonth);
+    }
+
+    @Override
+    public void onCloseBehavior() {
+        background.animate().alpha(0).setDuration(100).withEndAction(() -> {
+            wholeView.setVisibility(View.GONE);
+        });
     }
 
     public interface OnFragmentInteractionListener {
