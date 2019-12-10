@@ -19,7 +19,7 @@
         android:clickable="true"
         android:orientation="vertical"
         android:padding="0dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:cardCornerRadius="2dp"
         app:layout_behavior=".behaviors.DragDownHideBehavior"
         app:layout_constraintBottom_toBottomOf="parent"

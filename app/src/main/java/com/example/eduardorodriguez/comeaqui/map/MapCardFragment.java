@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.example.eduardorodriguez.comeaqui.behaviors.DragDownHideBehavior;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodElementFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
@@ -36,7 +37,7 @@ import java.util.concurrent.ExecutionException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
-public class MapCardFragment extends Fragment {
+public class MapCardFragment extends Fragment implements DragDownHideBehavior.OnBehaviorListener {
 
     TextView posterNameView;
     TextView posterUserName;
@@ -72,6 +73,8 @@ public class MapCardFragment extends Fragment {
         posterImageView = view.findViewById(R.id.poster_image);
         cardView = view.findViewById(R.id.map_card);
 
+
+        DragDownHideBehavior.setListener(this);
         // setCardMovement();
         return view;
     }
@@ -139,6 +142,11 @@ public class MapCardFragment extends Fragment {
                 MapFragment.setMarkerDesign(MapFragment.markerHashMap.get(foodPost.id), true);
             }
         });
+    }
+
+    @Override
+    public void onClose() {
+        mListener.onCardClosed();
     }
 
     private class PostAsyncTask extends AsyncTask<String[], Void, String> {

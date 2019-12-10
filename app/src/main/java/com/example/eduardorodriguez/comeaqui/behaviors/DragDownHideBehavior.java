@@ -19,6 +19,8 @@ public class DragDownHideBehavior extends CoordinatorLayout.Behavior<View> {
     private int cardDragDistance;
     private ObjectAnimator mAnimator;
 
+    private static OnBehaviorListener mListener;
+
     float initialY, dY;
     float IMAGE_SCROLL_ZISE = 228;
 
@@ -26,6 +28,10 @@ public class DragDownHideBehavior extends CoordinatorLayout.Behavior<View> {
     }
     public DragDownHideBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
+    }
+
+    public static void setListener(OnBehaviorListener listener){
+        mListener = listener;
     }
 
     @Override
@@ -103,6 +109,7 @@ public class DragDownHideBehavior extends CoordinatorLayout.Behavior<View> {
                     .setDuration(100).withEndAction((
             ) -> {
                 child.setVisibility(View.GONE);
+                mListener.onClose();
             }).start();
         } else {
             child.animate()
@@ -167,5 +174,9 @@ public class DragDownHideBehavior extends CoordinatorLayout.Behavior<View> {
 
             }
         });
+    }
+
+    public interface OnBehaviorListener {
+        void onClose();
     }
 }
