@@ -203,8 +203,10 @@ public class AddFoodActivity extends AppCompatActivity implements
     void setFoodPostIfItHas() {
         if (!foodPostDetail.plate_name.isEmpty())
             foodName.setText(foodPostDetail.plate_name);
-        if (!foodPostDetail.price.isEmpty())
+        if (!foodPostDetail.price.isEmpty()) {
             price.setText(foodPostDetail.price + "$");
+            seekbar.setProgress((int) (Float.parseFloat(foodPostDetail.price) * 100));
+        }
         if (foodPostDetail.max_dinners != 0) {
             // dinnerPicker.setText(foodPostDetail.max_dinners);
         }

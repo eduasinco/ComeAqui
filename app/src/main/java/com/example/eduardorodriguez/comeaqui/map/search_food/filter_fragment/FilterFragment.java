@@ -134,8 +134,6 @@ public class FilterFragment extends Fragment implements
                 .commit();
 
         SlideHideBehavior.setListener(this);
-
-
         showFilter(true);
 
         setSortButtons();
@@ -179,7 +177,7 @@ public class FilterFragment extends Fragment implements
     }
 
     void setPriceSeekBar(){
-        distanceSeekbar.setMax(10000);
+        distanceSeekbar.setMax(1000);
         distanceSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}
@@ -193,6 +191,7 @@ public class FilterFragment extends Fragment implements
                 seekBar.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.text_input_shape));
             }
         });
+        distanceSeekbar.setProgress(initial_distance);
     }
 
     void sendFilterOptions(){

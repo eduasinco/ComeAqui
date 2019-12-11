@@ -65,7 +65,7 @@ public class SearchFoodFragment extends Fragment implements
     private TextView delleteAllButton;
 
     private boolean[] onFilters = new boolean[]{false, false, false, false, false, false};
-    int INITIAL_DISTANCE = 5000;
+    int INITIAL_DISTANCE = 500;
 
     private int sortOption;
     private int priceOption;
@@ -148,7 +148,7 @@ public class SearchFoodFragment extends Fragment implements
         for (int i = 0; i < filters.length; i++){
             final int finalI = i;
             filters[i].setOnClickListener(v -> {
-                filterFragment = FilterFragment.newInstance(INITIAL_DISTANCE, finalI);
+                filterFragment = FilterFragment.newInstance(distance, finalI);
                 getChildFragmentManager().beginTransaction()
                         .replace(R.id.filter_frame, filterFragment)
                         .commit();
