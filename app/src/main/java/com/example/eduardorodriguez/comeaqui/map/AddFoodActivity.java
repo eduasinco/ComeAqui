@@ -401,7 +401,6 @@ public class AddFoodActivity extends AppCompatActivity implements
             new String[]{"visible",  visible ? "true": "false"}
         );
         showProgress(true);
-        addImageFragment.uploadImages();
     }
 
     void getFoodPostDetailsAndSet(int foodPostId){
@@ -487,7 +486,6 @@ public class AddFoodActivity extends AppCompatActivity implements
         protected void onPostExecute(String response) {
             if (response != null){
                 foodPostDetail = new SavedFoodPost(new JsonParser().parse(response).getAsJsonObject());
-                addImageFragment.initializeFoodPost(foodPostDetail);
                 addImageFragment.uploadImages();
             }
             super.onPostExecute(response);

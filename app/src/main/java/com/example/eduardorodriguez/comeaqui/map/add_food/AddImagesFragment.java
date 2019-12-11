@@ -45,7 +45,7 @@ public class AddImagesFragment extends Fragment {
 
     public AddImagesFragment() {}
 
-    public void addImage(Uri uri){
+    public void addImage(Uri uri) {
         imageViews[indexClicked].setImageURI(uri);
         try {
             Bitmap bm = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
