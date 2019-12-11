@@ -18,9 +18,9 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.*;
 
-import com.example.eduardorodriguez.comeaqui.map.add_food.AddImagesFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodDateTimePickerFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.WordLimitEditTextFragment;
+import com.example.eduardorodriguez.comeaqui.map.add_food.add_images.AddImagesFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.SavedFoodPost;
 import com.example.eduardorodriguez.comeaqui.utilities.SelectImageFromFragment;
@@ -149,7 +149,7 @@ public class AddFoodActivity extends AppCompatActivity implements
             foodTimePickerFragment = FoodDateTimePickerFragment.newInstance();
             wordLimitEditTextFragment = WordLimitEditTextFragment.newInstance();
             selectImagesFromFragment = SelectImageFromFragment.newInstance(false);
-            addImageFragment = AddImagesFragment.newInstance(foodPostId);
+            addImageFragment = AddImagesFragment.newInstance();
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.locationAutocomplete, placeAutocompleteFragment)
@@ -177,6 +177,8 @@ public class AddFoodActivity extends AppCompatActivity implements
 
             if (foodPostId != null){
                 getFoodPostDetailsAndSet(foodPostId);
+            } else {
+                saveFoodPost();
             }
         }
 
@@ -363,15 +365,19 @@ public class AddFoodActivity extends AppCompatActivity implements
         });
     }
 
+    void saveFoodPost(){
+        visible = false;
+        if (foodPostDetail == null){
+            postFood();
+        } else {
+            patchFood(foodPostDetail.id);
+        }
+    }
+
     void setOptionsActions(String title){
         switch (title){
             case "Save":
-                visible = false;
-                if (foodPostDetail == null){
-                    postFood();
-                } else {
-                    patchFood(foodPostDetail.id);
-                }
+                saveFoodPost();
                 break;
         }
     }
@@ -429,6 +435,7 @@ public class AddFoodActivity extends AppCompatActivity implements
         protected void onPostExecute(String response) {
             if (response != null){
                 foodPostDetail = new SavedFoodPost(new JsonParser().parse(response).getAsJsonObject());
+                addImageFragment.initializeFoodPost(foodPostDetail.id);
                 setFoodPostIfItHas();
             }
             super.onPostExecute(response);
@@ -485,9 +492,13 @@ public class AddFoodActivity extends AppCompatActivity implements
         protected void onPostExecute(String response) {
             if (response != null){
                 foodPostDetail = new SavedFoodPost(new JsonParser().parse(response).getAsJsonObject());
-                addImageFragment.initializeFoodPostAndImages(foodPostDetail);
-                addImageFragment.uploadImages();
             }
+            if (method.equals("POST")) {
+                addImageFragment.initializeFoodPost(foodPostDetail.id);
+            } else {
+                finish();
+            }
+            showProgress(false);
             super.onPostExecute(response);
         }
     }
@@ -594,12 +605,6 @@ public class AddFoodActivity extends AppCompatActivity implements
     @Override
     public void onAddImage() {
         selectImagesFromFragment.showCard();
-    }
-
-    @Override
-    public void onImageUploadFinished() {
-        showProgress(false);
-        finish();
     }
 
     @Override

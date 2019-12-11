@@ -68,7 +68,7 @@ public class FoodPost implements Serializable {
         images = new ArrayList<>();
         try {
             for (JsonElement je: jo.get("images").getAsJsonArray()){
-                images.add(new FoodPostImageObject(je.getAsJsonObject()));
+                images.add(0, new FoodPostImageObject(je.getAsJsonObject()));
             }
         }catch (Exception ignore){}
 

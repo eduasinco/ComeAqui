@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    tools:context=".map.add_food.AddImagesFragment">
+    tools:context=".map.add_food.add_images.AddImagesFragment">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/back"
@@ -24,6 +24,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/box_thin_stroke">
+
+            <ProgressBar
+                android:id="@+id/progress0"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminateDrawable="@drawable/white_progress"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/image0"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/add_image_0"
@@ -63,6 +75,18 @@
             android:layout_height="match_parent"
             android:background="@drawable/box_thin_stroke">
 
+            <ProgressBar
+                android:id="@+id/progress1"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminateDrawable="@drawable/white_progress"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <ImageView
                 android:id="@+id/add_image_1"
                 android:layout_width="24dp"
@@ -100,6 +124,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/box_thin_stroke">
+
+            <ProgressBar
+                android:id="@+id/progress2"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminateDrawable="@drawable/white_progress"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/image2" />
 
             <ImageView
                 android:id="@+id/add_image_2"

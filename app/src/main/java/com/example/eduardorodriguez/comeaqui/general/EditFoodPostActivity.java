@@ -16,10 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.map.add_food.AddImagesFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodDateTimePickerFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodTypeSelectorFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.WordLimitEditTextFragment;
+import com.example.eduardorodriguez.comeaqui.map.add_food.add_images.AddImagesFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.utilities.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
@@ -96,6 +96,11 @@ public class EditFoodPostActivity extends AppCompatActivity implements
                 .replace(R.id.select_image_from, selectImageFromLayout)
                 .commit();
 
+        addImageFragment = AddImagesFragment.newInstance();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.add_images_frame, addImageFragment)
+                .commit();
+
         edit.setOnClickListener(v -> postEditFood());
         close.setOnClickListener(v -> finish());
     }
@@ -107,12 +112,6 @@ public class EditFoodPostActivity extends AppCompatActivity implements
         foodTypeSelectorFragment.setTypes(foodPostDetail.type);
         time.setText(foodPostDetail.time_to_show);
         price.setText(foodPostDetail.price + "$");
-
-        addImageFragment = AddImagesFragment.newInstance(foodPostDetail.id);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.add_images_frame, addImageFragment)
-                .commit();
-
     }
 
     void showProgress(boolean show){
@@ -134,7 +133,6 @@ public class EditFoodPostActivity extends AppCompatActivity implements
     void edit(){
         patchPost();
         showProgress(true);
-        addImageFragment.uploadImages();
     }
 
     void patchPost(){
@@ -165,6 +163,8 @@ public class EditFoodPostActivity extends AppCompatActivity implements
         }
         @Override
         protected void onPostExecute(String response) {
+            showProgress(false);
+            finish();
             super.onPostExecute(response);
         }
     }
@@ -195,11 +195,6 @@ public class EditFoodPostActivity extends AppCompatActivity implements
         selectImageFromLayout.showCard();
     }
 
-    @Override
-    public void onImageUploadFinished() {
-        showProgress(false);
-        finish();
-    }
 
     @Override
     public void onFragmentInteraction(boolean[] pressed) {
@@ -250,6 +245,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
         protected void onPostExecute(String response) {
             if (response != null){
                 foodPostDetail = new FoodPostDetail(new JsonParser().parse(response).getAsJsonObject());
+                addImageFragment.initializeFoodPost(foodPostDetail.id);
                 setViewDetails();
             }
             showProgress(false);

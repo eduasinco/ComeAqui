@@ -61,7 +61,7 @@ public class ImageLookActivity extends AppCompatActivity {
     }
 
     void deleteImage(int imageId){
-        tasks.add(new DeleteImageAsyncTaks(getResources().getString(R.string.server) + "/food_images/" + imageId + "/").execute());
+        tasks.add(new DeleteImageAsyncTaks(getResources().getString(R.string.server) + "/image/" + imageId + "/").execute());
     }
     class DeleteImageAsyncTaks extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -79,13 +79,15 @@ public class ImageLookActivity extends AppCompatActivity {
         }
         @Override
         protected void onPostExecute(String response) {
-            if (response != null){}
+            if (response != null){
+                finish();
+            }
             super.onPostExecute(response);
         }
     }
 
     void getFoodPostImage(int imageId) {
-        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/food_images/" + imageId + "/").execute());
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/image/" + imageId + "/").execute());
     }
 
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
