@@ -216,11 +216,13 @@ public class MapFragment extends Fragment implements
                                 marker.remove();
                             }
                         } else {
-                            foodPostHashMap.put(fp.id, fp);
-                            Marker marker =  googleMap.addMarker(new MarkerOptions().position(new LatLng(fp.lat, fp.lng)));
-                            marker.setTag(fp.id);
-                            setMarkerIcon(marker, fp.favourite ? R.drawable.map_icon_favourite : R.drawable.map_icon);
-                            markerHashMap.put(fp.id, marker);
+                            if (!foodPostHashMap.containsKey(fp.id)){
+                                foodPostHashMap.put(fp.id, fp);
+                                Marker marker =  googleMap.addMarker(new MarkerOptions().position(new LatLng(fp.lat, fp.lng)));
+                                marker.setTag(fp.id);
+                                setMarkerIcon(marker, fp.favourite ? R.drawable.map_icon_favourite : R.drawable.map_icon);
+                                markerHashMap.put(fp.id, marker);
+                            }
                         }
                     });
                 }
