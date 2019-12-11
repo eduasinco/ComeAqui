@@ -174,7 +174,7 @@ public class MapPickerFragment extends Fragment implements PlaceAutocompleteFrag
 
 
     @Override
-    public void onPlacesAutocompleteChangeText() {
+    public void onPlacesAutocompleteChangeText(boolean isAddressValid) {
 
     }
 

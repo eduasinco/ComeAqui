@@ -544,7 +544,7 @@ public class MapFragment extends Fragment implements
 
 
     @Override
-    public void onPlacesAutocompleteChangeText() {
+    public void onPlacesAutocompleteChangeText(boolean isAddressValid) {
 
     }
 

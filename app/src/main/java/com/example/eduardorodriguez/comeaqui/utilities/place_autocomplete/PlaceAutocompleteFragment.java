@@ -246,7 +246,7 @@ public class PlaceAutocompleteFragment extends Fragment {
                 //You need to remove this to run only once
 
                 showList(true);
-                mListener.onPlacesAutocompleteChangeText();
+                mListener.onPlacesAutocompleteChangeText(placeClicked);
                 handler.removeCallbacks(input_finish_checker);
                 placeClicked = false;
             }
@@ -276,12 +276,12 @@ public class PlaceAutocompleteFragment extends Fragment {
                         + " must implement OnFragmentInteractionListener");
             }
         }
-
     }
 
     public void setAddress(String text, String id){
         addressView.setText(text);
         placeClicked = true;
+        mListener.onPlacesAutocompleteChangeText(placeClicked);
     }
 
     private void hideKeyboard(){
@@ -308,7 +308,7 @@ public class PlaceAutocompleteFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void onListPlaceChosen(String address, String place_id, Double lat, Double lng, HashMap<String, String> address_elements);
-        void onPlacesAutocompleteChangeText();
+        void onPlacesAutocompleteChangeText(boolean isAddressValid);
         void closeButtonPressed();
         void searchButtonClicked();
     }

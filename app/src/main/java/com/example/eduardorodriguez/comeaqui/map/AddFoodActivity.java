@@ -215,7 +215,12 @@ public class AddFoodActivity extends AppCompatActivity implements
             formatted_address = foodPostDetail.formatted_address;
             place_id = foodPostDetail.place_id;
         }
-
+        if (foodPostDetail.lat != null){
+            lat_picked = foodPostDetail.lat;
+        }
+        if (foodPostDetail.lng != null){
+            lng_picked = foodPostDetail.lng;
+        }
         address_elements = new HashMap<>();
         if (foodPostDetail.street_n != null && !foodPostDetail.street_n.isEmpty()){
             address_elements.put("street_number", foodPostDetail.street_n);
@@ -557,8 +562,8 @@ public class AddFoodActivity extends AppCompatActivity implements
         this.isAddressValid = true;
     }
     @Override
-    public void onPlacesAutocompleteChangeText() {
-        this.isAddressValid = false;
+    public void onPlacesAutocompleteChangeText(boolean isAddressValid) {
+        this.isAddressValid = isAddressValid;
     }
 
     @Override

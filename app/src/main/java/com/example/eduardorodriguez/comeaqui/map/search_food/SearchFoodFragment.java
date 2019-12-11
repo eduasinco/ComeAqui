@@ -365,9 +365,7 @@ public class SearchFoodFragment extends Fragment implements
     }
 
     @Override
-    public void onPlacesAutocompleteChangeText() {
-
-    }
+    public void onPlacesAutocompleteChangeText(boolean isAddressValid) {}
 
     @Override
     public void closeButtonPressed() {
