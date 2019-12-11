@@ -45,7 +45,7 @@ public class AddImagesFragment extends Fragment {
 
     public AddImagesFragment() {}
 
-    public void addImage(Uri uri) {
+    public void addImage(Uri uri){
         imageViews[indexClicked].setImageURI(uri);
         try {
             Bitmap bm = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
@@ -59,7 +59,7 @@ public class AddImagesFragment extends Fragment {
         setImageAbailable();
     }
 
-    public void initializeFoodPost(FoodPost foodPostDetail){
+    public void initializeFoodPostAndImages(FoodPost foodPostDetail){
         this.foodPostDetail = foodPostDetail;
         for (int i = 0; i < foodPostDetail.images.size(); i++){
             if(!foodPostDetail.images.get(i).image.contains("no-image")){
@@ -156,7 +156,7 @@ public class AddImagesFragment extends Fragment {
         @Override
         protected void onPostExecute(String response) {
             if (response != null){
-                initializeFoodPost(new SavedFoodPost(new JsonParser().parse(response).getAsJsonObject()));
+                initializeFoodPostAndImages(new SavedFoodPost(new JsonParser().parse(response).getAsJsonObject()));
                 setImageAbailable();
             }
             super.onPostExecute(response);
@@ -164,7 +164,7 @@ public class AddImagesFragment extends Fragment {
     }
 
     public void uploadImages(){
-        List<Bitmap> bitmapsToPost = imageBitmaps.subList(foodPostDetail.images.size(), imageBitmaps.size());
+        List<Bitmap> bitmapsToPost = ((List<Bitmap>) imageBitmaps.clone()).subList(foodPostDetail.images.size(), imageBitmaps.size());
         PostImagesAsyncTask postI = new PostImagesAsyncTask(
                 getResources().getString(R.string.server) + "/add_food_images/" + foodPostDetail.id + "/",
                 bitmapsToPost

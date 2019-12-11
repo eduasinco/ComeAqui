@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
 import com.example.eduardorodriguez.comeaqui.map.add_food.AddImagesFragment;
@@ -486,6 +485,7 @@ public class AddFoodActivity extends AppCompatActivity implements
         protected void onPostExecute(String response) {
             if (response != null){
                 foodPostDetail = new SavedFoodPost(new JsonParser().parse(response).getAsJsonObject());
+                addImageFragment.initializeFoodPostAndImages(foodPostDetail);
                 addImageFragment.uploadImages();
             }
             super.onPostExecute(response);
