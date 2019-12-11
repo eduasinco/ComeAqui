@@ -18,7 +18,7 @@ import com.example.eduardorodriguez.comeaqui.profile.settings.SettingsActivity;
 import com.example.eduardorodriguez.comeaqui.profile.user_posts.UserPostFragment;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.SelectImageFromFragment;
-import com.example.eduardorodriguez.comeaqui.utilities.image_view_pager.ImageLookActivity;
+import com.example.eduardorodriguez.comeaqui.utilities.image_view_pager.ImagePagerActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.ProfileImageGalleryFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 import com.google.android.material.tabs.TabLayout;
@@ -190,7 +190,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         if(!user.profile_photo.contains("no-image")) {
             Glide.with(view.getContext()).load(user.profile_photo).into(profileImageView);
             profileImageView.setOnClickListener((v) -> {
-                Intent imageLook = new Intent(getContext(), ImageLookActivity.class);
+                Intent imageLook = new Intent(getContext(), ImagePagerActivity.class);
                 ArrayList<String> urls = new ArrayList<>();
                 urls.add(user.profile_photo);
                 imageLook.putExtra("image_urls", urls);
@@ -200,7 +200,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         if(!user.background_photo.contains("no-image")) {
             Glide.with(view.getContext()).load(user.background_photo).into(backGroundImage);
             backGroundImage.setOnClickListener((v) -> {
-                Intent imageLook = new Intent(getContext(), ImageLookActivity.class);
+                Intent imageLook = new Intent(getContext(), ImagePagerActivity.class);
                 ArrayList<String> urls = new ArrayList<>();
                 urls.add(user.background_photo);
                 imageLook.putExtra("image_urls", urls);

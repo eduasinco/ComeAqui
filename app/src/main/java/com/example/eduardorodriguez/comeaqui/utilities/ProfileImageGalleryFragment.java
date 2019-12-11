@@ -20,7 +20,7 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostImageObject;
 
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
-import com.example.eduardorodriguez.comeaqui.utilities.image_view_pager.ImageLookActivity;
+import com.example.eduardorodriguez.comeaqui.utilities.image_view_pager.ImagePagerActivity;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -28,7 +28,6 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 public class ProfileImageGalleryFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -165,7 +164,7 @@ public class ProfileImageGalleryFragment extends Fragment {
                 Glide.with(view.getContext()).load(imageUrl).into(imageView);
 
                 imageView.setOnClickListener((v) -> {
-                    Intent imageLook = new Intent(getContext(), ImageLookActivity.class);
+                    Intent imageLook = new Intent(getContext(), ImagePagerActivity.class);
                     imageLook.putExtra("image_urls", imageUrls);
                     imageLook.putExtra("index", fi);
                     startActivity(imageLook);

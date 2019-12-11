@@ -11,30 +11,24 @@ import androidx.fragment.app.Fragment;
 
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostImageObject;
 
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
-import com.example.eduardorodriguez.comeaqui.utilities.image_view_pager.ImageLookActivity;
+import com.example.eduardorodriguez.comeaqui.utilities.image_view_pager.ImagePagerActivity;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 
 public class HorizontalImageDisplayFragment extends Fragment {
@@ -157,7 +151,7 @@ public class HorizontalImageDisplayFragment extends Fragment {
     }
 
     void goToImageLook(int i){
-        Intent k = new Intent(getContext(), ImageLookActivity.class);
+        Intent k = new Intent(getContext(), ImagePagerActivity.class);
         ArrayList<String> urls = new ArrayList<>();
         for(FoodPostImageObject fio: foodPostImageObjects){
             urls.add(fio.image);

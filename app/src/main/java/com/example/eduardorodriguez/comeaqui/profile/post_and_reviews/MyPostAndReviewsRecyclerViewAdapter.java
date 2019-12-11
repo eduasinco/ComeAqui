@@ -16,7 +16,7 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostImageObject;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostReview;
 import com.example.eduardorodriguez.comeaqui.review.food_review_look.FoodPostReviewLookActivity;
-import com.example.eduardorodriguez.comeaqui.utilities.image_view_pager.ImageLookActivity;
+import com.example.eduardorodriguez.comeaqui.utilities.image_view_pager.ImagePagerActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ public class MyPostAndReviewsRecyclerViewAdapter extends RecyclerView.Adapter<My
             holder.imageView.setVisibility(View.VISIBLE);
             Glide.with(holder.mView.getContext()).load(foodPost.images.get(0).image).into(holder.imageView);
             holder.imageView.setOnClickListener((v) -> {
-                Intent imageLook = new Intent(holder.mView.getContext(), ImageLookActivity.class);
+                Intent imageLook = new Intent(holder.mView.getContext(), ImagePagerActivity.class);
                 ArrayList<String> urls = new ArrayList<>();
                 for(FoodPostImageObject fio: foodPost.images){
                     urls.add(fio.image);

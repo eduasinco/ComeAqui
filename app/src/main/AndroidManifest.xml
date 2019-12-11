@@ -30,7 +30,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".general.EditFoodPostActivity"></activity>
+        <activity android:name=".map.add_food.image_look.ImageLookActivity"></activity>
+        <activity android:name=".general.EditFoodPostActivity" />
         <activity android:name=".general.FoodLookActivity" />
         <activity android:name=".profile.edit_profile.edit_account_details.confirm_email.ConfirmEmailActivity" />
         <activity android:name=".review.food_review_look.ReplyReviewActivity" />
@@ -39,6 +40,7 @@
         <activity android:name=".login_and_register.LoginOrRegisterActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -51,12 +53,13 @@
         <activity android:name=".PrepareActivity">
             <intent-filter>
                 <action android:name="PREPARE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity android:name=".review.GuestsReviewActivity" />
         <activity android:name=".review.ReviewPostActivity" />
-        <activity android:name=".utilities.image_view_pager.ImageLookActivity" />
+        <activity android:name=".utilities.image_view_pager.ImagePagerActivity" />
         <activity android:name=".profile.edit_profile.edit_account_details.payment.AddPaymentMethodActivity" />
         <activity android:name=".profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity" />
         <activity android:name=".profile.edit_profile.edit_account_details.EditAcountDetailsActivity" />
@@ -66,12 +69,11 @@
         <activity android:name=".chat.conversation.ConversationActivity">
             <intent-filter>
                 <action android:name="CONVERSATION" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".chat.ChatActivity">
-
-        </activity>
+        <activity android:name=".chat.ChatActivity"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -80,7 +82,6 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
-
         <service
             android:name=".MyFirebaseMessagingService"
             android:exported="false">
@@ -99,6 +100,7 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -126,7 +128,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
 

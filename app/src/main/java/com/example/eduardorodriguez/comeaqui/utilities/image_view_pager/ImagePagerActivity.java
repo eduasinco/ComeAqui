@@ -1,23 +1,22 @@
 package com.example.eduardorodriguez.comeaqui.utilities.image_view_pager;
 
 import android.content.Intent;
-import android.widget.ImageView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
-import com.bumptech.glide.Glide;
+
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 
 import java.util.ArrayList;
 
-public class ImageLookActivity extends AppCompatActivity {
+public class ImagePagerActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image_look);
+        setContentView(R.layout.activity_image_pager);
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
 
