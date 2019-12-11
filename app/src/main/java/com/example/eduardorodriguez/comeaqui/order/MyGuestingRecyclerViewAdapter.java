@@ -64,7 +64,7 @@ public class MyGuestingRecyclerViewAdapter extends RecyclerView.Adapter<MyGuesti
             orderLook.putExtra("orderId", holder.mItem.id);
             holder.mView.getContext().startActivity(orderLook);
         });
-        holder.dateView.setText(DateFormatting.hYesterdayWeekDay(holder.mItem.createdAt));
+        holder.dateView.setText(holder.mItem.post.time_to_show);
     }
 
     @Override

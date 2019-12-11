@@ -208,9 +208,7 @@ public class FoodLookActivity extends AppCompatActivity {
     }
 
     void setDinners(){
-        dinnersListView.setOnClickListener((v) -> {
-            startActivity(new Intent(this, DinnerListActivity.class).putExtra("foodPostId", foodPostDetail.id));
-        });
+
         dinnerArray = new ImageView[]{
                 findViewById(R.id.dinner0),
                 findViewById(R.id.dinner1),
@@ -222,7 +220,18 @@ public class FoodLookActivity extends AppCompatActivity {
                 findViewById(R.id.dinner7)
         };
         TextView dinnersNumber = findViewById(R.id.dinners_number);
-        dinnersNumber.setText(foodPostDetail.confirmedOrdersList.size() + "/" + foodPostDetail.max_dinners + " dinners for this meal");
+
+        dinnersListView.setOnClickListener((v) -> {
+            if (foodPostDetail.confirmedOrdersList.size() > 0) {
+                startActivity(new Intent(this, DinnerListActivity.class).putExtra("foodPostId", foodPostDetail.id));
+            }
+        });
+
+        if (foodPostDetail.confirmedOrdersList.size() > 0){
+            dinnersNumber.setText(foodPostDetail.confirmedOrdersList.size() + "/" + foodPostDetail.max_dinners + " dinners for this meal");
+        } else {
+            dinnersNumber.setText("No dinners for this meal yet");
+        }
         int i = 0;
         while (i < dinnerArray.length && i < foodPostDetail.confirmedOrdersList.size()){
             if(!foodPostDetail.confirmedOrdersList.get(i).owner.profile_photo.contains("no-image")) {
