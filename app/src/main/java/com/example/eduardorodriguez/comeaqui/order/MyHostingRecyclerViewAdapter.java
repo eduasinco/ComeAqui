@@ -49,6 +49,9 @@ public class MyHostingRecyclerViewAdapter extends RecyclerView.Adapter<MyHosting
 
         if (checkIfInfoMissing(holder.mItem)){
             holder.notCompletedMessage.setVisibility(View.VISIBLE);
+        } else if (!holder.mItem.visible){
+            holder.notCompletedMessage.setVisibility(View.VISIBLE);
+            holder.notCompletedMessage.setText("Meal not posted yet");
         }
 
         if (holder.mItem.images.size() > 0){
@@ -67,7 +70,13 @@ public class MyHostingRecyclerViewAdapter extends RecyclerView.Adapter<MyHosting
     }
 
     boolean checkIfInfoMissing(FoodPost foodPost){
-        return foodPost.start_time.isEmpty() || foodPost.end_time.isEmpty() || foodPost.formatted_address.isEmpty() || foodPost.formatted_address.isEmpty() || foodPost.price.isEmpty();
+        return
+                foodPost.max_dinners == 0 ||
+                foodPost.start_time.isEmpty() ||
+                foodPost.end_time.isEmpty() ||
+                foodPost.formatted_address.isEmpty() ||
+                foodPost.formatted_address.isEmpty() ||
+                foodPost.price.isEmpty();
     }
 
     @Override

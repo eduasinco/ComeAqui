@@ -208,7 +208,7 @@ public class AddFoodActivity extends AppCompatActivity implements
             seekbar.setProgress((int) (Float.parseFloat(foodPostDetail.price) * 100));
         }
         if (foodPostDetail.max_dinners != 0) {
-            // dinnerPicker.setText(foodPostDetail.max_dinners);
+            dinnerPicker.setText(foodPostDetail.max_dinners + "");
         }
         if (foodPostDetail.formatted_address != null && !foodPostDetail.formatted_address.isEmpty() && foodPostDetail.place_id != null && !foodPostDetail.place_id.isEmpty()) {
             placeAutocompleteFragment.setAddress(foodPostDetail.formatted_address, foodPostDetail.place_id);
@@ -265,8 +265,11 @@ public class AddFoodActivity extends AppCompatActivity implements
             @Override
             public void onTextChanged ( final CharSequence s, int start, int before, int count){
                 dinnerPicker.setBackground(ContextCompat.getDrawable(getApplication(), R.drawable.text_input_shape));
-                if (s.toString().length() > 0)
+                if (s.toString().length() > 0) {
                     dinners = Long.parseLong(s.toString());
+                } else {
+                    dinners = 0;
+                }
             }
             @Override
             public void afterTextChanged ( final Editable s){}
