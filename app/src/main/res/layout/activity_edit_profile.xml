@@ -194,7 +194,7 @@
                     android:layout_weight="0"
                     android:gravity="center_vertical"
                     android:paddingStart="8dp"
-                    android:text="Eduardo"
+                    android:text="-"
                     android:textSize="18sp" />
             </LinearLayout>
 
@@ -221,7 +221,7 @@
                     android:layout_weight="0"
                     android:gravity="center_vertical"
                     android:paddingStart="8dp"
-                    android:text="Rodriguez Perez"
+                    android:text="-"
                     android:textSize="18sp" />
             </LinearLayout>
 
@@ -242,7 +242,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:paddingStart="8dp"
-                    android:text="666 666 666"
+                    android:text="000 000 0000"
                     android:textSize="18sp" />
             </LinearLayout>
 

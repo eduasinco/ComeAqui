@@ -18,6 +18,8 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.login_and_register.forgot_password.ForgotPasswordActivity;
 
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.json.JSONObject;
 
@@ -41,6 +43,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
     View progress;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
+    boolean passwordChanged = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,8 +63,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         setEditText(oldPassword, oldPasswordValtext);
         setPasswordButton.setOnClickListener((v) -> sendEmail());
         goToLogin.setOnClickListener((v) -> {
-            Intent a = new Intent(this, LoginActivity.class);
-            startActivity(a);
+            goToLogin();
         });
         findViewById(R.id.forgot_pw).setOnClickListener((v) -> {
             Intent a = new Intent(this, ForgotPasswordActivity.class);
@@ -72,6 +75,11 @@ public class ChangePasswordActivity extends AppCompatActivity {
         if (emailValid()){
             submit();
         }
+    }
+
+    void goToLogin(){
+        Intent a = new Intent(this, LoginActivity.class);
+        startActivity(a);
     }
 
     boolean emailValid(){
@@ -139,8 +147,16 @@ public class ChangePasswordActivity extends AppCompatActivity {
         }
         @Override
         protected void onPostExecute(String response) {
-            passwordSetText.setVisibility(View.VISIBLE);
-            goToLogin.setVisibility(View.VISIBLE);
+            if (response != null){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                if (jo.get("old_password") != null){
+                    showValtext(oldPasswordValtext, jo.get("old_password").getAsJsonArray().get(0).getAsString(), oldPassword);
+                } else {
+                    passwordSetText.setVisibility(View.VISIBLE);
+                    goToLogin.setVisibility(View.VISIBLE);
+                    passwordChanged = true;
+                }
+            }
             progress.setVisibility(View.GONE);
             super.onPostExecute(response);
         }
@@ -151,5 +167,14 @@ public class ChangePasswordActivity extends AppCompatActivity {
             if (task != null) task.cancel(true);
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void finish() {
+        if (passwordChanged){
+            goToLogin();
+        } else {
+            super.finish();
+        }
     }
 }

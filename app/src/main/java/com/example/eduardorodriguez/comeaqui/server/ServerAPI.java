@@ -27,6 +27,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import static android.content.Context.MODE_PRIVATE;
 
 public class ServerAPI {
@@ -94,9 +96,9 @@ public class ServerAPI {
             connection.connect();
 
             int responseCode = connection.getResponseCode();
-//            if (responseCode != HttpsURLConnection.HTTP_CREATED) {
-//                throw new IOException("HTTP error code: " + responseCode);
-//            }
+            if (responseCode == HttpsURLConnection.HTTP_BAD_REQUEST) {
+                return readStream(connection.getErrorStream());
+            }
             stream = connection.getInputStream();
             if (stream != null) {
                 result = readStream(stream);
