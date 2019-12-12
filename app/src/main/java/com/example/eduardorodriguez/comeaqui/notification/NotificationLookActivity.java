@@ -156,11 +156,11 @@ public class NotificationLookActivity extends AppCompatActivity {
                 orderAction.setBackground(ContextCompat.getDrawable(this, R.color.colorPrimary));
                 break;
             case "CONFIRMED":
-                orderAction.setText("Your order has been confirmed!");
+                orderAction.setText("Meal confirmed!");
                 orderAction.setBackground(ContextCompat.getDrawable(this, R.color.success));
                 break;
             case "CANCELED":
-                orderAction.setText("Canceled the meal");
+                orderAction.setText("Meal canceled");
                 orderAction.setBackground(ContextCompat.getDrawable(this, R.color.canceled));
 
                 if(!orderObject.owner.profile_photo.contains("no-image")){
