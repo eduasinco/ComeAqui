@@ -5,21 +5,30 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 
+
+
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+
+import static com.example.eduardorodriguez.comeaqui.App.USER;
+
 
 public class AddBioActivity extends AppCompatActivity {
 
+    ImageView image;
     EditText bioEditTextView;
+    TextView name;
+    TextView username;
+
     int MAX_NUMBER_OF_LETTER = 101;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
@@ -28,9 +37,15 @@ public class AddBioActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_bio);
         bioEditTextView = findViewById(R.id.bio_edit_text);
+        name = findViewById(R.id.name);
+        username = findViewById(R.id.username);
+        image = findViewById(R.id.poster_image);
         TextView textCountView = findViewById(R.id.text_count);
         Button save = findViewById(R.id.save);
-        Button discard = findViewById(R.id.discard);
+
+        Glide.with(this).load(USER.profile_photo).into(image);
+        name.setText(USER.first_name + " " + USER.last_name);
+        username.setText(USER.username);
 
         bioEditTextView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -50,7 +65,7 @@ public class AddBioActivity extends AppCompatActivity {
             }
         });
 
-        discard.setOnClickListener(v -> finish());
+        findViewById(R.id.back_arrow).setOnClickListener(v -> finish());
         save.setOnClickListener(v -> saveImage());
     }
 

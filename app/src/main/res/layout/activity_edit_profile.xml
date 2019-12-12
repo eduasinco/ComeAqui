@@ -9,198 +9,300 @@
         tools:context=".profile.edit_profile.EditProfileActivity">
 
     <androidx.core.widget.NestedScrollView
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:showIn="@layout/activity_edit_profile"
-            android:background="#FFFFFF"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".profile.edit_profile.EditProfileActivity" android:layout_marginTop="56dp">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="56dp"
+        android:background="#FFFFFF"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".profile.edit_profile.EditProfileActivity"
+        tools:showIn="@layout/activity_edit_profile">
+
         <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:layout_margin="16dp">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:orientation="vertical">
+
             <LinearLayout
-                    android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView9"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Profile Picture"
+                    android:textColor="@android:color/black"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
                 <TextView
-                        android:text="Profile Picture"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:id="@+id/textView9" android:textStyle="bold"
-                        android:textSize="24sp" android:textColor="@android:color/black" android:layout_weight="1"/>
-                <TextView
-                        android:text="Edit"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" android:id="@+id/edit_profile_picture"
-                        android:layout_weight="1" android:textAlignment="textEnd" android:gravity="center_vertical"
-                        android:textColor="@color/colorPrimary" android:textSize="18sp"/>
+                    android:id="@+id/edit_profile_picture"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Edit"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp" />
             </LinearLayout>
+
             <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <com.mikhaellopez.circularimageview.CircularImageView
-                        android:layout_width="150dp"
-                        android:layout_height="150dp"
-                        android:src="@drawable/no_profile_photo"
-                        app:civ_border_color="@android:color/white"
-                        app:civ_shadow="false"
-                        app:civ_shadow_color="@color/colorPrimaryDark"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        android:id="@+id/profile_image"
-                        app:srcCompat="@drawable/dairyfill"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:layout_gravity="center"/>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-            <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                <TextView
-                        android:text="Cover Photo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:id="@+id/textView16" android:textStyle="bold"
-                        android:textSize="24sp" android:textColor="@android:color/black" android:layout_weight="1"/>
-                <TextView
-                        android:text="Edit"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" android:id="@+id/edit_cover_photo"
-                        android:layout_weight="1" android:textAlignment="textEnd" android:gravity="center_vertical"
-                        android:textColor="@color/colorPrimary" android:textSize="18sp"/>
-            </LinearLayout>
-            <ImageView
-                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                    android:layout_width="wrap_content"
-                    android:layout_height="200dp" app:srcCompat="@drawable/background"
-                    android:id="@+id/background_image" android:scaleType="centerCrop"/>
-            <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                <TextView
-                        android:text="Bio"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:id="@+id/textView22" android:textStyle="bold"
-                        android:textSize="24sp" android:textColor="@android:color/black" android:layout_weight="1"/>
-                <TextView
-                        android:text="Add"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" android:id="@+id/add_bio"
-                        android:layout_weight="1" android:textAlignment="textEnd" android:gravity="center_vertical"
-                        android:textColor="@color/colorPrimary" android:textSize="18sp"/>
-            </LinearLayout>
-            <TextView
-                    android:id="@+id/bioText"
-                    android:background="#ffffff"
-                    android:layout_height="50dp"
-                    android:layout_width="match_parent"
-                    android:scrollHorizontally="false"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:id="@+id/profile_image"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/no_profile_photo"
+                    app:civ_border_color="@android:color/white"
+                    app:civ_shadow="false"
+                    app:civ_shadow_color="@color/colorPrimaryDark"
                     app:layout_constraintEnd_toEndOf="parent"
-                    tools:layout_editor_absoluteY="19dp" android:textAlignment="center"
-                    android:text="add your new bio..." android:gravity="center_vertical"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/dairyfill" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <LinearLayout
-                    android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView16"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Cover Photo"
+                    android:textColor="@android:color/black"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
                 <TextView
-                        android:text="Account Details"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:id="@+id/textView23" android:textStyle="bold"
-                        android:textSize="24sp" android:textColor="@android:color/black" android:layout_weight="1"/>
-                <TextView
-                        android:text="Edit"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" android:id="@+id/edit_account_details"
-                        android:layout_weight="1" android:textAlignment="textEnd" android:gravity="center_vertical"
-                        android:textColor="@color/colorPrimary" android:textSize="18sp"/>
+                    android:id="@+id/edit_cover_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Edit"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp" />
             </LinearLayout>
+
+            <ImageView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/background_image"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/background" />
+
             <LinearLayout
-                    android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView22"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Bio"
+                    android:textColor="@android:color/black"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
                 <TextView
-                        android:text="Name:"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:id="@+id/textView2"
-                        app:layout_constraintTop_toBottomOf="@+id/profile_image"
-                        app:layout_constraintStart_toStartOf="parent" android:textSize="18sp"
-                        android:layout_weight="0"
-                        android:gravity="center_vertical" android:textStyle="bold"/>
-                <TextView
-                        android:text="Eduardo"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" android:id="@+id/first_name" android:layout_weight="0"
-                        android:gravity="center_vertical" android:textSize="18sp" android:paddingStart="8dp"/>
+                    android:id="@+id/add_bio"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Add"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/bioText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="#ffffff"
+                android:gravity="center_vertical"
+                android:scrollHorizontally="false"
+                android:text="add your new bio..."
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:layout_editor_absoluteY="19dp" />
+
             <LinearLayout
-                    android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView23"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Account Details"
+                    android:textColor="@android:color/black"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
                 <TextView
-                        android:text="Surname:"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        app:layout_constraintTop_toBottomOf="@+id/profile_image"
-                        app:layout_constraintStart_toStartOf="parent" android:textSize="18sp"
-                        android:layout_weight="0"
-                        android:gravity="center_vertical" android:textStyle="bold"/>
-                <TextView
-                        android:text="Rodriguez Perez"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" android:id="@+id/last_name" android:layout_weight="0"
-                        android:gravity="center_vertical" android:textSize="18sp" android:paddingStart="8dp"/>
+                    android:id="@+id/edit_account_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Edit"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp" />
             </LinearLayout>
+
             <LinearLayout
-                    android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    android:gravity="center_vertical"
+                    android:text="Name:"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/profile_image" />
+
+                <TextView
+                    android:id="@+id/first_name"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp">
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    android:gravity="center_vertical"
+                    android:paddingStart="8dp"
+                    android:text="Eduardo"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    android:gravity="center_vertical"
+                    android:text="Surname:"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/profile_image" />
+
+                <TextView
+                    android:id="@+id/last_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    android:gravity="center_vertical"
+                    android:paddingStart="8dp"
+                    android:text="Rodriguez Perez"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
                 <ImageView
-                        android:layout_width="19dp"
-                        android:layout_height="match_parent" app:srcCompat="@drawable/phone_icon"
-                />
+                    android:layout_width="19dp"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/phone_icon" />
+
                 <TextView
-                        android:text="666 666 666"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" android:id="@+id/phone_number" android:layout_weight="1"
-                        android:gravity="center_vertical" android:textSize="18sp" android:paddingStart="8dp"/>
-            </LinearLayout>
-            <LinearLayout
-                    android:orientation="horizontal"
+                    android:id="@+id/phone_number"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp">
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingStart="8dp"
+                    android:text="666 666 666"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
                 <ImageView
-                        android:layout_width="27dp"
-                        android:layout_height="match_parent"
-                        app:srcCompat="@drawable/credit_card"
-                        android:id="@+id/imageView11"/>
+                    android:id="@+id/imageView11"
+                    android:layout_width="27dp"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/credit_card" />
+
                 <TextView
-                        android:text="0000-0000-0000-0000"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" android:id="@+id/credit_card_number"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical" android:textSize="18sp" android:paddingStart="8dp"/>
+                    android:id="@+id/credit_card_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingStart="8dp"
+                    android:text="0000-0000-0000-0000"
+                    android:textSize="18sp" />
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-    <LinearLayout
-            android:background="@color/colorPrimary"
-            android:orientation="horizontal"
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="0dp">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp" android:gravity="center_vertical" android:paddingStart="8dp">
-        <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp" app:srcCompat="@drawable/back_white" android:id="@+id/back_arrow"
-                android:layout_weight="0"/>
-        <TextView
-                android:text="Edit Profile"
+            android:layout_height="56dp"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/back_arrow"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/back_arrow_white" />
+
+            <TextView
+                android:id="@+id/textView6"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent" android:id="@+id/textView6" android:layout_weight="0"
-                android:gravity="center_vertical" android:textStyle="bold" android:textSize="24sp"
-                android:textColor="@android:color/white" android:paddingStart="24dp"/>
-    </LinearLayout>
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_weight="0"
+                android:gravity="center_vertical"
+                android:text="Edit Profile"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
     <FrameLayout
         android:id="@+id/select_from"

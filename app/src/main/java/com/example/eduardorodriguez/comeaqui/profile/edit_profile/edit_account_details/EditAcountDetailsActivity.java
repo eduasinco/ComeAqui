@@ -66,6 +66,7 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
         emailAddress.setOnClickListener(v -> goToChangeEmail());
         save.setOnClickListener(v -> saveData());
         changePassword.setOnClickListener((v) -> startActivity(new Intent(this, ChangePasswordActivity.class)));
+        findViewById(R.id.back_arrow).setOnClickListener(v -> finish());
     }
 
     public void initializeUser(){
