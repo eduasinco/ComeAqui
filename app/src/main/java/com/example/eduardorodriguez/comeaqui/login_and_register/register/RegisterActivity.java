@@ -99,6 +99,8 @@ public class RegisterActivity extends AppCompatActivity {
         registerButton.setOnClickListener((v) -> {
             register();
         });
+
+        backArrow.setOnClickListener(v -> finish());
     }
 
     void register(){

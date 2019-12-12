@@ -29,8 +29,17 @@ public class VerifyEmailActivity extends AppCompatActivity {
         }
 
         goToLogin.setOnClickListener((v) -> {
-            Intent login = new Intent(this, LoginActivity.class);
-            startActivity(login);
+            goToLogin();
         });
+    }
+
+    void goToLogin(){
+        Intent login = new Intent(this, LoginActivity.class);
+        startActivity(login);
+    }
+
+    @Override
+    public void finish() {
+        goToLogin();
     }
 }
