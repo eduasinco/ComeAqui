@@ -118,45 +118,13 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     void submit(){
-        try{
-            showProgress(true);
-            new RegisterAsyncTask(getResources().getString(R.string.server) + "/register/"){
-                @Override
-                protected void onPostExecute(String response) {
-                    JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
-                    try{
-                        User newUser = new User(jo);
-                        goToVerifyEmailActivity(newUser);
-                    } catch (Exception e){
-                        if (jo != null && jo.get("username") != null && jo.get("username").isJsonArray()){
-                            showValtext(usernameValtext, jo.get("username").getAsJsonArray().get(0).getAsString(), username);
-                            validationText.setVisibility(View.VISIBLE);
-                        }
-                        if (jo != null && jo.get("email") != null && jo.get("email").isJsonArray()){
-                            showValtext(emailValtext, jo.get("email").getAsJsonArray().get(0).getAsString(), email);
-                            validationText.setVisibility(View.VISIBLE);
-                        }
-                        showProgress(false);
-                    }
-                    super.onPostExecute(response);
-                }
-            }.execute(
-                    new String[]{"username", username.getText().toString()},
-                    new String[]{"first_name", name.getText().toString()},
-                    new String[]{"last_name", surname.getText().toString()},
-                    new String[]{"email", email.getText().toString()},
-                    new String[]{"password", password.getText().toString()}
-            ).get(10, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            showProgress(false);
-            Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
-        } catch (
-        TimeoutException e) {
-            e.printStackTrace();
-            showProgress(false);
-            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
-        }
+        new RegisterAsyncTask(getResources().getString(R.string.server) + "/register/").execute(
+                new String[]{"username", username.getText().toString()},
+                new String[]{"first_name", name.getText().toString()},
+                new String[]{"last_name", surname.getText().toString()},
+                new String[]{"email", email.getText().toString()},
+                new String[]{"password", password.getText().toString()}
+        );
     }
 
     void goToVerifyEmailActivity(User newUser){
@@ -237,6 +205,13 @@ public class RegisterActivity extends AppCompatActivity {
         }
         String uri;
         public Bitmap bitmap;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgress(true);
+        }
+
         @Override
         protected String doInBackground(String[]... params)
         {
@@ -280,10 +255,26 @@ public class RegisterActivity extends AppCompatActivity {
                 return null;
             }
         }
-
         @Override
         protected void onPostExecute(String response) {
-            if(response != null) {}
+            if(response != null) {
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                try{
+                    User newUser = new User(jo);
+                    goToVerifyEmailActivity(newUser);
+                } catch (Exception e){
+                    if (jo != null && jo.get("username") != null && jo.get("username").isJsonArray()){
+                        showValtext(usernameValtext, jo.get("username").getAsJsonArray().get(0).getAsString(), username);
+                        validationText.setVisibility(View.VISIBLE);
+                    }
+                    if (jo != null && jo.get("email") != null && jo.get("email").isJsonArray()){
+                        showValtext(emailValtext, jo.get("email").getAsJsonArray().get(0).getAsString(), email);
+                        validationText.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+            showProgress(false);
+            super.onPostExecute(response);
         }
     }
 }
