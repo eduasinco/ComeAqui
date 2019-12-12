@@ -2,13 +2,14 @@ package com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import com.example.eduardorodriguez.comeaqui.MainActivity;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.login_and_register.ChangePasswordActivity;
 import com.example.eduardorodriguez.comeaqui.objects.User;
@@ -22,8 +23,6 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -34,6 +33,8 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
     private TextView phoneNumber;
     private TextView emailAddress;
     private Button changePassword;
+    private TextView save;
+    private ProgressBar progressBar;
 
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
@@ -53,7 +54,8 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
         phoneNumber = findViewById(R.id.phone_number);
         emailAddress = findViewById(R.id.email_address);
         changePassword = findViewById(R.id.change_password);
-        TextView save = findViewById(R.id.save);
+        save = findViewById(R.id.save);
+        progressBar = findViewById(R.id.progressBar);
         LinearLayout paymentMethod = findViewById(R.id.payment_method);
 
         initializeUser();
@@ -109,6 +111,11 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
         startActivity(confirmEmail);
     }
 
+    void showProgress(boolean show){
+        progressBar.setVisibility(show ? View.VISIBLE: View.GONE);
+        save.setVisibility(show ? View.GONE: View.VISIBLE);
+    }
+
     void setData(){
         firstName.setText(USER.first_name);
         lastName.setText(USER.last_name);
@@ -129,6 +136,13 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
         public PatchAsyncTask(String uri){
             this.uri = uri;
         }
+
+        @Override
+        protected void onPreExecute() {
+            showProgress(true);
+            super.onPreExecute();
+        }
+
         @Override
         protected String doInBackground(String[]... params) {
             try {
@@ -140,6 +154,7 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
         }
         @Override
         protected void onPostExecute(String response) {
+            showProgress(false);
             finish();
             super.onPostExecute(response);
         }
