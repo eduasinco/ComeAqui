@@ -13,29 +13,29 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.login_and_register.LoginActivity;
+import com.example.eduardorodriguez.comeaqui.objects.User;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import static com.example.eduardorodriguez.comeaqui.server.ServerAPI.readStream;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
 
+    LinearLayout sendEmailFrom;
     TextView emailValtext;
     EditText emailAdress;
     TextView resendPassword;
@@ -43,11 +43,16 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     View progress;
     Button goToLogin;
 
+    boolean passwordChanged = false;
+
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
 
+        sendEmailFrom = findViewById(R.id.send_email_form);
         emailValtext = findViewById(R.id.email_vtext);
         emailAdress = findViewById(R.id.email_address);
         sendPassword = findViewById(R.id.send_code_button);
@@ -66,7 +71,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     void sendEmail(){
         if (emailValid()){
-            submit();
+            submitEmail();
         }
     }
 
@@ -101,72 +106,143 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         });
     }
 
-    void submit(){
-        try {
-            sendPassword.setVisibility(View.GONE);
-            progress.setVisibility(View.VISIBLE);
-            new SendNewPassword("GET", getResources().getString(R.string.server) + "/send_new_password/" + emailAdress.getText() + "/"){
-                @Override
-                protected void onPostExecute(String response) {
-                    if (response != null){
-                        progress.setVisibility(View.GONE);
-                        goToLogin.setVisibility(View.VISIBLE);
+    void goToLogin(){
+        Intent a = new Intent(this, LoginActivity.class);
+        startActivity(a);
+    }
+
+    void showProgress(boolean show){
+        sendPassword.setVisibility(show ? View.GONE : View.VISIBLE);
+        resendPassword.setVisibility(show ? View.GONE : View.VISIBLE);
+        progress.setVisibility(show? View.VISIBLE : View.GONE);
+    }
+
+    void submitEmail(){
+        tasks.add(new SendNewPassword(getResources().getString(R.string.server) + "/send_new_password/" + emailAdress.getText() + "/").execute());
+    }
+    class GetAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetAsyncTask(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            showProgress(true);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                try {
+                    User newUser = new User(jo);
+                    sendEmailFrom.setVisibility(View.GONE);
+                    goToLogin.setVisibility(View.VISIBLE);
+                } catch (Exception e){
+                    if (jo.get("error_message") != null){
+                        showValtext(emailValtext, jo.get("error_message").getAsString(), emailAdress);
                     }
-                    super.onPostExecute(response);
                 }
-            }.execute().get(10, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            sendPassword.setVisibility(View.VISIBLE);
-            progress.setVisibility(View.GONE);
-            Toast.makeText(this, "A problem has occurred", Toast.LENGTH_LONG).show();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            sendPassword.setVisibility(View.VISIBLE);
-            progress.setVisibility(View.GONE);
-            Toast.makeText(this, "Not internet connection", Toast.LENGTH_LONG).show();
+            }
+            showProgress(false);
+            super.onPostExecute(response);
         }
     }
 
     public class  SendNewPassword extends AsyncTask<String[], Void, String> {
         private String uri;
-        public String method;
 
-        public SendNewPassword(String method, String uri){
+        public SendNewPassword(String uri){
             this.uri = uri;
-            this.method = method;
+        }
+        @Override
+        protected void onPreExecute() {
+            showProgress(true);
+            super.onPreExecute();
         }
 
         @Override
         protected String doInBackground(String[]... params)
         {
-            StringBuilder builder = new StringBuilder();
-            HttpClient client = new DefaultHttpClient();
-
-
-            HttpGet httpGet = new HttpGet(this.uri);
-            httpGet.setHeader("Content-Type", "application/json");
+            InputStream stream = null;
+            HttpURLConnection connection = null;
+            String result = null;
             try {
-                HttpResponse response = client.execute(httpGet);
-                StatusLine statusLine = response.getStatusLine();
-                int statusCode = statusLine.getStatusCode();
-                if (statusCode == 200) {
-                    HttpEntity entity = response.getEntity();
-                    InputStream content = entity.getContent();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        builder.append(line);
-                    }
-                    String resp = builder.toString();
-                    return resp;
-                } else {
-                    return null;
+                connection = (HttpURLConnection) new URL(this.uri).openConnection();
+                connection.setReadTimeout(3000);
+                connection.setConnectTimeout(3000);
+                connection.setRequestMethod("GET");
+                connection.setDoInput(true);
+                connection.connect();
+                int responseCode = connection.getResponseCode();
+                if (responseCode == HttpsURLConnection.HTTP_NOT_FOUND) {
+                    return readStream(connection.getErrorStream());
+                }
+                stream = connection.getInputStream();
+                if (stream != null) {
+                    result = readStream(stream);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                return null;
+            } finally {
+                if (stream != null) {
+                    try {
+                        stream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (connection != null) {
+                    connection.disconnect();
+                }
             }
+            return result;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                try {
+                    User newUser = new User(jo);
+                    sendEmailFrom.setVisibility(View.GONE);
+                    goToLogin.setVisibility(View.VISIBLE);
+                    passwordChanged = true;
+                } catch (Exception e){
+                    if (jo.get("error_message") != null){
+                        showValtext(emailValtext, jo.get("error_message").getAsString(), emailAdress);
+                    }
+                }
+            }
+            showProgress(false);
+            resendPassword.setVisibility(View.VISIBLE);
+            super.onPostExecute(response);
+        }
+    }
+    @Override
+    public void onDestroy() {
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public void finish() {
+        if (passwordChanged){
+            goToLogin();
+        } else {
+            super.finish();
         }
     }
 }

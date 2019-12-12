@@ -52,6 +52,10 @@ public class ServerAPI {
 //            if (responseCode != HttpsURLConnection.HTTP_OK) {
 //                throw new IOException("HTTP error code: " + responseCode);
 //            }
+
+            if (responseCode == HttpsURLConnection.HTTP_NOT_FOUND) {
+                return readStream(connection.getErrorStream());
+            }
             stream = connection.getInputStream();
             if (stream != null) {
                 result = readStream(stream);

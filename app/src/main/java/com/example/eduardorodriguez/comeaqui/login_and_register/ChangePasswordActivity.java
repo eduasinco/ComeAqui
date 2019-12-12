@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ import java.util.regex.Pattern;
 
 public class ChangePasswordActivity extends AppCompatActivity {
 
+    LinearLayout setPasswordForm;
     TextView oldPasswordValtext;
     EditText oldPassword;
     EditText newPassword;
@@ -50,6 +52,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
 
+        setPasswordForm = findViewById(R.id.set_password_form);
         oldPasswordValtext = findViewById(R.id.old_password_valtext);
         oldPassword = findViewById(R.id.old_password);
         newPasswordValtext = findViewById(R.id.new_password_valtext);
@@ -125,6 +128,11 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 new String[]{"new_password", newPassword.getText().toString()}
                 ));
     }
+
+    void showProgress(boolean show){
+        progress.setVisibility(show ? View.VISIBLE : View.GONE);
+        setPasswordButton.setVisibility(show ? View.GONE : View.VISIBLE);
+    }
     private class PatchAsyncTask extends AsyncTask<String[], Void, String> {
         String uri;
         public PatchAsyncTask(String uri){
@@ -132,8 +140,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         }
         @Override
         protected void onPreExecute() {
-            passwordSetText.setVisibility(View.GONE);
-            progress.setVisibility(View.VISIBLE);
+            showProgress(true);
             super.onPreExecute();
         }
         @Override
@@ -152,12 +159,13 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 if (jo.get("old_password") != null){
                     showValtext(oldPasswordValtext, jo.get("old_password").getAsJsonArray().get(0).getAsString(), oldPassword);
                 } else {
+                    setPasswordForm.setVisibility(View.GONE);
                     passwordSetText.setVisibility(View.VISIBLE);
                     goToLogin.setVisibility(View.VISIBLE);
                     passwordChanged = true;
                 }
             }
-            progress.setVisibility(View.GONE);
+            showProgress(false);
             super.onPostExecute(response);
         }
     }
