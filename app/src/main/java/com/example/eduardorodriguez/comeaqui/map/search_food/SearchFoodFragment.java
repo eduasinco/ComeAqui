@@ -358,7 +358,7 @@ public class SearchFoodFragment extends Fragment implements
     }
 
     @Override
-    public void searchButtonClicked() {
+    public void myLocationButton() {
         getDistanceIntoQuery(distance);
         getFilteredPosts();
         hideKeyboard();

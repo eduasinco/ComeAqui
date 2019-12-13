@@ -1,6 +1,5 @@
 package com.example.eduardorodriguez.comeaqui.utilities.place_autocomplete;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,7 +21,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -32,16 +30,13 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.TreeMap;
-import java.util.concurrent.TimeUnit;
-
 
 
 public class PlaceAutocompleteFragment extends Fragment {
     private static final String ADDRESS = "address";
     private static final String WITH_CLOSE = "close";
     private String address;
-    private boolean withClose;
+    private boolean searchMode;
     private OnFragmentInteractionListener mListener;
 
 
@@ -50,8 +45,9 @@ public class PlaceAutocompleteFragment extends Fragment {
     TextView loadingView;
     RecyclerView recyclerView;
     View wholePlaceACView;
-    ImageButton searchbutton;
+    ImageButton myLocationButton;
     ImageButton closeButton;
+    ImageButton deleteText;
 
     boolean placeClicked = false;
 
@@ -64,11 +60,11 @@ public class PlaceAutocompleteFragment extends Fragment {
 
     public PlaceAutocompleteFragment() {}
 
-    public static PlaceAutocompleteFragment newInstance(String address, boolean withClose) {
+    public static PlaceAutocompleteFragment newInstance(String address, boolean searchMode) {
         PlaceAutocompleteFragment fragment = new PlaceAutocompleteFragment();
         Bundle args = new Bundle();
         args.putString(ADDRESS, address);
-        args.putBoolean(WITH_CLOSE, withClose);
+        args.putBoolean(WITH_CLOSE, searchMode);
         fragment.setArguments(args);
         return fragment;
     }
@@ -78,7 +74,7 @@ public class PlaceAutocompleteFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             address = getArguments().getString(ADDRESS);
-            withClose = getArguments().getBoolean(WITH_CLOSE);
+            searchMode = getArguments().getBoolean(WITH_CLOSE);
         }
     }
 
@@ -120,18 +116,16 @@ public class PlaceAutocompleteFragment extends Fragment {
         loadingView = view.findViewById(R.id.loading_places);
         recyclerView = view.findViewById(R.id.places_list);
         wholePlaceACView = view.findViewById(R.id.wholePlaceACView);
-        searchbutton = view.findViewById(R.id.search_button);
+        myLocationButton = view.findViewById(R.id.my_locatoin_button);
         closeButton = view.findViewById(R.id.close_button);
+        deleteText = view.findViewById(R.id.delete_text);
 
         loadingView.setVisibility(View.GONE);
         addressView.setText(address);
+        addressView.setText(address);
 
-        if (withClose){
-            closeButton.setVisibility(View.VISIBLE);
-        } else {
-            closeButton.setVisibility(View.GONE);
-        }
-
+        myLocationButton.setVisibility(searchMode ? View.VISIBLE: View.GONE);
+        closeButton.setVisibility(searchMode ? View.VISIBLE: View.GONE);
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -139,9 +133,10 @@ public class PlaceAutocompleteFragment extends Fragment {
         adapter = new MyPlacesAutocompleteRecyclerViewAdapter(data, this, mListener);
         recyclerView.setAdapter(adapter);
 
-        searchbutton.setOnClickListener(v -> mListener.searchButtonClicked());
+        myLocationButton.setOnClickListener(v -> mListener.myLocationButton());
         closeButton.setOnClickListener(v -> mListener.closeButtonPressed());
         detectTypingAndSetLocationPrediction();
+        deleteText.setOnClickListener(v -> addressView.setText(""));
         return view;
     }
 
@@ -254,9 +249,11 @@ public class PlaceAutocompleteFragment extends Fragment {
             public void afterTextChanged ( final Editable s){
                 //avoid triggering event when text is empty
                 if (s.length() > 0) {
+                    deleteText.setVisibility(View.VISIBLE);
                     last_text_edit = System.currentTimeMillis();
                     handler.postDelayed(input_finish_checker, delay);
                 } else {
+                    deleteText.setVisibility(View.GONE);
                     showList(false);
                 }
             }
@@ -310,7 +307,7 @@ public class PlaceAutocompleteFragment extends Fragment {
         void onListPlaceChosen(String address, String place_id, Double lat, Double lng, HashMap<String, String> address_elements);
         void onPlacesAutocompleteChangeText(boolean isAddressValid);
         void closeButtonPressed();
-        void searchButtonClicked();
+        void myLocationButton();
     }
 
 }

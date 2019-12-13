@@ -556,7 +556,7 @@ public class MapFragment extends Fragment implements
     }
 
     @Override
-    public void searchButtonClicked() {
+    public void myLocationButton() {
         goToSearchedPlace();
     }
 

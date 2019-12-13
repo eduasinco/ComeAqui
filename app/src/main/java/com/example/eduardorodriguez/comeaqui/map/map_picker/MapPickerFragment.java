@@ -184,8 +184,8 @@ public class MapPickerFragment extends Fragment implements PlaceAutocompleteFrag
     }
 
     @Override
-    public void searchButtonClicked() {
-        mListener.searchButtonClicked();
+    public void myLocationButton() {
+        mListener.myLocationButton();
     }
 
     public interface OnFragmentInteractionListener extends PlaceAutocompleteFragment.OnFragmentInteractionListener{

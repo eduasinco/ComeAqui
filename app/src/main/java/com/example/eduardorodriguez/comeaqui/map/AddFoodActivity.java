@@ -611,7 +611,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     public void closeButtonPressed() {}
 
     @Override
-    public void searchButtonClicked() {}
+    public void myLocationButton() {}
 
     @Override
     public void onFragmentInteraction() {
