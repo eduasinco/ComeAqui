@@ -36,6 +36,7 @@ import com.example.eduardorodriguez.comeaqui.utilities.message_fragments.OneOpti
 import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.HorizontalImageDisplayFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.message_fragments.TwoOptionsMessageFragment;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.gson.JsonObject;
@@ -46,7 +47,7 @@ import java.util.ArrayList;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
-public class FoodLookActivity extends AppCompatActivity {
+public class FoodLookActivity extends AppCompatActivity implements TwoOptionsMessageFragment.OnFragmentInteractionListener{
 
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbar;
@@ -73,6 +74,8 @@ public class FoodLookActivity extends AppCompatActivity {
     ImageView[] dinnerArray;
     FrameLayout waitingFrame;
     Menu collapseMenu;
+
+    TwoOptionsMessageFragment sureFragment;
 
     FoodPostDetail foodPostDetail;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
@@ -184,7 +187,7 @@ public class FoodLookActivity extends AppCompatActivity {
                     editFoodPost();
                     break;
                 case "Delete":
-                    deleteOrder();
+                    sureFragment.show(true);
                     break;
                 case "Report":
                     break;
@@ -279,6 +282,11 @@ public class FoodLookActivity extends AppCompatActivity {
                 .replace(R.id.waiting_frame, WaitFragment.newInstance())
                 .commit();
 
+        sureFragment = TwoOptionsMessageFragment.newInstance("Delete", "Are you sure you want to delete this post?", "NO", "DELETE");
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.sure_message, sureFragment)
+                .commit();
+
         setPlaceButton();
         setDinners();
     }
@@ -286,6 +294,7 @@ public class FoodLookActivity extends AppCompatActivity {
     void getFoodPostDetailsAndSet(int foodPostId){
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/foods/" + foodPostId + "/").execute());
     }
+
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
         public GetAsyncTask(String uri){
@@ -362,7 +371,7 @@ public class FoodLookActivity extends AppCompatActivity {
         }
     }
 
-    void deleteOrder(){
+    void deletePost(){
         tasks.add(new DeletePostAsyncTask(getResources().getString(R.string.server) + "/foods/" + foodPostDetail.id + "/").execute());
     }
 
@@ -445,6 +454,15 @@ public class FoodLookActivity extends AppCompatActivity {
                         "Please make sure that you have connection to the internet"))
                 .commit();
     }
+
+    @Override
+    public void leftButtonPressed() {}
+
+    @Override
+    public void rightButtonPressed() {
+        deletePost();
+    }
+
     @Override
     public void onDestroy() {
         for (AsyncTask task: tasks){

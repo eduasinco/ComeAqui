@@ -441,4 +441,11 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <FrameLayout
+        android:id="@+id/sure_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
