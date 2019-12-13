@@ -25,6 +25,7 @@ public class FoodPost implements Serializable {
 
     public int max_dinners;
     public String time_to_show;
+    public String time_range;
     public String start_time;
     public String end_time;
     public String price;
@@ -61,6 +62,7 @@ public class FoodPost implements Serializable {
         start_time = jo.get("start_time").getAsString();
         end_time = jo.get("end_time").getAsString();
         time_to_show = DateFormatting.hhmmHappenedNowTodayYesterdayWeekDay(start_time, end_time);
+        time_range = DateFormatting.timeRange(start_time, end_time);
         price = jo.get("price").getAsString();
         type = jo.get("food_type").getAsString();
         description = jo.get("description").getAsString();

@@ -119,18 +119,10 @@ public class DateFormatting {
             long differenceToDate = now - date.getTime();
             long differenceToStartOrDay = now - startOfDay;
 
-            if (now < date.getTime() - TimeUnit.DAYS.toMillis(30)){
-                int n = (int) Math.abs(differenceToDate / TimeUnit.DAYS.toMillis(30));
-                return "IN " + n + " MONTH";
-            }else if (now < date.getTime() - TimeUnit.DAYS.toMillis(7)){
-                int n = (int) Math.abs(differenceToDate / TimeUnit.DAYS.toMillis(7));
-                return "IN " + n + " WEEKS";
-            }else if (now < date.getTime() - TimeUnit.DAYS.toMillis(2)){
-                DateFormat df = new SimpleDateFormat("h:mm aa");
+            if (now < date.getTime() - TimeUnit.DAYS.toMillis(2)){
+                DateFormat df = new SimpleDateFormat("EEE, MMM d");
                 df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
-                DateFormat dayNumberFormat = new SimpleDateFormat("u");
-                dayNumberFormat.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
-                return WEEK_DAYS[Integer.parseInt(dayNumberFormat.format(date)) - 1] + " " + df.format(date) + " - " + df.format(endDate);
+                return df.format(date);
             }else if (now < date.getTime() - TimeUnit.DAYS.toMillis(1)){
                 DateFormat df = new SimpleDateFormat("h:mm aa");
                 df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
@@ -164,6 +156,30 @@ public class DateFormatting {
         }
         return null;
     }
+
+    public static String timeRange(String dateString, String endDateString){
+        Date date;
+        Date endDate;
+        try {
+            date = convertToDate(dateString);
+            endDate = convertToDate(endDateString);
+        } catch (ParseException e) {
+            try {
+                // https://stackoverflow.com/questions/32113211/saving-model-instance-with-datetimefield-in-django-admin-loses-microsecond-resol
+                DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                format.setTimeZone(TimeZone.getTimeZone("UTC"));
+                date = format.parse(dateString);
+                endDate = format.parse(endDateString);
+            } catch (ParseException e2) {
+                return null;
+            }
+        }
+
+        DateFormat df = new SimpleDateFormat("h:mm aa");
+        df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
+        return df.format(date) + " - " + df.format(endDate);
+    }
+
 
     public static String hYesterdayWeekDay(String dateString){
         try {

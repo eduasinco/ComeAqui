@@ -56,6 +56,7 @@ public class FoodLookActivity extends AppCompatActivity {
     TextView plateNameView;
     TextView descriptionView;
     TextView priceView;
+    TextView date;
     TextView timeView;
     TextView usernameView;
     TextView posterNameView;
@@ -89,8 +90,9 @@ public class FoodLookActivity extends AppCompatActivity {
         plateNameView = findViewById(R.id.postPlateName);
         descriptionView = findViewById(R.id.post_description);
         priceView = findViewById(R.id.price);
-        timeView = findViewById(R.id.time);
         placeOrderButton = findViewById(R.id.placeOrderButton);
+        timeView = findViewById(R.id.time);
+        date = findViewById(R.id.date);
         usernameView = findViewById(R.id.username);
         posterNameView = findViewById(R.id.poster_name);
         posterLocationView = findViewById(R.id.posterLocation);
@@ -104,8 +106,6 @@ public class FoodLookActivity extends AppCompatActivity {
 
         waitingFrame = findViewById(R.id.waiting_frame);
         setToolbar();
-
-
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -250,7 +250,8 @@ public class FoodLookActivity extends AppCompatActivity {
         descriptionView.setText(foodPostDetail.description);
         posterLocationView.setText(foodPostDetail.formatted_address);
         priceView.setText(foodPostDetail.price + "$");
-        timeView.setText(foodPostDetail.time_to_show);
+        timeView.setText(foodPostDetail.time_range);
+        date.setText(foodPostDetail.time_to_show);
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("type", foodPostDetail.type);
