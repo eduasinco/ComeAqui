@@ -1,9 +1,14 @@
 package com.example.eduardorodriguez.comeaqui.chat;
 
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -44,7 +49,10 @@ public class ChatActivity extends AppCompatActivity{
     RecyclerView recyclerView;
     FrameLayout waitFrame;
     LinearLayout noMessages;
+    EditText searchBox;
+    ImageButton deleteText;
 
+    String query = "query=";
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
 
@@ -62,14 +70,49 @@ public class ChatActivity extends AppCompatActivity{
         recyclerView = findViewById(R.id.recycler_chat);
         waitFrame = findViewById(R.id.wait_frame);
         noMessages = findViewById(R.id.no_messages);
+        searchBox = findViewById(R.id.search_box);
+        deleteText = findViewById(R.id.delete_text);
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.wait_frame, WaitFragment.newInstance())
                 .commit();
+
+        setSearchListener();
         start();
 
+        deleteText.setOnClickListener(v -> searchBox.setText(""));
         View backView = findViewById(R.id.back);
         backView.setOnClickListener(v -> finish());
+    }
+
+    static long last_text_edit = 0;
+    void setSearchListener(){
+        final long delay = 1000;
+        final Handler handler = new Handler();
+        final Runnable input_finish_checker = () -> {
+            if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
+                getChatsAndSet();
+            }
+        };
+        searchBox.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged (CharSequence s,int start, int count, int after){}
+            @Override
+            public void onTextChanged ( final CharSequence s, int start, int before, int count){
+                handler.removeCallbacks(input_finish_checker);
+            }
+            @Override
+            public void afterTextChanged ( final Editable s){
+                if (s.length() > 0) {
+                    deleteText.setVisibility(View.VISIBLE);
+                } else {
+                    deleteText.setVisibility(View.GONE);
+                }
+                query = "query=" + s.toString();
+                last_text_edit = System.currentTimeMillis();
+                handler.postDelayed(input_finish_checker, delay);
+            }
+        });
     }
 
     public void makeList(JsonArray jsonArray){
@@ -95,7 +138,10 @@ public class ChatActivity extends AppCompatActivity{
     }
 
     void getChatsAndSet(){
-        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_chats/").execute());
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_chats/" + query.toString() + "/").execute());
     }
 
     private class GetAsyncTask extends AsyncTask<String[], Void, String> {
@@ -123,8 +169,7 @@ public class ChatActivity extends AppCompatActivity{
         @Override
         protected void onPostExecute(String response) {
             if (response != null){
-                if (response != null)
-                    makeList(new JsonParser().parse(response).getAsJsonArray());
+                makeList(new JsonParser().parse(response).getAsJsonArray());
             }
             startWaitingFrame(false);
             super.onPostExecute(response);
