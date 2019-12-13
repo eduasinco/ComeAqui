@@ -12,7 +12,6 @@ import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
 import com.example.eduardorodriguez.comeaqui.utilities.DateFormatting;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.chat.ChatFragment.OnListFragmentInteractionListener;
 import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.google.firebase.storage.FirebaseStorage;
@@ -25,12 +24,10 @@ import static com.example.eduardorodriguez.comeaqui.App.USER;
 public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecyclerViewAdapter.ViewHolder> {
 
     ArrayList<ChatObject> mValues;
-    private final OnListFragmentInteractionListener mListener;
     StorageReference firebaseStorage;
 
-    public MyChatRecyclerViewAdapter(ArrayList<ChatObject> items, OnListFragmentInteractionListener listener) {
+    public MyChatRecyclerViewAdapter(ArrayList<ChatObject> items) {
         mValues = items;
-        mListener = listener;
     }
 
     @Override
