@@ -23,7 +23,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.map.AddFoodActivity;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
@@ -32,9 +31,8 @@ import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
 
 
-import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
-import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.message_fragments.OneOptionMessageFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.HorizontalImageDisplayFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
@@ -45,7 +43,6 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -442,7 +439,7 @@ public class FoodLookActivity extends AppCompatActivity {
     void showErrorMessage(){
         placeOrderErrorMessage.setVisibility(View.VISIBLE);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.error_message_frame, ErrorMessageFragment.newInstance(
+                .replace(R.id.error_message_frame, OneOptionMessageFragment.newInstance(
                         "Error during posting",
                         "Please make sure that you have connection to the internet"))
                 .commit();

@@ -1,7 +1,6 @@
-package com.example.eduardorodriguez.comeaqui.utilities;
+package com.example.eduardorodriguez.comeaqui.utilities.message_fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,7 +13,7 @@ import android.widget.TextView;
 
 import com.example.eduardorodriguez.comeaqui.R;
 
-public class ErrorMessageFragment extends Fragment {
+public class OneOptionMessageFragment extends Fragment {
     private static final String TITLE = "title";
     private static final String MESSAGE = "message";
 
@@ -24,11 +23,11 @@ public class ErrorMessageFragment extends Fragment {
     Button continueButton;
     Button cancelButton;
 
-    private ErrorMessageFragment.OnFragmentInteractionListener mListener;
+    private OneOptionMessageFragment.OnFragmentInteractionListener mListener;
 
-    public ErrorMessageFragment() {}
-    public static ErrorMessageFragment newInstance(String title, String message) {
-        ErrorMessageFragment fragment = new ErrorMessageFragment();
+    public OneOptionMessageFragment() {}
+    public static OneOptionMessageFragment newInstance(String title, String message) {
+        OneOptionMessageFragment fragment = new OneOptionMessageFragment();
         Bundle args = new Bundle();
         args.putString(MESSAGE, message);
         args.putString(TITLE, title);
@@ -77,8 +76,8 @@ public class ErrorMessageFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof ErrorMessageFragment.OnFragmentInteractionListener) {
-            mListener = (ErrorMessageFragment.OnFragmentInteractionListener) context;
+        if (context instanceof OneOptionMessageFragment.OnFragmentInteractionListener) {
+            mListener = (OneOptionMessageFragment.OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

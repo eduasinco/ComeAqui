@@ -12,25 +12,18 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.ReviewObject;
 import com.example.eduardorodriguez.comeaqui.objects.ReviewReplyObject;
 
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
-import com.example.eduardorodriguez.comeaqui.utilities.DateFormatting;
-import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
-import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.message_fragments.OneOptionMessageFragment;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public class ReplyReviewActivity extends AppCompatActivity {
 
@@ -122,7 +115,7 @@ public class ReplyReviewActivity extends AppCompatActivity {
     void showErrorMessage(){
         errorMessage.setVisibility(View.VISIBLE);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.error_message_frame, ErrorMessageFragment.newInstance(
+                .replace(R.id.error_message_frame, OneOptionMessageFragment.newInstance(
                         "Error during posting",
                         "Please make sure that you have connection to the internet"))
                 .commit();

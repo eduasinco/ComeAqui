@@ -21,14 +21,14 @@ import android.widget.*;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodDateTimePickerFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.WordLimitEditTextFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.add_images.AddImagesFragment;
-import com.example.eduardorodriguez.comeaqui.map.add_food.image_look.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.SavedFoodPost;
 import com.example.eduardorodriguez.comeaqui.utilities.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
-import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.message_fragments.OneOptionMessageFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodTypeSelectorFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.message_fragments.TwoOptionsMessageFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.place_autocomplete.PlaceAutocompleteFragment;
 import com.google.gson.JsonParser;
 
@@ -43,11 +43,12 @@ public class AddFoodActivity extends AppCompatActivity implements
         DatePickerDialog.OnDateSetListener,
         PlaceAutocompleteFragment.OnFragmentInteractionListener,
         SelectImageFromFragment.OnFragmentInteractionListener,
-        ErrorMessageFragment.OnFragmentInteractionListener,
+        OneOptionMessageFragment.OnFragmentInteractionListener,
         FoodTypeSelectorFragment.OnFragmentInteractionListener,
         FoodDateTimePickerFragment.OnFragmentInteractionListener,
         WordLimitEditTextFragment.OnFragmentInteractionListener,
-        AddImagesFragment.OnFragmentInteractionListener{
+        AddImagesFragment.OnFragmentInteractionListener,
+        TwoOptionsMessageFragment.OnFragmentInteractionListener{
     EditText foodName;
     TextView price;
     ImageView image;
@@ -80,6 +81,7 @@ public class AddFoodActivity extends AppCompatActivity implements
 
 
     boolean isAddressValid = true;
+    boolean showSaveMessageOnFinish = false;
     Context context;
     Integer foodPostId;
 
@@ -91,6 +93,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     WordLimitEditTextFragment wordLimitEditTextFragment;
     AddImagesFragment addImageFragment;
     SelectImageFromFragment selectImagesFromFragment;
+    TwoOptionsMessageFragment saveMessageFragment;
 
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
@@ -151,6 +154,11 @@ public class AddFoodActivity extends AppCompatActivity implements
             wordLimitEditTextFragment = WordLimitEditTextFragment.newInstance();
             selectImagesFromFragment = SelectImageFromFragment.newInstance(false);
             addImageFragment = AddImagesFragment.newInstance();
+            saveMessageFragment = TwoOptionsMessageFragment.newInstance(
+                    "Save",
+                    "Do you want to save the post?",
+                    "no",
+                    "save");
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.locationAutocomplete, placeAutocompleteFragment)
@@ -176,23 +184,32 @@ public class AddFoodActivity extends AppCompatActivity implements
                     .replace(R.id.add_images_frame, addImageFragment)
                     .commit();
 
-            if (foodPostId != null){
-                getFoodPostDetailsAndSet(foodPostId);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.save_message, saveMessageFragment)
+                    .commit();
+
+            if (foodPostId == null){
+                postFood();
             } else {
-                saveFoodPost();
+                getFoodPostDetailsAndSet(foodPostId);
             }
         }
 
         setTextInputs();
         setFoodName();
         setPriceSeekBar();
-        setSubmit();
+
+        submit.setOnClickListener(v -> {
+            visible = true;
+            if (validateFrom()){
+                patchFood(foodPostDetail.id);
+            }
+        });
 
         scrollView.getViewTreeObserver().addOnScrollChangedListener(() -> {
             foodName.clearFocus();
         });
 
-        setOptionsMenu();
         backView.setOnClickListener(v -> finish());
     }
 
@@ -283,19 +300,6 @@ public class AddFoodActivity extends AppCompatActivity implements
         });
     }
 
-    void setSubmit(){
-        submit.setOnClickListener(v -> {
-            visible = true;
-            if (validateFrom()){
-                if (foodPostDetail == null){
-                    postFood();
-                } else {
-                    patchFood(foodPostDetail.id);
-                }
-            }
-        });
-    }
-
     void showProgress(boolean show){
         if (show){
             mProgressView.setVisibility(View.VISIBLE);
@@ -371,11 +375,7 @@ public class AddFoodActivity extends AppCompatActivity implements
 
     void saveFoodPost(){
         visible = false;
-        if (foodPostDetail == null){
-            postFood();
-        } else {
-            patchFood(foodPostDetail.id);
-        }
+        patchFood(foodPostDetail.id);
     }
 
     void setOptionsActions(String title){
@@ -389,8 +389,9 @@ public class AddFoodActivity extends AppCompatActivity implements
         }
     }
     void deletePost(){
-        tasks.add(new DeletePostAsyncTask(getResources().getString(R.string.server) + "/foods/" + foodPostDetail.id + "/").execute());
+        tasks.add(new DeletePostAsyncTask(getResources().getString(R.string.server) + "/true_food_delete/" + foodPostDetail.id + "/").execute());
     }
+
     class DeletePostAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
         public DeletePostAsyncTask(String uri){
@@ -408,6 +409,7 @@ public class AddFoodActivity extends AppCompatActivity implements
         @Override
         protected void onPostExecute(String response) {
             if (response != null){
+                showSaveMessageOnFinish = false;
                 finish();
             }
             super.onPostExecute(response);
@@ -415,6 +417,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     }
 
     void patchFood(int foodPostId){
+        showSaveMessageOnFinish = false;
         UploadPost post = new UploadPost(getResources().getString(R.string.server) + "/foods/" + foodPostId + "/", "PATCH");
         post.execute(
             new String[]{"plate_name", foodName.getText().toString()},
@@ -437,7 +440,6 @@ public class AddFoodActivity extends AppCompatActivity implements
             new String[]{"description", description},
             new String[]{"visible",  visible ? "true": "false"}
         );
-        showProgress(true);
     }
 
     void getFoodPostDetailsAndSet(int foodPostId){
@@ -469,12 +471,14 @@ public class AddFoodActivity extends AppCompatActivity implements
                 foodPostDetail = new SavedFoodPost(new JsonParser().parse(response).getAsJsonObject());
                 addImageFragment.initializeFoodPost(foodPostDetail.id);
                 setFoodPostIfItHas();
+                setOptionsMenu();
             }
             super.onPostExecute(response);
         }
     }
 
     void postFood(){
+        showSaveMessageOnFinish = true;
         UploadPost post = new UploadPost(getResources().getString(R.string.server) + "/foods/", "POST");
         tasks.add(post.execute(
                 new String[]{"plate_name", foodName.getText().toString()},
@@ -524,6 +528,7 @@ public class AddFoodActivity extends AppCompatActivity implements
         protected void onPostExecute(String response) {
             if (response != null){
                 foodPostDetail = new SavedFoodPost(new JsonParser().parse(response).getAsJsonObject());
+                setOptionsMenu();
             }
             if (method.equals("POST")) {
                 addImageFragment.initializeFoodPost(foodPostDetail.id);
@@ -543,7 +548,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     void showErrorMessage(){
         errorMessage.setVisibility(View.VISIBLE);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.error_message_frame, ErrorMessageFragment.newInstance(
+                .replace(R.id.error_message_frame, OneOptionMessageFragment.newInstance(
                         "Error during posting",
                         "Please make sure that you have connection to the internet"))
                 .commit();
@@ -642,6 +647,30 @@ public class AddFoodActivity extends AppCompatActivity implements
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public void leftButtonPressed() {
+        if (foodPostId == null){
+            deletePost();
+        } else {
+            showSaveMessageOnFinish = false;
+            finish();
+        }
+    }
+
+    @Override
+    public void rightButtonPressed() {
+        saveFoodPost();
+    }
+
+    @Override
+    public void finish() {
+        if (showSaveMessageOnFinish){
+            saveMessageFragment.show(true);
+        } else {
+            super.finish();
+        }
     }
 
     @Override

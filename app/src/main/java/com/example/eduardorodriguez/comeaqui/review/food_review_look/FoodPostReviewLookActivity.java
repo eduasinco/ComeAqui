@@ -22,7 +22,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostReview;
@@ -33,7 +32,7 @@ import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
-import com.example.eduardorodriguez.comeaqui.utilities.ErrorMessageFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.message_fragments.OneOptionMessageFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.HorizontalImageDisplayFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.android.material.appbar.AppBarLayout;
@@ -43,8 +42,6 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -330,7 +327,7 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
 
     void showErrorMessage(String message){
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.error_message_frame, ErrorMessageFragment.newInstance(
+                .replace(R.id.error_message_frame, OneOptionMessageFragment.newInstance(
                         "Error during posting",
                         "Please make sure that you have connection to the internet"))
                 .commit();
