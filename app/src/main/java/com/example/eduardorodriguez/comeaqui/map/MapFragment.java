@@ -266,25 +266,7 @@ public class MapFragment extends Fragment implements
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                 if (!gotTimezone){
-                    System.out.println(++c);
-                    gotTimezone = true;
-                    String uri = "https://maps.googleapis.com/maps/api/timezone/json?location=" +
-                            lat + "," + lng + "&timestamp=0&key=" + getResources().getString(R.string.google_key);
-                    try {
-                        new Server(getContext(),"GET", uri){
-                            @Override
-                            protected void onPostExecute(String response) {
-                                if (response != null) {
-                                    String timeZone = new JsonParser().parse(response).getAsJsonObject().get("timeZoneId").getAsString();
-                                    USER.timeZone = timeZone;
-                                    setUserTimeZone(timeZone);
-                                }
-                            }
-                        }.execute().get();
-                    } catch (ExecutionException | InterruptedException e) {
-                        gotTimezone = false;
-                        e.printStackTrace();
-                    }
+                    getTimeZoneFromGoogle();
                 }
             }
         };
@@ -303,6 +285,44 @@ public class MapFragment extends Fragment implements
             setMarkerBigger(marker);
             return false;
         });
+    }
+
+    public void getTimeZoneFromGoogle(){
+        gotTimezone = true;
+        String uri = "https://maps.googleapis.com/maps/api/timezone/json?location=" +
+                lat + "," + lng + "&timestamp=0&key=" + getResources().getString(R.string.google_key);
+        new GetAsyncTask(uri).execute();
+    }
+    class GetAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetAsyncTask(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.getNoCredentials(this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null) {
+                String timeZone = new JsonParser().parse(response).getAsJsonObject().get("timeZoneId").getAsString();
+                USER.timeZone = timeZone;
+                setUserTimeZone(timeZone);
+            } else {
+                gotTimezone = false;
+            }
+        }
     }
 
     private void setUserTimeZone(String timeZone){

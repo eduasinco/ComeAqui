@@ -23,7 +23,6 @@ import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 
 
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
-import com.example.eduardorodriguez.comeaqui.utilities.ContinueCancelFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.HorizontalImageDisplayFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
