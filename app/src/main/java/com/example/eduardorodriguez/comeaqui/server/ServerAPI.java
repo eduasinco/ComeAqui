@@ -71,6 +71,40 @@ public class ServerAPI {
         return result;
     }
 
+    public static String getNoCredentials(String url) throws IOException {
+        InputStream stream = null;
+        HttpURLConnection connection = null;
+        String result = null;
+        try {
+            connection = (HttpURLConnection) new URL(url).openConnection();
+            connection.setReadTimeout(3000);
+            connection.setConnectTimeout(3000);
+            connection.setRequestMethod("GET");
+            connection.setDoInput(true);
+            connection.connect();
+            int responseCode = connection.getResponseCode();
+//            if (responseCode != HttpsURLConnection.HTTP_OK) {
+//                throw new IOException("HTTP error code: " + responseCode);
+//            }
+
+            if (responseCode == HttpsURLConnection.HTTP_NOT_FOUND) {
+                return readStream(connection.getErrorStream());
+            }
+            stream = connection.getInputStream();
+            if (stream != null) {
+                result = readStream(stream);
+            }
+        } finally {
+            if (stream != null) {
+                stream.close();
+            }
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+        return result;
+    }
+
     public static String upload(Context context, String method, String url, String[][] params) throws IOException {
 
         String credentials = getCredentials(context);

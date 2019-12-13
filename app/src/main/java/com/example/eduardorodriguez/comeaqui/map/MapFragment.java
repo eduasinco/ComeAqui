@@ -463,6 +463,7 @@ public class MapFragment extends Fragment implements
     @SuppressLint("RestrictedApi")
     void fabFunctionality(){
         mapPickerFragment.apearMapPicker(true);
+        searchButton.setVisibility(View.GONE);
         mapPickerFragment.getLocationFromGoogle(pickedLocation);
         if (fabCount == 0){
             markersVisibility(false);
@@ -488,6 +489,7 @@ public class MapFragment extends Fragment implements
         switchFabImage(false);
         fabCount = 0;
         mapPickerFragment.apearMapPicker(false);
+        searchButton.setVisibility(View.VISIBLE);
     }
 
     void switchFabImage(boolean toPlus){
@@ -557,7 +559,7 @@ public class MapFragment extends Fragment implements
 
     @Override
     public void myLocationButton() {
-        goToSearchedPlace();
+        centerMap();
     }
 
     @Override

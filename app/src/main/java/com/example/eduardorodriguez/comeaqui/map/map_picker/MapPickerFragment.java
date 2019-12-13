@@ -1,6 +1,7 @@
 package com.example.eduardorodriguez.comeaqui.map.map_picker;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -13,7 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.objects.SavedFoodPost;
 import com.example.eduardorodriguez.comeaqui.server.Server;
+import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.place_autocomplete.PlaceAutocompleteFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.JsonArray;
@@ -21,6 +24,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MapPickerFragment extends Fragment implements PlaceAutocompleteFragment.OnFragmentInteractionListener{
@@ -35,6 +40,8 @@ public class MapPickerFragment extends Fragment implements PlaceAutocompleteFrag
     ConstraintLayout mapPickerPanView;
 
     PlaceAutocompleteFragment placeAutocompleteFragment;
+
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     public boolean abled;
     String LOADING = "Loading...";
@@ -81,42 +88,62 @@ public class MapPickerFragment extends Fragment implements PlaceAutocompleteFrag
     public void getLocationFromGoogle(LatLng latLng){
         String latLngString = latLng.latitude + "," + latLng.longitude;
         String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLngString + "&key=" + getResources().getString(R.string.google_key);
-        pickedAdress.setVisibility(View.VISIBLE);
-        pickedAdress.setText(LOADING);
-        new Server(getContext(),"GET", uri){
-            @Override
-            protected void onPostExecute(String response) {
-                if (response != null){
-                    JsonObject joo = new JsonParser().parse(response).getAsJsonObject();
-                    JsonArray jsonArray = joo.get("results").getAsJsonArray();
-                    if (jsonArray.size() > 0) {
-                        JsonObject jo = jsonArray.get(0).getAsJsonObject();
-                        JsonArray addss_components = jo.get("address_components").getAsJsonArray();
-                        String address = jo.get("formatted_address").getAsString();
-                        String place_id = jo.get("place_id").getAsString();
-                        JsonObject jsonLocation = jo.get("geometry").getAsJsonObject().get("location").getAsJsonObject();
-                        Double lat = jsonLocation.get("lat").getAsDouble();
-                        Double lng = jsonLocation.get("lng").getAsDouble();
+        tasks.add(new GetAsyncTask(uri).execute());
+    }
+    class GetAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetAsyncTask(String uri){
+            this.uri = uri;
+        }
 
-                        HashMap<String, String> address_elements = new HashMap<>();
-                        for (JsonElement je: addss_components){
-                            address_elements.put(je.getAsJsonObject().get("types").getAsJsonArray().get(0).getAsString(), je.getAsJsonObject().get("long_name").getAsString());
-                        }
-                        pickedAdress.setText(address);
-                        if (!address.equals(LOADING)){
-                            mListener.refreshFragment(
-                                    address,
-                                    place_id,
-                                    lat,
-                                    lng,
-                                    address_elements
-                            );
-                        }
+        @Override
+        protected void onPreExecute() {
+            pickedAdress.setVisibility(View.VISIBLE);
+            pickedAdress.setText(LOADING);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.getNoCredentials(this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                JsonObject joo = new JsonParser().parse(response).getAsJsonObject();
+                JsonArray jsonArray = joo.get("results").getAsJsonArray();
+                if (jsonArray.size() > 0) {
+                    JsonObject jo = jsonArray.get(0).getAsJsonObject();
+                    JsonArray addss_components = jo.get("address_components").getAsJsonArray();
+                    String address = jo.get("formatted_address").getAsString();
+                    String place_id = jo.get("place_id").getAsString();
+                    JsonObject jsonLocation = jo.get("geometry").getAsJsonObject().get("location").getAsJsonObject();
+                    Double lat = jsonLocation.get("lat").getAsDouble();
+                    Double lng = jsonLocation.get("lng").getAsDouble();
+
+                    HashMap<String, String> address_elements = new HashMap<>();
+                    for (JsonElement je: addss_components){
+                        address_elements.put(je.getAsJsonObject().get("types").getAsJsonArray().get(0).getAsString(), je.getAsJsonObject().get("long_name").getAsString());
+                    }
+                    pickedAdress.setText(address);
+                    if (!address.equals(LOADING)){
+                        mListener.refreshFragment(
+                                address,
+                                place_id,
+                                lat,
+                                lng,
+                                address_elements
+                        );
                     }
                 }
-                super.onPostExecute(response);
             }
-        }.execute();
+            super.onPostExecute(response);
+        }
     }
 
     public void showList(boolean show){
@@ -190,5 +217,13 @@ public class MapPickerFragment extends Fragment implements PlaceAutocompleteFrag
 
     public interface OnFragmentInteractionListener extends PlaceAutocompleteFragment.OnFragmentInteractionListener{
         void refreshFragment(String address, String place_id, Double lat, Double lng, HashMap<String, String> address_elements);
+    }
+
+    @Override
+    public void onDestroy() {
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        super.onDestroy();
     }
 }

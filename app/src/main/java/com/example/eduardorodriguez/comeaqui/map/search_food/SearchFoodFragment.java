@@ -2,6 +2,7 @@ package com.example.eduardorodriguez.comeaqui.map.search_food;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -18,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.HorizontalScrollView;
-import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -26,6 +26,7 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.map.search_food.filter_fragment.FilterFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
+import com.example.eduardorodriguez.comeaqui.utilities.MyLocation;
 import com.example.eduardorodriguez.comeaqui.utilities.place_autocomplete.PlaceAutocompleteFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.JsonArray;
@@ -94,6 +95,73 @@ public class SearchFoodFragment extends Fragment implements
         this.lat = lat;
         this.lng = lng;
         getDistanceIntoQuery(INITIAL_DISTANCE);
+    }
+
+    void searchOnMyLocation(){
+        MyLocation.LocationResult locationResult = new MyLocation.LocationResult(){
+            @Override
+            public void gotLocation(Location location){
+                lng = location.getLongitude();
+                lat = location.getLatitude();
+
+                getDistanceIntoQuery(distance);
+                getFilteredPosts();
+                getLocationFromGoogle();
+            }
+        };
+        MyLocation myLocation = new MyLocation();
+        myLocation.getLocation(getContext(), locationResult);
+    }
+
+    public void getLocationFromGoogle(){
+        LatLng latLng = new LatLng(lat, lng);
+        String latLngString = latLng.latitude + "," + latLng.longitude;
+        String uri = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latLngString + "&key=" + getResources().getString(R.string.google_key);
+        tasks.add(new GetPlaceFromGoogle(uri).execute());
+    }
+    class GetPlaceFromGoogle extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetPlaceFromGoogle(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.getNoCredentials(this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                JsonObject joo = new JsonParser().parse(response).getAsJsonObject();
+                JsonArray jsonArray = joo.get("results").getAsJsonArray();
+                if (jsonArray.size() > 0) {
+                    JsonObject jo = jsonArray.get(0).getAsJsonObject();
+                    JsonArray addss_components = jo.get("address_components").getAsJsonArray();
+                    String address = jo.get("formatted_address").getAsString();
+                    String place_id = jo.get("place_id").getAsString();
+                    JsonObject jsonLocation = jo.get("geometry").getAsJsonObject().get("location").getAsJsonObject();
+                    Double lat = jsonLocation.get("lat").getAsDouble();
+                    Double lng = jsonLocation.get("lng").getAsDouble();
+
+                    HashMap<String, String> address_elements = new HashMap<>();
+                    for (JsonElement je: addss_components){
+                        address_elements.put(je.getAsJsonObject().get("types").getAsJsonArray().get(0).getAsString(), je.getAsJsonObject().get("long_name").getAsString());
+                    }
+                    placeAutocompleteFragment.setAddress(address, place_id);
+                }
+            }
+            super.onPostExecute(response);
+        }
     }
 
     @Override
@@ -359,8 +427,7 @@ public class SearchFoodFragment extends Fragment implements
 
     @Override
     public void myLocationButton() {
-        getDistanceIntoQuery(distance);
-        getFilteredPosts();
+        searchOnMyLocation();
         hideKeyboard();
     }
 
