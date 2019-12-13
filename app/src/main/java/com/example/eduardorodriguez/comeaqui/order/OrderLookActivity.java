@@ -96,7 +96,8 @@ public class OrderLookActivity extends AppCompatActivity implements TwoOptionsMe
                 "Canceling the order",
                 "Should you cancel after confirmation you would still owe the full fee. Are you sure you want to cancel?",
                 "NO",
-                "CANCEL");
+                "CANCEL",
+                true);
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.cancel_message, continueCancelFragment)

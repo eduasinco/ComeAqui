@@ -25,6 +25,7 @@ import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.HorizontalImageDisplayFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.message_fragments.TwoOptionsMessageFragment;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ import java.util.ArrayList;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
-public class NotificationLookActivity extends AppCompatActivity {
+public class NotificationLookActivity extends AppCompatActivity implements TwoOptionsMessageFragment.OnFragmentInteractionListener{
 
     static Context context;
 
@@ -55,6 +56,8 @@ public class NotificationLookActivity extends AppCompatActivity {
     FrameLayout waitingFrame;
 
     OrderObject orderObject;
+
+    TwoOptionsMessageFragment sureFragment;
 
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
@@ -86,6 +89,11 @@ public class NotificationLookActivity extends AppCompatActivity {
                 .replace(R.id.waiting_frame, WaitFragment.newInstance())
                 .commit();
 
+        sureFragment = TwoOptionsMessageFragment.newInstance("Confirm Meal", "Are you sure you want to confirm this meal?", "CANCEL", "CONFIRM", false);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.sure_message, sureFragment)
+                .commit();
+
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
 
@@ -99,6 +107,7 @@ public class NotificationLookActivity extends AppCompatActivity {
     void getOrderObject(int orderId){
         tasks.add(new GetAsyncTask(context.getResources().getString(R.string.server) + "/order_detail/" + orderId + "/").execute());
     }
+
     private class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
         public GetAsyncTask(String uri){
@@ -216,15 +225,12 @@ public class NotificationLookActivity extends AppCompatActivity {
     void setConfirmCancelButton(){
         if (orderObject.status.equals("PENDING")){
             confirmCancelButton.setOnClickListener(v -> {
-                showProgress(true);
-                confirmOrder(orderObject, true, this);
-                finish();
+                sureFragment.show(true);
             });
         } else {
             confirmCancelButton.setVisibility(View.GONE);
             statucMessage.setVisibility(View.VISIBLE);
         }
-
         if (orderObject.status.equals("CONFIRMED")){
             statucMessage.setText("CONFIRMED");
             statucMessage.setTextColor(ContextCompat.getColor(this, R.color.confirm));
@@ -260,13 +266,14 @@ public class NotificationLookActivity extends AppCompatActivity {
             try {
                 return ServerAPI.upload(getApplicationContext(), "POST", this.uri, params);
             } catch (IOException e) {
-                showProgress(false);
                 e.printStackTrace();
             }
             return null;
         }
         @Override
         protected void onPostExecute(String response) {
+            showProgress(false);
+            finish();
             super.onPostExecute(response);
         }
     }
@@ -276,6 +283,17 @@ public class NotificationLookActivity extends AppCompatActivity {
         k.putExtra("userId", userId);
         startActivity(k);
     }
+
+    @Override
+    public void leftButtonPressed() {
+
+    }
+
+    @Override
+    public void rightButtonPressed() {
+        confirmOrder(orderObject, true, this);
+    }
+
     @Override
     public void onDestroy() {
         for (AsyncTask task: tasks){

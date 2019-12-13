@@ -127,7 +127,7 @@ TwoOptionsMessageFragment.OnFragmentInteractionListener{
                     .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(fpId, 0, 4, 200,0, 0))
                     .commit();
 
-            sureFragment = TwoOptionsMessageFragment.newInstance("Delete", "Are you sure you want to delete this post?", "CANCEL", "DELETE");
+            sureFragment = TwoOptionsMessageFragment.newInstance("Delete", "Are you sure you want to delete this post?", "CANCEL", "DELETE", true);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.sure_message, sureFragment)
                     .commit();

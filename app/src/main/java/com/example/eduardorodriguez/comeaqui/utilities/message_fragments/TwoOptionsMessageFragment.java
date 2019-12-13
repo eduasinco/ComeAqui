@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -17,16 +18,22 @@ import android.widget.TextView;
 import com.craftman.cardform.Card;
 import com.example.eduardorodriguez.comeaqui.R;
 
+import static com.example.eduardorodriguez.comeaqui.R.color.canceled;
+import static com.example.eduardorodriguez.comeaqui.R.color.colorPrimary;
+import static com.example.eduardorodriguez.comeaqui.R.color.colorPrimaryLight;
+
 public class TwoOptionsMessageFragment extends Fragment {
     private static final String TITLE = "title";
     private static final String MESSAGE = "message";
     private static final String LEFT_BUTTON = "left";
     private static final String RIGHT_BUTTON = "right";
+    private static final String MODE = "mode";
 
     private String title;
     private String message;
     private String leftButtonMessage;
     private String rightButtonMessage;
+    private boolean cancelMode;
 
     ConstraintLayout background;
     CardView cardView;
@@ -36,7 +43,7 @@ public class TwoOptionsMessageFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     public TwoOptionsMessageFragment() {}
-    public static TwoOptionsMessageFragment newInstance(String title, String message, String leftButtonMessage, String rightButtonMessage) {
+    public static TwoOptionsMessageFragment newInstance(String title, String message, String leftButtonMessage, String rightButtonMessage, boolean cancelMode) {
         TwoOptionsMessageFragment fragment = new TwoOptionsMessageFragment();
         Bundle args = new Bundle();
         args.putString(MESSAGE, message);
@@ -90,6 +97,11 @@ public class TwoOptionsMessageFragment extends Fragment {
         messageView.setText(message);
         leftButton.setText(leftButtonMessage);
         rightButton.setText(rightButtonMessage);
+
+        if (cancelMode){
+            leftButton.setTextColor(ContextCompat.getColor(getContext(), colorPrimary));
+            rightButton.setTextColor(ContextCompat.getColor(getContext(), canceled));
+        }
 
         background.setOnClickListener(v -> show(false));
         leftButton.setOnClickListener(v -> {

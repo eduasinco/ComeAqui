@@ -158,7 +158,8 @@ public class AddFoodActivity extends AppCompatActivity implements
                     "Save",
                     "Do you want to save the post?",
                     "no",
-                    "save");
+                    "save",
+                    false);
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.locationAutocomplete, placeAutocompleteFragment)
