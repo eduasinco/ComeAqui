@@ -225,7 +225,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
         price.setText("$" + order.post.price);
         subtotalView.setText("$" + order.post.price);
         totalPriceView.setText("$" + order.post.price);
-        mealTimeView.setText(order.post.time_to_show);
+        mealTimeView.setText(order.post.time_to_show + " " + order.post.time_range);
         orderStatus.setText(order.status);
 
         if (order.status.equals("CONFIRMED")){

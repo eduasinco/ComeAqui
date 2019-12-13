@@ -119,38 +119,40 @@ public class DateFormatting {
             long differenceToDate = now - date.getTime();
             long differenceToStartOrDay = now - startOfDay;
 
+            String result;
             if (now < date.getTime() - TimeUnit.DAYS.toMillis(2)){
                 DateFormat df = new SimpleDateFormat("EEE, MMM d");
                 df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
-                return df.format(date);
+                result = df.format(date);
             }else if (now < date.getTime() - TimeUnit.DAYS.toMillis(1)){
                 DateFormat df = new SimpleDateFormat("h:mm aa");
                 df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
-                return "TOMORROW " + df.format(date) + " - " + df.format(endDate);
+                result =  "TOMORROW " + df.format(date) + " - " + df.format(endDate);
             } else if (now < date.getTime()) {
                 DateFormat df = new SimpleDateFormat("h:mm aa");
                 df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
-                return "TODAY " + df.format(date) + " - " + df.format(endDate);
+                result =  "TODAY";
             } else if (date.getTime() <= now && now < endDate.getTime()){
-                return "HAPPENING NOW";
+                result =  "HAPPENING NOW";
             } else if (differenceToDate <= differenceToStartOrDay) {
-                return "HAPPENED TODAY";
+                result =  "HAPPENED TODAY";
             } else if (differenceToDate <= differenceToStartOrDay + TimeUnit.DAYS.toMillis(1)) {
-                return "YESTERDAY";
+                result =  "YESTERDAY";
             } else if (differenceToDate <= differenceToStartOrDay + TimeUnit.DAYS.toMillis(7)) {
                 int n = (int) (differenceToDate / TimeUnit.DAYS.toMillis(1));
-                return n + " DAYS AGO";
+                result =  n + " DAY" + (n > 1 ? "S " : " ") + "AGO";
             } else if (differenceToDate <= differenceToStartOrDay + TimeUnit.DAYS.toMillis(30)) {
                 int n = (int) (differenceToDate / TimeUnit.DAYS.toMillis(7));
-                return n + " WEEKS AGO";
+                result =  n + " WEEK" + (n > 1 ? "S " : " ") + " AGO";
             } else if (differenceToDate <= differenceToStartOrDay + TimeUnit.DAYS.toMillis(30 * 12)) {
                 int n = (int) (differenceToDate / TimeUnit.DAYS.toMillis(30));
-                return n + " MONTHS AGO";
+                result =  n + " MONTH" + (n > 1 ? "S " : " ") + " AGO";
             } else {
                 DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
                 df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
-                return df.format(date);
+                result =  df.format(date);
             }
+            return result.toUpperCase();
         } catch (ParseException e) {
             e.printStackTrace();
         }

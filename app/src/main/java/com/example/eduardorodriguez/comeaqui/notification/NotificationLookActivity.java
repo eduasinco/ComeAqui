@@ -41,6 +41,7 @@ public class NotificationLookActivity extends AppCompatActivity {
     TextView priceView;
     TextView orderAction;
     TextView timeView;
+    TextView date;
     TextView usernameView;
     TextView posterNameView;
     TextView posterLocationView;
@@ -66,6 +67,7 @@ public class NotificationLookActivity extends AppCompatActivity {
         plateNameView = findViewById(R.id.postPlateName);
         descriptionView = findViewById(R.id.post_description);
         priceView = findViewById(R.id.price);
+        date = findViewById(R.id.date);
         timeView = findViewById(R.id.time);
         confirmCancelButton = findViewById(R.id.placeOrderButton);
         usernameView = findViewById(R.id.username);
@@ -147,7 +149,8 @@ public class NotificationLookActivity extends AppCompatActivity {
         descriptionView.setText(orderObject.post.description);
         posterLocationView.setText(orderObject.post.formatted_address);
         priceView.setText("$" + orderObject.post.price);
-        timeView.setText(orderObject.post.time_to_show);
+        date.setText(orderObject.post.time_to_show);
+        timeView.setText(orderObject.post.time_range);
         rating.setText(String.format("%.01f", orderObject.poster.rating));
 
         switch (orderObject.status){

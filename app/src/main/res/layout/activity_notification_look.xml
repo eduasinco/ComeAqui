@@ -41,17 +41,12 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <FrameLayout
-                android:id="@+id/types"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="24dp"
-                android:paddingEnd="24dp"
-                android:paddingBottom="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/plate_name">
-
-            </FrameLayout>
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -79,6 +74,18 @@
                     android:textColor="@color/grey"
                     android:textSize="14sp" />
             </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/types"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="24dp"
+                android:paddingEnd="24dp"
+                android:paddingBottom="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/plate_name">
+
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/textView18"
