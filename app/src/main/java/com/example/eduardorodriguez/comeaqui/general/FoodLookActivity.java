@@ -282,7 +282,7 @@ public class FoodLookActivity extends AppCompatActivity implements TwoOptionsMes
                 .replace(R.id.waiting_frame, WaitFragment.newInstance())
                 .commit();
 
-        sureFragment = TwoOptionsMessageFragment.newInstance("Delete", "Are you sure you want to delete this post?", "NO", "DELETE");
+        sureFragment = TwoOptionsMessageFragment.newInstance("Delete", "Are you sure you want to delete this post?", "CANCEL", "DELETE");
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.sure_message, sureFragment)
                 .commit();

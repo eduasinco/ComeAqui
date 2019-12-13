@@ -24,6 +24,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.general.FoodLookActivity;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostReview;
 import com.example.eduardorodriguez.comeaqui.objects.ReviewReplyObject;
 import com.example.eduardorodriguez.comeaqui.objects.ReviewObject;
@@ -35,6 +36,7 @@ import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.message_fragments.OneOptionMessageFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.HorizontalImageDisplayFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.message_fragments.TwoOptionsMessageFragment;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.gson.JsonParser;
@@ -45,7 +47,8 @@ import java.util.concurrent.ExecutionException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
-public class FoodPostReviewLookActivity extends AppCompatActivity implements MyFoodReviewRecyclerViewAdapter.OnListFragmentInteractionListener {
+public class FoodPostReviewLookActivity extends AppCompatActivity implements MyFoodReviewRecyclerViewAdapter.OnListFragmentInteractionListener,
+TwoOptionsMessageFragment.OnFragmentInteractionListener{
 
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbar;
@@ -64,7 +67,9 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
     public TextView postNameView;
     public TextView postRating;
     public View cardButtonView;
+
     FrameLayout waitingFrame;
+    TwoOptionsMessageFragment sureFragment;
 
     ImageView vegetarian;
     ImageView vegan;
@@ -120,6 +125,11 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
                     .commit();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(fpId, 0, 4, 200,0, 0))
+                    .commit();
+
+            sureFragment = TwoOptionsMessageFragment.newInstance("Delete", "Are you sure you want to delete this post?", "CANCEL", "DELETE");
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.sure_message, sureFragment)
                     .commit();
         }
 
@@ -191,19 +201,22 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
             popupMenu.getMenu().add("Report");
         }
 
+        popupMenu.setOnMenuItemClickListener(item1 -> {
+            String title = item1.getTitle().toString();
+            switch (title){
+                case "Delete":
+                    sureFragment.show(true);
+                    break;
+                case "Report":
+                    break;
+            }
+            return false;
+        });
         switch (item.getItemId()){
             case android.R.id.home:
                 finish();
                 break;
             case R.id.action_settings:
-                String title = item.getTitle().toString();
-                switch (title){
-                    case "Delete":
-                        deleteOrder();
-                        break;
-                    case "Report":
-                        break;
-                }
                 popupMenu.show();
                 break;
         }
@@ -214,6 +227,7 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
     void getReviewsFrompFoodPost(int foodPostId){
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/food_reviews/" + foodPostId + "/", this).execute());
     }
+
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
         private Context context;
@@ -313,14 +327,30 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
         }
     }
 
+    void deletePost(){
+        tasks.add(new DeletePostAsyncTask(getResources().getString(R.string.server) + "/foods/" + foodPostReview.id + "/").execute());
+    }
 
-    void deleteOrder(){
-        Server deleteFoodPost = new Server(this,"DELETE", getResources().getString(R.string.server) + "/foods/" + foodPostReview.id + "/");
-        try {
-            deleteFoodPost.execute().get();
-            finish();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+    class DeletePostAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public DeletePostAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.delete(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                finish();
+            }
+            super.onPostExecute(response);
         }
     }
 
@@ -361,6 +391,14 @@ public class FoodPostReviewLookActivity extends AppCompatActivity implements MyF
     @Override
     public void onReplyDelete(ReviewReplyObject reply) {
         deleteReply(reply.id);
+    }
+
+    @Override
+    public void leftButtonPressed() {}
+
+    @Override
+    public void rightButtonPressed() {
+        deletePost();
     }
 
     @Override

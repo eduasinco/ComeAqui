@@ -27,12 +27,13 @@ import com.example.eduardorodriguez.comeaqui.utilities.ContinueCancelFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.HorizontalImageDisplayFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.RatingFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
+import com.example.eduardorodriguez.comeaqui.utilities.message_fragments.TwoOptionsMessageFragment;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class OrderLookActivity extends AppCompatActivity implements ContinueCancelFragment.OnFragmentInteractionListener {
+public class OrderLookActivity extends AppCompatActivity implements TwoOptionsMessageFragment.OnFragmentInteractionListener {
 
     ImageButton back;
     ImageButton options;
@@ -51,7 +52,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
     FrameLayout waitingFrame;
 
 
-    ContinueCancelFragment continueCancelFragment;
+    TwoOptionsMessageFragment continueCancelFragment;
     OrderObject order;
 
     Context context;
@@ -91,9 +92,11 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
             getOrderDetails(orderId);
         }
 
-        continueCancelFragment = ContinueCancelFragment.newInstance(
-                "Your are canceling the order",
-                "Should you cancel after confirmation you would still owe the full fee");
+        continueCancelFragment = TwoOptionsMessageFragment.newInstance(
+                "Canceling the order",
+                "Should you cancel after confirmation you would still owe the full fee. Are you sure you want to cancel?",
+                "NO",
+                "CANCEL");
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.cancel_message, continueCancelFragment)
@@ -104,7 +107,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
             PopupMenu popupMenu = new PopupMenu(this, v);
             popupMenu.getMenu().add("Help");
 
-            if (!order.status.equals("CANCELED"))
+            if (order.status.equals("CONFIRMED") || order.status.equals("PENDING"))
                 popupMenu.getMenu().add("Cancel order");
 
             popupMenu.setOnMenuItemClickListener(item -> {
@@ -128,6 +131,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
     void getOrderDetails(int orderId){
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/order_detail/" + orderId + "/").execute());
     }
+
     private class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
         public GetAsyncTask(String uri){
@@ -179,7 +183,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
     }
 
     void checkIfUserWantsToCancel(){
-        continueCancelFragment.appear();
+        continueCancelFragment.show(true);
     }
 
     void cancelOrder(){
@@ -196,7 +200,6 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
         }
         @Override
         protected void onPreExecute() {
-            continueCancelFragment.waiting();
             super.onPreExecute();
         }
         @Override
@@ -210,7 +213,7 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
         }
         @Override
         protected void onPostExecute(String response) {
-            continueCancelFragment.dessapear();
+            continueCancelFragment.show(false);
             finish();
             super.onPostExecute(response);
         }
@@ -255,11 +258,15 @@ public class OrderLookActivity extends AppCompatActivity implements ContinueCanc
     }
 
     @Override
-    public void onFragmentInteraction(boolean ok) {
-        if (ok){
-            cancelOrder();
-        }
+    public void leftButtonPressed() {
+
     }
+
+    @Override
+    public void rightButtonPressed() {
+        cancelOrder();
+    }
+
     @Override
     public void onDestroy() {
         for (AsyncTask task: tasks){
