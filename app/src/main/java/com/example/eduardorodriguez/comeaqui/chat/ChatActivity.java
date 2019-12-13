@@ -1,11 +1,13 @@
 package com.example.eduardorodriguez.comeaqui.chat;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -107,6 +109,7 @@ public class ChatActivity extends AppCompatActivity{
                     deleteText.setVisibility(View.VISIBLE);
                 } else {
                     deleteText.setVisibility(View.GONE);
+                    hideKeyboard();
                 }
                 query = "query=" + s.toString();
                 last_text_edit = System.currentTimeMillis();
@@ -226,6 +229,14 @@ public class ChatActivity extends AppCompatActivity{
             mWebSocketClient.connect();
         } catch (URISyntaxException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void hideKeyboard(){
+        View view = getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 

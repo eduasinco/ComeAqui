@@ -44,7 +44,7 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
 
         User chattingWith = USER.id == (holder.mItem.users.get(0).id) ? holder.mItem.users.get(1) : holder.mItem.users.get(0);
 
-        holder.username.setText(chattingWith.first_name + ", " + chattingWith.last_name);
+        holder.username.setText(chattingWith.first_name + " " + chattingWith.last_name);
         if (holder.mItem.last_message != null){
             holder.lastMessage.setText(holder.mItem.last_message.message);
         }
