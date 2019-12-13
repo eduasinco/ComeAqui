@@ -19,9 +19,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.map.AddFoodActivity;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
@@ -169,8 +171,10 @@ public class FoodLookActivity extends AppCompatActivity {
         PopupMenu popupMenu = new PopupMenu(this, findViewById(R.id.action_settings));
         if (foodPostDetail.owner.id == USER.id){
             popupMenu.getMenu().add("Edit");
-            if (foodPostDetail.confirmedOrdersList.size() == 0 ||(foodPostDetail.confirmedOrdersList.size() > 0 && foodPostDetail.confirmedOrdersList.get(0).status.equals("FINISHED"))){
+            if (foodPostDetail.confirmedOrdersList.size() == 0 || (foodPostDetail.confirmedOrdersList.size() > 0 && foodPostDetail.confirmedOrdersList.get(0).status.equals("FINISHED"))){
                 popupMenu.getMenu().add("Delete");
+            } else {
+                Toast.makeText(this, "You can't delete a confirmed post", Toast.LENGTH_LONG).show();
             }
         } else {
             popupMenu.getMenu().add("Report");
@@ -361,13 +365,29 @@ public class FoodLookActivity extends AppCompatActivity {
     }
 
     void deleteOrder(){
-        Server deleteFoodPost = new Server(this,"DELETE", getResources().getString(R.string.server) + "/foods/" + foodPostDetail.id + "/");
-        try {
-            deleteFoodPost.execute().get();
-            finish();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            showErrorMessage();
+        tasks.add(new DeletePostAsyncTask(getResources().getString(R.string.server) + "/foods/" + foodPostDetail.id + "/").execute());
+    }
+
+    class DeletePostAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public DeletePostAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.delete(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                finish();
+            }
+            super.onPostExecute(response);
         }
     }
 

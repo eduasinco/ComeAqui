@@ -21,6 +21,7 @@ import android.widget.*;
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodDateTimePickerFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.WordLimitEditTextFragment;
 import com.example.eduardorodriguez.comeaqui.map.add_food.add_images.AddImagesFragment;
+import com.example.eduardorodriguez.comeaqui.map.add_food.image_look.ImageLookActivity;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.SavedFoodPost;
 import com.example.eduardorodriguez.comeaqui.utilities.SelectImageFromFragment;
@@ -356,6 +357,9 @@ public class AddFoodActivity extends AppCompatActivity implements
         options.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(this, options);
             popupMenu.getMenu().add("Save");
+            if (foodPostDetail.owner.id == USER.id){
+                popupMenu.getMenu().add("Delete");
+            }
 
             popupMenu.setOnMenuItemClickListener(item -> {
                 setOptionsActions(item.getTitle().toString());
@@ -379,6 +383,34 @@ public class AddFoodActivity extends AppCompatActivity implements
             case "Save":
                 saveFoodPost();
                 break;
+            case "Delete":
+                deletePost();
+                break;
+        }
+    }
+    void deletePost(){
+        tasks.add(new DeletePostAsyncTask(getResources().getString(R.string.server) + "/foods/" + foodPostDetail.id + "/").execute());
+    }
+    class DeletePostAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public DeletePostAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.delete(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                finish();
+            }
+            super.onPostExecute(response);
         }
     }
 

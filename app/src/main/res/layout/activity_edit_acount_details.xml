@@ -58,12 +58,11 @@
                 android:gravity="bottom"
                 android:text="Phone number" />
 
-            <TextView
+            <EditText
                 android:id="@+id/phone_number"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center_vertical"
-                android:text="Phone"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
 
