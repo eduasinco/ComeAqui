@@ -1,5 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.order;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -13,7 +14,6 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.SavedFoodPost;
 import com.example.eduardorodriguez.comeaqui.order.HostingFragment.OnListFragmentInteractionListener;
-import com.example.eduardorodriguez.comeaqui.order.dummy.DummyContent.DummyItem;
 
 import java.util.List;
 
@@ -56,6 +56,8 @@ public class MyHostingRecyclerViewAdapter extends RecyclerView.Adapter<MyHosting
 
         if (holder.mItem.images.size() > 0){
             Glide.with(holder.mView.getContext()).load(holder.mItem.images.get(0).image).into(holder.postImage);
+        } else {
+            holder.postImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.empty_plate));
         }
 
         holder.mView.setOnClickListener(v -> {

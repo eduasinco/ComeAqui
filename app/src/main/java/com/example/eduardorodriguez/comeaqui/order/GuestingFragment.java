@@ -87,11 +87,6 @@ public class GuestingFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -111,9 +106,14 @@ public class GuestingFragment extends Fragment {
                 .replace(R.id.wait_frame, WaitFragment.newInstance())
                 .commit();
 
-        getDataAndSet();
         start();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getDataAndSet();
     }
 
     void getDataAndSet(){

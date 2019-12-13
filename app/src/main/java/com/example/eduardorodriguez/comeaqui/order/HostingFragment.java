@@ -90,8 +90,13 @@ public class HostingFragment extends Fragment {
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.wait_frame, WaitFragment.newInstance())
                 .commit();
-        getDataAndSet();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getDataAndSet();
     }
 
     void getDataAndSet(){
