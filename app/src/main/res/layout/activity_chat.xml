@@ -109,14 +109,14 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/imageView23"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:id="@+id/no_list_image"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_marginBottom="16dp"
                 app:srcCompat="@drawable/no_messages" />
 
             <TextView
-                android:id="@+id/textView15"
+                android:id="@+id/no_list_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"

@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
@@ -53,6 +56,8 @@ public class ChatActivity extends AppCompatActivity{
     LinearLayout noMessages;
     EditText searchBox;
     ImageButton deleteText;
+    ImageView noListImage;
+    TextView noListMessage;
 
     String query = "query=";
     ArrayList<AsyncTask> tasks = new ArrayList<>();
@@ -74,6 +79,8 @@ public class ChatActivity extends AppCompatActivity{
         noMessages = findViewById(R.id.no_messages);
         searchBox = findViewById(R.id.search_box);
         deleteText = findViewById(R.id.delete_text);
+        noListImage = findViewById(R.id.no_list_image);
+        noListMessage = findViewById(R.id.no_list_message);
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.wait_frame, WaitFragment.newInstance())
@@ -107,7 +114,11 @@ public class ChatActivity extends AppCompatActivity{
             public void afterTextChanged ( final Editable s){
                 if (s.length() > 0) {
                     deleteText.setVisibility(View.VISIBLE);
+                    noListImage.setImageDrawable(ContextCompat.getDrawable(getApplication(), R.drawable.not_found));
+                    noListMessage.setText("No messages found");
                 } else {
+                    noListImage.setImageDrawable(ContextCompat.getDrawable(getApplication(), R.drawable.no_messages));
+                    noListMessage.setText("No messages");
                     deleteText.setVisibility(View.GONE);
                     hideKeyboard();
                 }
