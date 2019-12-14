@@ -67,15 +67,15 @@ public class RatingFragment extends Fragment {
             starArray[i].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.star_empty));
         }
 
-        for (int i = 0; i < rating; i++){
+        for (int i = 0; i < (int) rating; i++){
             starArray[i].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.star_filled));
         }
 
         double decimal = rating - Math.floor(rating);
-        if(decimal < 0.75 && decimal >= 0.25){
-            starArray[(int) rating].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.star_half_filled));
-        } else if (decimal >= 0.75){
+        if (decimal >= 0.75){
             starArray[(int) rating].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.star_filled));
+        } else if (decimal >= 0.25) {
+            starArray[(int) rating].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.star_half_filled));
         }
 
         if (rating == 0){

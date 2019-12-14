@@ -103,7 +103,7 @@ public class MapCardFragment extends Fragment implements DragDownHideBehavior.On
                 .commit();
 
         getChildFragmentManager().beginTransaction()
-                .replace(R.id.profile_rating, RatingFragment.newInstance(USER.rating, USER.ratingN))
+                .replace(R.id.profile_rating, RatingFragment.newInstance(foodPost.owner.rating, foodPost.owner.ratingN))
                 .commit();
 
         getChildFragmentManager().beginTransaction()
