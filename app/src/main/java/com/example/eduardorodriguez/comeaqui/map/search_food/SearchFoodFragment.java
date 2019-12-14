@@ -19,6 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -64,6 +66,7 @@ public class SearchFoodFragment extends Fragment implements
     private TextView distanceButton;
     private TextView dietaryButton;
     private TextView delleteAllButton;
+    private LinearLayout notPostFoundView;
 
     private boolean[] onFilters = new boolean[]{false, false, false, false, false, false};
     int INITIAL_DISTANCE = 500;
@@ -180,6 +183,7 @@ public class SearchFoodFragment extends Fragment implements
         distanceButton = view.findViewById(R.id.distance);
         dietaryButton = view.findViewById(R.id.dietary);
         delleteAllButton = view.findViewById(R.id.dellete_all);
+        notPostFoundView = view.findViewById(R.id.no_messages);
 
         placeAutocompleteFragment = PlaceAutocompleteFragment.newInstance("", true);
         getChildFragmentManager().beginTransaction()
@@ -231,6 +235,11 @@ public class SearchFoodFragment extends Fragment implements
                 JsonObject jo = pa.getAsJsonObject();
                 FoodPost chat = new FoodPost(jo);
                 foodPosts.add(chat);
+            }
+            if (foodPosts.size() > 0){
+                notPostFoundView.setVisibility(View.GONE);
+            } else{
+                notPostFoundView.setVisibility(View.VISIBLE);
             }
             adapter.addData(foodPosts);
             adapter.notifyDataSetChanged();
