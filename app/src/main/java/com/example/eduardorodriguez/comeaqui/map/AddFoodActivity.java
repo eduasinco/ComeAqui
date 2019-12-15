@@ -651,7 +651,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void leftButtonPressed() {
+    public void leftButtonPressed(boolean cancelMode) {
         if (foodPostId == null){
             deletePost();
         } else {
@@ -661,7 +661,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void rightButtonPressed() {
+    public void rightButtonPressed(boolean cancelMode) {
         saveFoodPost();
     }
 

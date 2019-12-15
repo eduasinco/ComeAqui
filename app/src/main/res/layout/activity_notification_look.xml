@@ -198,7 +198,7 @@
             <TextView
                 android:id="@+id/status_message"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="70dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:paddingLeft="24dp"
@@ -331,13 +331,33 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <Button
-            android:id="@+id/placeOrderButton"
+        <LinearLayout
+            android:id="@+id/buttons"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/holo_green_dark"
-            android:text="Confirm"
-            android:textColor="@android:color/white" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/rejectButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:background="@color/canceled"
+                android:text="Reject"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/placeOrderButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:background="@android:color/holo_green_dark"
+                android:text="Confirm"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
 
         <ProgressBar
             android:id="@+id/confirm_notification_progress"
@@ -349,13 +369,20 @@
     </LinearLayout>
 
     <FrameLayout
-        android:id="@+id/sure_message"
+        android:id="@+id/confirm_message"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/reject_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     </FrameLayout>
 

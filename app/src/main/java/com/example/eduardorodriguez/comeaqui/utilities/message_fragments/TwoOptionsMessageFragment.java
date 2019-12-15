@@ -50,6 +50,7 @@ public class TwoOptionsMessageFragment extends Fragment {
         args.putString(TITLE, title);
         args.putString(LEFT_BUTTON, leftButtonMessage);
         args.putString(RIGHT_BUTTON, rightButtonMessage);
+        args.putString(MODE, rightButtonMessage);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,6 +63,7 @@ public class TwoOptionsMessageFragment extends Fragment {
             title = getArguments().getString(TITLE);
             leftButtonMessage = getArguments().getString(LEFT_BUTTON);
             rightButtonMessage = getArguments().getString(RIGHT_BUTTON);
+            cancelMode = getArguments().getBoolean(MODE);
         }
     }
 
@@ -105,11 +107,11 @@ public class TwoOptionsMessageFragment extends Fragment {
 
         background.setOnClickListener(v -> show(false));
         leftButton.setOnClickListener(v -> {
-            mListener.leftButtonPressed();
+            mListener.leftButtonPressed(cancelMode);
             show(false);
         });
         rightButton.setOnClickListener(v -> {
-            mListener.rightButtonPressed();
+            mListener.rightButtonPressed(cancelMode);
             show(false);
         });
         return view;
@@ -140,7 +142,7 @@ public class TwoOptionsMessageFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void leftButtonPressed();
-        void rightButtonPressed();
+        void leftButtonPressed(boolean cancelMode);
+        void rightButtonPressed(boolean cancelMode);
     }
 }

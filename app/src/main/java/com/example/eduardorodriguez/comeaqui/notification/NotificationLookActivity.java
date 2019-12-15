@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -48,7 +49,9 @@ public class NotificationLookActivity extends AppCompatActivity implements TwoOp
     TextView posterLocationView;
     TextView statucMessage;
     TextView rating;
-    Button confirmCancelButton;
+    Button confirmButton;
+    Button rejectButton;
+    LinearLayout buttons;
 
     ImageView dinnerImage;
     ImageView backView;
@@ -57,7 +60,8 @@ public class NotificationLookActivity extends AppCompatActivity implements TwoOp
 
     OrderObject orderObject;
 
-    TwoOptionsMessageFragment sureFragment;
+    TwoOptionsMessageFragment confirmFragment;
+    TwoOptionsMessageFragment rejectFragment;
 
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
@@ -72,13 +76,15 @@ public class NotificationLookActivity extends AppCompatActivity implements TwoOp
         priceView = findViewById(R.id.price);
         date = findViewById(R.id.date);
         timeView = findViewById(R.id.time);
-        confirmCancelButton = findViewById(R.id.placeOrderButton);
+        confirmButton = findViewById(R.id.placeOrderButton);
+        rejectButton = findViewById(R.id.rejectButton);
         usernameView = findViewById(R.id.username);
         posterNameView = findViewById(R.id.dinner_name);
         posterLocationView = findViewById(R.id.posterLocation);
         statucMessage = findViewById(R.id.status_message);
         rating = findViewById(R.id.rating);
         orderAction = findViewById(R.id.order_action);
+        buttons = findViewById(R.id.buttons);
 
         dinnerImage = findViewById(R.id.dinner_image);
         backView = findViewById(R.id.back);
@@ -89,9 +95,14 @@ public class NotificationLookActivity extends AppCompatActivity implements TwoOp
                 .replace(R.id.waiting_frame, WaitFragment.newInstance())
                 .commit();
 
-        sureFragment = TwoOptionsMessageFragment.newInstance("Confirm Meal", "Are you sure you want to confirm this meal?", "CANCEL", "CONFIRM", false);
+        confirmFragment = TwoOptionsMessageFragment.newInstance("Confirm Meal", "Are you sure you want to confirm this meal?", "CANCEL", "CONFIRM", false);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.sure_message, sureFragment)
+                .replace(R.id.confirm_message, confirmFragment)
+                .commit();
+
+        rejectFragment = TwoOptionsMessageFragment.newInstance("Reject Meal", "Are you sure you want to reject this meal?", "CANCEL", "Reject", true);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.reject_message, rejectFragment)
                 .commit();
 
         Intent intent = getIntent();
@@ -215,20 +226,23 @@ public class NotificationLookActivity extends AppCompatActivity implements TwoOp
     void showProgress(boolean show){
         if (show){
             confirmNotificationProgress.setVisibility(View.VISIBLE);
-            confirmCancelButton.setVisibility(View.GONE);
+            buttons.setVisibility(View.GONE);
         } else {
             confirmNotificationProgress.setVisibility(View.GONE);
-            confirmCancelButton.setVisibility(View.VISIBLE);
+            buttons.setVisibility(View.VISIBLE);
         }
     }
 
     void setConfirmCancelButton(){
         if (orderObject.status.equals("PENDING")){
-            confirmCancelButton.setOnClickListener(v -> {
-                sureFragment.show(true);
+            confirmButton.setOnClickListener(v -> {
+                confirmFragment.show(true);
+            });
+            rejectButton.setOnClickListener(v -> {
+                rejectFragment.show(true);
             });
         } else {
-            confirmCancelButton.setVisibility(View.GONE);
+            buttons.setVisibility(View.GONE);
             statucMessage.setVisibility(View.VISIBLE);
         }
         if (orderObject.status.equals("CONFIRMED")){
@@ -285,13 +299,13 @@ public class NotificationLookActivity extends AppCompatActivity implements TwoOp
     }
 
     @Override
-    public void leftButtonPressed() {
+    public void leftButtonPressed(boolean cancelMode) {
 
     }
 
     @Override
-    public void rightButtonPressed() {
-        confirmOrder(orderObject, true, this);
+    public void rightButtonPressed(boolean cancelMode) {
+        confirmOrder(orderObject, cancelMode, this);
     }
 
     @Override

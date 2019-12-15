@@ -258,12 +258,12 @@ public class OrderLookActivity extends AppCompatActivity implements TwoOptionsMe
     }
 
     @Override
-    public void leftButtonPressed() {
+    public void leftButtonPressed(boolean cancelMode) {
 
     }
 
     @Override
-    public void rightButtonPressed() {
+    public void rightButtonPressed(boolean cancelMode) {
         cancelOrder();
     }
 
