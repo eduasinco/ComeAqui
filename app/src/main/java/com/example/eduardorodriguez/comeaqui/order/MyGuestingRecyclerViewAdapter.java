@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.order.GuestingFragment.OnListFragmentInteractionListener;
-import com.example.eduardorodriguez.comeaqui.utilities.DateFormatting;
 
 import java.util.List;
 
@@ -48,12 +47,18 @@ public class MyGuestingRecyclerViewAdapter extends RecyclerView.Adapter<MyGuesti
         holder.orderStatus.setBackgroundColor(Color.TRANSPARENT);
 
         if (!holder.mItem.seen){
-            holder.orderStatus.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_notification_status_changed));
+            if (holder.mItem.status.equals("CONFIRMED")){
+                holder.orderStatus.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_order_status_confirmed));
+            } else if (holder.mItem.status.equals("REJECTED") || holder.mItem.status.equals("CANCELED")){
+                holder.orderStatus.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_order_status_canceled));
+            } else {
+                holder.orderStatus.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_order_status));
+            }
             holder.orderStatus.setTypeface(null, Typeface.BOLD);
             holder.orderStatus.setTextColor(Color.WHITE);
         } else if (holder.mItem.status.equals("CONFIRMED")){
             holder.orderStatus.setTextColor(ContextCompat.getColor(holder.mView.getContext(), R.color.success));
-        } else if (holder.mItem.status.equals("CANCELED")){
+        } else if (holder.mItem.status.equals("REJECTED") || holder.mItem.status.equals("CANCELED")){
             holder.orderStatus.setTextColor(ContextCompat.getColor(holder.mView.getContext(), R.color.canceled));
         } else {
             holder.orderStatus.setTextColor(ContextCompat.getColor(holder.mView.getContext(), R.color.colorPrimary));

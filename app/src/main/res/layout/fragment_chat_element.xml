@@ -57,7 +57,7 @@
                     app:layout_constraintStart_toEndOf="@+id/receiver_image"
                     android:layout_weight="1"/>
             <TextView
-                    android:background="@drawable/box_notification_status_changed"
+                    android:background="@drawable/box_order_status"
                     android:text="12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/notChat" android:layout_weight="0"
