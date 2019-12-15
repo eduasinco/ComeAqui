@@ -64,6 +64,7 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
                     context.startActivity(notification);
                 });
                 break;
+            case "REJECTED":
             case "CANCELED":
                 holder.typeImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.order_canceled_not));
                 holder.mView.setOnClickListener(v -> {
@@ -72,6 +73,7 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
                     context.startActivity(notification);
                 });
                 break;
+
             case "REVIEW":
                 holder.typeImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.social_not));
                 holder.mView.setOnClickListener(v -> goToFoodPostReview(holder.mItem.type_id));

@@ -233,7 +233,7 @@ public class OrderLookActivity extends AppCompatActivity implements TwoOptionsMe
 
         if (order.status.equals("CONFIRMED")){
             orderStatus.setTextColor(getResources().getColor(R.color.success));
-        } else if (order.status.equals("CANCELED")){
+        } else if (order.status.equals("CANCELED") || order.status.equals("REJECTED")){
             orderStatus.setTextColor(getResources().getColor(R.color.canceled));
         } else {
             orderStatus.setTextColor(getResources().getColor(R.color.colorPrimary));

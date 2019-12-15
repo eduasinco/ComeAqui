@@ -182,6 +182,10 @@ public class NotificationLookActivity extends AppCompatActivity implements TwoOp
                 orderAction.setText("Meal confirmed!");
                 orderAction.setBackground(ContextCompat.getDrawable(this, R.color.success));
                 break;
+            case "REJECTED":
+                orderAction.setText("Meal rejected");
+                orderAction.setBackground(ContextCompat.getDrawable(this, R.color.canceled));
+                break;
             case "CANCELED":
                 orderAction.setText("Meal canceled");
                 orderAction.setBackground(ContextCompat.getDrawable(this, R.color.canceled));
@@ -245,21 +249,19 @@ public class NotificationLookActivity extends AppCompatActivity implements TwoOp
             buttons.setVisibility(View.GONE);
             statucMessage.setVisibility(View.VISIBLE);
         }
+        statucMessage.setText(orderObject.status);
         if (orderObject.status.equals("CONFIRMED")){
-            statucMessage.setText("CONFIRMED");
             statucMessage.setTextColor(ContextCompat.getColor(this, R.color.confirm));
-        } else if (orderObject.status.equals("CANCELED")){
-            statucMessage.setText("CANCELED");
+        } else if (orderObject.status.equals("CANCELED") || orderObject.status.equals("REJECTED")){
             statucMessage.setTextColor(ContextCompat.getColor(this, R.color.canceled));
         } else if (orderObject.status.equals("FINISHED")){
-            statucMessage.setText("FINISHED");
             statucMessage.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
         }
     }
 
     void confirmOrder(OrderObject order, boolean confirm, Context context){
         PostAsyncTask orderStatus = new PostAsyncTask(context.getString(R.string.server) + "/set_order_status/");
-        order.status = confirm ? "CONFIRMED" : "CANCELED";
+        order.status = confirm ? "CONFIRMED" : "REJECTED";
         tasks.add(orderStatus.execute(
                 new String[]{"order_id",  order.id + ""},
                 new String[]{"order_status", order.status}
