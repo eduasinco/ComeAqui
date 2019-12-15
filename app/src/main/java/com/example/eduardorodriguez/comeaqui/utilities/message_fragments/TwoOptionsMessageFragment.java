@@ -107,11 +107,11 @@ public class TwoOptionsMessageFragment extends Fragment {
 
         background.setOnClickListener(v -> show(false));
         leftButton.setOnClickListener(v -> {
-            mListener.leftButtonPressed(cancelMode);
+            mListener.leftButtonPressed();
             show(false);
         });
         rightButton.setOnClickListener(v -> {
-            mListener.rightButtonPressed(cancelMode);
+            mListener.rightButtonPressed();
             show(false);
         });
         return view;
@@ -142,7 +142,7 @@ public class TwoOptionsMessageFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void leftButtonPressed(boolean cancelMode);
-        void rightButtonPressed(boolean cancelMode);
+        void leftButtonPressed();
+        void rightButtonPressed();
     }
 }

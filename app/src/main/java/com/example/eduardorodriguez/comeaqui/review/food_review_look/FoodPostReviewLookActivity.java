@@ -394,10 +394,10 @@ TwoOptionsMessageFragment.OnFragmentInteractionListener{
     }
 
     @Override
-    public void leftButtonPressed(boolean cancelMode) {}
+    public void leftButtonPressed() {}
 
     @Override
-    public void rightButtonPressed(boolean cancelMode) {
+    public void rightButtonPressed() {
         deletePost();
     }
 

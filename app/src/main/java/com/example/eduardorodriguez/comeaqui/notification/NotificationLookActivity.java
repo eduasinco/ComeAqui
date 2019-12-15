@@ -59,6 +59,7 @@ public class NotificationLookActivity extends AppCompatActivity implements TwoOp
     FrameLayout waitingFrame;
 
     OrderObject orderObject;
+    boolean confirm;
 
     TwoOptionsMessageFragment confirmFragment;
     TwoOptionsMessageFragment rejectFragment;
@@ -240,9 +241,11 @@ public class NotificationLookActivity extends AppCompatActivity implements TwoOp
     void setConfirmCancelButton(){
         if (orderObject.status.equals("PENDING")){
             confirmButton.setOnClickListener(v -> {
+                confirm = true;
                 confirmFragment.show(true);
             });
             rejectButton.setOnClickListener(v -> {
+                confirm = false;
                 rejectFragment.show(true);
             });
         } else {
@@ -301,13 +304,13 @@ public class NotificationLookActivity extends AppCompatActivity implements TwoOp
     }
 
     @Override
-    public void leftButtonPressed(boolean cancelMode) {
+    public void leftButtonPressed() {
 
     }
 
     @Override
-    public void rightButtonPressed(boolean cancelMode) {
-        confirmOrder(orderObject, cancelMode, this);
+    public void rightButtonPressed() {
+        confirmOrder(orderObject, confirm, this);
     }
 
     @Override

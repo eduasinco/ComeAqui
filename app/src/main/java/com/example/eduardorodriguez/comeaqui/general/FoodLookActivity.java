@@ -456,10 +456,10 @@ public class FoodLookActivity extends AppCompatActivity implements TwoOptionsMes
     }
 
     @Override
-    public void leftButtonPressed(boolean cancelMode) {}
+    public void leftButtonPressed() {}
 
     @Override
-    public void rightButtonPressed(boolean cancelMode) {
+    public void rightButtonPressed() {
         deletePost();
     }
 
