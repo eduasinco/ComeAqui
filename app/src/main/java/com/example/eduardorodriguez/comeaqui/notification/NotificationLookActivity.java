@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
@@ -27,6 +28,7 @@ import com.example.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.HorizontalImageDisplayFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.message_fragments.TwoOptionsMessageFragment;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
@@ -297,8 +299,18 @@ public class NotificationLookActivity extends AppCompatActivity implements TwoOp
         }
         @Override
         protected void onPostExecute(String response) {
+            if (response != null){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                if (jo.get("error_message") == null){
+                    try{
+                        OrderObject order = new OrderObject(jo);
+                        finish();
+                    } catch (Exception e){}
+                } else {
+                    Toast.makeText(getApplication(), jo.get("error_message").getAsString(), Toast.LENGTH_LONG).show();
+                }
+            }
             showProgress(false);
-            finish();
             super.onPostExecute(response);
         }
     }

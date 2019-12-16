@@ -137,6 +137,9 @@ public class ServerAPI {
             if (responseCode == HttpsURLConnection.HTTP_BAD_REQUEST) {
                 return readStream(connection.getErrorStream());
             }
+            if (responseCode == HttpsURLConnection.HTTP_UNAUTHORIZED) {
+                return readStream(connection.getErrorStream());
+            }
             stream = connection.getInputStream();
             if (stream != null) {
                 result = readStream(stream);
