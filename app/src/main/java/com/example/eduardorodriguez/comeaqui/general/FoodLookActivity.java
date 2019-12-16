@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.general.attend_message.AttendFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
@@ -47,7 +48,9 @@ import java.util.ArrayList;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
-public class FoodLookActivity extends AppCompatActivity implements TwoOptionsMessageFragment.OnFragmentInteractionListener{
+public class FoodLookActivity extends AppCompatActivity implements
+        TwoOptionsMessageFragment.OnFragmentInteractionListener,
+        AttendFragment.OnFragmentInteractionListener {
 
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbar;
@@ -63,12 +66,12 @@ public class FoodLookActivity extends AppCompatActivity implements TwoOptionsMes
     TextView posterNameView;
     TextView posterLocationView;
     TextView changePaymentMethod;
-    Button placeOrderButton;
+    Button attendMealButton;
 
     ImageView posterImage;
     LinearLayout paymentMethod;
     LinearLayout profileLook;
-    View placeOrderProgress;
+    View progress;
     FrameLayout placeOrderErrorMessage;
     LinearLayout dinnersListView;
     ImageView[] dinnerArray;
@@ -76,8 +79,10 @@ public class FoodLookActivity extends AppCompatActivity implements TwoOptionsMes
     Menu collapseMenu;
 
     TwoOptionsMessageFragment sureFragment;
+    AttendFragment attendFragment;
 
     FoodPostDetail foodPostDetail;
+    int additionalGuests;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     @Override
@@ -93,7 +98,7 @@ public class FoodLookActivity extends AppCompatActivity implements TwoOptionsMes
         plateNameView = findViewById(R.id.postPlateName);
         descriptionView = findViewById(R.id.post_description);
         priceView = findViewById(R.id.price);
-        placeOrderButton = findViewById(R.id.placeOrderButton);
+        attendMealButton = findViewById(R.id.placeOrderButton);
         timeView = findViewById(R.id.time);
         date = findViewById(R.id.date);
         usernameView = findViewById(R.id.username);
@@ -103,7 +108,7 @@ public class FoodLookActivity extends AppCompatActivity implements TwoOptionsMes
         posterImage = findViewById(R.id.poster_image);
         paymentMethod = findViewById(R.id.payment_method_layout);
         changePaymentMethod = findViewById(R.id.change_payment);
-        placeOrderProgress = findViewById(R.id.place_order_progress);
+        progress = findViewById(R.id.place_order_progress);
         dinnersListView = findViewById(R.id.dinners_list_view);
         profileLook = findViewById(R.id.profile_look);
 
@@ -287,6 +292,11 @@ public class FoodLookActivity extends AppCompatActivity implements TwoOptionsMes
                 .replace(R.id.sure_message, sureFragment)
                 .commit();
 
+        attendFragment = AttendFragment.newInstance(foodPostDetail.dinners_left);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.sure_message, attendFragment)
+                .commit();
+
         setPlaceButton();
         setDinners();
     }
@@ -345,29 +355,34 @@ public class FoodLookActivity extends AppCompatActivity implements TwoOptionsMes
 
     void showProgress(boolean show){
         if (show){
-            placeOrderButton.setVisibility(View.GONE);
-            placeOrderProgress.setVisibility(View.VISIBLE);
+            attendMealButton.setVisibility(View.GONE);
+            progress.setVisibility(View.VISIBLE);
         } else {
-            placeOrderButton.setVisibility(View.VISIBLE);
-            placeOrderProgress.setVisibility(View.GONE);
+            attendMealButton.setVisibility(View.VISIBLE);
+            progress.setVisibility(View.GONE);
         }
     }
 
     void setPlaceButton(){
         if (foodPostDetail.owner.id == USER.id){
             if (foodPostDetail.confirmedOrdersList.size() > 0){
-                placeOrderButton.setText("Post confirmed");
-                placeOrderButton.setBackgroundColor(Color.TRANSPARENT);
-                placeOrderButton.setTextColor(ContextCompat.getColor(this, R.color.success));
+                attendMealButton.setText("Meal confirmed");
+                attendMealButton.setBackgroundColor(Color.TRANSPARENT);
+                attendMealButton.setTextColor(ContextCompat.getColor(this, R.color.success));
             } else {
-                placeOrderButton.setVisibility(View.INVISIBLE);
+                attendMealButton.setVisibility(View.INVISIBLE);
             }
             paymentMethod.setVisibility(View.GONE);
         }else{
-            placeOrderButton.setOnClickListener(v -> {
-                showProgress(true);
-                createOrder();
-            });
+            if (foodPostDetail.confirmedOrdersList.size() == foodPostDetail.max_dinners){
+                attendMealButton.setText("Event full");
+                attendMealButton.setBackgroundColor(Color.TRANSPARENT);
+                attendMealButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
+            } else {
+                attendMealButton.setOnClickListener(v -> {
+                    attendFragment.show(true);
+                });
+            }
         }
     }
 
@@ -400,7 +415,10 @@ public class FoodLookActivity extends AppCompatActivity implements TwoOptionsMes
 
     void createOrder(){
         PostAsyncTask createOrder = new PostAsyncTask(getResources().getString(R.string.server) + "/create_order_and_notification/");
-        tasks.add(createOrder.execute(new String[]{"food_post_id", "" + foodPostDetail.id}));
+        tasks.add(createOrder.execute(
+                new String[]{"food_post_id", "" + foodPostDetail.id},
+                new String[]{"additional_guests", "" + additionalGuests}
+        ));
     }
     private class PostAsyncTask extends AsyncTask<String[], Void, String> {
         public Bitmap bitmap;
@@ -453,6 +471,13 @@ public class FoodLookActivity extends AppCompatActivity implements TwoOptionsMes
                         "Error during posting",
                         "Please make sure that you have connection to the internet"))
                 .commit();
+    }
+
+    @Override
+    public void onConfirmAttend(int additionalGuests) {
+        this.additionalGuests = additionalGuests;
+        attendFragment.show(false);
+        createOrder();
     }
 
     @Override

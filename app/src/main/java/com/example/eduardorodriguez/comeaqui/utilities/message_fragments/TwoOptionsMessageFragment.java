@@ -80,7 +80,6 @@ public class TwoOptionsMessageFragment extends Fragment {
             cardView.animate().scaleX(0).setDuration(100);
             cardView.animate().scaleY(0).setDuration(100).withEndAction(() -> background.setVisibility(View.GONE));
         }
-
     }
 
     @Override

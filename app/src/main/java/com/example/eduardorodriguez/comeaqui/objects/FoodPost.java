@@ -24,6 +24,7 @@ public class FoodPost implements Serializable {
     public String postal_code;
 
     public int max_dinners;
+    public int dinners_left;
     public String time_to_show;
     public String time_range;
     public String start_time;
@@ -59,6 +60,7 @@ public class FoodPost implements Serializable {
         postal_code = jo.get("postal_code") instanceof JsonNull ? "" : jo.get("postal_code").getAsString();
 
         max_dinners = jo.get("max_dinners").getAsInt();
+        dinners_left = jo.get("dinners_left").getAsInt();
         start_time = jo.get("start_time").getAsString();
         end_time = jo.get("end_time").getAsString();
         time_to_show = DateFormatting.hhmmHappenedNowTodayYesterdayWeekDay(start_time, end_time);

@@ -423,7 +423,7 @@
                 android:background="@android:color/holo_green_dark"
                 android:paddingStart="24dp"
                 android:paddingEnd="24dp"
-                android:text="PLACE ORDER"
+                android:text="ATTEND TO MEAL"
                 android:textColor="@android:color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -444,6 +444,13 @@
 
     <FrameLayout
         android:id="@+id/sure_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/attend_message"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
