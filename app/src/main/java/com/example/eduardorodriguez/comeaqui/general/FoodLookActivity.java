@@ -306,7 +306,7 @@ public class FoodLookActivity extends AppCompatActivity implements
 
         attendFragment = AttendFragment.newInstance(foodPostDetail.dinners_left);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.sure_message, attendFragment)
+                .replace(R.id.attend_message, attendFragment)
                 .commit();
 
         setPlaceButton();

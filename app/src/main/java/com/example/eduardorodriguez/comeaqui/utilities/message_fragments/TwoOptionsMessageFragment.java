@@ -50,7 +50,7 @@ public class TwoOptionsMessageFragment extends Fragment {
         args.putString(TITLE, title);
         args.putString(LEFT_BUTTON, leftButtonMessage);
         args.putString(RIGHT_BUTTON, rightButtonMessage);
-        args.putString(MODE, rightButtonMessage);
+        args.putBoolean(MODE, cancelMode);
         fragment.setArguments(args);
         return fragment;
     }
