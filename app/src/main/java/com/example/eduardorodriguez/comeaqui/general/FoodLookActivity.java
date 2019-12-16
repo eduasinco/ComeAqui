@@ -180,8 +180,6 @@ public class FoodLookActivity extends AppCompatActivity implements
             popupMenu.getMenu().add("Edit");
             if (foodPostDetail.confirmedOrdersList.size() == 0 || (foodPostDetail.confirmedOrdersList.size() > 0 && foodPostDetail.confirmedOrdersList.get(0).status.equals("FINISHED"))){
                 popupMenu.getMenu().add("Delete");
-            } else {
-                Toast.makeText(this, "You can't delete a confirmed post", Toast.LENGTH_LONG).show();
             }
         } else {
             popupMenu.getMenu().add("Report");

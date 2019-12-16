@@ -250,7 +250,7 @@ public class FoodDateTimePickerFragment extends Fragment {
             formatter.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
             String dateFormatted = formatter.format(startDate);
             timeTextView.setText(dateFormatted);
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
             format.setTimeZone(TimeZone.getTimeZone("UTC"));
             mListener.onFragmentInteraction(format.format(startDate), format.format(newEndDate));
         }

@@ -17,7 +17,7 @@ public class DateFormatting {
 
     public static Date convertToDate(String dateString) throws ParseException {
         try {
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'");
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
             format.setTimeZone(TimeZone.getTimeZone("UTC"));
             return format.parse(dateString);
         } catch (Exception e){

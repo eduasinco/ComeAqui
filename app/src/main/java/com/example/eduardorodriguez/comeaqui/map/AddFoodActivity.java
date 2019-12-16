@@ -30,6 +30,7 @@ import com.example.eduardorodriguez.comeaqui.utilities.message_fragments.OneOpti
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodTypeSelectorFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.message_fragments.TwoOptionsMessageFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.place_autocomplete.PlaceAutocompleteFragment;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
@@ -530,13 +531,19 @@ public class AddFoodActivity extends AppCompatActivity implements
         @Override
         protected void onPostExecute(String response) {
             if (response != null){
-                foodPostDetail = new SavedFoodPost(new JsonParser().parse(response).getAsJsonObject());
-                setOptionsMenu();
-            }
-            if (method.equals("POST")) {
-                addImageFragment.initializeFoodPost(foodPostDetail.id);
-            } else {
-                finish();
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                if (jo.get("error_message") == null){
+                    foodPostDetail = new SavedFoodPost(jo);
+                    if (visible) {
+                        finish();
+                    } else {
+                        addImageFragment.initializeFoodPost(foodPostDetail.id);
+                        setOptionsMenu();
+                        Toast.makeText(getApplication(), "Meal saved", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(getApplication(), jo.get("error_message").getAsString(), Toast.LENGTH_LONG).show();
+                }
             }
             showProgress(false);
             super.onPostExecute(response);
