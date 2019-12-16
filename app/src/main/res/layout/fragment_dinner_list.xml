@@ -20,6 +20,6 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
-        tools:context=".general.DinnerFragment"
+        tools:context=".general.dinner_list.DinnerFragment"
         tools:listitem="@layout/fragment_dinner" />
 </androidx.constraintlayout.widget.ConstraintLayout>

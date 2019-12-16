@@ -1,4 +1,4 @@
-package com.example.eduardorodriguez.comeaqui.general;
+package com.example.eduardorodriguez.comeaqui.general.dinner_list;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
@@ -22,9 +21,6 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public class DinnerFragment extends Fragment {
 

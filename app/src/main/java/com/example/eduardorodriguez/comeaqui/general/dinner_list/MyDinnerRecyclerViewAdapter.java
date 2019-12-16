@@ -1,8 +1,7 @@
-package com.example.eduardorodriguez.comeaqui.general;
+package com.example.eduardorodriguez.comeaqui.general.dinner_list;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +10,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
-import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
-import com.example.eduardorodriguez.comeaqui.general.DinnerFragment.OnListFragmentInteractionListener;
+import com.example.eduardorodriguez.comeaqui.general.dinner_list.DinnerFragment.OnListFragmentInteractionListener;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
-import com.example.eduardorodriguez.comeaqui.objects.User;
-
-import com.google.gson.JsonParser;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -54,6 +47,11 @@ public class MyDinnerRecyclerViewAdapter extends RecyclerView.Adapter<MyDinnerRe
             holder.dinnerChat.setVisibility(View.GONE);
         }
 
+        if (holder.mItem.additionalGuests > 0){
+            holder.plus.setVisibility(View.VISIBLE);
+            holder.plus.setText("+" + holder.mItem.additionalGuests);
+        }
+
         holder.dinnerChat.setOnClickListener(v -> {
             if (null != mListener){
                 mListener.onChatInteraction(holder.mItem);
@@ -79,6 +77,7 @@ public class MyDinnerRecyclerViewAdapter extends RecyclerView.Adapter<MyDinnerRe
         public final TextView dinnerName;
         public final ImageView dinnerChat;
         public final ImageView dinnerImage;
+        public final TextView plus;
         public OrderObject mItem;
 
         public ViewHolder(View view) {
@@ -87,6 +86,7 @@ public class MyDinnerRecyclerViewAdapter extends RecyclerView.Adapter<MyDinnerRe
             dinnerName = view.findViewById(R.id.dinner_name);
             dinnerChat = view.findViewById(R.id.dinner_chat);
             dinnerImage = view.findViewById(R.id.dinner_image);
+            plus = view.findViewById(R.id.plus);
         }
     }
 }

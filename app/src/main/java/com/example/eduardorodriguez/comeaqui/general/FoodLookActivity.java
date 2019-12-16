@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.general.attend_message.AttendFragment;
+import com.example.eduardorodriguez.comeaqui.general.dinner_list.DinnerListActivity;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
@@ -75,6 +76,7 @@ public class FoodLookActivity extends AppCompatActivity implements
     FrameLayout placeOrderErrorMessage;
     LinearLayout dinnersListView;
     ImageView[] dinnerArray;
+    TextView[] plusArray;
     FrameLayout waitingFrame;
     Menu collapseMenu;
 
@@ -226,7 +228,15 @@ public class FoodLookActivity extends AppCompatActivity implements
                 findViewById(R.id.dinner4),
                 findViewById(R.id.dinner5),
                 findViewById(R.id.dinner6),
-                findViewById(R.id.dinner7)
+        };
+        plusArray = new TextView[]{
+                findViewById(R.id.plus0),
+                findViewById(R.id.plus1),
+                findViewById(R.id.plus2),
+                findViewById(R.id.plus3),
+                findViewById(R.id.plus4),
+                findViewById(R.id.plus5),
+                findViewById(R.id.plus6),
         };
         TextView dinnersNumber = findViewById(R.id.dinners_number);
 
@@ -237,7 +247,7 @@ public class FoodLookActivity extends AppCompatActivity implements
         });
 
         if (foodPostDetail.confirmedOrdersList.size() > 0){
-            dinnersNumber.setText(foodPostDetail.confirmedOrdersList.size() + "/" + foodPostDetail.max_dinners + " dinners for this meal");
+            dinnersNumber.setText((foodPostDetail.max_dinners - foodPostDetail.dinners_left) + "/" + foodPostDetail.max_dinners + " dinners for this meal");
         } else {
             dinnersNumber.setText("No dinners for this meal yet");
         }
@@ -245,6 +255,10 @@ public class FoodLookActivity extends AppCompatActivity implements
         while (i < dinnerArray.length && i < foodPostDetail.confirmedOrdersList.size()){
             if(!foodPostDetail.confirmedOrdersList.get(i).owner.profile_photo.contains("no-image")) {
                 Glide.with(this).load(foodPostDetail.confirmedOrdersList.get(i).owner.profile_photo).into(dinnerArray[i]);
+                if (foodPostDetail.confirmedOrdersList.get(i).additionalGuests > 0){
+                    plusArray[i].setVisibility(View.VISIBLE);
+                    plusArray[i].setText("+" + foodPostDetail.confirmedOrdersList.get(i).additionalGuests);
+                }
             }
             dinnerArray[i].setVisibility(View.VISIBLE);
             i++;
