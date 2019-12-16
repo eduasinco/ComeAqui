@@ -451,19 +451,25 @@ public class FoodLookActivity extends AppCompatActivity implements
             try {
                 return ServerAPI.upload(getApplicationContext(), "POST", this.uri, params);
             } catch (IOException e) {
-                showProgress(false);
                 e.printStackTrace();
             }
             return null;
         }
         @Override
         protected void onPostExecute(String response) {
-            if (null != response){
-                JsonObject jo = new JsonParser().parse(response).getAsJsonObject().get("order").getAsJsonObject();
-                OrderObject orderObject = new OrderObject(jo);
-                goToOrder(orderObject);
-                finish();
+            if (response != null){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                if (jo.get("error_message") == null){
+                    try{
+                        OrderObject orderObject = new OrderObject(jo.get("order").getAsJsonObject());
+                        goToOrder(orderObject);
+                        finish();
+                    } catch (Exception e){}
+                } else {
+                    Toast.makeText(getApplication(), jo.get("error_message").getAsString(), Toast.LENGTH_LONG).show();
+                }
             }
+            showProgress(false);
             super.onPostExecute(response);
         }
     }
