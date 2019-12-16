@@ -38,6 +38,7 @@ public class NotificationLookActivity extends AppCompatActivity implements TwoOp
 
     static Context context;
 
+    TextView plusGuests;
     TextView plateNameView;
     TextView descriptionView;
     TextView priceView;
@@ -72,6 +73,7 @@ public class NotificationLookActivity extends AppCompatActivity implements TwoOp
         setContentView(R.layout.activity_notification_look);
         context = getApplicationContext();
 
+        plusGuests = findViewById(R.id.plus_guests);
         plateNameView = findViewById(R.id.postPlateName);
         descriptionView = findViewById(R.id.post_description);
         priceView = findViewById(R.id.price);
@@ -166,6 +168,10 @@ public class NotificationLookActivity extends AppCompatActivity implements TwoOp
     void setDetails(){
         posterNameView.setText(orderObject.owner.first_name + " " + orderObject.owner.last_name);
         usernameView.setText(orderObject.owner.username);
+        if (orderObject.additionalGuests > 0){
+            plusGuests.setVisibility(View.VISIBLE);
+            plusGuests.setText("+" + orderObject.additionalGuests);
+        }
         plateNameView.setText(orderObject.post.plate_name);
         descriptionView.setText(orderObject.post.description);
         posterLocationView.setText(orderObject.post.formatted_address);

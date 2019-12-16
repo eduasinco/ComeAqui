@@ -32,7 +32,7 @@
                 android:id="@+id/postPlateName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="80dp"
+                android:layout_marginTop="85dp"
                 android:layout_marginBottom="8dp"
                 android:paddingLeft="24dp"
                 android:paddingEnd="24dp"
@@ -304,6 +304,17 @@
 
                 </LinearLayout>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/plus_guests"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="+"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/order_action"

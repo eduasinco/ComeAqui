@@ -476,7 +476,6 @@ public class FoodLookActivity extends AppCompatActivity implements
     @Override
     public void onConfirmAttend(int additionalGuests) {
         this.additionalGuests = additionalGuests;
-        attendFragment.show(false);
         createOrder();
     }
 

@@ -75,6 +75,7 @@ public class AttendFragment extends Fragment {
         minusButton = view.findViewById(R.id.minus_button);
         confirmAttendButton = view.findViewById(R.id.confirm_button);
 
+        background.setOnClickListener(v -> show(false));
         plusButton.setOnClickListener(v -> {
             if (additionalGuests < dinners_left - 1){
                 additionalGuests++;
@@ -87,7 +88,10 @@ public class AttendFragment extends Fragment {
             }
             addGuestsText.setText("" + additionalGuests);
         });
-        confirmAttendButton.setOnClickListener(v -> mListener.onConfirmAttend(additionalGuests));
+        confirmAttendButton.setOnClickListener(v -> {
+            mListener.onConfirmAttend(additionalGuests);
+            show(false);
+        });
         return view;
     }
 
