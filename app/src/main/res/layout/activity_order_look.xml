@@ -352,13 +352,13 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <ProgressBar
-                android:id="@+id/order_cancel_progress"
-                style="?android:attr/progressBarStyleLarge"
+            <Button
+                android:id="@+id/chat_with_host_button"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="8dp"
-                android:visibility="gone" />
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDim"
+                android:text="Chat with host"
+                android:textColor="@android:color/white" />
         </LinearLayout>
     </ScrollView>
 

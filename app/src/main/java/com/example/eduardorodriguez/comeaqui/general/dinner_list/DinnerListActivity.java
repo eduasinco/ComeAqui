@@ -94,7 +94,6 @@ public class DinnerListActivity extends AppCompatActivity implements DinnerFragm
 
     }
 
-
     void goToConversationActivity(ChatObject chat){
         Intent k = new Intent(this, ConversationActivity.class);
         k.putExtra("chatId", chat.id + "");

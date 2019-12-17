@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -15,7 +16,10 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
+import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
 import com.example.eduardorodriguez.comeaqui.general.StaticMapFragment;
+import com.example.eduardorodriguez.comeaqui.general.dinner_list.DinnerListActivity;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.User;
@@ -46,6 +50,7 @@ public class OrderLookActivity extends AppCompatActivity implements TwoOptionsMe
     TextView posterNameView;
     TextView posterUsername;
     TextView orderStatus;
+    Button chatWithHostButton;
 
     ImageView posterImageView;
     FrameLayout waitingFrame;
@@ -76,6 +81,7 @@ public class OrderLookActivity extends AppCompatActivity implements TwoOptionsMe
         totalPriceView = findViewById(R.id.totalPrice);
         mealTimeView = findViewById(R.id.time);
         orderStatus = findViewById(R.id.order_status);
+        chatWithHostButton = findViewById(R.id.chat_with_host_button);
 
         posterImageView = findViewById(R.id.poster_image);
         waitingFrame = findViewById(R.id.waiting_frame);
@@ -115,6 +121,9 @@ public class OrderLookActivity extends AppCompatActivity implements TwoOptionsMe
                 return true;
             });
             popupMenu.show();
+        });
+        chatWithHostButton.setOnClickListener(v -> {
+            goToConversationWithUser(order.poster);
         });
     }
 
@@ -255,6 +264,47 @@ public class OrderLookActivity extends AppCompatActivity implements TwoOptionsMe
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.profile_rating, RatingFragment.newInstance(order.poster.rating, order.poster.ratingN))
                 .commit();
+    }
+
+    void goToConversationWithUser(User user){
+        new GetOrCreateChatAsyncTask(getResources().getString(R.string.server) + "/get_or_create_chat/" + user.id + "/").execute();
+    }
+    class GetOrCreateChatAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetOrCreateChatAsyncTask(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null) {
+                ChatObject chat = new ChatObject(new JsonParser().parse(response).getAsJsonObject());
+                goToConversationActivity(chat);
+            }
+            super.onPostExecute(response);
+        }
+
+    }
+
+    void goToConversationActivity(ChatObject chat){
+        Intent k = new Intent(this, ConversationActivity.class);
+        k.putExtra("chatId", chat.id + "");
+        startActivity(k);
     }
 
     @Override
