@@ -39,7 +39,7 @@ enum SubmitButtonStatus{
     NEXT, SUBMIT
 }
 
-public class ReviewPostActivity extends AppCompatActivity implements StarReasonFragment.OnFragmentInteractionListener {
+public class ReviewHostActivity extends AppCompatActivity implements StarReasonFragment.OnFragmentInteractionListener {
 
     LinearLayout rateMealView;
     Button submitButton;

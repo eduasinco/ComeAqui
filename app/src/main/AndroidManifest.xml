@@ -57,8 +57,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".review.GuestsReviewActivity" />
-        <activity android:name=".review.ReviewPostActivity" />
+        <activity android:name=".review.ReviewGuestActivity" />
+        <activity android:name=".review.ReviewHostActivity" />
         <activity android:name=".utilities.image_view_pager.ImagePagerActivity" />
         <activity android:name=".profile.edit_profile.edit_account_details.payment.AddPaymentMethodActivity" />
         <activity android:name=".profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity" />

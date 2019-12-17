@@ -16,8 +16,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.eduardorodriguez.comeaqui.map.NoLocationFragmentFragment;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
-import com.example.eduardorodriguez.comeaqui.review.GuestsReviewActivity;
-import com.example.eduardorodriguez.comeaqui.review.ReviewPostActivity;
+import com.example.eduardorodriguez.comeaqui.review.ReviewGuestActivity;
+import com.example.eduardorodriguez.comeaqui.review.ReviewHostActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
                 JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
                 if (ja.size() > 0){
                     OrderObject orderObject = new OrderObject(ja.get(0).getAsJsonObject());
-                    Intent k = new Intent(context, GuestsReviewActivity.class);
+                    Intent k = new Intent(context, ReviewGuestActivity.class);
                     k.putExtra("order", orderObject);
                     startActivity(k);
                 }
@@ -229,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
                 JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
                 if (ja.size() > 0){
                     OrderObject orderObject = new OrderObject(ja.get(0).getAsJsonObject());
-                    Intent k = new Intent(context, ReviewPostActivity.class);
+                    Intent k = new Intent(context, ReviewHostActivity.class);
                     k.putExtra("order", orderObject);
                     startActivity(k);
                 }

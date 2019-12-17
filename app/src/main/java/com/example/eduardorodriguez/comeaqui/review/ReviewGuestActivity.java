@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-public class GuestsReviewActivity extends AppCompatActivity implements StarReasonFragment.OnFragmentInteractionListener{
+public class ReviewGuestActivity extends AppCompatActivity implements StarReasonFragment.OnFragmentInteractionListener{
 
 
     Button submitButton;
