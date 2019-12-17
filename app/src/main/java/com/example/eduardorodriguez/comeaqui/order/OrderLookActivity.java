@@ -122,6 +122,53 @@ public class OrderLookActivity extends AppCompatActivity implements TwoOptionsMe
             });
             popupMenu.show();
         });
+
+    }
+
+    void setView(){
+        plateName.setText(order.post.plate_name);
+        posterUsername.setText(order.poster.username);
+        posterNameView.setText(order.poster.first_name + " " + order.poster.last_name);
+        posterDescription.setText(order.post.description);
+        posterLocationView.setText(order.post.formatted_address);
+        price.setText("$" + order.post.price);
+        subtotalView.setText("$" + order.post.price);
+        totalPriceView.setText("$" + order.post.price);
+        mealTimeView.setText(order.post.time_to_show + " " + order.post.time_range);
+        orderStatus.setText(order.status);
+
+        if (order.status.equals("CONFIRMED")){
+            orderStatus.setTextColor(getResources().getColor(R.color.success));
+        } else if (order.status.equals("CANCELED") || order.status.equals("REJECTED")){
+            orderStatus.setTextColor(getResources().getColor(R.color.canceled));
+        } else {
+            orderStatus.setTextColor(getResources().getColor(R.color.colorPrimary));
+        }
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.static_map_frame, StaticMapFragment.newInstance(order.post.lat, order.post.lng))
+                .commit();
+
+        if(!order.poster.profile_photo.contains("no-image")) {
+            Glide.with(context).load(order.poster.profile_photo).into(posterImageView);
+            posterImageView.setOnClickListener(v -> goToProfileView(order.poster));
+        }
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(order.post.id,16, 8, 200,4, 4))
+                .commit();
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.profile_rating, RatingFragment.newInstance(order.poster.rating, order.poster.ratingN))
+                .commit();
+
+        setChatWithHostButton();
+    }
+
+    void setChatWithHostButton(){
+        if (order.status.equals("CONFIRMED") || order.status.equals("PENDING")){
+            chatWithHostButton.setVisibility(View.VISIBLE);
+        }
         chatWithHostButton.setOnClickListener(v -> {
             goToConversationWithUser(order.poster);
         });
@@ -226,44 +273,6 @@ public class OrderLookActivity extends AppCompatActivity implements TwoOptionsMe
             finish();
             super.onPostExecute(response);
         }
-    }
-
-    void setView(){
-        plateName.setText(order.post.plate_name);
-        posterUsername.setText(order.poster.username);
-        posterNameView.setText(order.poster.first_name + " " + order.poster.last_name);
-        posterDescription.setText(order.post.description);
-        posterLocationView.setText(order.post.formatted_address);
-        price.setText("$" + order.post.price);
-        subtotalView.setText("$" + order.post.price);
-        totalPriceView.setText("$" + order.post.price);
-        mealTimeView.setText(order.post.time_to_show + " " + order.post.time_range);
-        orderStatus.setText(order.status);
-
-        if (order.status.equals("CONFIRMED")){
-            orderStatus.setTextColor(getResources().getColor(R.color.success));
-        } else if (order.status.equals("CANCELED") || order.status.equals("REJECTED")){
-            orderStatus.setTextColor(getResources().getColor(R.color.canceled));
-        } else {
-            orderStatus.setTextColor(getResources().getColor(R.color.colorPrimary));
-        }
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.static_map_frame, StaticMapFragment.newInstance(order.post.lat, order.post.lng))
-                .commit();
-
-        if(!order.poster.profile_photo.contains("no-image")) {
-            Glide.with(context).load(order.poster.profile_photo).into(posterImageView);
-            posterImageView.setOnClickListener(v -> goToProfileView(order.poster));
-        }
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(order.post.id,16, 8, 200,4, 4))
-                .commit();
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.profile_rating, RatingFragment.newInstance(order.poster.rating, order.poster.ratingN))
-                .commit();
     }
 
     void goToConversationWithUser(User user){

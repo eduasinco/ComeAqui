@@ -358,7 +358,8 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimaryDim"
                 android:text="Chat with host"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
 
