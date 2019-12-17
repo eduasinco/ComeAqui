@@ -91,7 +91,7 @@
                 android:background="@drawable/text_input_shape"
                 android:ems="10"
                 android:hint="Username"
-                android:inputType="textPersonName"
+                android:inputType="textPersonName|textCapSentences"
                 android:paddingStart="16dp" />
 
             <TextView
@@ -137,7 +137,7 @@
                     android:background="@drawable/text_input_shape"
                     android:ems="10"
                     android:hint="Name"
-                    android:inputType="textPersonName"
+                    android:inputType="textPersonName|textCapSentences"
                     android:paddingStart="16dp" />
 
                 <EditText
@@ -149,7 +149,7 @@
                     android:background="@drawable/text_input_shape"
                     android:ems="10"
                     android:hint="Surname"
-                    android:inputType="textPersonName"
+                    android:inputType="textPersonName|textCapSentences"
                     android:paddingStart="16dp" />
             </LinearLayout>
 

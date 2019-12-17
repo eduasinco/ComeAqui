@@ -84,7 +84,8 @@
                 android:layout_weight="1"
                 android:background="@drawable/send_input_text"
                 android:hint="Escribe un mensaje"
-                android:paddingStart="16dp" />
+                android:paddingStart="16dp"
+                android:inputType="textCapSentences"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"

@@ -43,7 +43,7 @@
                     android:background="@color/white_transparent"
                     android:ems="10"
                     android:hint="Address"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName|textCapSentences" />
 
                 <ImageButton
                     android:id="@+id/delete_text"

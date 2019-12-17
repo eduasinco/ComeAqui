@@ -79,6 +79,7 @@
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/text_input_shape"
                 android:text="Plate Name"
+                android:inputType="textCapSentences"
                 android:textSize="18sp" />
 
             <FrameLayout
