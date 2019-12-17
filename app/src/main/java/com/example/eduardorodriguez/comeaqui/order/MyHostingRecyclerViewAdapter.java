@@ -69,6 +69,11 @@ public class MyHostingRecyclerViewAdapter extends RecyclerView.Adapter<MyHosting
                 }
             }
         });
+
+        if (holder.mItem.time_to_show != null){
+            holder.mealTime.setVisibility(View.VISIBLE);
+            holder.mealTime.setText(holder.mItem.time_to_show);
+        }
     }
 
     boolean checkIfInfoMissing(FoodPost foodPost){
