@@ -84,6 +84,7 @@ public class FoodLookActivity extends AppCompatActivity implements
     AttendFragment attendFragment;
 
     FoodPostDetail foodPostDetail;
+    String userStatusInPost;
     int additionalGuests;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
@@ -314,7 +315,7 @@ public class FoodLookActivity extends AppCompatActivity implements
     }
 
     void getFoodPostDetailsAndSet(int foodPostId){
-        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/foods/" + foodPostId + "/").execute());
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/food_with_user_status/" + foodPostId + "/").execute());
     }
 
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
@@ -342,7 +343,10 @@ public class FoodLookActivity extends AppCompatActivity implements
         @Override
         protected void onPostExecute(String response) {
             if (response != null){
-                foodPostDetail = new FoodPostDetail(new JsonParser().parse(response).getAsJsonObject());
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                foodPostDetail = new FoodPostDetail(jo.get("food_post").getAsJsonObject());
+                if (jo.get("user_status_in_this_post") != null)
+                    userStatusInPost = jo.get("user_status_in_this_post").getAsString();
                 setDetails();
             }
             startWaitingFrame(false);
@@ -376,18 +380,17 @@ public class FoodLookActivity extends AppCompatActivity implements
     }
 
     void setPlaceButton(){
-        if (foodPostDetail.owner.id == USER.id){
-            if (foodPostDetail.confirmedOrdersList.size() > 0){
+        if (foodPostDetail.owner.id != USER.id){
+            if (foodPostDetail.dinners_left == 0){
+                attendMealButton.setText("Event full");
+                attendMealButton.setBackgroundColor(Color.TRANSPARENT);
+                attendMealButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
+            } else if (userStatusInPost.equals("CONFIRMED")) {
                 attendMealButton.setText("Meal confirmed");
                 attendMealButton.setBackgroundColor(Color.TRANSPARENT);
                 attendMealButton.setTextColor(ContextCompat.getColor(this, R.color.success));
-            } else {
-                attendMealButton.setVisibility(View.INVISIBLE);
-            }
-            paymentMethod.setVisibility(View.GONE);
-        }else{
-            if (foodPostDetail.confirmedOrdersList.size() == foodPostDetail.max_dinners){
-                attendMealButton.setText("Event full");
+            } else if (userStatusInPost.equals("PENDING")) {
+                attendMealButton.setText("Meal pending confirmation");
                 attendMealButton.setBackgroundColor(Color.TRANSPARENT);
                 attendMealButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
             } else {
@@ -395,6 +398,8 @@ public class FoodLookActivity extends AppCompatActivity implements
                     attendFragment.show(true);
                 });
             }
+            attendMealButton.setVisibility(View.VISIBLE);
+            paymentMethod.setVisibility(View.VISIBLE);
         }
     }
 

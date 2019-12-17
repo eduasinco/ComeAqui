@@ -192,7 +192,6 @@
                 android:layout_marginBottom="8dp"
                 android:paddingStart="24dp"
                 android:paddingEnd="24dp"
-                android:text="Description"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -232,7 +231,6 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:lines="2"
-                    android:text="Calle Julian Romea, 5, 6D"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/locationImage"
@@ -475,7 +473,8 @@
                 android:layout_height="60dp"
                 android:orientation="horizontal"
                 android:paddingStart="24dp"
-                android:paddingEnd="24dp">
+                android:paddingEnd="24dp"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/card_icon"
@@ -513,6 +512,7 @@
                 android:paddingEnd="24dp"
                 android:text="ATTEND TO MEAL"
                 android:textColor="@android:color/white"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
