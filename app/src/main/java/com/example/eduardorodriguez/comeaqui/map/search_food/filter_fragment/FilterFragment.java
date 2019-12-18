@@ -60,7 +60,7 @@ public class FilterFragment extends Fragment implements
     private TextView distanceText;
     private SeekBar distanceSeekbar;
 
-    private LinearLayout[] sortOptions;
+    private Button[] sortOptions;
     private Button[] priceOptions;
 
     private int sortOption;
@@ -113,7 +113,7 @@ public class FilterFragment extends Fragment implements
         distanceSeekbar = view.findViewById(R.id.distance_seekbar);
         setPriceSeekBar();
 
-        sortOptions = new LinearLayout[]{
+        sortOptions = new Button[]{
                 view.findViewById(R.id.sort0),
                 view.findViewById(R.id.sort1),
                 view.findViewById(R.id.sort2)
@@ -224,16 +224,18 @@ public class FilterFragment extends Fragment implements
 
     void setSortButtons(){
         for (int i = 0; i < sortOptions.length; i++){
-            LinearLayout priceClicked = sortOptions[i];
+            Button priceClicked = sortOptions[i];
             final int finalI = i;
             priceClicked.setOnClickListener(v -> {
-                sortOption = finalI;
-                for (LinearLayout button: sortOptions){
+                priceOption = finalI;
+                for (Button button: sortOptions){
                     button.setBackgroundColor(ContextCompat.getColor(getContext(), colorPrimaryLight));
+                    button.setTextColor(Color.WHITE);
                 }
-                for (LinearLayout button: sortOptions){
+                for (Button button: sortOptions){
                     if (button != priceClicked){
                         button.setBackgroundColor(ContextCompat.getColor(getContext(), grey_light));
+                        button.setTextColor(ContextCompat.getColor(getContext(), secondary_text_default_material_light));
                     }
                 }
             });

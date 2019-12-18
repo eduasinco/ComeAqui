@@ -41,9 +41,9 @@ public class FoodDateTimePickerFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     LinearLayout timePicker;
     TextView timeTextView;
-    EditText date;
-    EditText startTime;
-    EditText endTime;
+    TextView date;
+    TextView startTime;
+    TextView endTime;
 
     Date datePicked;
     Long startMilli;
@@ -112,7 +112,7 @@ public class FoodDateTimePickerFragment extends Fragment {
         }
     }
 
-    void getRidOfError(EditText view){
+    void getRidOfError(TextView view){
         view.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged (CharSequence s,int start, int count, int after){ }
@@ -240,16 +240,16 @@ public class FoodDateTimePickerFragment extends Fragment {
         } else {
             newEndDate = endDate;
         }
+        timeTextView.setVisibility(View.GONE);
         if (System.currentTimeMillis() > newEndDate.getTime()){
             DateFormat formatter = new SimpleDateFormat("HH:mm a");
             formatter.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
             String dateFormatted = formatter.format(now);
+            timeTextView.setVisibility(View.VISIBLE);
             timeTextView.setText("Please pick a end time greater than today at " + dateFormatted);
         } else {
             DateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm a");
             formatter.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
-            String dateFormatted = formatter.format(startDate);
-            timeTextView.setText(dateFormatted);
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
             format.setTimeZone(TimeZone.getTimeZone("UTC"));
             mListener.onFragmentInteraction(format.format(startDate), format.format(newEndDate));

@@ -18,7 +18,8 @@
             android:gravity="center"
             android:text="-- --"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/timePicker"
@@ -27,7 +28,7 @@
             android:orientation="vertical"
             android:visibility="visible">
 
-            <EditText
+            <TextView
                 android:id="@+id/date"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -38,14 +39,16 @@
                 android:gravity="center"
                 android:hint="Date"
                 android:inputType="date"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <EditText
+                <TextView
                     android:id="@+id/start_time"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
@@ -57,9 +60,11 @@
                     android:gravity="center"
                     android:hint="Start time"
                     android:inputType="time"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
 
-                <EditText
+                <TextView
                     android:id="@+id/end_time"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
@@ -71,7 +76,9 @@
                     android:gravity="center"
                     android:hint="End time"
                     android:inputType="time"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
             </LinearLayout>
         </LinearLayout>
 
