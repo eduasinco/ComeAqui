@@ -84,7 +84,7 @@ public class FoodLookActivity extends AppCompatActivity implements
     AttendFragment attendFragment;
 
     FoodPostDetail foodPostDetail;
-    String userStatusInPost;
+    String userStatusInPost = "";
     int additionalGuests;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
