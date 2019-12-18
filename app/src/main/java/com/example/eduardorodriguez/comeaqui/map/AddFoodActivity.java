@@ -4,12 +4,15 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 
 import android.os.Bundle;
@@ -50,6 +53,8 @@ public class AddFoodActivity extends AppCompatActivity implements
         WordLimitEditTextFragment.OnFragmentInteractionListener,
         AddImagesFragment.OnFragmentInteractionListener,
         TwoOptionsMessageFragment.OnFragmentInteractionListener{
+    ConstraintLayout rootView;
+    CardView header;
     EditText foodName;
     TextView price;
     ImageView image;
@@ -97,6 +102,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     TwoOptionsMessageFragment saveMessageFragment;
 
     ArrayList<AsyncTask> tasks = new ArrayList<>();
+    boolean isKeyboardShowing = false;
 
     private String setTypes(){
         StringBuilder types = new StringBuilder();
@@ -119,6 +125,7 @@ public class AddFoodActivity extends AppCompatActivity implements
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.order_choices, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        rootView = findViewById(R.id.rootView);
         foodName = findViewById(R.id.plateName);
         price = findViewById(R.id.priceText);
         image = findViewById(R.id.image);
@@ -135,6 +142,30 @@ public class AddFoodActivity extends AppCompatActivity implements
         dinnerPicker = findViewById(R.id.dinners);
 
         context = getApplicationContext();
+
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(
+                () -> {
+                    Rect r = new Rect();
+                    rootView.getWindowVisibleDisplayFrame(r);
+                    int screenHeight = rootView.getRootView().getHeight();
+                    int keypadHeight = screenHeight - r.bottom;
+                    int heightDifference = rootView.getHeight() - (r.bottom - r.top);
+                    ConstraintSet set = new ConstraintSet();
+                    set.clone(rootView);
+                    set.connect(R.id.scrollview, ConstraintSet.BOTTOM, R.id.rootView, ConstraintSet.BOTTOM, heightDifference);
+                    set.applyTo(rootView);
+                    if (keypadHeight > screenHeight * 0.15) {
+                        if (!isKeyboardShowing) {
+                            isKeyboardShowing = true;
+                        }
+                    } else {
+                        if (isKeyboardShowing) {
+                            isKeyboardShowing = false;
+                            set.connect(R.id.scrollview, ConstraintSet.BOTTOM, R.id.rootView, ConstraintSet.BOTTOM, 0);
+                            set.applyTo(rootView);
+                        }
+                    }
+                });
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
