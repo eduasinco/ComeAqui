@@ -224,10 +224,11 @@ public class SearchFoodFragment extends Fragment implements
         for (int i = 0; i < filters.length; i++){
             final int finalI = i;
             filters[i].setOnClickListener(v -> {
-                filterFragment = FilterFragment.newInstance(distance, finalI);
+                filterFragment = FilterFragment.newInstance(sortOption, priceOption, startTime, endTime, distance, dietary, finalI);
                 getChildFragmentManager().beginTransaction()
                         .replace(R.id.filter_frame, filterFragment)
                         .commit();
+
             });
         }
     }
@@ -285,7 +286,13 @@ public class SearchFoodFragment extends Fragment implements
             onFilters[i] = false;
         }
 
-        this.distance = INITIAL_DISTANCE;
+        sortOption = 0;
+        priceOption = 0;
+        dietary = "";
+        startTime = "";
+        endTime = "";
+        distance = INITIAL_DISTANCE;
+
         getDistanceIntoQuery(INITIAL_DISTANCE);
         getFilteredPosts();
     }

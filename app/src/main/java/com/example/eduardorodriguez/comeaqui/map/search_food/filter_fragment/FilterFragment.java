@@ -39,10 +39,19 @@ public class FilterFragment extends Fragment implements
         DatePickerDialog.OnDateSetListener,
         SlideHideBehavior.OnBehaviorListener
 {
-    private static final String INITIAL_DISTANCE = "distance";
+    private static final String SORT_OPTION = "sort";
+    private static final String PRICE_OPTION = "price";
+    private static final String START_TIME = "s_time";
+    private static final String END_TIME = "e_time";
+    private static final String DISTANCE = "distance";
+    private static final String TYPE = "dietary";
     private static final String FILTER = "filter";
-    private int initial_distance;
-
+    private Integer sortOption;
+    private Integer priceOption;
+    private String startTime;
+    private String endTime;
+    private String dietary;
+    private int distance;
     private int filter;
 
     private OnFragmentInteractionListener mListener;
@@ -63,22 +72,20 @@ public class FilterFragment extends Fragment implements
     private Button[] sortOptions;
     private Button[] priceOptions;
 
-    private int sortOption;
-    private int priceOption;
-    private int distance;
-    private String startTime;
-    private String endTime;
-    private String dietary;
-
     FoodDateTimePickerFragment foodTimePickerFragment;
     FoodTypeSelectorFragment foodTypeSelectorFragment;
 
     public FilterFragment() {}
 
-    public static FilterFragment newInstance(int initial_distance, int filter) {
+    public static FilterFragment newInstance(Integer sortOption, Integer priceOption,  String startTime, String endTime,  int distance,  String dietary,  int filter) {
         FilterFragment fragment = new FilterFragment();
         Bundle args = new Bundle();
-        args.putInt(INITIAL_DISTANCE, initial_distance);
+        args.putInt(SORT_OPTION, sortOption == null ? 0 : sortOption);
+        args.putInt(PRICE_OPTION, priceOption == null ? 0 : priceOption);
+        args.putString(START_TIME, startTime);
+        args.putString(END_TIME, endTime);
+        args.putInt(DISTANCE, distance);
+        args.putString(TYPE, dietary);
         args.putInt(FILTER, filter);
         fragment.setArguments(args);
         return fragment;
@@ -88,8 +95,45 @@ public class FilterFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            initial_distance = getArguments().getInt(INITIAL_DISTANCE);
+            sortOption = getArguments().getInt(SORT_OPTION);
+            priceOption = getArguments().getInt(PRICE_OPTION);
+            startTime = getArguments().getString(START_TIME);
+            endTime = getArguments().getString(END_TIME);
+            distance = getArguments().getInt(DISTANCE);
+            dietary = getArguments().getString(TYPE);
             filter = getArguments().getInt(FILTER);
+        }
+    }
+
+    void setFilterInfo(){
+        if (sortOption != null){
+            for (int j = 0; j < sortOptions.length; j++){
+                if (j == sortOption){
+                    sortOptions[j].setBackgroundColor(ContextCompat.getColor(getContext(), colorPrimaryLight));
+                    sortOptions[j].setTextColor(Color.WHITE);
+                } else {
+                    sortOptions[j].setBackgroundColor(ContextCompat.getColor(getContext(), grey_light));
+                    sortOptions[j].setTextColor(ContextCompat.getColor(getContext(), secondary_text_default_material_light));
+                }
+            }
+        }
+        if (priceOption != null){
+            for (int j = 0; j < priceOptions.length; j++){
+                if (j == priceOption){
+                    priceOption = priceOption;
+                    priceOptions[j].setBackgroundColor(ContextCompat.getColor(getContext(), colorPrimaryLight));
+                    priceOptions[j].setTextColor(Color.WHITE);
+                } else {
+                    priceOptions[j].setBackgroundColor(ContextCompat.getColor(getContext(), grey_light));
+                    priceOptions[j].setTextColor(ContextCompat.getColor(getContext(), secondary_text_default_material_light));
+                }
+            }
+        }
+        if (startTime != null && endTime != null) {
+            foodTimePickerFragment.setDateTime(startTime, endTime);
+        }
+        if (dietary != null){
+            foodTypeSelectorFragment.setTypes(dietary);
         }
     }
 
@@ -109,7 +153,7 @@ public class FilterFragment extends Fragment implements
         applyFilterButton = view.findViewById(R.id.apply_filter_button);
 
         distanceText = view.findViewById(R.id.distance_text);
-        distanceText.setText(initial_distance + "m");
+        distanceText.setText(distance + "m");
         distanceSeekbar = view.findViewById(R.id.distance_seekbar);
         setPriceSeekBar();
 
@@ -138,7 +182,6 @@ public class FilterFragment extends Fragment implements
 
         setSortButtons();
         setPirceButtons();
-        setInformationInFilter();
 
         wholeView.setOnTouchListener((v, event) -> {
             showFilter(false);
@@ -153,10 +196,10 @@ public class FilterFragment extends Fragment implements
         return view;
     }
 
-    void setInformationInFilter(){
-        if (startTime != null && endTime != null) {
-            foodTimePickerFragment.setDateTime(startTime, endTime);
-        }
+    @Override
+    public void onResume() {
+        super.onResume();
+        setFilterInfo();
     }
 
     public void showFilter(boolean show){
@@ -199,7 +242,7 @@ public class FilterFragment extends Fragment implements
                 seekBar.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.text_input_shape));
             }
         });
-        distanceSeekbar.setProgress(initial_distance);
+        distanceSeekbar.setProgress(distance);
     }
 
     void sendFilterOptions(){
@@ -211,19 +254,28 @@ public class FilterFragment extends Fragment implements
                 mListener.onPrice(priceOption);
                 break;
             case 2:
-                mListener.onMealTime(startTime, endTime);
+                if (startTime != null && !startTime.isEmpty() && endTime != null && !endTime.isEmpty()){
+                    mListener.onMealTime(startTime, endTime);
+                }
                 break;
             case 3:
                 mListener.onDistance(distance);
                 break;
             case 4:
-                mListener.onDietary(dietary);
+                if (dietary != null && !dietary.isEmpty()){
+                    mListener.onDietary(dietary);
+                }
                 break;
             case 5:
                 mListener.onSort(sortOption);
                 mListener.onPrice(priceOption);
+                if (startTime != null && !startTime.isEmpty() && endTime != null && !endTime.isEmpty()){
+                    mListener.onMealTime(startTime, endTime);
+                }
                 mListener.onDistance(distance);
-                mListener.onDietary(dietary);
+                if (dietary != null && !dietary.isEmpty()){
+                    mListener.onDietary(dietary);
+                }
                 break;
         }
         mListener.onApplyFilterClicked();
@@ -232,18 +284,16 @@ public class FilterFragment extends Fragment implements
 
     void setSortButtons(){
         for (int i = 0; i < sortOptions.length; i++){
-            Button priceClicked = sortOptions[i];
             final int finalI = i;
-            priceClicked.setOnClickListener(v -> {
-                priceOption = finalI;
-                for (Button button: sortOptions){
-                    button.setBackgroundColor(ContextCompat.getColor(getContext(), colorPrimaryLight));
-                    button.setTextColor(Color.WHITE);
-                }
-                for (Button button: sortOptions){
-                    if (button != priceClicked){
-                        button.setBackgroundColor(ContextCompat.getColor(getContext(), grey_light));
-                        button.setTextColor(ContextCompat.getColor(getContext(), secondary_text_default_material_light));
+            sortOptions[i].setOnClickListener(v -> {
+                for (int j = 0; j < sortOptions.length; j++){
+                    if (j == finalI){
+                        sortOption = finalI;
+                        sortOptions[j].setBackgroundColor(ContextCompat.getColor(getContext(), colorPrimaryLight));
+                        sortOptions[j].setTextColor(Color.WHITE);
+                    } else {
+                        sortOptions[j].setBackgroundColor(ContextCompat.getColor(getContext(), grey_light));
+                        sortOptions[j].setTextColor(ContextCompat.getColor(getContext(), secondary_text_default_material_light));
                     }
                 }
             });
@@ -252,18 +302,16 @@ public class FilterFragment extends Fragment implements
 
     void setPirceButtons(){
         for (int i = 0; i < priceOptions.length; i++){
-            Button priceClicked = priceOptions[i];
             final int finalI = i;
-            priceClicked.setOnClickListener(v -> {
-                priceOption = finalI;
-                for (Button button: priceOptions){
-                    button.setBackgroundColor(ContextCompat.getColor(getContext(), colorPrimaryLight));
-                    button.setTextColor(Color.WHITE);
-                }
-                for (Button button: priceOptions){
-                    if (button != priceClicked){
-                        button.setBackgroundColor(ContextCompat.getColor(getContext(), grey_light));
-                        button.setTextColor(ContextCompat.getColor(getContext(), secondary_text_default_material_light));
+            priceOptions[i].setOnClickListener(v -> {
+                for (int j = 0; j < priceOptions.length; j++){
+                    if (j == finalI){
+                        priceOption = finalI;
+                        priceOptions[j].setBackgroundColor(ContextCompat.getColor(getContext(), colorPrimaryLight));
+                        priceOptions[j].setTextColor(Color.WHITE);
+                    } else {
+                        priceOptions[j].setBackgroundColor(ContextCompat.getColor(getContext(), grey_light));
+                        priceOptions[j].setTextColor(ContextCompat.getColor(getContext(), secondary_text_default_material_light));
                     }
                 }
             });
