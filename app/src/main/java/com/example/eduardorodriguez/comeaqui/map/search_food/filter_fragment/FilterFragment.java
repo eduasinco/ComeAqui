@@ -177,7 +177,7 @@ public class FilterFragment extends Fragment implements
     }
 
     void setPriceSeekBar(){
-        distanceSeekbar.setMax(1000);
+        distanceSeekbar.setMax(2000);
         distanceSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}

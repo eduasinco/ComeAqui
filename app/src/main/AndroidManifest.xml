@@ -30,7 +30,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".map.add_food.image_look.ImageLookActivity"></activity>
+        <activity android:name=".map.search_people.SearchPeopleActivity"></activity>
+        <activity android:name=".map.add_food.image_look.ImageLookActivity" />
         <activity android:name=".general.EditFoodPostActivity" />
         <activity android:name=".general.FoodLookActivity" />
         <activity android:name=".profile.edit_profile.edit_account_details.confirm_email.ConfirmEmailActivity" />
@@ -73,7 +74,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".chat.ChatActivity"></activity>
+        <activity android:name=".chat.ChatActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

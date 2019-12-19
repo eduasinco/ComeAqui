@@ -59,6 +59,7 @@ public class SearchFoodFragment extends Fragment implements
     private CoordinatorLayout cardView;
     private RecyclerView recyclerView;
     private HorizontalScrollView filterScroll;
+    private TextView peopleButton;
     private TextView allButton;
     private TextView sortButton;
     private TextView mealTimeButton;
@@ -69,7 +70,7 @@ public class SearchFoodFragment extends Fragment implements
     private LinearLayout notPostFoundView;
 
     private boolean[] onFilters = new boolean[]{false, false, false, false, false, false};
-    int INITIAL_DISTANCE = 500;
+    int INITIAL_DISTANCE = 5000;
 
     private int sortOption;
     private int priceOption;
@@ -176,6 +177,7 @@ public class SearchFoodFragment extends Fragment implements
 
         cardView = view.findViewById(R.id.card_view);
         filterScroll = view.findViewById(R.id.filter_scroll);
+        peopleButton = view.findViewById(R.id.people);
         allButton = view.findViewById(R.id.all);
         sortButton = view.findViewById(R.id.sort);
         priceButton = view.findViewById(R.id.price);
@@ -196,9 +198,11 @@ public class SearchFoodFragment extends Fragment implements
 
         showFilterLogic();
 
-        delleteAllButton.setOnClickListener(v -> {
-            deleteAllFilter();
+        peopleButton.setOnClickListener( v -> {
+            mListener.peopleSearch();
+            showSearchList(false);
         });
+        delleteAllButton.setOnClickListener(v -> deleteAllFilter());
         return view;
     }
 
@@ -478,6 +482,7 @@ public class SearchFoodFragment extends Fragment implements
 
     public interface OnListFragmentInteractionListener {
         void onListFragmentInteraction(FoodPost item);
+        void peopleSearch();
         void closeSearch();
     }
 }

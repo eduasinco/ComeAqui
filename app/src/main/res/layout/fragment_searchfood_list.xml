@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
-        android:visibility="gone">
+        android:visibility="invisible">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/food_search_list"
@@ -79,7 +79,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp">
 
                 </FrameLayout>
@@ -88,8 +87,8 @@
                     android:id="@+id/filter_scroll"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginBottom="4dp"
                     android:scrollbars="none">
 
                     <LinearLayout
@@ -98,11 +97,24 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/people"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="4dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/food_filters_light"
+                            android:gravity="center"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:text="People"
+                            android:textColor="@android:color/black"
+                            android:textStyle="bold" />
+
+                        <TextView
                             android:id="@+id/all"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginEnd="8dp"
+                            android:layout_marginEnd="4dp"
                             android:layout_weight="1"
                             android:background="@drawable/food_filters_light"
                             android:gravity="center"
@@ -116,7 +128,7 @@
                             android:id="@+id/sort"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_marginEnd="8dp"
+                            android:layout_marginEnd="4dp"
                             android:layout_weight="1"
                             android:background="@drawable/food_filters_light"
                             android:gravity="center"
@@ -130,7 +142,7 @@
                             android:id="@+id/price"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_marginEnd="8dp"
+                            android:layout_marginEnd="4dp"
                             android:layout_weight="1"
                             android:background="@drawable/food_filters_light"
                             android:gravity="center"
@@ -144,7 +156,7 @@
                             android:id="@+id/meal_time"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_marginEnd="8dp"
+                            android:layout_marginEnd="4dp"
                             android:layout_weight="1"
                             android:background="@drawable/food_filters_light"
                             android:gravity="center"
@@ -158,7 +170,7 @@
                             android:id="@+id/distance"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_marginEnd="8dp"
+                            android:layout_marginEnd="4dp"
                             android:layout_weight="1"
                             android:background="@drawable/food_filters_light"
                             android:gravity="center"
@@ -172,7 +184,7 @@
                             android:id="@+id/dietary"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_marginEnd="8dp"
+                            android:layout_marginEnd="4dp"
                             android:layout_weight="1"
                             android:background="@drawable/food_filters_light"
                             android:gravity="center"
@@ -186,7 +198,7 @@
                             android:id="@+id/dellete_all"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_marginEnd="8dp"
+                            android:layout_marginEnd="4dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:paddingStart="16dp"

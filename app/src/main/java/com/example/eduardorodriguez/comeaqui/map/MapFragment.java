@@ -10,8 +10,10 @@ import android.os.Bundle;
 
 import com.example.eduardorodriguez.comeaqui.map.map_picker.MapPickerFragment;
 import com.example.eduardorodriguez.comeaqui.map.search_food.SearchFoodFragment;
+import com.example.eduardorodriguez.comeaqui.map.search_people.SearchPeopleActivity;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 
+import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.example.eduardorodriguez.comeaqui.server.Server;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.example.eduardorodriguez.comeaqui.utilities.MyLocation;
@@ -340,9 +342,19 @@ public class MapFragment extends Fragment implements
         this.address_elements = address_elements;
     }
 
+    void goToPeopleSearch(){
+        Intent k = new Intent(getContext(), SearchPeopleActivity.class);
+        startActivity(k);
+    }
+
     @Override
     public void onListFragmentInteraction(FoodPost item) {
 
+    }
+
+    @Override
+    public void peopleSearch() {
+        goToPeopleSearch();
     }
 
     @SuppressLint("RestrictedApi")
