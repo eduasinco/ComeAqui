@@ -126,7 +126,8 @@ public class UpperNotificationFragment extends Fragment {
             postCard.setVisibility(View.GONE);
         }
     }
-    
+
+    boolean result = false;
     void setCardView(View view){
         orderCard.setOnClickListener(v -> {
             Intent orderLook = new Intent(getContext(), OrderLookActivity.class);
@@ -139,6 +140,7 @@ public class UpperNotificationFragment extends Fragment {
                 case MotionEvent.ACTION_DOWN:
                     dY = v.getY() - event.getRawY();
                     initialY = v.getY();
+                    result = false;
                     break;
                 case MotionEvent.ACTION_MOVE:
                     if (event.getRawY() + dY < 0){
@@ -147,6 +149,7 @@ public class UpperNotificationFragment extends Fragment {
                                 .setDuration(0)
                                 .start();
                     }
+                    result = true;
                     break;
                 case MotionEvent.ACTION_UP:
                     if (initialY - v.getY() > v.getHeight() / 2){
@@ -163,10 +166,8 @@ public class UpperNotificationFragment extends Fragment {
                                 .start();
                     }
                     break;
-                default:
-                    return false;
             }
-            return true;
+            return result;
         });
     }
 
