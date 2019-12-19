@@ -9,10 +9,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +21,6 @@ import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.MessageObject;
 import com.example.eduardorodriguez.comeaqui.login_and_register.LoginOrRegisterActivity;
-import com.example.eduardorodriguez.comeaqui.login_and_register.register.RegisterActivity;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 
@@ -42,7 +38,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -50,10 +45,15 @@ public class ConversationActivity extends AppCompatActivity {
 
     ChatObject chat;
     User chattingWith;
+    boolean isUserBlocked;
 
     MessageObject lastMessage = null;
     String lastMessageDate = "";
 
+    private LinearLayout blockView;
+    private LinearLayout textInputView;
+    private Button unblockButton;
+    private ImageButton options;
     private ConstraintLayout rootView;
     private CircleImageView fotoPerfil;
     private TextView nombre;
@@ -72,6 +72,10 @@ public class ConversationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
 
+        blockView = findViewById(R.id.block_view);
+        textInputView = findViewById(R.id.text_input_view);
+        unblockButton = findViewById(R.id.unblock_button);
+        options = findViewById(R.id.options);
         rootView = findViewById(R.id.root_view);
         fotoPerfil = findViewById(R.id.dinner_image);
         nombre = findViewById(R.id.nombre);
@@ -162,7 +166,7 @@ public class ConversationActivity extends AppCompatActivity {
         btnEnviar.setOnClickListener(view -> {
             sendMessage(validJsonString(txtMensaje.getText().toString()));
         });
-
+        unblockButton.setOnClickListener(v -> unBlockUser());
     }
 
 
@@ -189,6 +193,11 @@ public class ConversationActivity extends AppCompatActivity {
         if (!chattingWith.profile_photo.contains("no-image"))
             Glide.with(this).load(chattingWith.profile_photo).into(fotoPerfil);
         fotoPerfil.setOnClickListener(v -> goToProfileView(chattingWith));
+    }
+
+    void setBlockView(){
+        blockView.setVisibility(isUserBlocked ? View.VISIBLE: View.GONE);
+        textInputView.setVisibility(isUserBlocked ? View.GONE: View.VISIBLE);
     }
 
     String validJsonString(String str){
@@ -237,18 +246,78 @@ public class ConversationActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String response) {
             if (response != null) {
-                JsonObject chatJson = new JsonParser().parse(response).getAsJsonObject();
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                JsonObject chatJson = jo.get("chat").getAsJsonObject();
                 for (JsonElement je: chatJson.get("message_set").getAsJsonArray()){
                     MessageObject currentMessage = new MessageObject(je.getAsJsonObject());
                     setMessageStatus(currentMessage);
                     adapter.addMensaje(currentMessage);
                 }
                 chat = new ChatObject(chatJson);
+                isUserBlocked = jo.get("blocked").getAsBoolean();
                 setChat();
+                setOptions();
+                setBlockView();
             }
             super.onPostExecute(response);
         }
+    }
 
+    void blockUser(){
+        tasks.add(new BlockUserAsyncTask(getResources().getString(R.string.server) + "/block_user/" + chattingWith.id + "/").execute());
+    }
+    class BlockUserAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public BlockUserAsyncTask(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null) {
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                User user = new User(jo);
+                isUserBlocked = true;
+                setBlockView();
+            }
+            super.onPostExecute(response);
+        }
+    }
+
+    void unBlockUser(){
+        tasks.add(new UnblockAsyncTask(getResources().getString(R.string.server) + "/block_user/" + chattingWith.id + "/").execute());
+    }
+    class UnblockAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public UnblockAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.delete(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                isUserBlocked = false;
+                setBlockView();
+            }
+            super.onPostExecute(response);
+        }
     }
 
     public void setMessageStatus(MessageObject currentMessage){
@@ -311,6 +380,39 @@ public class ConversationActivity extends AppCompatActivity {
             mWebSocketClient.connect();
         } catch (URISyntaxException e) {
             e.printStackTrace();
+        }
+    }
+
+    void setOptions(){
+        options.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(this, v);
+            popupMenu.getMenu().add("See Profile");
+            if (isUserBlocked){
+                popupMenu.getMenu().add("Unblock");
+            } else {
+                popupMenu.getMenu().add("Block");
+            }
+            popupMenu.getMenu().add("Report");
+            popupMenu.setOnMenuItemClickListener(item -> {
+                setOptionsActions(item.getTitle().toString());
+                return true;
+            });
+            popupMenu.show();
+        });
+    }
+    void setOptionsActions(String title){
+        switch (title){
+            case "See profile":
+                goToProfileView(chattingWith);
+                break;
+            case "Block":
+                blockUser();
+                break;
+            case "Unblock":
+                unBlockUser();
+                break;
+            case "Report":
+                break;
         }
     }
 
