@@ -392,7 +392,7 @@ public class ConversationActivity extends AppCompatActivity {
     void setOptions(){
         options.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(this, v);
-            popupMenu.getMenu().add("See Profile");
+            popupMenu.getMenu().add("Profile View");
             if (isUserBlocked){
                 popupMenu.getMenu().add("Unblock");
             } else {
@@ -408,7 +408,7 @@ public class ConversationActivity extends AppCompatActivity {
     }
     void setOptionsActions(String title){
         switch (title){
-            case "See profile":
+            case "Profile View":
                 goToProfileView(chattingWith);
                 break;
             case "Block":
