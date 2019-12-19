@@ -270,7 +270,7 @@ public class FoodLookActivity extends AppCompatActivity implements
         plateNameView.setText(foodPostDetail.plate_name);
         descriptionView.setText(foodPostDetail.description);
         posterLocationView.setText(foodPostDetail.formatted_address);
-        priceView.setText(foodPostDetail.price + "$");
+        priceView.setText("$" + foodPostDetail.price);
         timeView.setText(foodPostDetail.time_range);
         date.setText(foodPostDetail.time_to_show);
 
