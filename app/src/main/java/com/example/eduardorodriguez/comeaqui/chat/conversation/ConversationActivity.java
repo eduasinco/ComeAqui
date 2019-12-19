@@ -360,12 +360,18 @@ public class ConversationActivity extends AppCompatActivity {
                 @Override
                 public void onMessage(String s) {
                     runOnUiThread(() -> {
-                        MessageObject brandNewMessage = new MessageObject(new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject().get("message").getAsJsonObject());
-                        setMessageStatus(brandNewMessage);
-                        adapter.addMensaje(brandNewMessage);
-                        if (brandNewMessage.sender.id != USER.id){
-                            setMessagAsSeen(brandNewMessage.id);
+                        JsonObject jo = new JsonParser().parse(s).getAsJsonObject().get("message").getAsJsonObject();
+                        if (jo.get("error_message") == null){
+                            MessageObject brandNewMessage = new MessageObject(jo.get("message").getAsJsonObject());
+                            setMessageStatus(brandNewMessage);
+                            adapter.addMensaje(brandNewMessage);
+                            if (brandNewMessage.sender.id != USER.id){
+                                setMessagAsSeen(brandNewMessage.id);
+                            }
+                        } else {
+                            Toast.makeText(getApplication(), jo.get("error_message").getAsString(), Toast.LENGTH_LONG).show();
                         }
+
                     });
                 }
                 @Override
