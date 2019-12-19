@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -58,7 +59,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     EditText foodName;
     TextView price;
     ImageView image;
-    SeekBar seekbar;
+    EditText priceEText;
     ConstraintLayout descriptionLayout;
     Button submit;
     ImageView backView;
@@ -80,7 +81,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     private Double lng_picked;
     private HashMap<String, String> address_elements;
 
-    Float price_data;
+    Double price_data;
     boolean[] pressed = {false, false, false, false, false, false, false};
     String description = "";
     boolean visible = false;
@@ -127,9 +128,9 @@ public class AddFoodActivity extends AppCompatActivity implements
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         rootView = findViewById(R.id.rootView);
         foodName = findViewById(R.id.plateName);
-        price = findViewById(R.id.priceText);
+        price = findViewById(R.id.priceView);
         image = findViewById(R.id.image);
-        seekbar = findViewById(R.id.seekBar);
+        priceEText = findViewById(R.id.price);
         descriptionLayout = findViewById(R.id.descriptionLayout);
         submit = findViewById(R.id.submitButton);
         backView = findViewById(R.id.back_arrow);
@@ -230,7 +231,6 @@ public class AddFoodActivity extends AppCompatActivity implements
 
         setTextInputs();
         setFoodName();
-        setPriceSeekBar();
 
         submit.setOnClickListener(v -> {
             visible = true;
@@ -256,8 +256,8 @@ public class AddFoodActivity extends AppCompatActivity implements
         if (!foodPostDetail.plate_name.isEmpty())
             foodName.setText(foodPostDetail.plate_name);
         if (!foodPostDetail.price.isEmpty()) {
-            price.setText(foodPostDetail.price + "$");
-            seekbar.setProgress((int) (Float.parseFloat(foodPostDetail.price) * 100));
+            price.setText("$" + foodPostDetail.price);
+            price_data = Double.parseDouble(foodPostDetail.price);
         }
         if (foodPostDetail.max_dinners != 0) {
             dinnerPicker.setText(foodPostDetail.max_dinners + "");
@@ -331,6 +331,29 @@ public class AddFoodActivity extends AppCompatActivity implements
             @Override
             public void afterTextChanged ( final Editable s){}
         });
+        priceEText.setOnClickListener(v -> priceEText.setSelection(priceEText.getText().length()));
+        priceEText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged (CharSequence s,int start, int count, int after){
+                priceEText.setSelection(priceEText.getText().length());
+            }
+            @Override
+            public void onTextChanged ( final CharSequence s, int start, int before, int count){
+                price.setBackground(ContextCompat.getDrawable(getApplication(), R.drawable.text_input_shape));
+                if (s.length() > 0) {
+                    int intText = Integer.parseInt(s.toString());
+                    price_data = intText / 100.d;
+                    price.setText("$" + String.format("%.02f", price_data));
+                } else {
+                    price.setText("$0.00");
+                }
+                priceEText.setSelection(priceEText.getText().length());
+            }
+            @Override
+            public void afterTextChanged ( final Editable s){
+                priceEText.setSelection(priceEText.getText().length());
+            }
+        });
     }
 
     void showProgress(boolean show){
@@ -372,7 +395,7 @@ public class AddFoodActivity extends AppCompatActivity implements
             isValid = false;
         }
         if (price_data == null){
-            seekbar.setBackground(ContextCompat.getDrawable(getApplication(), R.drawable.text_input_shape_error));
+            price.setBackground(ContextCompat.getDrawable(getApplication(), R.drawable.text_input_shape_error));
             errorText = errorText + "You have to set a meal price \n";
             isValid = false;
         }
@@ -605,30 +628,6 @@ public class AddFoodActivity extends AppCompatActivity implements
         foodName.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 foodName.setHint("What are you making?");
-            }
-        });
-    }
-
-    void setPriceSeekBar(){
-        seekbar.setMax(1000);
-        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
-                price_data = (float) progress/100;
-                String priceText = String.format("%.02f", price_data) + "$";
-                price.setText(priceText);
-                seekBar.setBackground(ContextCompat.getDrawable(getApplication(), R.drawable.text_input_shape));
             }
         });
     }

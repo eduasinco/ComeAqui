@@ -182,12 +182,44 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintTop_toBottomOf="@+id/timePicker" />
 
-            <SeekBar
-                android:id="@+id/seekBar"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/price_contrain"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@drawable/text_input_shape"
-                app:layout_constraintTop_toBottomOf="@+id/priceText" />
+                android:layout_height="50dp">
+
+                <TextView
+                    android:id="@+id/priceView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:background="@drawable/text_input_shape"
+                    android:gravity="center"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="$0.00"
+                    android:textColor="@android:color/black"
+                    android:textSize="24sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/price"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:alpha="0"
+                    android:background="@android:color/transparent"
+                    android:cursorVisible="false"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:maxLength="9"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/textView7"
@@ -199,7 +231,7 @@
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="24sp"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintTop_toBottomOf="@+id/seekBar" />
+                app:layout_constraintTop_toBottomOf="@+id/seekBar"/>
 
             <FrameLayout
                 android:id="@+id/set_foot_types_frame"
