@@ -93,6 +93,7 @@ public class StarReasonFragment extends Fragment {
             star.setOnClickListener(v -> {
 
                 rating = finalI + 1;
+                mListener.onRating(rating);
                 onceRateView.setVisibility(View.VISIBLE);
                 int j = 0;
                 while (j <= finalI){
@@ -204,5 +205,6 @@ public class StarReasonFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(int rating, boolean[] reasonB, String review);
         void onHasToScrollIfNeeded();
+        void onRating(int rating);
     }
 }

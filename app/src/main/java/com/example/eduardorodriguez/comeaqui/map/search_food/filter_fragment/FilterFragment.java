@@ -138,6 +138,8 @@ public class FilterFragment extends Fragment implements
 
         setSortButtons();
         setPirceButtons();
+        setInformationInFilter();
+
         wholeView.setOnTouchListener((v, event) -> {
             showFilter(false);
             return true;
@@ -149,6 +151,12 @@ public class FilterFragment extends Fragment implements
 
         applyFilterButton.setOnClickListener(v -> sendFilterOptions());
         return view;
+    }
+
+    void setInformationInFilter(){
+        if (startTime != null && endTime != null) {
+            foodTimePickerFragment.setDateTime(startTime, endTime);
+        }
     }
 
     public void showFilter(boolean show){

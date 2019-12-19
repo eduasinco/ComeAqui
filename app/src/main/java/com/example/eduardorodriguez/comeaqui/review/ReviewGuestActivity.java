@@ -132,6 +132,12 @@ public class ReviewGuestActivity extends AppCompatActivity implements StarReason
     public void onHasToScrollIfNeeded() {
         scrollView.fullScroll(View.FOCUS_DOWN);
     }
+
+    @Override
+    public void onRating(int rating) {
+        this.rating = rating;
+    }
+
     @Override
     public void onDestroy() {
         for (AsyncTask task: tasks){
