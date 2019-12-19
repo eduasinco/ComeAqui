@@ -194,6 +194,7 @@ public class MapFragment extends Fragment implements
     public void onResume() {
         super.onResume();
         mMapView.onResume();
+        cancelMapPicker();
     }
 
     public void listenToPosts(){
