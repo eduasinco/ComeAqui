@@ -84,7 +84,7 @@
                     android:id="@+id/poster_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Eduardo Rodriguez"
+                    android:text="-"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -93,7 +93,7 @@
                     android:id="@+id/username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="eduasinco"
+                    android:text="-"
                     android:textColor="@android:color/white" />
             </LinearLayout>
 
