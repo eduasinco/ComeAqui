@@ -63,7 +63,11 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
         if (!chattingWith.profile_photo.contains("no-image"))
             Glide.with(holder.mView.getContext()).load(chattingWith.profile_photo).into(holder.chattererImage);
 
-        holder.dateView.setText(DateFormatting.hYesterdayWeekDay(holder.mItem.last_message.createdAt));
+        if (holder.mItem.last_message != null){
+            holder.dateView.setText(DateFormatting.hYesterdayWeekDay(holder.mItem.last_message.createdAt));
+        } else {
+            holder.dateView.setText(DateFormatting.hYesterdayWeekDay(holder.mItem.createdAt));
+        }
     }
 
     @Override
