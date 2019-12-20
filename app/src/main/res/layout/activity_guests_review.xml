@@ -64,7 +64,7 @@
                             android:id="@+id/guest_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Abdullah"
+                            android:text="-"
                             android:textStyle="bold" />
 
                         <ImageView
@@ -76,11 +76,11 @@
                             app:srcCompat="@drawable/start_black" />
 
                         <TextView
-                            android:id="@+id/rating"
+                            android:id="@+id/guest_rate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="5.0" />
+                            android:text="-.-" />
                     </LinearLayout>
 
                 </LinearLayout>

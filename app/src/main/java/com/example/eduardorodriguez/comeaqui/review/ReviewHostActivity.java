@@ -35,13 +35,14 @@ import static com.example.eduardorodriguez.comeaqui.R.color.colorPrimaryLight;
 import static com.example.eduardorodriguez.comeaqui.R.color.grey_light;
 import static com.example.eduardorodriguez.comeaqui.R.color.secondary_text_default_material_light;
 
-enum SubmitButtonStatus{
-    NEXT, SUBMIT
-}
 
 public class ReviewHostActivity extends AppCompatActivity implements StarReasonFragment.OnFragmentInteractionListener {
+    enum SubmitButtonStatus{
+        NEXT, SUBMIT
+    }
 
     LinearLayout rateMealView;
+    TextView posterRating;
     Button submitButton;
     ScrollView scrollView;
     View progress;
@@ -51,7 +52,7 @@ public class ReviewHostActivity extends AppCompatActivity implements StarReasonF
     boolean[] reasonB = {false, false, false, false};
     String review = "";
 
-    SubmitButtonStatus buttonStatus = SubmitButtonStatus.NEXT;
+    boolean readyForSubmit = false;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     @Override
@@ -63,6 +64,7 @@ public class ReviewHostActivity extends AppCompatActivity implements StarReasonF
         TextView amount = findViewById(R.id.amount);
         TextView cardLastNumbers = findViewById(R.id.card_last_numbers);
         rateMealView = findViewById(R.id.rate_meal_view);
+        posterRating = findViewById(R.id.poster_rating);
         submitButton = findViewById(R.id.submitButton);
         scrollView = findViewById(R.id.scrollView);
         progress = findViewById(R.id.review_progress);
@@ -77,30 +79,36 @@ public class ReviewHostActivity extends AppCompatActivity implements StarReasonF
                 Glide.with(this).load(orderObject.poster.profile_photo).into(posterImage);
             }
 
+            blockSubmitButton(true);
+
             posterName.setText(orderObject.poster.first_name);
-            amount.setText(orderObject.post.price);
+            amount.setText("USD" + orderObject.post.price);
             cardLastNumbers.setText("USER CARD");
+            posterRating.setText(orderObject.owner.rating + "");
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.star_reason_frame, StarReasonFragment.newInstance())
                     .commit();
         }
 
-        submitButton.setAlpha(0.5f);
-
         setTipButtons();
+    }
+
+    void blockSubmitButton(boolean block){
+        submitButton.setAlpha(block ? 0.5f: 1);
         submitButton.setOnClickListener(v -> {
-            if (buttonStatus == SubmitButtonStatus.NEXT){
-                submitButton.setAlpha(0.5f);
-                scrollView.fullScroll(View.FOCUS_DOWN);
-                submitButton.setText("SUBMIT");
-                rateMealView.setVisibility(View.VISIBLE);
-            } else {
-                submit();
+            if (!block){
+                if (readyForSubmit){
+                    submit();
+                } else {
+                    submitButton.setAlpha(0.5f);
+                    scrollView.fullScroll(View.FOCUS_DOWN);
+                    submitButton.setText("SUBMIT");
+                    rateMealView.setVisibility(View.VISIBLE);
+                }
             }
         });
     }
-
 
 
     void submit(){
@@ -155,6 +163,7 @@ public class ReviewHostActivity extends AppCompatActivity implements StarReasonF
         for (int i = 0; i < tipViews.length; i++){
             Button button = tipViews[i];
             button.setOnClickListener(v -> {
+                blockSubmitButton(false);
                 submitButton.setAlpha(1);
                 for (Button tip: tipViews){
                     button.setBackgroundColor(ContextCompat.getColor(this, colorPrimaryLight));
@@ -173,7 +182,7 @@ public class ReviewHostActivity extends AppCompatActivity implements StarReasonF
     @Override
     public void onFragmentInteraction(int rating, boolean[] reasonB, String review) {
         submitButton.setAlpha(1);
-        buttonStatus = SubmitButtonStatus.SUBMIT;
+        readyForSubmit = true;
         this.review = review;
     }
 

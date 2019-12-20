@@ -22,6 +22,8 @@ import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -31,6 +33,7 @@ public class ReviewGuestActivity extends AppCompatActivity implements StarReason
 
     Button submitButton;
     ScrollView scrollView;
+    TextView rateGuest;
     View progress;
 
     OrderObject orderObject;
@@ -50,6 +53,7 @@ public class ReviewGuestActivity extends AppCompatActivity implements StarReason
         TextView rating = findViewById(R.id.rating);
         submitButton = findViewById(R.id.submitButton);
         scrollView = findViewById(R.id.scrollv);
+        rateGuest = findViewById(R.id.guest_rate);
         progress = findViewById(R.id.review_submit_progress);
 
         Intent intent = getIntent();
@@ -66,6 +70,7 @@ public class ReviewGuestActivity extends AppCompatActivity implements StarReason
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.star_rating_fr, StarReasonFragment.newInstance())
                     .commit();
+            rateGuest.setText(orderObject.owner.rating + "");
         }
 
         setSubmitButton();

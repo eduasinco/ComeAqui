@@ -72,7 +72,7 @@
                                 android:id="@+id/poster_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Abdullah"
+                                android:text="-"
                                 android:textStyle="bold" />
 
                             <ImageView
@@ -84,11 +84,11 @@
                                 app:srcCompat="@drawable/start_black" />
 
                             <TextView
-                                android:id="@+id/rating"
+                                android:id="@+id/poster_rating"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="5.0" />
+                                android:text="-.-" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -114,7 +114,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
-                        android:text="USD16.35"
+                        android:text="USD--"
                         android:textStyle="bold" />
                 </LinearLayout>
 
