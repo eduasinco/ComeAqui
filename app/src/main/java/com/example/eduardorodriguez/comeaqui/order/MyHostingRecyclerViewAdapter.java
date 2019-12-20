@@ -82,7 +82,6 @@ public class MyHostingRecyclerViewAdapter extends RecyclerView.Adapter<MyHosting
                 foodPost.start_time.isEmpty() ||
                 foodPost.end_time.isEmpty() ||
                 foodPost.formatted_address.isEmpty() ||
-                foodPost.formatted_address.isEmpty() ||
                 foodPost.price.isEmpty();
     }
 

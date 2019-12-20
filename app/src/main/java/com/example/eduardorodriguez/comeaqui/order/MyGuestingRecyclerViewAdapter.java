@@ -8,8 +8,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.order.GuestingFragment.OnListFragmentInteractionListener;
@@ -46,6 +48,12 @@ public class MyGuestingRecyclerViewAdapter extends RecyclerView.Adapter<MyGuesti
         holder.orderStatus.setText(holder.mItem.status);
         holder.orderStatus.setBackgroundColor(Color.TRANSPARENT);
 
+        if (holder.mItem.post.images.size() > 0){
+            Glide.with(holder.mView.getContext()).load(holder.mItem.post.images.get(0).image).into(holder.orderImage);
+        } else {
+            holder.orderImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.empty_plate));
+        }
+
         if (!holder.mItem.seen){
             if (holder.mItem.status.equals("CONFIRMED")){
                 holder.orderStatus.setBackground(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.box_order_status_confirmed));
@@ -79,6 +87,7 @@ public class MyGuestingRecyclerViewAdapter extends RecyclerView.Adapter<MyGuesti
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
+        public final ImageView orderImage;
         public final TextView posterName;
         public final TextView price;
         public final TextView posterUsername;
@@ -90,6 +99,7 @@ public class MyGuestingRecyclerViewAdapter extends RecyclerView.Adapter<MyGuesti
         public ViewHolder(View view) {
             super(view);
             mView = view;
+            orderImage = view.findViewById(R.id.order_image);
             posterName = view.findViewById(R.id.poster_name);
             price = view.findViewById(R.id.price);
             posterUsername = view.findViewById(R.id.poster_username);
