@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,8 +19,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
 import com.example.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
+import com.example.eduardorodriguez.comeaqui.general.FoodLookActivity;
 import com.example.eduardorodriguez.comeaqui.general.StaticMapFragment;
 import com.example.eduardorodriguez.comeaqui.general.dinner_list.DinnerListActivity;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.User;
@@ -40,6 +43,7 @@ public class OrderLookActivity extends AppCompatActivity implements TwoOptionsMe
 
     ImageButton back;
     ImageButton options;
+    CardView orderCard;
     TextView plateName;
     TextView price;
     TextView posterDescription;
@@ -69,6 +73,7 @@ public class OrderLookActivity extends AppCompatActivity implements TwoOptionsMe
         setContentView(R.layout.activity_order_look);
         context = getApplicationContext();
         back = findViewById(R.id.back);
+        orderCard = findViewById(R.id.orderCard);
         options = findViewById(R.id.options);
         plateName = findViewById(R.id.plate_name);
         plateName = findViewById(R.id.plate_name);
@@ -163,6 +168,7 @@ public class OrderLookActivity extends AppCompatActivity implements TwoOptionsMe
                 .commit();
 
         setChatWithHostButton();
+        orderCard.setOnClickListener(v -> goToPostLook(order.post.id));
     }
 
     void setChatWithHostButton(){
@@ -231,7 +237,11 @@ public class OrderLookActivity extends AppCompatActivity implements TwoOptionsMe
         }
     }
 
-
+    void goToPostLook(int foodPostId) {
+        Intent foodLook = new Intent(this, FoodLookActivity.class);
+        foodLook.putExtra("foodPostId", foodPostId);
+        startActivity(foodLook);
+    }
     void goToProfileView(User user){
         Intent k = new Intent(getApplicationContext(), ProfileViewActivity.class);
         k.putExtra("userId", user.id);
