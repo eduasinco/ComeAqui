@@ -136,7 +136,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
     }
 
     void patchPost(){
-        tasks.add(new PatchAsyncTask(getResources().getString(R.string.server) + "/foods/" + foodPostDetail.id + "/").execute(
+        tasks.add(new PatchAsyncTask(getResources().getString(R.string.server) + "/edit_food/" + foodPostDetail.id + "/").execute(
                 new String[]{"plate_name", plateName.getText().toString()},
                 new String[]{"food_type", types},
                 new String[]{"description", description}
