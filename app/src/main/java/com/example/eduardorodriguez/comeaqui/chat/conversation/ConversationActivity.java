@@ -369,7 +369,9 @@ public class ConversationActivity extends AppCompatActivity {
                                 setMessagAsSeen(brandNewMessage.id);
                             }
                         } else {
-                            Toast.makeText(getApplication(), jo.get("error_message").getAsString(), Toast.LENGTH_LONG).show();
+                            if (jo.get("to").getAsInt() == USER.id) {
+                                Toast.makeText(getApplication(), jo.get("error_message").getAsString(), Toast.LENGTH_LONG).show();
+                            }
                         }
 
                     });
