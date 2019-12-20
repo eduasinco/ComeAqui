@@ -101,7 +101,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:paddingBottom="8dp"
-                    android:text="Plate Name"
+                    android:text="-"
                     android:textColor="@color/colorPrimary"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
@@ -210,7 +210,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView"
+                android:maxLines="4"
+                android:text="-"
+                android:ellipsize="end"
                 android:textColor="@color/grey" />
 
             <LinearLayout
@@ -233,7 +235,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
                     android:layout_weight="0"
-                    android:text="4.6"
+                    android:text="-.-"
                     android:textColor="@color/grey" />
 
                 <TextView

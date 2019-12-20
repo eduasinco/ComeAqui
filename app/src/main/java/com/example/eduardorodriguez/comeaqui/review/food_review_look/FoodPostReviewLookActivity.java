@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.general.FoodLookActivity;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostReview;
 import com.example.eduardorodriguez.comeaqui.objects.ReviewReplyObject;
 import com.example.eduardorodriguez.comeaqui.objects.ReviewObject;
@@ -143,13 +144,6 @@ TwoOptionsMessageFragment.OnFragmentInteractionListener{
             }
         });
     }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getReviewsFrompFoodPost(fpId);
-    }
-
-
     void setToolbar(){
         collapsingToolbar.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
@@ -158,6 +152,65 @@ TwoOptionsMessageFragment.OnFragmentInteractionListener{
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         collapsingToolbar.setTitleEnabled(true);
         collapsingToolbar.setExpandedTitleColor(ContextCompat.getColor(this, R.color.colorPrimary_trans));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getReviewsFrompFoodPost(fpId);
+    }
+
+    void setViewFoodPost(){
+        postNameView.setText(foodPostReview.plate_name);
+        posterDescriptionView.setText(foodPostReview.description);
+        posterDescriptionView.setVisibility(View.VISIBLE);
+        postPrice.setText(foodPostReview.price + "$");
+
+        String rating = "-.-";
+        if (foodPostReview.rating != 0){
+            rating = String.format("%.01f", foodPostReview.rating);
+        }
+        postRating.setText(rating);
+        setTypes(foodPostReview.type);
+        cardButtonView.setOnClickListener(v -> goToPostLook(foodPostReview.id));
+    }
+
+    void setTypes(String types){
+        ImageView[] imageViews = new ImageView[]{
+                vegetarian,
+                vegan,
+                cereal,
+                spicy,
+                fish,
+                meat,
+                dairy
+        };
+        ArrayList<ImageView> imageViewArrayList = new ArrayList<>();
+        for (ImageView imageView: imageViews){
+            imageView.setVisibility(View.GONE);
+            imageViewArrayList.add(imageView);
+        }
+        int[] resources = new int[]{
+                R.drawable.vegetarianfill,
+                R.drawable.veganfill,
+                R.drawable.cerealfill,
+                R.drawable.spicyfill,
+                R.drawable.fishfill,
+                R.drawable.meatfill,
+                R.drawable.dairyfill,
+        };
+        for (int i = 0; i < types.length(); i++){
+            if (types.charAt(i) == '1'){
+                imageViewArrayList.get(i).setImageResource(resources[i]);
+                imageViewArrayList.get(i).setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    void goToPostLook(int foodPostId) {
+        Intent foodLook = new Intent(this, FoodLookActivity.class);
+        foodLook.putExtra("foodPostId", foodPostId);
+        startActivity(foodLook);
     }
 
     @Override
@@ -278,52 +331,6 @@ TwoOptionsMessageFragment.OnFragmentInteractionListener{
             waitingFrame.setVisibility(View.VISIBLE);
         } else {
             waitingFrame.setVisibility(View.GONE);
-        }
-    }
-
-    void setViewFoodPost(){
-        postNameView.setText(foodPostReview.plate_name);
-        posterDescriptionView.setText(foodPostReview.description);
-        posterDescriptionView.setVisibility(View.VISIBLE);
-        postPrice.setText(foodPostReview.price + "$");
-
-        String rating = "-.-";
-        if (foodPostReview.rating != 0){
-            rating = String.format("%.01f", foodPostReview.rating);
-        }
-        postRating.setText(rating);
-        setTypes(foodPostReview.type);
-    }
-
-    void setTypes(String types){
-        ImageView[] imageViews = new ImageView[]{
-                vegetarian,
-                vegan,
-                cereal,
-                spicy,
-                fish,
-                meat,
-                dairy
-        };
-        ArrayList<ImageView> imageViewArrayList = new ArrayList<>();
-        for (ImageView imageView: imageViews){
-            imageView.setVisibility(View.GONE);
-            imageViewArrayList.add(imageView);
-        }
-        int[] resources = new int[]{
-                R.drawable.vegetarianfill,
-                R.drawable.veganfill,
-                R.drawable.cerealfill,
-                R.drawable.spicyfill,
-                R.drawable.fishfill,
-                R.drawable.meatfill,
-                R.drawable.dairyfill,
-        };
-        for (int i = 0; i < types.length(); i++){
-            if (types.charAt(i) == '1'){
-                imageViewArrayList.get(i).setImageResource(resources[i]);
-                imageViewArrayList.get(i).setVisibility(View.VISIBLE);
-            }
         }
     }
 
