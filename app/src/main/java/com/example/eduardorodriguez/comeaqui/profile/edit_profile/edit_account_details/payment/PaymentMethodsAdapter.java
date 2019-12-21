@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.objects.PaymentObject;
+import com.example.eduardorodriguez.comeaqui.objects.PaymentMethodObject;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -17,16 +17,16 @@ import java.util.List;
 
 public class PaymentMethodsAdapter extends RecyclerView.Adapter<PaymentMethodsAdapter.ViewHolder>{
 
-    private List<PaymentObject> listPaymentMethods = new ArrayList<>();
-    private Context c;
+    private List<PaymentMethodObject> listPaymentMethods;
+    private PaymentMethodsActivity activity;
     StorageReference firebaseStorage;
 
-    public PaymentMethodsAdapter(Context c, ArrayList<PaymentObject> paymentObjects) {
-        this.c = c;
+    public PaymentMethodsAdapter(PaymentMethodsActivity c, ArrayList<PaymentMethodObject> paymentObjects) {
+        this.activity = c;
         listPaymentMethods = paymentObjects;
     }
 
-    public void addPaymentMethod(PaymentObject m){
+    public void addPaymentMethod(PaymentMethodObject m){
         listPaymentMethods.add(m);
         notifyItemInserted(listPaymentMethods.size());
     }
@@ -44,6 +44,12 @@ public class PaymentMethodsAdapter extends RecyclerView.Adapter<PaymentMethodsAd
         holder.mItem = listPaymentMethods.get(position);
         holder.paymentType.setText(holder.mItem.card_type);
         holder.paymentInfo.setText("Ending " + holder.mItem.card_number.substring(holder.mItem.card_number.length() - 4));
+        if (holder.mItem.chosen){
+            holder.chosenImage.setVisibility(View.VISIBLE);
+        } else {
+            holder.chosenImage.setVisibility(View.GONE);
+        }
+        holder.mView.setOnClickListener(v -> activity.onPaymentMethodClicked(holder.mItem));
     }
 
     @Override
@@ -56,7 +62,8 @@ public class PaymentMethodsAdapter extends RecyclerView.Adapter<PaymentMethodsAd
         public final TextView paymentType;
         public final TextView paymentInfo;
         public final ImageView imageView;
-        public PaymentObject mItem;
+        public final ImageView chosenImage;
+        public PaymentMethodObject mItem;
 
         public ViewHolder(View view) {
             super(view);
@@ -64,6 +71,7 @@ public class PaymentMethodsAdapter extends RecyclerView.Adapter<PaymentMethodsAd
             paymentType = view.findViewById(R.id.payment_type);
             paymentInfo = view.findViewById(R.id.payment_info);
             imageView = view.findViewById(R.id.image);
+            chosenImage = view.findViewById(R.id.is_chosen);
         }
     }
 }
