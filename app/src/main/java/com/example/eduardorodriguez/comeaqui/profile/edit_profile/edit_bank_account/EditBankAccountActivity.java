@@ -17,15 +17,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.map.AddFoodActivity;
-import com.example.eduardorodriguez.comeaqui.objects.SavedFoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.StripeAccountInfoObject;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.rilixtech.widget.countrycodepicker.CountryCodePicker;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static com.example.eduardorodriguez.comeaqui.App.USER;
 
 public class EditBankAccountActivity extends AppCompatActivity {
 
@@ -71,7 +72,7 @@ public class EditBankAccountActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_bank_account);
-        backArrow = findViewById(R.id.back_arr);
+        backArrow = findViewById(R.id.back_arrow);
         firstName = findViewById(R.id.first_name);
         lastName = findViewById(R.id.last_name);
         birth = findViewById(R.id.date_of_birth);
@@ -119,7 +120,7 @@ public class EditBankAccountActivity extends AppCompatActivity {
         setEditText(country, countryVal);
 
         saveButton.setOnClickListener((v) -> {
-            register();
+            save();
         });
 
         getBankAccountInfo();
@@ -144,7 +145,7 @@ public class EditBankAccountActivity extends AppCompatActivity {
     }
 
     void getBankAccountInfo(){
-        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_stripe_account_info/").execute());
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/stripe_account/").execute());
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -169,16 +170,23 @@ public class EditBankAccountActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String response) {
             if (response != null){
-                accountInfoObject = new StripeAccountInfoObject(new JsonParser().parse(response).getAsJsonObject());
-                setInfo();
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                if (jo.get("error_message") == null){
+                    accountInfoObject = new StripeAccountInfoObject(new JsonParser().parse(response).getAsJsonObject());
+                    setInfo();
+                }
             }
             super.onPostExecute(response);
         }
     }
 
-    void register(){
-        if (valid()){
-            submit();
+    void save(){
+        if (true || valid()){
+            if (accountInfoObject == null){
+                submit("POST");
+            } else {
+                submit("PATCH");
+            }
         }
     }
 
@@ -192,11 +200,11 @@ public class EditBankAccountActivity extends AppCompatActivity {
         }
     }
 
-    void submit(){
-        tasks.add(new UploadAsyncTask(getResources().getString(R.string.server) + "/register/").execute(
+    void submit(String method){
+        tasks.add(new UploadAsyncTask(method,getResources().getString(R.string.server) + "/stripe_account/").execute(
                 new String[]{"first_name", firstName.getText().toString()},
                 new String[]{"last_name", lastName.getText().toString()},
-                new String[]{"date_of_birth", birth.getMinDate() + ""},
+                // new String[]{"date_of_birth", birth.getMinDate() + ""},
                 new String[]{"SSN_last_4", ssn.getText().toString()},
                 new String[]{"identity_document_front", ""},
                 new String[]{"identity_document_back", ""},
@@ -213,7 +221,9 @@ public class EditBankAccountActivity extends AppCompatActivity {
     }
     private class UploadAsyncTask extends AsyncTask<String[], Void, String> {
         String uri;
-        public UploadAsyncTask(String uri){
+        String method;
+        public UploadAsyncTask(String method, String uri){
+            this.method = method;
             this.uri = uri;
         }
         @Override
@@ -224,7 +234,7 @@ public class EditBankAccountActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String[]... params) {
             try {
-                return ServerAPI.upload(getApplicationContext(), "POST", this.uri, params);
+                return ServerAPI.upload(getApplicationContext(), method, this.uri, params);
             } catch (IOException e) {
                 e.printStackTrace();
             }

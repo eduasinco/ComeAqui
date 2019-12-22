@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_bank_account.EditBankAccountActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.EditAcountDetailsActivity;
@@ -111,7 +112,7 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
         });
 
         editBankAccount.setOnClickListener(v -> {
-            Intent bioActivity = new Intent(this, EditAcountDetailsActivity.class);
+            Intent bioActivity = new Intent(this, EditBankAccountActivity.class);
             startActivity(bioActivity);
         });
 
