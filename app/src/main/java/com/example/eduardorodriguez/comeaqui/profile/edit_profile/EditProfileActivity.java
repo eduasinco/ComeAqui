@@ -65,6 +65,7 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
         ImageView backView = findViewById(R.id.back_arrow);
         backgroundImageView = findViewById(R.id.background_image);
         TextView editAccountDetailsView = findViewById(R.id.edit_account_details);
+        TextView editBankAccount = findViewById(R.id.edit_bank_account);
         firstNameView = findViewById(R.id.first_name);
         lastNameView = findViewById(R.id.last_name);
         phoneNumber = findViewById(R.id.phone_number);
@@ -105,6 +106,11 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
         });
 
         editAccountDetailsView.setOnClickListener(v -> {
+            Intent bioActivity = new Intent(this, EditAcountDetailsActivity.class);
+            startActivity(bioActivity);
+        });
+
+        editBankAccount.setOnClickListener(v -> {
             Intent bioActivity = new Intent(this, EditAcountDetailsActivity.class);
             startActivity(bioActivity);
         });

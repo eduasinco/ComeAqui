@@ -10,7 +10,7 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="56dp"
         android:background="#FFFFFF"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -22,6 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:orientation="vertical">
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -265,6 +266,31 @@
                     android:gravity="center_vertical"
                     android:paddingStart="8dp"
                     android:text="0000-0000-0000-0000"
+                    android:textSize="18sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Bank Account Details"
+                    android:textColor="@android:color/black"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/edit_bank_account"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    android:gravity="center_vertical"
+                    android:text="Edit"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="18sp" />
             </LinearLayout>
         </LinearLayout>

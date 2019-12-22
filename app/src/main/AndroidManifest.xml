@@ -30,7 +30,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".map.search_people.SearchPeopleActivity"></activity>
+        <activity android:name=".profile.edit_profile.edit_bank_account.EditBankAccountActivity"></activity>
+        <activity android:name=".map.search_people.SearchPeopleActivity" />
         <activity android:name=".map.add_food.image_look.ImageLookActivity" />
         <activity android:name=".general.EditFoodPostActivity" />
         <activity android:name=".general.FoodLookActivity" />
