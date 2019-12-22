@@ -6,7 +6,457 @@
     android:layout_height="match_parent"
     tools:context=".profile.edit_profile.edit_bank_account.EditBankAccountActivity">
 
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/colorPrimaryLighter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView7">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/name_whole"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView38"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="First and last name"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/first_name_val_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Error"
+                    android:textColor="@color/canceled"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/last_name_val_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Error"
+                    android:textColor="@color/canceled"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/surname_valtext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Error"
+                    android:textColor="@color/canceled"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    tools:visibility="gone" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/first_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/text_input_shape"
+                        android:ems="10"
+                        android:hint="Name"
+                        android:inputType="textPersonName|textCapSentences"
+                        android:paddingStart="16dp" />
+
+                    <EditText
+                        android:id="@+id/last_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/text_input_shape"
+                        android:ems="10"
+                        android:hint="Surname"
+                        android:inputType="textPersonName|textCapSentences"
+                        android:paddingStart="16dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/birth_whole"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView45"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="Date of birth"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/date_of_birth_val_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Error"
+                    android:textColor="@color/canceled"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <DatePicker
+                    android:id="@+id/date_of_birth"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:calendarViewShown="false"
+                    android:datePickerMode="spinner"
+                    android:spinnersShown="true">
+                </DatePicker>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ssn_whole"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView47"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="SSN last 4 digits"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/ssn_val_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Error"
+                    android:textColor="@color/canceled"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <EditText
+                        android:id="@+id/ssn_digits"
+                        android:layout_width="150dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/text_input_shape"
+                        android:ems="10"
+                        android:inputType="number"
+                        android:maxLength="4"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/website_whole"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView34"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="Website"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/website_val_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Error"
+                    android:textColor="@color/canceled"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    tools:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/website"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/text_input_shape"
+                    android:ems="10"
+                    android:hint="Website"
+                    android:inputType="textPersonName|textCapSentences"
+                    android:paddingStart="16dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/email_whole"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView42"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="Email"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/email_valtext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Error"
+                    android:textColor="@color/canceled"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    tools:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/email"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/text_input_shape"
+                    android:ems="10"
+                    android:hint="Email"
+                    android:inputType="textEmailAddress"
+                    android:paddingStart="16dp"
+                    android:visibility="visible"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/phone_whole"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="Phone"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/phone_val_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Error"
+                    android:textColor="@color/canceled"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    tools:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/text_input_shape"
+                    android:ems="10"
+                    android:hint="Phone"
+                    android:inputType="textEmailAddress"
+                    android:paddingStart="16dp"
+                    android:visibility="visible"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/address_whole"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="Address"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/address1_val_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Error"
+                    android:textColor="@color/canceled"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/address_line_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/text_input_shape"
+                    android:ems="10"
+                    android:hint="Address line 1"
+                    android:inputType="textEmailAddress"
+                    android:paddingStart="16dp"
+                    android:visibility="visible"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/address2_val_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Error"
+                    android:textColor="@color/canceled"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/address_line_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/text_input_shape"
+                    android:ems="10"
+                    android:hint="Address line 2"
+                    android:inputType="textEmailAddress"
+                    android:paddingStart="16dp"
+                    android:visibility="visible"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/city_val_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Error"
+                    android:textColor="@color/canceled"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/city"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/text_input_shape"
+                    android:ems="10"
+                    android:hint="City"
+                    android:inputType="textEmailAddress"
+                    android:paddingStart="16dp"
+                    android:visibility="visible"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/state_val_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Error"
+                    android:textColor="@color/canceled"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/state"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/text_input_shape"
+                    android:ems="10"
+                    android:hint="State"
+                    android:inputType="textEmailAddress"
+                    android:paddingStart="16dp"
+                    android:visibility="visible"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/zip_val_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Error"
+                    android:textColor="@color/canceled"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/zip_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/text_input_shape"
+                    android:ems="10"
+                    android:hint="Zip "
+                    android:inputType="textEmailAddress"
+                    android:paddingStart="16dp"
+                    android:visibility="visible"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/country_val_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Error"
+                    android:textColor="@color/canceled"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/country"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/text_input_shape"
+                    android:ems="10"
+                    android:hint="Country "
+                    android:inputType="textEmailAddress"
+                    android:paddingStart="16dp"
+                    android:visibility="visible"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/validation_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="There are some error\s"
+                android:textColor="@color/canceled"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </ScrollView>
+
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="0dp"
@@ -34,12 +484,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="16dp"
-                android:layout_weight="0"
+                android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="Bank Account"
                 android:textColor="@color/colorPrimary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/save_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:background="@android:color/transparent"
+                android:text="save"
+                android:textColor="@color/success" />
+
+            <ProgressBar
+                android:id="@+id/register_progress"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="8dp"
+                android:visibility="gone" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
