@@ -9,7 +9,9 @@ public class StripeAccountInfoObject implements Serializable {
     public User owner;
     public String first_name;
     public String last_name;
-    public String date_of_birth;
+    public int day_of_birth;
+    public int month_of_birth;
+    public int year_of_birth;
     public String SSN_last_4;
     public String identity_document_front;
     public String identity_document_back;
@@ -22,6 +24,8 @@ public class StripeAccountInfoObject implements Serializable {
     public String state;
     public String zip_code;
     public String country;
+    public String routing_n;
+    public String account_n;
 
 
 
@@ -30,7 +34,9 @@ public class StripeAccountInfoObject implements Serializable {
         owner = new User(jo.get("owner").getAsJsonObject());
         try {first_name = jo.get("first_name").getAsString(); } catch (Exception e){}
         try {last_name = jo.get("last_name").getAsString();} catch (Exception e){}
-        try {date_of_birth = jo.get("date_of_birth").getAsString();} catch (Exception e){}
+        try {day_of_birth = jo.get("day_of_birth").getAsInt();} catch (Exception e){}
+        try {month_of_birth = jo.get("month_of_birth").getAsInt();} catch (Exception e){}
+        try {year_of_birth = jo.get("year_of_birth").getAsInt();} catch (Exception e){}
         try {SSN_last_4 = jo.get("SSN_last_4").getAsString();} catch (Exception e){}
         try {identity_document_front = jo.get("identity_document_front").getAsString();} catch (Exception e){}
         try {identity_document_back = jo.get("identity_document_back").getAsString();} catch (Exception e){}
@@ -43,5 +49,7 @@ public class StripeAccountInfoObject implements Serializable {
         try {state = jo.get("state").getAsString();} catch (Exception e){}
         try {zip_code = jo.get("zip_code").getAsString();} catch (Exception e){}
         try {country = jo.get("country").getAsString();} catch (Exception e){}
+        try {routing_n = jo.get("routing_n").getAsString();} catch (Exception e){}
+        try {account_n = jo.get("account_n").getAsString();} catch (Exception e){}
     }
 }

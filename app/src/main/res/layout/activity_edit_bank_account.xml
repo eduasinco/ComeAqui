@@ -443,6 +443,67 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/bank_account_whole"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="Bank Account"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/routing_n_val_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:text="Error"
+                    android:textColor="@color/canceled"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/routing_n"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/text_input_shape"
+                    android:ems="10"
+                    android:hint="Routing number"
+                    android:inputType="number"
+                    android:paddingStart="16dp"
+                    android:visibility="visible"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/account_n_val_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Error"
+                    android:textColor="@color/canceled"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/account_n"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/text_input_shape"
+                    android:ems="10"
+                    android:hint="Account number"
+                    android:inputType="number"
+                    android:paddingStart="16dp"
+                    android:visibility="visible"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
             <TextView
                 android:id="@+id/validation_text"
                 android:layout_width="match_parent"
@@ -451,7 +512,6 @@
                 android:textColor="@color/canceled"
                 android:textStyle="bold"
                 android:visibility="gone" />
-
         </LinearLayout>
     </ScrollView>
 

@@ -44,6 +44,8 @@ public class EditBankAccountActivity extends AppCompatActivity {
     EditText state;
     EditText zip;
     EditText country;
+    EditText routingN;
+    EditText accountN;
 
     TextView firstNameVal;
     TextView lastNameVal;
@@ -58,6 +60,8 @@ public class EditBankAccountActivity extends AppCompatActivity {
     TextView stateVal;
     TextView zipVal;
     TextView countryVal;
+    TextView routingVal;
+    TextView accountVal;
 
     CountryCodePicker ccp;
     TextView validationText;
@@ -86,6 +90,8 @@ public class EditBankAccountActivity extends AppCompatActivity {
         state = findViewById(R.id.state);
         zip = findViewById(R.id.zip_code);
         country = findViewById(R.id.country);
+        routingN = findViewById(R.id.routing_n);
+        accountN = findViewById(R.id.account_n);
 
         firstNameVal = findViewById(R.id.first_name_val_text);
         lastNameVal = findViewById(R.id.last_name_val_text);
@@ -100,6 +106,8 @@ public class EditBankAccountActivity extends AppCompatActivity {
         stateVal = findViewById(R.id.state_val_text);
         zipVal = findViewById(R.id.zip_val_text);
         countryVal = findViewById(R.id.country_val_text);
+        routingVal = findViewById(R.id.routing_n_val_text);
+        accountVal = findViewById(R.id.account_n_val_text);
 
         ccp = findViewById(R.id.ccp);
         validationText = findViewById(R.id.validation_text);
@@ -118,6 +126,8 @@ public class EditBankAccountActivity extends AppCompatActivity {
         setEditText(state, stateVal);
         setEditText(zip, zipVal);
         setEditText(country, countryVal);
+        setEditText(routingN, routingVal);
+        setEditText(accountN, accountVal);
 
         saveButton.setOnClickListener((v) -> {
             save();
@@ -131,17 +141,17 @@ public class EditBankAccountActivity extends AppCompatActivity {
     void setInfo(){
         firstName.setText(accountInfoObject.first_name);
         lastName.setText(accountInfoObject.last_name);
-        // birth.setText(accountInfoObject.date_of_birth);
+        birth.updateDate(accountInfoObject.year_of_birth, accountInfoObject.month_of_birth, accountInfoObject.day_of_birth);
         ssn.setText(accountInfoObject.SSN_last_4);
-        website.setText(accountInfoObject.identity_document_front);
-        email.setText(accountInfoObject.identity_document_back);
-        phone.setText(accountInfoObject.business_website);
-        address1.setText(accountInfoObject.email);
-        address2.setText(accountInfoObject.phone_number);
-        city.setText(accountInfoObject.address_line_1);
-        state.setText(accountInfoObject.address_line_2);
-        zip.setText(accountInfoObject.city);
-        country.setText(accountInfoObject.state);
+        website.setText(accountInfoObject.business_website);
+        email.setText(accountInfoObject.email);
+        phone.setText(accountInfoObject.phone_number);
+        address1.setText(accountInfoObject.address_line_1);
+        address2.setText(accountInfoObject.address_line_2);
+        city.setText(accountInfoObject.city);
+        state.setText(accountInfoObject.state);
+        zip.setText(accountInfoObject.zip_code);
+        country.setText(accountInfoObject.country);
     }
 
     void getBankAccountInfo(){
@@ -204,7 +214,9 @@ public class EditBankAccountActivity extends AppCompatActivity {
         tasks.add(new UploadAsyncTask(method,getResources().getString(R.string.server) + "/stripe_account/").execute(
                 new String[]{"first_name", firstName.getText().toString()},
                 new String[]{"last_name", lastName.getText().toString()},
-                // new String[]{"date_of_birth", birth.getMinDate() + ""},
+                new String[]{"day_of_birth", birth.getDayOfMonth() + ""},
+                new String[]{"month_of_birth", birth.getMonth() + ""},
+                new String[]{"year_of_birth", birth.getYear() + ""},
                 new String[]{"SSN_last_4", ssn.getText().toString()},
                 new String[]{"identity_document_front", ""},
                 new String[]{"identity_document_back", ""},
@@ -216,7 +228,9 @@ public class EditBankAccountActivity extends AppCompatActivity {
                 new String[]{"city", city.getText().toString()},
                 new String[]{"state", state.getText().toString()},
                 new String[]{"zip_code", zip.getText().toString()},
-                new String[]{"country", country.getText().toString()}
+                new String[]{"country", country.getText().toString()},
+                new String[]{"routing_n", routingN.getText().toString()},
+                new String[]{"account_n", accountN.getText().toString()}
         ));
     }
     private class UploadAsyncTask extends AsyncTask<String[], Void, String> {
