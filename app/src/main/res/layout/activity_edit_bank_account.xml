@@ -126,11 +126,12 @@
                 <DatePicker
                     android:id="@+id/date_of_birth"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/text_input_shape"
                     android:calendarViewShown="false"
                     android:datePickerMode="spinner"
-                    android:spinnersShown="true">
-                </DatePicker>
+                    android:spinnersShown="true"></DatePicker>
             </LinearLayout>
 
             <LinearLayout
@@ -168,90 +169,13 @@
                         android:layout_height="50dp"
                         android:background="@drawable/text_input_shape"
                         android:ems="10"
+                        android:gravity="center"
                         android:inputType="number"
                         android:maxLength="4"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/website_whole"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textView34"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:text="Website"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/website_val_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Error"
-                    android:textColor="@color/canceled"
-                    android:textStyle="bold"
-                    android:visibility="gone"
-                    tools:visibility="gone" />
-
-                <EditText
-                    android:id="@+id/website"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@drawable/text_input_shape"
-                    android:ems="10"
-                    android:hint="Website"
-                    android:inputType="textPersonName|textCapSentences"
-                    android:paddingStart="16dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/email_whole"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textView42"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:text="Email"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/email_valtext"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Error"
-                    android:textColor="@color/canceled"
-                    android:textStyle="bold"
-                    android:visibility="gone"
-                    tools:visibility="gone" />
-
-                <EditText
-                    android:id="@+id/email"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/text_input_shape"
-                    android:ems="10"
-                    android:hint="Email"
-                    android:inputType="textEmailAddress"
-                    android:paddingStart="16dp"
-                    android:visibility="visible"
-                    tools:visibility="visible" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -435,7 +359,7 @@
                     android:layout_marginTop="8dp"
                     android:background="@drawable/text_input_shape"
                     android:ems="10"
-                    android:hint="Country "
+                    android:hint="US available only"
                     android:inputType="textEmailAddress"
                     android:paddingStart="16dp"
                     android:visibility="visible"
@@ -495,6 +419,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginBottom="50dp"
                     android:background="@drawable/text_input_shape"
                     android:ems="10"
                     android:hint="Account number"

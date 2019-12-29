@@ -35,8 +35,6 @@ public class EditBankAccountActivity extends AppCompatActivity {
     EditText lastName;
     DatePicker birth;
     EditText ssn;
-    EditText website;
-    EditText email;
     EditText phone;
     EditText address1;
     EditText address2;
@@ -51,8 +49,6 @@ public class EditBankAccountActivity extends AppCompatActivity {
     TextView lastNameVal;
     TextView birthVal;
     TextView ssnVal;
-    TextView websiteVal;
-    TextView emailVal;
     TextView phoneVal;
     TextView address1Val;
     TextView address2Val;
@@ -81,8 +77,6 @@ public class EditBankAccountActivity extends AppCompatActivity {
         lastName = findViewById(R.id.last_name);
         birth = findViewById(R.id.date_of_birth);
         ssn = findViewById(R.id.ssn_digits);
-        website = findViewById(R.id.website);
-        email = findViewById(R.id.email);
         phone = findViewById(R.id.phone);
         address1 = findViewById(R.id.address_line_1);
         address2 = findViewById(R.id.address_line_2);
@@ -97,8 +91,6 @@ public class EditBankAccountActivity extends AppCompatActivity {
         lastNameVal = findViewById(R.id.last_name_val_text);
         birthVal = findViewById(R.id.date_of_birth_val_text);
         ssnVal = findViewById(R.id.ssn_val_text);
-        websiteVal = findViewById(R.id.website_val_text);
-        emailVal = findViewById(R.id.email_valtext);
         phoneVal = findViewById(R.id.phone_val_text);
         address1Val = findViewById(R.id.address1_val_text);
         address2Val = findViewById(R.id.address2_val_text);
@@ -117,8 +109,6 @@ public class EditBankAccountActivity extends AppCompatActivity {
         setEditText(firstName, firstNameVal);
         setEditText(lastName, lastNameVal);
         setEditText(ssn, ssnVal);
-        setEditText(website, websiteVal);
-        setEditText(email, emailVal);
         setEditText(phone, phoneVal);
         setEditText(address1, address1Val);
         setEditText(address2, address2Val);
@@ -141,10 +131,8 @@ public class EditBankAccountActivity extends AppCompatActivity {
     void setInfo(){
         firstName.setText(accountInfoObject.first_name);
         lastName.setText(accountInfoObject.last_name);
-        birth.updateDate(accountInfoObject.year_of_birth, accountInfoObject.month_of_birth, accountInfoObject.day_of_birth);
+        birth.updateDate(accountInfoObject.year_of_birth, accountInfoObject.month_of_birth - 1, accountInfoObject.day_of_birth);
         ssn.setText(accountInfoObject.SSN_last_4);
-        website.setText(accountInfoObject.business_website);
-        email.setText(accountInfoObject.email);
         phone.setText(accountInfoObject.phone_number);
         address1.setText(accountInfoObject.address_line_1);
         address2.setText(accountInfoObject.address_line_2);
@@ -152,6 +140,8 @@ public class EditBankAccountActivity extends AppCompatActivity {
         state.setText(accountInfoObject.state);
         zip.setText(accountInfoObject.zip_code);
         country.setText(accountInfoObject.country);
+        routingN.setText(accountInfoObject.routing_n);
+        accountN.setText(accountInfoObject.account_n);
     }
 
     void getBankAccountInfo(){
@@ -184,6 +174,8 @@ public class EditBankAccountActivity extends AppCompatActivity {
                 if (jo.get("error_message") == null){
                     accountInfoObject = new StripeAccountInfoObject(new JsonParser().parse(response).getAsJsonObject());
                     setInfo();
+                } else {
+                    submit("POST");
                 }
             }
             super.onPostExecute(response);
@@ -192,11 +184,7 @@ public class EditBankAccountActivity extends AppCompatActivity {
 
     void save(){
         if (true || valid()){
-            if (accountInfoObject == null){
-                submit("POST");
-            } else {
-                submit("PATCH");
-            }
+            submit("PATCH");
         }
     }
 
@@ -215,13 +203,11 @@ public class EditBankAccountActivity extends AppCompatActivity {
                 new String[]{"first_name", firstName.getText().toString()},
                 new String[]{"last_name", lastName.getText().toString()},
                 new String[]{"day_of_birth", birth.getDayOfMonth() + ""},
-                new String[]{"month_of_birth", birth.getMonth() + ""},
+                new String[]{"month_of_birth", (birth.getMonth() + 1) + ""},
                 new String[]{"year_of_birth", birth.getYear() + ""},
                 new String[]{"SSN_last_4", ssn.getText().toString()},
                 new String[]{"identity_document_front", ""},
                 new String[]{"identity_document_back", ""},
-                new String[]{"business_website", website.getText().toString()},
-                new String[]{"email", email.getText().toString()},
                 new String[]{"phone_number", phone.getText().toString()},
                 new String[]{"address_line_1", address1.getText().toString()},
                 new String[]{"address_line_2", address2.getText().toString()},
@@ -257,7 +243,6 @@ public class EditBankAccountActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String response) {
             showProgress(false);
-            finish();
             super.onPostExecute(response);
         }
     }
@@ -290,17 +275,6 @@ public class EditBankAccountActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(ssn.getText().toString())){
             showValtext(ssnVal, "Please, insert a firstName", ssn);
-            valid = false;
-        }
-
-        if (TextUtils.isEmpty(website.getText().toString())){
-            showValtext(websiteVal, "Please, insert a lastName", website);
-            valid = false;
-        }
-
-        String target = email.getText().toString();
-        if (!(!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches())){
-            showValtext(emailVal, "Not a valid email", email);
             valid = false;
         }
 
