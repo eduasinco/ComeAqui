@@ -16,9 +16,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.StripeAccountInfoObject;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.rilixtech.widget.countrycodepicker.CountryCodePicker;
@@ -59,6 +61,7 @@ public class EditBankAccountActivity extends AppCompatActivity {
     TextView routingVal;
     TextView accountVal;
 
+    TextView accountMessage;
     CountryCodePicker ccp;
     TextView validationText;
     Button saveButton;
@@ -67,6 +70,7 @@ public class EditBankAccountActivity extends AppCompatActivity {
     StripeAccountInfoObject accountInfoObject;
 
     ArrayList<AsyncTask> tasks = new ArrayList<>();
+    ArrayList<String> currentDue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +109,7 @@ public class EditBankAccountActivity extends AppCompatActivity {
         validationText = findViewById(R.id.validation_text);
         saveButton = findViewById(R.id.save_button);
         progress = findViewById(R.id.register_progress);
+        accountMessage = findViewById(R.id.account_message);
 
         setEditText(firstName, firstNameVal);
         setEditText(lastName, lastNameVal);
@@ -120,7 +125,7 @@ public class EditBankAccountActivity extends AppCompatActivity {
         setEditText(accountN, accountVal);
 
         saveButton.setOnClickListener((v) -> {
-            save();
+            submit("PATCH");
         });
 
         getBankAccountInfo();
@@ -142,6 +147,57 @@ public class EditBankAccountActivity extends AppCompatActivity {
         country.setText(accountInfoObject.country);
         routingN.setText(accountInfoObject.routing_n);
         accountN.setText(accountInfoObject.account_n);
+
+        if (accountInfoObject.payouts_enabled){
+            accountMessage.setText("Account confirmed");
+            accountMessage.setBackground(ContextCompat.getDrawable(this, R.color.success));
+        } else if (currentDue.size() == 0){
+            accountMessage.setText("Pending review");
+            accountMessage.setBackground(ContextCompat.getDrawable(this, R.color.colorPrimary));
+        } else {
+            accountMessage.setText("Account incomplete");
+            accountMessage.setBackground(ContextCompat.getDrawable(this, R.color.canceled));
+        }
+        for (String due: currentDue){
+            switch (due){
+                case "individual.address.line1":
+                    showValtext(address1Val, "Please, insert a valid address", address1);
+                    break;
+                case "individual.address.line2":
+                    showValtext(address2Val, "Please, insert a valid address", address2);
+                    break;
+                case "individual.address.country":
+                    showValtext(countryVal, "Please, insert a country", country);
+                    break;
+                case "individual.address.city":
+                    showValtext(cityVal, "Please, insert a city", city);
+                    break;
+                case "individual.address.postal_code":
+                    showValtext(zipVal, "Please, insert a postal code", zip);
+                    break;
+                case "individual.address.state":
+                    showValtext(stateVal, "Please, insert a state", state);
+                    break;
+                case "individual.dob.day":
+                    break;
+                case "individual.dob.month":
+                    break;
+                case "individual.dob.year":
+                    break;
+                case "individual.first_name":
+                    showValtext(firstNameVal, "Please, insert a first name", firstName);
+                    break;
+                case "individual.last_name":
+                    showValtext(lastNameVal, "Please, insert a last name", lastName);
+                    break;
+                case "individual.phone":
+                    showValtext(phoneVal, "Please, insert a phone", phone);
+                    break;
+                case "individual.ssn_last_4":
+                    showValtext(ssnVal, "Please, insert last 4 digits of your SSN", ssn);
+                    break;
+            }
+        }
     }
 
     void getBankAccountInfo(){
@@ -172,19 +228,17 @@ public class EditBankAccountActivity extends AppCompatActivity {
             if (response != null){
                 JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
                 if (jo.get("error_message") == null){
-                    accountInfoObject = new StripeAccountInfoObject(new JsonParser().parse(response).getAsJsonObject());
+                    accountInfoObject = new StripeAccountInfoObject(jo.get("object").getAsJsonObject());
+                    currentDue = new ArrayList<>();
+                    for (JsonElement je: jo.get("due").getAsJsonArray()){
+                        currentDue.add(je.getAsString());
+                    }
                     setInfo();
                 } else {
                     submit("POST");
                 }
             }
             super.onPostExecute(response);
-        }
-    }
-
-    void save(){
-        if (true || valid()){
-            submit("PATCH");
         }
     }
 
@@ -258,62 +312,6 @@ public class EditBankAccountActivity extends AppCompatActivity {
         tv.setText(text);
         tv.setVisibility(View.VISIBLE);
         et.setBackground(ContextCompat.getDrawable(getApplication(), R.drawable.text_input_shape_error));
-    }
-
-    boolean valid(){
-        boolean valid = true;
-
-        if (TextUtils.isEmpty(firstName.getText().toString())){
-            showValtext(firstNameVal, "Please, insert a firstName", firstName);
-            valid = false;
-        }
-
-        if (TextUtils.isEmpty(lastName.getText().toString())){
-            showValtext(lastNameVal, "Please, insert a lastName", lastName);
-            valid = false;
-        }
-
-        if (TextUtils.isEmpty(ssn.getText().toString())){
-            showValtext(ssnVal, "Please, insert a firstName", ssn);
-            valid = false;
-        }
-
-        if (TextUtils.isEmpty(phone.getText().toString())){
-            showValtext(phoneVal, "Please, insert a lastName", phone);
-            valid = false;
-        }
-
-        if (TextUtils.isEmpty(address1.getText().toString())){
-            showValtext(phoneVal, "Please, insert a lastName", phone);
-            valid = false;
-        }
-
-        if (TextUtils.isEmpty(city.getText().toString())){
-            showValtext(cityVal, "Please, insert a lastName", city);
-            valid = false;
-        }
-
-        if (TextUtils.isEmpty(state.getText().toString())){
-            showValtext(stateVal, "Please, insert a lastName", state);
-            valid = false;
-        }
-
-        if (TextUtils.isEmpty(zip.getText().toString())){
-            showValtext(zipVal, "Please, insert a lastName", zip);
-            valid = false;
-        }
-
-        if (TextUtils.isEmpty(country.getText().toString())){
-            showValtext(countryVal, "Please, insert a lastName", country);
-            valid = false;
-        }
-
-        if (!valid){
-            validationText.setVisibility(View.VISIBLE);
-        } else {
-            validationText.setVisibility(View.GONE);
-        }
-        return valid;
     }
 
     void setEditText(EditText editText, TextView valtext){

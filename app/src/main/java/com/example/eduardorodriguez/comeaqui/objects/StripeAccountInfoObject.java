@@ -26,6 +26,8 @@ public class StripeAccountInfoObject implements Serializable {
     public String country;
     public String routing_n;
     public String account_n;
+    public boolean payouts_enabled;
+
 
 
 
@@ -51,5 +53,6 @@ public class StripeAccountInfoObject implements Serializable {
         try {country = jo.get("country").getAsString();} catch (Exception e){}
         try {routing_n = jo.get("routing_n").getAsString();} catch (Exception e){}
         try {account_n = jo.get("account_n").getAsString();} catch (Exception e){}
+        try {payouts_enabled = jo.get("payouts_enabled").getAsBoolean();} catch (Exception e){}
     }
 }
