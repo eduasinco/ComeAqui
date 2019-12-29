@@ -28,7 +28,7 @@ public class SavedFoodPost extends FoodPost {
         end_time = jo.get("end_time") instanceof JsonNull ? "" : jo.get("end_time").getAsString();
         time_to_show = jo.get("start_time") instanceof JsonNull && jo.get("end_time") instanceof JsonNull ? "" : DateFormatting.hhmmHappenedNowTodayYesterdayWeekDay(start_time, end_time);
         max_dinners = jo.get("max_dinners") instanceof JsonNull ? 0 : jo.get("max_dinners").getAsInt();
-        price = jo.get("price") instanceof JsonNull ? "" :  jo.get("price").getAsString();
+        price = jo.get("price") instanceof JsonNull ? 0 :  jo.get("price").getAsInt();
         type = jo.get("food_type") instanceof JsonNull ? "" : jo.get("food_type").getAsString();
         description = jo.get("description") instanceof JsonNull ? "" : jo.get("description").getAsString();
 

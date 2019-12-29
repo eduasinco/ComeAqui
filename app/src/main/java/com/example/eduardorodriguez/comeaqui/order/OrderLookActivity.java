@@ -136,9 +136,9 @@ public class OrderLookActivity extends AppCompatActivity implements TwoOptionsMe
         posterNameView.setText(order.poster.first_name + " " + order.poster.last_name);
         posterDescription.setText(order.post.description);
         posterLocationView.setText(order.post.formatted_address);
-        price.setText("$" + order.post.price);
-        subtotalView.setText("$" + order.post.price);
-        totalPriceView.setText("$" + order.post.price);
+        price.setText("$" + order.post.price / 100.d);
+        subtotalView.setText("$" + order.post.price / 100.d);
+        totalPriceView.setText("$" + order.post.price / 100.d);
         mealTimeView.setText(order.post.time_to_show + " " + order.post.time_range);
         orderStatus.setText(order.status);
 

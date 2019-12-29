@@ -81,8 +81,7 @@ public class MyHostingRecyclerViewAdapter extends RecyclerView.Adapter<MyHosting
                 foodPost.max_dinners == 0 ||
                 foodPost.start_time.isEmpty() ||
                 foodPost.end_time.isEmpty() ||
-                foodPost.formatted_address.isEmpty() ||
-                foodPost.price.isEmpty();
+                foodPost.formatted_address.isEmpty();
     }
 
     @Override
