@@ -386,7 +386,6 @@
                     android:id="@+id/routing_n_val_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingStart="16dp"
                     android:text="Error"
                     android:textColor="@color/canceled"
                     android:textStyle="bold"
@@ -507,7 +506,7 @@
                 android:gravity="center"
                 android:padding="4dp"
                 android:textColor="@android:color/white"
-                android:visibility="visible" />
+                android:visibility="gone" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

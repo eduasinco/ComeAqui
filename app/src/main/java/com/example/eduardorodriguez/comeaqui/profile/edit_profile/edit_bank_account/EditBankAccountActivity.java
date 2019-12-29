@@ -155,6 +155,7 @@ public class EditBankAccountActivity extends AppCompatActivity {
             accountMessage.setText("Pending review");
             accountMessage.setBackground(ContextCompat.getDrawable(this, R.color.colorPrimary));
         } else {
+            accountMessage.setVisibility(View.VISIBLE);
             accountMessage.setText("Account incomplete");
             accountMessage.setBackground(ContextCompat.getDrawable(this, R.color.canceled));
         }
@@ -198,8 +199,14 @@ public class EditBankAccountActivity extends AppCompatActivity {
                     break;
             }
         }
-    }
+        if (accountInfoObject.routing_n == null || accountInfoObject.routing_n.isEmpty()){
+            showValtext(routingVal, "Please, provide a routing number", routingN);
+        }
+        if (accountInfoObject.account_n == null || accountInfoObject.account_n.isEmpty()){
+            showValtext(accountVal, "Please, provide a bank account number", accountN);
+        }
 
+    }
     void getBankAccountInfo(){
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/stripe_account/").execute());
     }
