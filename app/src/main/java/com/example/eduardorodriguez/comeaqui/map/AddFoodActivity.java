@@ -81,7 +81,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     private Double lng_picked;
     private HashMap<String, String> address_elements;
 
-    Double price_data;
+    Integer price_data;
     boolean[] pressed = {false, false, false, false, false, false, false};
     String description = "";
     boolean visible = false;
@@ -255,10 +255,8 @@ public class AddFoodActivity extends AppCompatActivity implements
     void setFoodPostIfItHas() {
         if (!foodPostDetail.plate_name.isEmpty())
             foodName.setText(foodPostDetail.plate_name);
-        if (!foodPostDetail.price.isEmpty()) {
-            price.setText("$" + foodPostDetail.price);
-            price_data = Double.parseDouble(foodPostDetail.price);
-        }
+        price.setText("$" + foodPostDetail.price);
+        price_data = foodPostDetail.price;
         if (foodPostDetail.max_dinners != 0) {
             dinnerPicker.setText(foodPostDetail.max_dinners + "");
         }
@@ -342,8 +340,8 @@ public class AddFoodActivity extends AppCompatActivity implements
                 price.setBackground(ContextCompat.getDrawable(getApplication(), R.drawable.text_input_shape));
                 if (s.length() > 0) {
                     int intText = Integer.parseInt(s.toString());
-                    price_data = intText / 100.d;
-                    price.setText("$" + String.format("%.02f", price_data));
+                    price_data = intText;
+                    price.setText("$" + String.format("%.02f", price_data / 100.d));
                 } else {
                     price.setText("$0.00");
                 }
