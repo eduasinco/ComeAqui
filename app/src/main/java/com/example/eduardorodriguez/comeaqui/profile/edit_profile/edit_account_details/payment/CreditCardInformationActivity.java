@@ -12,22 +12,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
-import com.google.gson.JsonParser;
 
 import io.card.payment.CardIOActivity;
 import io.card.payment.CreditCard;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 public class CreditCardInformationActivity extends AppCompatActivity {
 
     EditText creditCardView;
-    EditText expiryDateView;
+    EditText expMonth;
+    EditText expYear;
     EditText cvvView;
     String cardType = "";
     ArrayList<AsyncTask> tasks = new ArrayList<>();
@@ -38,7 +36,8 @@ public class CreditCardInformationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_card_information);
 
         creditCardView = findViewById(R.id.creditCard);
-        expiryDateView = findViewById(R.id.expiryDate);
+        expMonth = findViewById(R.id.exp_month);
+        expYear = findViewById(R.id.exp_year);
         cvvView = findViewById(R.id.cvv);
         Button saveCardButtonView = findViewById(R.id.saveCardButton);
 
@@ -46,9 +45,9 @@ public class CreditCardInformationActivity extends AppCompatActivity {
             PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/card/");
             tasks.add(post.execute(
                         new String[]{"card_number", creditCardView.getText().toString(), ""},
-                        new String[]{"expiration_date", expiryDateView.getText().toString(), ""},
-                        new String[]{"card_type", cardType, ""},
-                        new String[]{"cvv", cvvView.getText().toString(), ""}
+                        new String[]{"exp_month", expMonth.getText().toString(), ""},
+                        new String[]{"exp_year", expYear.getText().toString(), ""},
+                        new String[]{"cvc", cvvView.getText().toString(), ""}
                         ));
         });
     }

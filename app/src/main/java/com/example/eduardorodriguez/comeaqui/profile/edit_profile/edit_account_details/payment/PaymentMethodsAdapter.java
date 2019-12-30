@@ -42,7 +42,6 @@ public class PaymentMethodsAdapter extends RecyclerView.Adapter<PaymentMethodsAd
     @Override
     public void onBindViewHolder(final PaymentMethodsAdapter.ViewHolder holder, int position) {
         holder.mItem = listPaymentMethods.get(position);
-        holder.paymentType.setText(holder.mItem.card_type);
         holder.paymentInfo.setText("Ending " + holder.mItem.card_number.substring(holder.mItem.card_number.length() - 4));
         if (holder.mItem.chosen){
             holder.chosenImage.setVisibility(View.VISIBLE);
