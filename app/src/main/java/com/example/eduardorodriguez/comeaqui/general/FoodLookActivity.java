@@ -122,6 +122,7 @@ public class FoodLookActivity extends AppCompatActivity implements
         profileLook = findViewById(R.id.profile_look);
         pendingPaymentMethodText = findViewById(R.id.pending_payment_method_text);
         pendingPaymentMethod = findViewById(R.id.pending_payment_method);
+        cardLastNumbers = findViewById(R.id.card_last_numbers);
 
         waitingFrame = findViewById(R.id.waiting_frame);
         setToolbar();
