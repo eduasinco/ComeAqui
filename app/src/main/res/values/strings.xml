@@ -6,6 +6,8 @@
     <string name="default_notification_channel_id">1</string>
 
     <string name="delete_all"><u>Delete All</u></string>
+    <string name="pending_bank_account_info">You still have some pending <u>bank account</u> info</string>
+    <string name="pending_payment_method">You still have to add a <u>payment method</u></string>
 
     <string name="app_name">ComeAqui</string>
     <string name="nav_get">Get</string>

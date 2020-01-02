@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -27,6 +26,8 @@ import com.example.eduardorodriguez.comeaqui.map.add_food.WordLimitEditTextFragm
 import com.example.eduardorodriguez.comeaqui.map.add_food.add_images.AddImagesFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.SavedFoodPost;
+import com.example.eduardorodriguez.comeaqui.profile.edit_profile.AddBioActivity;
+import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_bank_account.EditBankAccountActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
@@ -34,8 +35,11 @@ import com.example.eduardorodriguez.comeaqui.utilities.message_fragments.OneOpti
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodTypeSelectorFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.message_fragments.TwoOptionsMessageFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.place_autocomplete.PlaceAutocompleteFragment;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -68,6 +72,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     TextView validationError;
     EditText dinnerPicker;
     ImageButton options;
+    TextView bankAccountInfo;
     private View mProgressView;
 
 
@@ -104,6 +109,7 @@ public class AddFoodActivity extends AppCompatActivity implements
 
     ArrayList<AsyncTask> tasks = new ArrayList<>();
     boolean isKeyboardShowing = false;
+    ArrayList<String> currentDue;
 
     private String setTypes(){
         StringBuilder types = new StringBuilder();
@@ -139,6 +145,7 @@ public class AddFoodActivity extends AppCompatActivity implements
         errorMessage = findViewById(R.id.error_message_frame);
         validationError = findViewById(R.id.validation_error);
         options = findViewById(R.id.options);
+        bankAccountInfo = findViewById(R.id.bank_account_info);
 
         dinnerPicker = findViewById(R.id.dinners);
 
@@ -227,6 +234,7 @@ public class AddFoodActivity extends AppCompatActivity implements
             } else {
                 getFoodPostDetailsAndSet(foodPostId);
             }
+            getBankAccountInfo();
         }
 
         setTextInputs();
@@ -237,6 +245,11 @@ public class AddFoodActivity extends AppCompatActivity implements
             if (validateFrom()){
                 patchFood(foodPostDetail.id);
             }
+        });
+
+        bankAccountInfo.setOnClickListener(v -> {
+            Intent a = new Intent(this, EditBankAccountActivity.class);
+            startActivity(a);
         });
 
         scrollView.getViewTreeObserver().addOnScrollChangedListener(() -> {
@@ -509,6 +522,7 @@ public class AddFoodActivity extends AppCompatActivity implements
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            showProgress(true);
         }
 
         @Override
@@ -528,6 +542,50 @@ public class AddFoodActivity extends AppCompatActivity implements
                 setFoodPostIfItHas();
                 setOptionsMenu();
             }
+            showProgress(false);
+            super.onPostExecute(response);
+        }
+    }
+
+    void getBankAccountInfo(){
+        tasks.add(new GetBankAccountAsyncTask(getResources().getString(R.string.server) + "/stripe_account/").execute());
+    }
+    class GetBankAccountAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetBankAccountAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected void onPreExecute() {
+            showProgress(true);
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                if (jo.get("error_message") == null){
+                    currentDue = new ArrayList<>();
+                    for (JsonElement je: jo.get("due").getAsJsonArray()){
+                        currentDue.add(je.getAsString());
+                    }
+                    if (currentDue.size() > 0){
+                        bankAccountInfo.setVisibility(View.VISIBLE);
+                        submit.setAlpha(0.5f);
+                        submit.setClickable(false);
+                    }
+                }
+            }
+            showProgress(false);
             super.onPostExecute(response);
         }
     }

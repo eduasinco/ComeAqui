@@ -27,9 +27,11 @@ import com.example.eduardorodriguez.comeaqui.general.attend_message.AttendFragme
 import com.example.eduardorodriguez.comeaqui.general.dinner_list.DinnerListActivity;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
+import com.example.eduardorodriguez.comeaqui.objects.PaymentMethodObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
+import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.AddPaymentMethodActivity;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
 
 
@@ -79,6 +81,10 @@ public class FoodLookActivity extends AppCompatActivity implements
     TextView[] plusArray;
     FrameLayout waitingFrame;
     Menu collapseMenu;
+    LinearLayout pendingPaymentMethod;
+    TextView pendingPaymentMethodText;
+    TextView cardLastNumbers;
+    ImageView cardIcon;
 
     TwoOptionsMessageFragment sureFragment;
     AttendFragment attendFragment;
@@ -114,6 +120,8 @@ public class FoodLookActivity extends AppCompatActivity implements
         progress = findViewById(R.id.place_order_progress);
         dinnersListView = findViewById(R.id.dinners_list_view);
         profileLook = findViewById(R.id.profile_look);
+        pendingPaymentMethodText = findViewById(R.id.pending_payment_method_text);
+        pendingPaymentMethod = findViewById(R.id.pending_payment_method);
 
         waitingFrame = findViewById(R.id.waiting_frame);
         setToolbar();
@@ -127,6 +135,11 @@ public class FoodLookActivity extends AppCompatActivity implements
         changePaymentMethod.setOnClickListener(v -> {
             Intent paymentMethod = new Intent(this, PaymentMethodsActivity.class);
             startActivity(paymentMethod);
+        });
+
+        pendingPaymentMethodText.setOnClickListener(v -> {
+            Intent a = new Intent(this, AddPaymentMethodActivity.class);
+            startActivity(a);
         });
 
     }
@@ -312,6 +325,7 @@ public class FoodLookActivity extends AppCompatActivity implements
 
         setPlaceButton();
         setDinners();
+        getMyChosenCard();
     }
 
     void getFoodPostDetailsAndSet(int foodPostId){
@@ -353,6 +367,43 @@ public class FoodLookActivity extends AppCompatActivity implements
             super.onPostExecute(response);
         }
 
+    }
+
+    void getMyChosenCard(){
+        GetMyChosenCardAsyncTask process = new GetMyChosenCardAsyncTask(getResources().getString(R.string.server) + "/my_chosen_card/");
+        tasks.add(process.execute());
+    }
+    private class GetMyChosenCardAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetMyChosenCardAsyncTask(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                if (jo.get("error_message") == null){
+                    PaymentMethodObject pm = new PaymentMethodObject(jo);
+                    cardLastNumbers.setText(pm.card_number.substring(pm.card_number.length() - 4));
+                } else {
+                    pendingPaymentMethod.setVisibility(View.VISIBLE);
+                    attendMealButton.setAlpha(0.5f);
+                    attendMealButton.setClickable(false);
+                }
+            }
+            super.onPostExecute(response);
+        }
     }
 
     void startWaitingFrame(boolean start){
