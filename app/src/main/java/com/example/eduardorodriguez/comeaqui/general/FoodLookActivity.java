@@ -396,6 +396,7 @@ public class FoodLookActivity extends AppCompatActivity implements
                 if (jo.get("error_message") == null){
                     PaymentMethodObject pm = new PaymentMethodObject(jo);
                     cardLastNumbers.setText(pm.card_number.substring(pm.card_number.length() - 4));
+                    paymentMethod.setVisibility(View.VISIBLE);
                 } else {
                     pendingPaymentMethod.setVisibility(View.VISIBLE);
                     attendMealButton.setAlpha(0.5f);
@@ -450,7 +451,6 @@ public class FoodLookActivity extends AppCompatActivity implements
                 });
             }
             attendMealButton.setVisibility(View.VISIBLE);
-            paymentMethod.setVisibility(View.VISIBLE);
         }
     }
 
