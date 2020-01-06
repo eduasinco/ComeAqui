@@ -39,7 +39,7 @@ public class AttendFragment extends Fragment {
         AttendFragment fragment = new AttendFragment();
         Bundle args = new Bundle();
         args.putInt(DINNERS_LEFT, dinnersLeft);
-        args.putInt(PRICE, dinnersLeft);
+        args.putInt(PRICE, price);
         fragment.setArguments(args);
         return fragment;
     }

@@ -71,7 +71,7 @@ public class FoodPost implements Serializable {
         price_to_show = "$" + String.format("%.02f", (price / 100.f));
         type = jo.get("food_type").getAsString();
         description = jo.get("description").getAsString();
-        status = jo.get("status").getAsString();
+        try {status = jo.get("status").getAsString();} catch (Exception ignored){}
 
         images = new ArrayList<>();
         try {
