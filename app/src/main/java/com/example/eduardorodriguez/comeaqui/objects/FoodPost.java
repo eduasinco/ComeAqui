@@ -33,6 +33,7 @@ public class FoodPost implements Serializable {
     public String price_to_show;
     public String type;
     public String description;
+    public String status;
 
     public ArrayList<FoodPostImageObject> images;
 
@@ -70,6 +71,7 @@ public class FoodPost implements Serializable {
         price_to_show = "$" + String.format("%.02f", (price / 100.f));
         type = jo.get("food_type").getAsString();
         description = jo.get("description").getAsString();
+        status = jo.get("status").getAsString();
 
         images = new ArrayList<>();
         try {

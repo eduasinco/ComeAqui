@@ -47,7 +47,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.TimeZone;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -449,9 +454,19 @@ public class FoodLookActivity extends AppCompatActivity implements
                 attendMealButton.setBackgroundColor(Color.TRANSPARENT);
                 attendMealButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
             } else {
-                attendMealButton.setOnClickListener(v -> {
-                    attendFragment.show(true);
-                });
+                if (foodPostDetail.status.equals("OPEN")) {
+                    attendMealButton.setOnClickListener(v -> {
+                        attendFragment.show(true);
+                    });
+                } else if (foodPostDetail.status.equals("IN_COURSE")){
+                    attendMealButton.setText("Meal in course");
+                    attendMealButton.setBackgroundColor(Color.TRANSPARENT);
+                    attendMealButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
+                } else if(foodPostDetail.status.equals("FINISHED")){
+                    attendMealButton.setText("Meal has finished");
+                    attendMealButton.setBackgroundColor(Color.TRANSPARENT);
+                    attendMealButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
+                }
             }
             attendMealButton.setVisibility(View.VISIBLE);
         }
