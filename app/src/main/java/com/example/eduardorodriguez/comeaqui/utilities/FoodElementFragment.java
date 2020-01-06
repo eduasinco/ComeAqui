@@ -60,7 +60,7 @@ public class FoodElementFragment extends Fragment {
         FoodPost foodPost = (FoodPost) getArguments().getSerializable("object");
 
         postNameView.setText(foodPost.plate_name);
-        postPrice.setText(foodPost.price / 100.d + "$");
+        postPrice.setText(foodPost.price_to_show);
         postTime.setText(foodPost.time_to_show + " (" + foodPost.time_range + ")");
         posterDescriptionView.setText(foodPost.description);
 

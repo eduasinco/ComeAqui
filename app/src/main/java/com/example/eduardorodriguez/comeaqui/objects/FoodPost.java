@@ -30,6 +30,7 @@ public class FoodPost implements Serializable {
     public String start_time;
     public String end_time;
     public int price;
+    public String price_to_show;
     public String type;
     public String description;
 
@@ -66,6 +67,7 @@ public class FoodPost implements Serializable {
         time_to_show = DateFormatting.hhmmHappenedNowTodayYesterdayWeekDay(start_time, end_time);
         time_range = DateFormatting.timeRange(start_time, end_time);
         price = jo.get("price").getAsInt();
+        price_to_show = "$" + String.format("%.02f", (price / 100.f));
         type = jo.get("food_type").getAsString();
         description = jo.get("description").getAsString();
 

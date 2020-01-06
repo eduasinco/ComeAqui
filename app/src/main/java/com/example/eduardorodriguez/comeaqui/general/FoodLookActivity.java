@@ -284,7 +284,7 @@ public class FoodLookActivity extends AppCompatActivity implements
         plateNameView.setText(foodPostDetail.plate_name);
         descriptionView.setText(foodPostDetail.description);
         posterLocationView.setText(foodPostDetail.formatted_address);
-        priceView.setText("$" + foodPostDetail.price);
+        priceView.setText(foodPostDetail.price_to_show);
         timeView.setText(foodPostDetail.time_range);
         date.setText(foodPostDetail.time_to_show);
 
@@ -319,7 +319,7 @@ public class FoodLookActivity extends AppCompatActivity implements
                 .replace(R.id.sure_message, sureFragment)
                 .commit();
 
-        attendFragment = AttendFragment.newInstance(foodPostDetail.dinners_left);
+        attendFragment = AttendFragment.newInstance(foodPostDetail.dinners_left, foodPostDetail.price);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.attend_message, attendFragment)
                 .commit();
@@ -397,7 +397,9 @@ public class FoodLookActivity extends AppCompatActivity implements
                 if (jo.get("error_message") == null){
                     PaymentMethodObject pm = new PaymentMethodObject(jo);
                     cardLastNumbers.setText(pm.card_number.substring(pm.card_number.length() - 4));
-                    paymentMethod.setVisibility(View.VISIBLE);
+                    if (USER.id != foodPostDetail.owner.id){
+                        paymentMethod.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     pendingPaymentMethod.setVisibility(View.VISIBLE);
                     attendMealButton.setAlpha(0.5f);

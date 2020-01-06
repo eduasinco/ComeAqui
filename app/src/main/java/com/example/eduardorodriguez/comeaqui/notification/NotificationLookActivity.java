@@ -177,7 +177,7 @@ public class NotificationLookActivity extends AppCompatActivity implements TwoOp
         plateNameView.setText(orderObject.post.plate_name);
         descriptionView.setText(orderObject.post.description);
         posterLocationView.setText(orderObject.post.formatted_address);
-        priceView.setText("$" + orderObject.post.price / 100.d);
+        priceView.setText(orderObject.post.price_to_show);
         date.setText(orderObject.post.time_to_show);
         timeView.setText(orderObject.post.time_range);
         rating.setText(String.format("%.01f", orderObject.poster.rating));

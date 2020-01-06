@@ -111,7 +111,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
         wordLimitEditTextFragment.setText(foodPostDetail.description);
         foodTypeSelectorFragment.setTypes(foodPostDetail.type);
         time.setText(foodPostDetail.time_to_show);
-        price.setText(foodPostDetail.price + "$");
+        price.setText(foodPostDetail.price);
     }
 
     void showProgress(boolean show){

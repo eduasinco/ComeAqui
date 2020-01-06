@@ -18,7 +18,9 @@ import com.example.eduardorodriguez.comeaqui.R;
 
 public class AttendFragment extends Fragment {
     private static final String DINNERS_LEFT = "dinners";
+    private static final String PRICE = "price";
     private int dinners_left;
+    private int price;
     private OnFragmentInteractionListener mListener;
 
     ConstraintLayout background;
@@ -27,15 +29,17 @@ public class AttendFragment extends Fragment {
     Button minusButton;
     Button plusButton;
     Button confirmAttendButton;
+    TextView priceView;
 
     int additionalGuests;
 
     public AttendFragment() {}
 
-    public static AttendFragment newInstance(int dinnersLeft) {
+    public static AttendFragment newInstance(int dinnersLeft, int price) {
         AttendFragment fragment = new AttendFragment();
         Bundle args = new Bundle();
         args.putInt(DINNERS_LEFT, dinnersLeft);
+        args.putInt(PRICE, dinnersLeft);
         fragment.setArguments(args);
         return fragment;
     }
@@ -45,6 +49,7 @@ public class AttendFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             dinners_left = getArguments().getInt(DINNERS_LEFT);
+            price = getArguments().getInt(PRICE);
         }
     }
 
@@ -74,17 +79,20 @@ public class AttendFragment extends Fragment {
         plusButton = view.findViewById(R.id.plus_button);
         minusButton = view.findViewById(R.id.minus_button);
         confirmAttendButton = view.findViewById(R.id.confirm_button);
+        priceView = view.findViewById(R.id.price);
 
         background.setOnClickListener(v -> show(false));
         plusButton.setOnClickListener(v -> {
             if (additionalGuests < dinners_left - 1){
                 additionalGuests++;
+                priceView.setText("$" + String.format("%.02f", (price * (1 + additionalGuests)) / 100.f));
             }
             addGuestsText.setText("" + additionalGuests);
         });
         minusButton.setOnClickListener(v -> {
             if (additionalGuests > 0){
                 additionalGuests--;
+                priceView.setText("$" + String.format("%.02f", (price * (1 + additionalGuests)) / 100.f));
             }
             addGuestsText.setText("" + additionalGuests);
         });
@@ -92,6 +100,8 @@ public class AttendFragment extends Fragment {
             mListener.onConfirmAttend(additionalGuests);
             show(false);
         });
+
+        priceView.setText("$" + price / 100.f);
         return view;
     }
 

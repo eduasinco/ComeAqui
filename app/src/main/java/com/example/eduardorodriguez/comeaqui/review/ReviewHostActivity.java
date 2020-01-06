@@ -82,7 +82,7 @@ public class ReviewHostActivity extends AppCompatActivity implements StarReasonF
             blockSubmitButton(true);
 
             posterName.setText(orderObject.poster.first_name);
-            amount.setText("USD" + orderObject.post.price / 100.d);
+            amount.setText("USD" + orderObject.post.price_to_show);
             cardLastNumbers.setText("USER CARD");
             posterRating.setText(orderObject.owner.rating + "");
 

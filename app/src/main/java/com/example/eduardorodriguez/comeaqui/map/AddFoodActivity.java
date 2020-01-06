@@ -268,7 +268,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     void setFoodPostIfItHas() {
         if (!foodPostDetail.plate_name.isEmpty())
             foodName.setText(foodPostDetail.plate_name);
-        price.setText("$" + foodPostDetail.price);
+        price.setText(foodPostDetail.price);
         price_data = foodPostDetail.price;
         if (foodPostDetail.max_dinners != 0) {
             dinnerPicker.setText(foodPostDetail.max_dinners + "");
@@ -354,7 +354,7 @@ public class AddFoodActivity extends AppCompatActivity implements
                 if (s.length() > 0) {
                     int intText = Integer.parseInt(s.toString());
                     price_data = intText;
-                    price.setText("$" + String.format("%.02f", price_data / 100.d));
+                    price.setText(String.format("%.02f", price_data / 100.d));
                 } else {
                     price.setText("$0.00");
                 }

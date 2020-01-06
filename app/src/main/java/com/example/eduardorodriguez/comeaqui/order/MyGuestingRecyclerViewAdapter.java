@@ -43,7 +43,7 @@ public class MyGuestingRecyclerViewAdapter extends RecyclerView.Adapter<MyGuesti
         holder.posterName.setText(holder.mItem.poster.first_name + " " + holder.mItem.poster.last_name);
         holder.posterUsername.setText(holder.mItem.poster.username);
         holder.postAddress.setText(holder.mItem.post.formatted_address);
-        String priceTextE = "$" + holder.mItem.post.price / 100.d + " - ";
+        String priceTextE = holder.mItem.post.price_to_show + " - ";
         holder.price.setText(priceTextE);
         holder.orderStatus.setText(holder.mItem.status);
         holder.orderStatus.setBackgroundColor(Color.TRANSPARENT);
