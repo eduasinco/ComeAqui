@@ -11,9 +11,15 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import com.example.eduardorodriguez.comeaqui.R;
 
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import io.card.payment.CardIOActivity;
 import io.card.payment.CreditCard;
@@ -27,6 +33,10 @@ public class CreditCardInformationActivity extends AppCompatActivity {
     EditText expMonth;
     EditText expYear;
     EditText cvcView;
+    TextView errorMessage;
+    ProgressBar mProgressView;
+    Button saveCardButtonView;
+
     String cardType = "";
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
@@ -39,7 +49,9 @@ public class CreditCardInformationActivity extends AppCompatActivity {
         expMonth = findViewById(R.id.exp_month);
         expYear = findViewById(R.id.exp_year);
         cvcView = findViewById(R.id.cvc);
-        Button saveCardButtonView = findViewById(R.id.saveCardButton);
+        errorMessage = findViewById(R.id.error_message);
+        mProgressView = findViewById(R.id.progressBar);
+        saveCardButtonView = findViewById(R.id.saveCardButton);
 
         saveCardButtonView.setOnClickListener(v -> {
             PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/card/");
@@ -61,6 +73,8 @@ public class CreditCardInformationActivity extends AppCompatActivity {
         }
         @Override
         protected void onPreExecute() {
+            showProgress(true);
+            errorMessage.setVisibility(View.GONE);
             super.onPreExecute();
         }
         @Override
@@ -75,8 +89,27 @@ public class CreditCardInformationActivity extends AppCompatActivity {
         }
         @Override
         protected void onPostExecute(String response) {
-            finish();
+            if (response != null){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                if (jo.get("error_message") == null){
+                    finish();
+                } else {
+                    errorMessage.setVisibility(View.VISIBLE);
+                    errorMessage.setText(jo.get("error_message").getAsString());
+                }
+            }
+            showProgress(false);
             super.onPostExecute(response);
+        }
+    }
+
+    void showProgress(boolean show){
+        if (show){
+            mProgressView.setVisibility(View.VISIBLE);
+            saveCardButtonView.setVisibility(View.GONE);
+        } else {
+            mProgressView.setVisibility(View.GONE);
+            saveCardButtonView.setVisibility(View.VISIBLE);
         }
     }
 
