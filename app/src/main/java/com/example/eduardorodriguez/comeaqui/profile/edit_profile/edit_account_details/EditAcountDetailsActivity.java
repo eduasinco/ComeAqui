@@ -62,6 +62,7 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
 
         paymentMethod.setOnClickListener(v -> {
             Intent paymentMethodA = new Intent(this, PaymentMethodsActivity.class);
+            paymentMethodA.putExtra("changeMode", false);
             startActivity(paymentMethodA);
         });
 

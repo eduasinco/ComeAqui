@@ -134,11 +134,13 @@ public class FoodLookActivity extends AppCompatActivity implements
         }
         changePaymentMethod.setOnClickListener(v -> {
             Intent paymentMethod = new Intent(this, PaymentMethodsActivity.class);
+            paymentMethod.putExtra("changeMode", true);
             startActivity(paymentMethod);
         });
 
         pendingPaymentMethodText.setOnClickListener(v -> {
             Intent paymentMethodA = new Intent(this, PaymentMethodsActivity.class);
+            paymentMethodA.putExtra("changeMode", true);
             startActivity(paymentMethodA);
         });
 

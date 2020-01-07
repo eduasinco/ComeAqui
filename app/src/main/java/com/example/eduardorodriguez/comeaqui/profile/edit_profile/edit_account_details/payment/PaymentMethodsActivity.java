@@ -3,7 +3,6 @@ package com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -26,8 +25,10 @@ public class PaymentMethodsActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
 
+    boolean changeMode;
     PaymentMethodsAdapter adapter;
     ArrayList<PaymentMethodObject> data;
+
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     @Override
@@ -42,6 +43,11 @@ public class PaymentMethodsActivity extends AppCompatActivity {
         adapter = new PaymentMethodsAdapter(this, data);
         recyclerView.setAdapter(adapter);
 
+        Intent intent = getIntent();
+        Bundle b = intent.getExtras();
+        if(b != null && b.get("changeMode") != null) {
+            changeMode = b.getBoolean("changeMode");
+        }
 
         addPaymentMethod.setOnClickListener(v -> {
             Intent pm = new Intent(this, CreditCardInformationActivity.class);
@@ -100,10 +106,13 @@ public class PaymentMethodsActivity extends AppCompatActivity {
     }
 
     void onPaymentMethodClicked(PaymentMethodObject paymentMethodObject){
-        patchPayment(paymentMethodObject.id);
-        Intent c = new Intent(this, CardLookActivity.class);
-        c.putExtra("cardId", paymentMethodObject.id);
-        startActivity(c);
+        if (changeMode){
+            patchPayment(paymentMethodObject.id);
+        } else {
+            Intent c = new Intent(this, CardLookActivity.class);
+            c.putExtra("cardId", paymentMethodObject.id);
+            startActivity(c);
+        }
     }
     void patchPayment(int paymentMethodId){
         tasks.add(new PatchAsyncTask(getResources().getString(R.string.server) + "/select_as_payment_method/" + paymentMethodId + "/").execute());
