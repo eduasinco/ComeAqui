@@ -6,17 +6,14 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.map.AddFoodActivity;
-import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.example.eduardorodriguez.comeaqui.objects.PaymentMethodObject;
-import com.example.eduardorodriguez.comeaqui.objects.SavedFoodPost;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
@@ -29,7 +26,7 @@ public class CardLookActivity extends AppCompatActivity {
     TextView brand;
     ImageButton options;
 
-    int cardId;
+    String cardId;
     PaymentMethodObject card;
 
     ArrayList<AsyncTask> tasks = new ArrayList<>();
@@ -47,12 +44,13 @@ public class CardLookActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if(b != null && b.get("cardId") != null) {
-            cardId = b.getInt("cardId");
+            cardId = b.getString("cardId");
             getCard();
         }
 
         options.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(this, v);
+            popupMenu.getMenu().add("Set as default");
             popupMenu.getMenu().add("Delete");
 
             popupMenu.setOnMenuItemClickListener(item -> {
@@ -64,16 +62,54 @@ public class CardLookActivity extends AppCompatActivity {
     }
 
     void setView(){
-        cardNumber.setText("****" + card.card_number.substring(card.card_number.length() - 4));
+        cardNumber.setText("****" + card.last4.substring(card.last4.length() - 4));
         expiryDate.setText(card.exp_month + "/" + card.exp_year);
         brand.setText((card.brand == null) ? "Card" : card.brand);
     }
 
     void setOptionsActions(String title){
         switch (title){
+            case "Set as default":
+                setAsDefaultPayment();
+                break;
             case "Delete":
                 deleteCard();
                 break;
+        }
+    }
+    void setAsDefaultPayment(){
+        tasks.add(new PatchAsyncTask(getResources().getString(R.string.server) + "/select_as_payment_method/" + cardId + "/").execute());
+    }
+    private class PatchAsyncTask extends AsyncTask<String[], Void, String> {
+        String uri;
+        public PatchAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.upload(getApplicationContext(), "PATCH", this.uri, params);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                if (jo.get("error_message") == null){
+                    Toast.makeText(getApplication(), "Payment set as default", Toast.LENGTH_LONG).show();
+                    finish();
+                } else {
+                    Toast.makeText(getApplication(), jo.get("error_message").getAsString(), Toast.LENGTH_LONG).show();
+                }
+            }
+            super.onPostExecute(response);
         }
     }
 
@@ -98,7 +134,13 @@ public class CardLookActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String response) {
             if (response != null){
-                finish();
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                if (jo.get("error_message") == null){
+                    Toast.makeText(getApplication(), "Payment deleted", Toast.LENGTH_LONG).show();
+                    finish();
+                } else {
+                    Toast.makeText(getApplication(), jo.get("error_message").getAsString(), Toast.LENGTH_LONG).show();
+                }
             }
             super.onPostExecute(response);
         }
@@ -124,8 +166,13 @@ public class CardLookActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String response) {
             if (response != null){
-                card = new PaymentMethodObject(new JsonParser().parse(response).getAsJsonObject());
-                setView();
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                if (jo.get("error_message") == null){
+                    card = new PaymentMethodObject(new JsonParser().parse(response).getAsJsonObject());
+                    setView();
+                } else {
+                    Toast.makeText(getApplication(), jo.get("error_message").getAsString(), Toast.LENGTH_LONG).show();
+                }
             }
             super.onPostExecute(response);
         }

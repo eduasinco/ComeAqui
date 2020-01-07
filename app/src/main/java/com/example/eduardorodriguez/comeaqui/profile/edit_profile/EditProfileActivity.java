@@ -128,7 +128,7 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
         backView.setOnClickListener(v -> finish());
     }
     void setPaymentData(){
-        paymentNumber.setText("**** " + pm.card_number.substring(pm.card_number.length() - 4));
+        paymentNumber.setText("**** " + pm.last4.substring(pm.last4.length() - 4));
         paymentImage.setImageDrawable(ContextCompat.getDrawable(this, pm.brandImage));
     }
 

@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -107,14 +108,14 @@ public class PaymentMethodsActivity extends AppCompatActivity {
 
     void onPaymentMethodClicked(PaymentMethodObject paymentMethodObject){
         if (changeMode){
-            patchPayment(paymentMethodObject.id);
+            selectAsDefaultPayment(paymentMethodObject.id);
         } else {
             Intent c = new Intent(this, CardLookActivity.class);
             c.putExtra("cardId", paymentMethodObject.id);
             startActivity(c);
         }
     }
-    void patchPayment(int paymentMethodId){
+    void selectAsDefaultPayment(String paymentMethodId){
         tasks.add(new PatchAsyncTask(getResources().getString(R.string.server) + "/select_as_payment_method/" + paymentMethodId + "/").execute());
     }
     private class PatchAsyncTask extends AsyncTask<String[], Void, String> {
@@ -137,7 +138,15 @@ public class PaymentMethodsActivity extends AppCompatActivity {
         }
         @Override
         protected void onPostExecute(String response) {
-            getCardPaymentMethods();
+            if (response != null){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                if (jo.get("error_message") == null){
+                    Toast.makeText(getApplication(), "Payment set as default", Toast.LENGTH_LONG).show();
+                    getCardPaymentMethods();
+                } else {
+                    Toast.makeText(getApplication(), jo.get("error_message").getAsString(), Toast.LENGTH_LONG).show();
+                }
+            }
             super.onPostExecute(response);
         }
     }

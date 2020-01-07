@@ -56,7 +56,7 @@ public class CreditCardInformationActivity extends AppCompatActivity {
         saveCardButtonView.setOnClickListener(v -> {
             PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/card/");
             tasks.add(post.execute(
-                        new String[]{"card_number", creditCardView.getText().toString(), ""},
+                        new String[]{"last4", creditCardView.getText().toString(), ""},
                         new String[]{"exp_month", expMonth.getText().toString(), ""},
                         new String[]{"exp_year", expYear.getText().toString(), ""},
                         new String[]{"cvc", cvcView.getText().toString(), ""}

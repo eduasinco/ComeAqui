@@ -397,7 +397,7 @@ public class FoodLookActivity extends AppCompatActivity implements
                 JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
                 if (jo.get("error_message") == null){
                     PaymentMethodObject pm = new PaymentMethodObject(jo);
-                    cardLastNumbers.setText(pm.card_number.substring(pm.card_number.length() - 4));
+                    cardLastNumbers.setText(pm.last4.substring(pm.last4.length() - 4));
                     if (USER.id != foodPostDetail.owner.id){
                         paymentMethod.setVisibility(View.VISIBLE);
                     }

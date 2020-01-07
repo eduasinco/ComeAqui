@@ -14,7 +14,6 @@ import androidx.core.content.ContextCompat;
 
 import android.os.Bundle;
 import com.example.eduardorodriguez.comeaqui.R;
-import com.example.eduardorodriguez.comeaqui.general.FoodLookActivity;
 import com.example.eduardorodriguez.comeaqui.login_and_register.ChangePasswordActivity;
 import com.example.eduardorodriguez.comeaqui.objects.PaymentMethodObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
@@ -28,7 +27,6 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -92,7 +90,7 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
     }
 
     void setPaymentData(){
-        paymentNumber.setText("**** " + pm.card_number.substring(pm.card_number.length() - 4));
+        paymentNumber.setText("**** " + pm.last4.substring(pm.last4.length() - 4));
         paymentImage.setImageDrawable(ContextCompat.getDrawable(this, pm.brandImage));
     }
 
