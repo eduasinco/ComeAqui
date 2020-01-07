@@ -9,10 +9,13 @@ import android.provider.MediaStore;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.eduardorodriguez.comeaqui.objects.PaymentMethodObject;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_bank_account.EditBankAccountActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.objects.User;
@@ -21,6 +24,7 @@ import com.example.eduardorodriguez.comeaqui.R;
 
 
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,8 +38,12 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
     private TextView bioTextView;
     private ImageView profileImageView;
     private ImageView backgroundImageView;
+    private ImageView paymentImage;
+    private TextView paymentNumber;
 
     private SelectImageFromFragment selectImageFromFragment;
+
+    PaymentMethodObject pm;
 
     boolean isBackGound;
     int userId;
@@ -70,12 +78,13 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
         firstNameView = findViewById(R.id.first_name);
         lastNameView = findViewById(R.id.last_name);
         phoneNumber = findViewById(R.id.phone_number);
+        paymentImage = findViewById(R.id.payment_image);
+        paymentNumber = findViewById(R.id.credit_card_number);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if(b != null){
             userId = b.getInt("userId");
-            getUser(userId);
         }
 
         selectImageFromFragment = SelectImageFromFragment.newInstance(false);
@@ -118,11 +127,17 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
 
         backView.setOnClickListener(v -> finish());
     }
+    void setPaymentData(){
+        paymentNumber.setText("**** " + pm.card_number.substring(pm.card_number.length() - 4));
+        paymentImage.setImageDrawable(ContextCompat.getDrawable(this, pm.brandImage));
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         selectImageFromFragment.hideCard();
         getUser(userId);
+        getMyChosenCard();
     }
 
     public User getUser(int userId) {
@@ -201,5 +216,38 @@ public class EditProfileActivity extends AppCompatActivity implements SelectImag
             if (task != null) task.cancel(true);
         }
         super.onDestroy();
+    }
+
+    void getMyChosenCard(){
+        GetMyChosenCardAsyncTask process = new GetMyChosenCardAsyncTask(getResources().getString(R.string.server) + "/my_chosen_card/");
+        tasks.add(process.execute());
+    }
+    private class GetMyChosenCardAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetMyChosenCardAsyncTask(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                if (jo.get("error_message") == null){
+                    pm = new PaymentMethodObject(jo);
+                    setPaymentData();
+                }
+            }
+            super.onPostExecute(response);
+        }
     }
 }

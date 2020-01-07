@@ -5,19 +5,25 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
 import android.os.Bundle;
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.general.FoodLookActivity;
 import com.example.eduardorodriguez.comeaqui.login_and_register.ChangePasswordActivity;
+import com.example.eduardorodriguez.comeaqui.objects.PaymentMethodObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.confirm_email.ConfirmEmailActivity;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
 
 
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
@@ -34,15 +40,13 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
     private TextView emailAddress;
     private Button changePassword;
     private TextView save;
+    private ImageView paymentImage;
+    private TextView paymentNumber;
     private ProgressBar progressBar;
+    private LinearLayout paymentMethod;
 
+    PaymentMethodObject pm;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        initializeUser();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +59,25 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
         emailAddress = findViewById(R.id.email_address);
         changePassword = findViewById(R.id.change_password);
         save = findViewById(R.id.save);
+        paymentImage = findViewById(R.id.payment_image);
+        paymentNumber = findViewById(R.id.credit_card_number);
         progressBar = findViewById(R.id.progressBar);
-        LinearLayout paymentMethod = findViewById(R.id.payment_method);
+        paymentMethod = findViewById(R.id.payment_method);
 
+
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
         initializeUser();
+        getMyChosenCard();
+    }
+
+    void setData(){
+        firstName.setText(USER.first_name);
+        lastName.setText(USER.last_name);
+        phoneNumber.setText(USER.phone_number);
+        emailAddress.setText(USER.email);
 
         paymentMethod.setOnClickListener(v -> {
             Intent paymentMethodA = new Intent(this, PaymentMethodsActivity.class);
@@ -72,17 +91,13 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
         findViewById(R.id.back_arrow).setOnClickListener(v -> finish());
     }
 
+    void setPaymentData(){
+        paymentNumber.setText("**** " + pm.card_number.substring(pm.card_number.length() - 4));
+        paymentImage.setImageDrawable(ContextCompat.getDrawable(this, pm.brandImage));
+    }
+
     public void initializeUser(){
-        GetAsyncTask process = new GetAsyncTask(getResources().getString(R.string.server) + "/my_profile/");
-        try {
-            String response = process.execute().get();
-            if (response != null){
-                USER = new User(new JsonParser().parse(response).getAsJsonArray().get(0).getAsJsonObject());
-                setData();
-            }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_profile/").execute());
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -104,6 +119,14 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
             }
             return null;
         }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                USER = new User(new JsonParser().parse(response).getAsJsonArray().get(0).getAsJsonObject());
+                setData();
+            }
+        }
     }
 
     void goToChangeEmail(){
@@ -115,13 +138,6 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
     void showProgress(boolean show){
         progressBar.setVisibility(show ? View.VISIBLE: View.GONE);
         save.setVisibility(show ? View.GONE: View.VISIBLE);
-    }
-
-    void setData(){
-        firstName.setText(USER.first_name);
-        lastName.setText(USER.last_name);
-        phoneNumber.setText(USER.phone_number);
-        emailAddress.setText(USER.email);
     }
 
     private void saveData(){
@@ -166,5 +182,38 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
             if (task != null) task.cancel(true);
         }
         super.onDestroy();
+    }
+
+    void getMyChosenCard(){
+        GetMyChosenCardAsyncTask process = new GetMyChosenCardAsyncTask(getResources().getString(R.string.server) + "/my_chosen_card/");
+        tasks.add(process.execute());
+    }
+    private class GetMyChosenCardAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetMyChosenCardAsyncTask(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                if (jo.get("error_message") == null){
+                    pm = new PaymentMethodObject(jo);
+                    setPaymentData();
+                }
+            }
+            super.onPostExecute(response);
+        }
     }
 }

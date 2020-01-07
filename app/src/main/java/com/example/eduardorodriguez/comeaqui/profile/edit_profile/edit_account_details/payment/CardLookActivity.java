@@ -26,6 +26,7 @@ public class CardLookActivity extends AppCompatActivity {
 
     TextView cardNumber;
     TextView expiryDate;
+    TextView brand;
     ImageButton options;
 
     int cardId;
@@ -41,6 +42,7 @@ public class CardLookActivity extends AppCompatActivity {
         cardNumber = findViewById(R.id.card_number);
         expiryDate = findViewById(R.id.expiry_date);
         options = findViewById(R.id.options);
+        brand = findViewById(R.id.brand);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -64,6 +66,7 @@ public class CardLookActivity extends AppCompatActivity {
     void setView(){
         cardNumber.setText("****" + card.card_number.substring(card.card_number.length() - 4));
         expiryDate.setText(card.exp_month + "/" + card.exp_year);
+        brand.setText((card.brand == null) ? "Card" : card.brand);
     }
 
     void setOptionsActions(String title){
