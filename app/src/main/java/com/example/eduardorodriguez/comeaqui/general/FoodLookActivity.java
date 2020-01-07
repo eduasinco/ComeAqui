@@ -31,7 +31,6 @@ import com.example.eduardorodriguez.comeaqui.objects.PaymentMethodObject;
 import com.example.eduardorodriguez.comeaqui.objects.User;
 import com.example.eduardorodriguez.comeaqui.order.OrderLookActivity;
 import com.example.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
-import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.AddPaymentMethodActivity;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
 
 
@@ -47,12 +46,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.TimeZone;
 
 import static com.example.eduardorodriguez.comeaqui.App.USER;
 
@@ -144,8 +138,8 @@ public class FoodLookActivity extends AppCompatActivity implements
         });
 
         pendingPaymentMethodText.setOnClickListener(v -> {
-            Intent a = new Intent(this, AddPaymentMethodActivity.class);
-            startActivity(a);
+            Intent paymentMethodA = new Intent(this, PaymentMethodsActivity.class);
+            startActivity(paymentMethodA);
         });
 
     }

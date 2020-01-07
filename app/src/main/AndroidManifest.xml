@@ -30,7 +30,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".profile.edit_profile.edit_bank_account.EditBankAccountActivity"></activity>
+        <activity android:name=".profile.edit_profile.edit_account_details.payment.CardLookActivity"></activity>
+        <activity android:name=".profile.edit_profile.edit_bank_account.EditBankAccountActivity" />
         <activity android:name=".map.search_people.SearchPeopleActivity" />
         <activity android:name=".map.add_food.image_look.ImageLookActivity" />
         <activity android:name=".general.EditFoodPostActivity" />
@@ -62,7 +63,6 @@
         <activity android:name=".review.ReviewGuestActivity" />
         <activity android:name=".review.ReviewHostActivity" />
         <activity android:name=".utilities.image_view_pager.ImagePagerActivity" />
-        <activity android:name=".profile.edit_profile.edit_account_details.payment.AddPaymentMethodActivity" />
         <activity android:name=".profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity" />
         <activity android:name=".profile.edit_profile.edit_account_details.EditAcountDetailsActivity" />
         <activity android:name=".profile.edit_profile.AddBioActivity" />

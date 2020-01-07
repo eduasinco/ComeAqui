@@ -6,6 +6,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.eduardorodriguez.comeaqui.R;
@@ -32,7 +34,7 @@ public class PaymentMethodsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_methods);
-        LinearLayout addPaymentMethod = findViewById(R.id.add_payment_method);
+        TextView addPaymentMethod = findViewById(R.id.add_payment_method);
         ImageView back = findViewById(R.id.back_arrow);
 
         recyclerView = findViewById(R.id.payment_methods_recycleview);
@@ -42,13 +44,17 @@ public class PaymentMethodsActivity extends AppCompatActivity {
 
 
         addPaymentMethod.setOnClickListener(v -> {
-            Intent addPaymentMethodA = new Intent(this, AddPaymentMethodActivity.class);
-            startActivity(addPaymentMethodA);
+            Intent pm = new Intent(this, CreditCardInformationActivity.class);
+            startActivity(pm);
         });
 
-
-        getCardPaymentMethods();
         back.setOnClickListener((v) -> finish());
+    }
+
+    @Override
+    protected void onResume() {
+        getCardPaymentMethods();
+        super.onResume();
     }
 
     void getCardPaymentMethods(){
@@ -95,6 +101,9 @@ public class PaymentMethodsActivity extends AppCompatActivity {
 
     void onPaymentMethodClicked(PaymentMethodObject paymentMethodObject){
         patchPayment(paymentMethodObject.id);
+        Intent c = new Intent(this, CardLookActivity.class);
+        c.putExtra("cardId", paymentMethodObject.id);
+        startActivity(c);
     }
     void patchPayment(int paymentMethodId){
         tasks.add(new PatchAsyncTask(getResources().getString(R.string.server) + "/select_as_payment_method/" + paymentMethodId + "/").execute());

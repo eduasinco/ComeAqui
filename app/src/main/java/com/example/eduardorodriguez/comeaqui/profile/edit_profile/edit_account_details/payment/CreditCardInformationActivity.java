@@ -26,7 +26,7 @@ public class CreditCardInformationActivity extends AppCompatActivity {
     EditText creditCardView;
     EditText expMonth;
     EditText expYear;
-    EditText cvvView;
+    EditText cvcView;
     String cardType = "";
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
@@ -38,7 +38,7 @@ public class CreditCardInformationActivity extends AppCompatActivity {
         creditCardView = findViewById(R.id.creditCard);
         expMonth = findViewById(R.id.exp_month);
         expYear = findViewById(R.id.exp_year);
-        cvvView = findViewById(R.id.cvv);
+        cvcView = findViewById(R.id.cvc);
         Button saveCardButtonView = findViewById(R.id.saveCardButton);
 
         saveCardButtonView.setOnClickListener(v -> {
@@ -47,7 +47,7 @@ public class CreditCardInformationActivity extends AppCompatActivity {
                         new String[]{"card_number", creditCardView.getText().toString(), ""},
                         new String[]{"exp_month", expMonth.getText().toString(), ""},
                         new String[]{"exp_year", expYear.getText().toString(), ""},
-                        new String[]{"cvc", cvvView.getText().toString(), ""}
+                        new String[]{"cvc", cvcView.getText().toString(), ""}
                         ));
         });
     }
@@ -75,8 +75,7 @@ public class CreditCardInformationActivity extends AppCompatActivity {
         }
         @Override
         protected void onPostExecute(String response) {
-            Intent back = new Intent(CreditCardInformationActivity.this, PaymentMethodsActivity.class);
-            startActivity(back);
+            finish();
             super.onPostExecute(response);
         }
     }
@@ -150,7 +149,7 @@ public class CreditCardInformationActivity extends AppCompatActivity {
                 if (scanResult.cvv != null) {
                     // Never log or display a CVV
                     resultDisplayStr += "CVV has " + scanResult.cvv.length() + " digits.\n";
-                    cvvView.setText(scanResult.cvv);
+                    cvcView.setText(scanResult.cvv);
                 }
 
                 if (scanResult.postalCode != null) {

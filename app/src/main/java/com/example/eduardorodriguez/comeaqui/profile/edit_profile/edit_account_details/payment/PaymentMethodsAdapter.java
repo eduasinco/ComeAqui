@@ -1,6 +1,7 @@
 package com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +49,9 @@ public class PaymentMethodsAdapter extends RecyclerView.Adapter<PaymentMethodsAd
         } else {
             holder.chosenImage.setVisibility(View.GONE);
         }
-        holder.mView.setOnClickListener(v -> activity.onPaymentMethodClicked(holder.mItem));
+        holder.mView.setOnClickListener(v -> {
+            activity.onPaymentMethodClicked(holder.mItem);
+        });
     }
 
     @Override
