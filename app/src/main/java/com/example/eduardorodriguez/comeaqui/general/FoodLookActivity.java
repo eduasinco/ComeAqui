@@ -121,6 +121,7 @@ public class FoodLookActivity extends AppCompatActivity implements
         profileLook = findViewById(R.id.profile_look);
         pendingPaymentMethodText = findViewById(R.id.pending_payment_method_text);
         pendingPaymentMethod = findViewById(R.id.pending_payment_method);
+        cardIcon = findViewById(R.id.card_icon);
         cardLastNumbers = findViewById(R.id.card_last_numbers);
 
         waitingFrame = findViewById(R.id.waiting_frame);
@@ -327,7 +328,9 @@ public class FoodLookActivity extends AppCompatActivity implements
 
         setPlaceButton();
         setDinners();
-        getMyChosenCard();
+        if (USER.id != foodPostDetail.owner.id) {
+            getMyChosenCard();
+        }
     }
 
     void getFoodPostDetailsAndSet(int foodPostId){
@@ -397,10 +400,9 @@ public class FoodLookActivity extends AppCompatActivity implements
                 JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
                 if (jo.get("error_message") == null){
                     PaymentMethodObject pm = new PaymentMethodObject(jo);
+                    cardIcon.setImageDrawable(ContextCompat.getDrawable(getApplication(), pm.brandImage));
                     cardLastNumbers.setText(pm.last4.substring(pm.last4.length() - 4));
-                    if (USER.id != foodPostDetail.owner.id){
-                        paymentMethod.setVisibility(View.VISIBLE);
-                    }
+                    paymentMethod.setVisibility(View.VISIBLE);
                 } else {
                     pendingPaymentMethod.setVisibility(View.VISIBLE);
                     attendMealButton.setAlpha(0.5f);
