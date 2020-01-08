@@ -136,8 +136,14 @@ public class EditBankAccountActivity extends AppCompatActivity {
     }
 
     void setInfo(){
-        firstName.setText(accountInfoObject.individual.first_name);
-        lastName.setText(accountInfoObject.individual.last_name);
+        if (accountInfoObject.individual.first_name != null && !accountInfoObject.individual.first_name.isEmpty()) {
+            firstName.setHint(accountInfoObject.individual.first_name);
+            firstName.setHintTextColor(Color.BLACK);
+        }
+        if (accountInfoObject.individual.last_name != null && !accountInfoObject.individual.last_name.isEmpty()) {
+            lastName.setHint(accountInfoObject.individual.last_name);
+            lastName.setHintTextColor(Color.BLACK);
+        }
         birth.updateDate(accountInfoObject.individual.dob.year, accountInfoObject.individual.dob.month - 1, accountInfoObject.individual.dob.day);
         if (accountInfoObject.individual.ssn_last_4_provided){
             ssnProvidedView.setVisibility(View.VISIBLE);
@@ -148,16 +154,39 @@ public class EditBankAccountActivity extends AppCompatActivity {
             });
             ssn.setVisibility(View.INVISIBLE);
         }
-        phone.setText(accountInfoObject.individual.phone);
-        address1.setText(accountInfoObject.individual.address.line1);
-        address2.setText(accountInfoObject.individual.address.line2);
-        city.setText(accountInfoObject.individual.address.city);
-        state.setText(accountInfoObject.individual.address.state);
-        zip.setText(accountInfoObject.individual.address.postal_code);
-        country.setText(accountInfoObject.individual.address.country);
+        if (accountInfoObject.individual.phone != null && !accountInfoObject.individual.phone.isEmpty()) {
+            phone.setHint(accountInfoObject.individual.phone);
+            phone.setHintTextColor(Color.BLACK);
+        }
+        if (accountInfoObject.individual.address.line1 != null && !accountInfoObject.individual.address.line1.isEmpty()) {
+            address1.setHint(accountInfoObject.individual.address.line1);
+            address1.setHintTextColor(Color.BLACK);
+        }
+        if (accountInfoObject.individual.address.line2 != null && !accountInfoObject.individual.address.line2.isEmpty()) {
+            address2.setHint(accountInfoObject.individual.address.line2);
+            address2.setHintTextColor(Color.BLACK);
+        }
+        if (accountInfoObject.individual.address.city != null && !accountInfoObject.individual.address.city.isEmpty()) {
+            city.setHint(accountInfoObject.individual.address.city);
+            city.setHintTextColor(Color.BLACK);
+        }
+        if (accountInfoObject.individual.address.state != null && !accountInfoObject.individual.address.state.isEmpty()) {
+            state.setHint(accountInfoObject.individual.address.state);
+            state.setHintTextColor(Color.BLACK);
+        }
+        if (accountInfoObject.individual.address.postal_code != null && !accountInfoObject.individual.address.postal_code.isEmpty()) {
+            zip.setHint(accountInfoObject.individual.address.postal_code);
+            zip.setHintTextColor(Color.BLACK);
+        }
+        if (accountInfoObject.individual.address.country != null && !accountInfoObject.individual.address.country.isEmpty()) {
+            country.setHint(accountInfoObject.individual.address.country);
+            country.setHintTextColor(Color.BLACK);
+        }
         if (accountInfoObject.external_accounts.data.size() > 0){
-            routingN.setText(accountInfoObject.external_accounts.data.get(0).routing_number);
-            accountN.setText("Ending " + accountInfoObject.external_accounts.data.get(0).last4);
+            routingN.setHint(accountInfoObject.external_accounts.data.get(0).routing_number);
+            routingN.setHintTextColor(Color.BLACK);
+            accountN.setHint("Ending " + accountInfoObject.external_accounts.data.get(0).last4);
+            accountN.setHintTextColor(Color.BLACK);
         } else {
             showValtext(routingVal, "Please, provide a routing number", routingN);
             showValtext(accountVal, "Please, provide a bank account number", accountN);
