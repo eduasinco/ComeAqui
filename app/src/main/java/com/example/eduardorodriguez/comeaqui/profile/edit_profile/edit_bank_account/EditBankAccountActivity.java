@@ -3,20 +3,20 @@ package com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_bank_acc
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.StripeAccountInfoObject;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
@@ -27,8 +27,6 @@ import com.rilixtech.widget.countrycodepicker.CountryCodePicker;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
-import static com.example.eduardorodriguez.comeaqui.App.USER;
 
 public class EditBankAccountActivity extends AppCompatActivity {
 
@@ -51,6 +49,8 @@ public class EditBankAccountActivity extends AppCompatActivity {
     TextView lastNameVal;
     TextView birthVal;
     TextView ssnVal;
+    LinearLayout ssnProvidedView;
+    Button ssnReplaceButton;
     TextView phoneVal;
     TextView address1Val;
     TextView address2Val;
@@ -67,10 +67,9 @@ public class EditBankAccountActivity extends AppCompatActivity {
     Button saveButton;
     View progress;
 
+    boolean replaceSNN = false;
     StripeAccountInfoObject accountInfoObject;
-
     ArrayList<AsyncTask> tasks = new ArrayList<>();
-    ArrayList<String> currentDue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +110,9 @@ public class EditBankAccountActivity extends AppCompatActivity {
         progress = findViewById(R.id.register_progress);
         accountMessage = findViewById(R.id.account_message);
 
+        ssnProvidedView = findViewById(R.id.ssn_provided);
+        ssnReplaceButton = findViewById(R.id.replace_ssn);
+
         setEditText(firstName, firstNameVal);
         setEditText(lastName, lastNameVal);
         setEditText(ssn, ssnVal);
@@ -134,32 +136,46 @@ public class EditBankAccountActivity extends AppCompatActivity {
     }
 
     void setInfo(){
-        firstName.setText(accountInfoObject.first_name);
-        lastName.setText(accountInfoObject.last_name);
-        birth.updateDate(accountInfoObject.year_of_birth, accountInfoObject.month_of_birth - 1, accountInfoObject.day_of_birth);
-        ssn.setText(accountInfoObject.SSN_last_4);
-        phone.setText(accountInfoObject.phone_number);
-        address1.setText(accountInfoObject.address_line_1);
-        address2.setText(accountInfoObject.address_line_2);
-        city.setText(accountInfoObject.city);
-        state.setText(accountInfoObject.state);
-        zip.setText(accountInfoObject.zip_code);
-        country.setText(accountInfoObject.country);
-        routingN.setText(accountInfoObject.routing_n);
-        accountN.setText(accountInfoObject.account_n);
+        firstName.setText(accountInfoObject.individual.first_name);
+        lastName.setText(accountInfoObject.individual.last_name);
+        birth.updateDate(accountInfoObject.individual.dob.year, accountInfoObject.individual.dob.month - 1, accountInfoObject.individual.dob.day);
+        if (accountInfoObject.individual.ssn_last_4_provided){
+            ssnProvidedView.setVisibility(View.VISIBLE);
+            ssnReplaceButton.setOnClickListener(v -> {
+                replaceSNN = true;
+                ssn.setVisibility(View.VISIBLE);
+                ssnProvidedView.setVisibility(View.INVISIBLE);
+            });
+            ssn.setVisibility(View.INVISIBLE);
+        }
+        phone.setText(accountInfoObject.individual.phone);
+        address1.setText(accountInfoObject.individual.address.line1);
+        address2.setText(accountInfoObject.individual.address.line2);
+        city.setText(accountInfoObject.individual.address.city);
+        state.setText(accountInfoObject.individual.address.state);
+        zip.setText(accountInfoObject.individual.address.postal_code);
+        country.setText(accountInfoObject.individual.address.country);
+        if (accountInfoObject.external_accounts.data.size() > 0){
+            routingN.setText(accountInfoObject.external_accounts.data.get(0).routing_number);
+            accountN.setText("Ending " + accountInfoObject.external_accounts.data.get(0).last4);
+        } else {
+            showValtext(routingVal, "Please, provide a routing number", routingN);
+            showValtext(accountVal, "Please, provide a bank account number", accountN);
+        }
 
         if (accountInfoObject.payouts_enabled){
-            accountMessage.setText("Account confirmed");
+            accountMessage.setText("Account verified");
             accountMessage.setBackground(ContextCompat.getDrawable(this, R.color.success));
-        } else if (currentDue.size() == 0){
+        } else if (accountInfoObject.requirements.currently_due.size() == 0){
             accountMessage.setText("Pending review");
             accountMessage.setBackground(ContextCompat.getDrawable(this, R.color.colorPrimary));
         } else {
-            accountMessage.setVisibility(View.VISIBLE);
             accountMessage.setText("Account incomplete");
             accountMessage.setBackground(ContextCompat.getDrawable(this, R.color.canceled));
         }
-        for (String due: currentDue){
+        accountMessage.setVisibility(View.VISIBLE);
+
+        for (String due: accountInfoObject.requirements.currently_due){
             switch (due){
                 case "individual.address.line1":
                     showValtext(address1Val, "Please, insert a valid address", address1);
@@ -199,12 +215,6 @@ public class EditBankAccountActivity extends AppCompatActivity {
                     break;
             }
         }
-        if (accountInfoObject.routing_n == null || accountInfoObject.routing_n.isEmpty()){
-            showValtext(routingVal, "Please, provide a routing number", routingN);
-        }
-        if (accountInfoObject.account_n == null || accountInfoObject.account_n.isEmpty()){
-            showValtext(accountVal, "Please, provide a bank account number", accountN);
-        }
 
     }
     void getBankAccountInfo(){
@@ -218,6 +228,7 @@ public class EditBankAccountActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
+            showProgress(true);
             super.onPreExecute();
         }
 
@@ -235,16 +246,13 @@ public class EditBankAccountActivity extends AppCompatActivity {
             if (response != null){
                 JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
                 if (jo.get("error_message") == null){
-                    accountInfoObject = new StripeAccountInfoObject(jo.get("object").getAsJsonObject());
-                    currentDue = new ArrayList<>();
-                    for (JsonElement je: jo.get("due").getAsJsonArray()){
-                        currentDue.add(je.getAsString());
-                    }
+                    accountInfoObject = new StripeAccountInfoObject(jo);
                     setInfo();
                 } else {
                     submit("POST");
                 }
             }
+            showProgress(false);
             super.onPostExecute(response);
         }
     }
@@ -263,21 +271,19 @@ public class EditBankAccountActivity extends AppCompatActivity {
         tasks.add(new UploadAsyncTask(method,getResources().getString(R.string.server) + "/stripe_account/").execute(
                 new String[]{"first_name", firstName.getText().toString()},
                 new String[]{"last_name", lastName.getText().toString()},
-                new String[]{"day_of_birth", birth.getDayOfMonth() + ""},
-                new String[]{"month_of_birth", (birth.getMonth() + 1) + ""},
-                new String[]{"year_of_birth", birth.getYear() + ""},
-                new String[]{"SSN_last_4", ssn.getText().toString()},
-                new String[]{"identity_document_front", ""},
-                new String[]{"identity_document_back", ""},
-                new String[]{"phone_number", phone.getText().toString()},
-                new String[]{"address_line_1", address1.getText().toString()},
-                new String[]{"address_line_2", address2.getText().toString()},
+                new String[]{"day", birth.getDayOfMonth() + ""},
+                new String[]{"month", (birth.getMonth() + 1) + ""},
+                new String[]{"year", birth.getYear() + ""},
+                new String[]{"ssn_last_4", ssn.getText().toString()},
+                new String[]{"phone", phone.getText().toString()},
+                new String[]{"line1", address1.getText().toString()},
+                new String[]{"line2", address2.getText().toString()},
                 new String[]{"city", city.getText().toString()},
                 new String[]{"state", state.getText().toString()},
-                new String[]{"zip_code", zip.getText().toString()},
+                new String[]{"postal_code", zip.getText().toString()},
                 new String[]{"country", country.getText().toString()},
-                new String[]{"routing_n", routingN.getText().toString()},
-                new String[]{"account_n", accountN.getText().toString()}
+                new String[]{"routing_number", routingN.getText().toString()},
+                new String[]{"account_number", accountN.getText().toString()}
         ));
     }
     private class UploadAsyncTask extends AsyncTask<String[], Void, String> {
@@ -303,6 +309,15 @@ public class EditBankAccountActivity extends AppCompatActivity {
         }
         @Override
         protected void onPostExecute(String response) {
+            if (response != null){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                if (jo.get("error_message") == null){
+                    Toast.makeText(getApplication(), "Account saved", Toast.LENGTH_LONG).show();
+                    finish();
+                } else {
+                    Toast.makeText(getApplication(), jo.get("error_message").getAsString(), Toast.LENGTH_LONG).show();
+                }
+            }
             showProgress(false);
             super.onPostExecute(response);
         }
@@ -333,7 +348,7 @@ public class EditBankAccountActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) { }
+            public void afterTextChanged(Editable s) {}
         });
     }
 
