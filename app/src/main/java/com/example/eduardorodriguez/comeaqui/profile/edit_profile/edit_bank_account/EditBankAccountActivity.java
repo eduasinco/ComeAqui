@@ -2,11 +2,21 @@ package com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_bank_acc
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -14,23 +24,31 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.eduardorodriguez.comeaqui.R;
+import com.example.eduardorodriguez.comeaqui.map.add_food.add_images.AddImagesFragment;
+import com.example.eduardorodriguez.comeaqui.objects.FoodPostImageObject;
 import com.example.eduardorodriguez.comeaqui.objects.StripeAccountInfoObject;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.rilixtech.widget.countrycodepicker.CountryCodePicker;
+import com.yalantis.ucrop.UCrop;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.yalantis.ucrop.UCrop.REQUEST_CROP;
 
 public class EditBankAccountActivity extends AppCompatActivity {
 
@@ -39,8 +57,12 @@ public class EditBankAccountActivity extends AppCompatActivity {
     EditText lastName;
     EditText birth;
     EditText ssn;
-    CardView idFront;
-    CardView idBack;
+    LinearLayout idFront;
+    ImageView imageFront;
+    ProgressBar frontProgress;
+    LinearLayout idBack;
+    ImageView imageBack;
+    ProgressBar backProgress;
     EditText idNumber;
     EditText phone;
     EditText address1;
@@ -80,6 +102,8 @@ public class EditBankAccountActivity extends AppCompatActivity {
     Integer year;
     String currentS = "";
 
+    boolean isFront;
+    boolean isBack;
     boolean replaceSNN = false;
     StripeAccountInfoObject accountInfoObject;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
@@ -96,7 +120,11 @@ public class EditBankAccountActivity extends AppCompatActivity {
         birth = findViewById(R.id.date_of_birth);
         ssn = findViewById(R.id.ssn_digits);
         idFront = findViewById(R.id.id_front);
+        imageFront = findViewById(R.id.image_front);
+        frontProgress = findViewById(R.id.front_progress);
         idBack = findViewById(R.id.id_back);
+        imageBack = findViewById(R.id.image_back);
+        backProgress = findViewById(R.id.back_progress);
         idNumber = findViewById(R.id.id_number);
         phone = findViewById(R.id.phone);
         address1 = findViewById(R.id.address_line_1);
@@ -195,6 +223,15 @@ public class EditBankAccountActivity extends AppCompatActivity {
             }
         };
         birth.addTextChangedListener(tw);
+
+        idFront.setOnClickListener(v -> {
+            isFront = true;
+            checkPermissions();
+        });
+        idBack.setOnClickListener(v -> {
+            isBack = true;
+            checkPermissions();
+        });
     }
     boolean isDateValid() {
         try {
@@ -231,6 +268,12 @@ public class EditBankAccountActivity extends AppCompatActivity {
                 ssnProvidedView.setVisibility(View.INVISIBLE);
             });
             ssn.setVisibility(View.INVISIBLE);
+        }
+        if (accountInfoObject.individual.verification.document.front != null) {
+            imageFront.setImageDrawable(ContextCompat.getDrawable(getApplication(), R.drawable.check));
+        }
+        if (accountInfoObject.individual.verification.document.back != null) {
+            imageBack.setImageDrawable(ContextCompat.getDrawable(getApplication(), R.drawable.check));
         }
         if (accountInfoObject.individual.id_number != null) {
             idNumber.setHint(accountInfoObject.individual.id_number);
@@ -520,5 +563,198 @@ public class EditBankAccountActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {}
         });
+    }
+
+
+
+    public void uploadImage(Bitmap imageBitmap, String param){
+        PostImagesAsyncTask postI = new PostImagesAsyncTask(
+                getResources().getString(R.string.server) + "/upload_stripe_document/",
+                imageBitmap,
+                param
+        );
+        tasks.add(postI.execute());
+    }
+
+    class PostImagesAsyncTask extends AsyncTask<String, Void, String> {
+        String uri;
+        Bitmap image;
+        String param;
+        public PostImagesAsyncTask(String uri, Bitmap imageBitmaps, String param){
+            this.uri = uri;
+            this.image = imageBitmaps;
+            this.param = param;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showUploadProgress(true, param);
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                return ServerAPI.uploadImage(getApplication(), "PATCH", this.uri, param, image);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                if (jo.get("error_message") == null){
+                    StripeAccountInfoObject saio = new StripeAccountInfoObject(jo);
+                    if (saio.individual.verification.document.front != null) {
+                        imageFront.setImageDrawable(ContextCompat.getDrawable(getApplication(), R.drawable.check));
+                    }
+                    if (saio.individual.verification.document.back != null) {
+                        imageBack.setImageDrawable(ContextCompat.getDrawable(getApplication(), R.drawable.check));
+                    }
+                }
+            }
+            if (this.param.equals("front")){
+                isFront = false;
+            } else if (this.param.equals("back")){
+                isBack = false;
+            }
+            showUploadProgress(false, param);
+            super.onPostExecute(response);
+        }
+    }
+
+    void showUploadProgress(boolean show, String param){
+        if (param.equals("front")){
+            frontProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            imageFront.setVisibility(show ? View.GONE: View.VISIBLE);
+        } else if (param.equals("back")){
+            backProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            imageBack.setVisibility(show ? View.GONE: View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK){
+            switch (requestCode){
+                case REQUEST_TAKE_PHOTO:
+                    Uri photoUri = Uri.fromFile(photoFile);
+                    if (photoUri != null) {
+                        if (isFront){
+                            imageFront.setImageURI(photoUri);
+                            try {
+                                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+                                uploadImage(bitmap, "front");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else if (isBack){
+                            imageBack.setImageURI(photoUri);
+                            try {
+                                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+                                uploadImage(bitmap, "back");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    break;
+            }
+        }
+    }
+    void showNoAccessNotification(String title, String message) {
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("OK", (dialogInterface, i) -> {
+                    requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE},
+                            READ_EX_STORAGE_AND_CAMERA);
+                })
+                .create()
+                .show();
+    }
+
+    String currentPhotoPath;
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+
+    File photoFile;
+    static final int REQUEST_TAKE_PHOTO = 2;
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+            }
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.example.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode){
+            case READ_EX_STORAGE_AND_CAMERA:
+                if (
+                        grantResults[0] != PackageManager.PERMISSION_GRANTED &&
+                                grantResults[1] != PackageManager.PERMISSION_GRANTED) {
+                    showNoAccessNotification("Camera and storage access",
+                            "In order to obtain best quality images we need access to camera and external storage");
+                } else if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    showNoAccessNotification("Camera access","In order to capture images we need access to camera");
+                } else if (grantResults[1] != PackageManager.PERMISSION_GRANTED) {
+                    showNoAccessNotification("Storage access", "In order to obtain best quality images we need access external storage");
+                } else {
+                    dispatchTakePictureIntent();
+                }
+                return;
+        }
+    }
+
+    private static final int READ_EX_STORAGE_AND_CAMERA = 3;
+    public void checkPermissions() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED ||  ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.CAMERA) && ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                showNoAccessNotification("Camera and storage access",
+                        "In order to obtain best quality images we need access to camera and external storage");
+            } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.CAMERA)) {
+                showNoAccessNotification("Camera access","In order to capture images we need access to camera");
+            } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)){
+                showNoAccessNotification("Storage access", "In order to obtain best quality images we need access external storage");
+            } else {
+                requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EX_STORAGE_AND_CAMERA);
+            }
+        } else {
+            dispatchTakePictureIntent();
+        }
     }
 }

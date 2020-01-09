@@ -320,16 +320,18 @@
                     android:orientation="horizontal">
 
                     <androidx.cardview.widget.CardView
-                        android:id="@+id/id_front"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:layout_weight="1"
+                        android:clickable="false"
                         app:cardCornerRadius="8dp">
 
                         <LinearLayout
+                            android:id="@+id/id_front"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:clickable="true"
                             android:orientation="horizontal">
 
                             <TextView
@@ -345,8 +347,16 @@
                                 android:textColor="@color/colorPrimary"
                                 android:textSize="18sp" />
 
+                            <ProgressBar
+                                android:id="@+id/front_progress"
+                                style="?android:attr/progressBarStyle"
+                                android:layout_width="20dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0"
+                                android:visibility="gone" />
+
                             <ImageView
-                                android:id="@+id/imageView29"
+                                android:id="@+id/image_front"
                                 android:layout_width="60dp"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="16dp"
@@ -357,16 +367,18 @@
                     </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
-                        android:id="@+id/id_back"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:layout_weight="1"
+                        android:clickable="true"
                         app:cardCornerRadius="8dp">
 
                         <LinearLayout
+                            android:id="@+id/id_back"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:clickable="true"
                             android:orientation="horizontal">
 
                             <TextView
@@ -384,8 +396,16 @@
                                 android:textColor="@color/colorPrimary"
                                 android:textSize="18sp" />
 
+                            <ProgressBar
+                                android:id="@+id/back_progress"
+                                style="?android:attr/progressBarStyle"
+                                android:layout_width="20dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0"
+                                android:visibility="gone" />
+
                             <ImageView
-                                android:id="@+id/imageView30"
+                                android:id="@+id/image_back"
                                 android:layout_width="60dp"
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="16dp"

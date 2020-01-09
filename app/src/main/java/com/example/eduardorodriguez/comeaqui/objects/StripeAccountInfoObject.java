@@ -34,11 +34,13 @@ public class StripeAccountInfoObject implements Serializable {
         public String last_name;
         public String phone;
         public boolean ssn_last_4_provided;
+        public Verification verification;
 
         public Individual(JsonObject jo){
             id = jo.get("id").getAsString();
             address = new Address(jo.get("address").getAsJsonObject());
             dob = new DOB(jo.get("dob").getAsJsonObject());
+            verification = new Verification(jo.get("verification").getAsJsonObject());
             try {id_number = jo.get("id_number").getAsInt();} catch (Exception e){}
             try {email = jo.get("email").getAsString();} catch (Exception e){}
             try {first_name = jo.get("first_name").getAsString(); } catch (Exception e){}
@@ -120,6 +122,25 @@ public class StripeAccountInfoObject implements Serializable {
             try {country = jo.get("country").getAsString(); } catch (Exception e){}
             try {last4 = jo.get("last4").getAsString();} catch (Exception e){}
             try {routing_number = jo.get("routing_number").getAsString();} catch (Exception e){}
+        }
+    }
+
+    public class Verification implements Serializable {
+        public String status;
+        public Document document;
+
+        public Verification(JsonObject jo){
+            try {status = jo.get("account").getAsString();} catch (Exception e){}
+            document = new Document(jo.get("document").getAsJsonObject());
+        }
+    }
+    public class Document implements Serializable {
+        public String back;
+        public String front;
+
+        public Document(JsonObject jo){
+            try {back = jo.get("back").getAsString();} catch (Exception e){}
+            try {front = jo.get("front").getAsString();} catch (Exception e){}
         }
     }
 }
