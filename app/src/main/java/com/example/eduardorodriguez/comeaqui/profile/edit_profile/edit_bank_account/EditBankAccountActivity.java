@@ -1,6 +1,7 @@
 package com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_bank_account;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
 import android.graphics.Color;
@@ -38,6 +39,9 @@ public class EditBankAccountActivity extends AppCompatActivity {
     EditText lastName;
     EditText birth;
     EditText ssn;
+    CardView idFront;
+    CardView idBack;
+    EditText idNumber;
     EditText phone;
     EditText address1;
     EditText address2;
@@ -54,6 +58,7 @@ public class EditBankAccountActivity extends AppCompatActivity {
     TextView ssnVal;
     LinearLayout ssnProvidedView;
     Button ssnReplaceButton;
+    TextView idNumberVal;
     TextView phoneVal;
     TextView address1Val;
     TextView address2Val;
@@ -90,6 +95,9 @@ public class EditBankAccountActivity extends AppCompatActivity {
         lastName = findViewById(R.id.last_name);
         birth = findViewById(R.id.date_of_birth);
         ssn = findViewById(R.id.ssn_digits);
+        idFront = findViewById(R.id.id_front);
+        idBack = findViewById(R.id.id_back);
+        idNumber = findViewById(R.id.id_number);
         phone = findViewById(R.id.phone);
         address1 = findViewById(R.id.address_line_1);
         address2 = findViewById(R.id.address_line_2);
@@ -104,6 +112,7 @@ public class EditBankAccountActivity extends AppCompatActivity {
         lastNameVal = findViewById(R.id.last_name_val_text);
         birthVal = findViewById(R.id.date_of_birth_val_text);
         ssnVal = findViewById(R.id.ssn_val_text);
+        idNumberVal = findViewById(R.id.id_number_val);
         phoneVal = findViewById(R.id.phone_val_text);
         address1Val = findViewById(R.id.address1_val_text);
         address2Val = findViewById(R.id.address2_val_text);
@@ -127,6 +136,7 @@ public class EditBankAccountActivity extends AppCompatActivity {
         setEditText(lastName, lastNameVal);
         setEditText(birth, birthVal);
         setEditText(ssn, ssnVal);
+        setEditText(idNumber, idNumberVal);
         setEditText(phone, phoneVal);
         setEditText(address1, address1Val);
         setEditText(address2, address2Val);
@@ -222,6 +232,9 @@ public class EditBankAccountActivity extends AppCompatActivity {
             });
             ssn.setVisibility(View.INVISIBLE);
         }
+        if (accountInfoObject.individual.id_number != null) {
+            idNumber.setHint(accountInfoObject.individual.id_number);
+        }
         if (accountInfoObject.individual.phone != null && !accountInfoObject.individual.phone.isEmpty()) {
             phone.setHint(accountInfoObject.individual.phone);
         }
@@ -305,6 +318,9 @@ public class EditBankAccountActivity extends AppCompatActivity {
                 case "individual.ssn_last_4":
                     ssn.setHintTextColor(color_red);
                     break;
+                case "individual.id_number":
+                    idNumber.setHintTextColor(color_red);
+                    break;
             }
         }
     }
@@ -382,6 +398,7 @@ public class EditBankAccountActivity extends AppCompatActivity {
                 new String[]{"month", mon + ""},
                 new String[]{"year", year + ""},
                 new String[]{"ssn_last_4", ssn.getText().toString()},
+                new String[]{"id_number", idNumber.getText().toString()},
                 new String[]{"phone", phone.getText().toString()},
                 new String[]{"line1", address1.getText().toString()},
                 new String[]{"line2", address2.getText().toString()},
@@ -431,14 +448,17 @@ public class EditBankAccountActivity extends AppCompatActivity {
                         showValtext(lastNameVal, "The last name is not valid", lastName);
                     }
                     if (
-                        e_message.contains("individual[dob][year]") &&
-                        e_message.contains("individual[dob][day]") &&
+                        e_message.contains("individual[dob][year]") ||
+                        e_message.contains("individual[dob][day]") ||
                         e_message.contains("individual[dob][month]")
                     ) {
                         showValtext(birthVal,"The date of birth is not valid", birth);
                     }
                     if (e_message.contains("individual[ssn_last_4]")) {
                         showValtext(ssnVal, "The ssn number is not valid", ssn);
+                    }
+                    if (e_message.contains("individual[id_number]")) {
+                        showValtext(idNumberVal, "The ID number is not valid", idNumber);
                     }
                     if (e_message.contains("individual[phone]")) {
                         showValtext(phoneVal, "The phone number is not valid", phone);

@@ -26,6 +26,7 @@ public class StripeAccountInfoObject implements Serializable {
 
     public class Individual implements Serializable {
         public String id;
+        public Integer id_number;
         public Address address;
         public DOB dob;
         public String email;
@@ -38,6 +39,7 @@ public class StripeAccountInfoObject implements Serializable {
             id = jo.get("id").getAsString();
             address = new Address(jo.get("address").getAsJsonObject());
             dob = new DOB(jo.get("dob").getAsJsonObject());
+            try {id_number = jo.get("id_number").getAsInt();} catch (Exception e){}
             try {email = jo.get("email").getAsString();} catch (Exception e){}
             try {first_name = jo.get("first_name").getAsString(); } catch (Exception e){}
             try {last_name = jo.get("last_name").getAsString();} catch (Exception e){}

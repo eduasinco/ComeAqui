@@ -2,6 +2,7 @@ package com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_
 
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -33,13 +34,19 @@ public class CreditCardInformationActivity extends AppCompatActivity {
     EditText expMonth;
     EditText expYear;
     EditText cvcView;
+
+    TextView numberVal;
+    TextView monthVal;
+    TextView yearVal;
+    TextView cvcVal;
     TextView errorMessage;
+
     ProgressBar mProgressView;
     Button saveCardButtonView;
 
     String cardType = "";
     String currentS = "";
-    String card_number;
+    String card_number = "";
 
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
@@ -55,6 +62,11 @@ public class CreditCardInformationActivity extends AppCompatActivity {
         errorMessage = findViewById(R.id.error_message);
         mProgressView = findViewById(R.id.progressBar);
         saveCardButtonView = findViewById(R.id.saveCardButton);
+
+        numberVal = findViewById(R.id.number_val);
+        monthVal = findViewById(R.id.month_val);
+        yearVal = findViewById(R.id.year_val);
+        cvcVal = findViewById(R.id.cvc_val);
 
         saveCardButtonView.setOnClickListener(v -> {
             PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/card/");
@@ -92,6 +104,32 @@ public class CreditCardInformationActivity extends AppCompatActivity {
                 creditCardView.setSelection(creditCardView.getText().length());
             }
         });
+
+        setEditText(creditCardView, numberVal);
+        setEditText(expMonth, monthVal);
+        setEditText(expYear, yearVal);
+        setEditText(cvcView, cvcVal);
+    }
+
+    void setEditText(EditText editText, TextView valtext){
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                editText.setBackground(ContextCompat.getDrawable(getApplication(), R.drawable.text_input_shape));
+                valtext.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+    }
+    void showValtext(TextView tv, String text, EditText et){
+        tv.setText(text);
+        tv.setVisibility(View.VISIBLE);
+        et.setBackground(ContextCompat.getDrawable(getApplication(), R.drawable.text_input_shape_error));
     }
 
     private class PostAsyncTask extends AsyncTask<String[], Void, String> {
@@ -124,8 +162,19 @@ public class CreditCardInformationActivity extends AppCompatActivity {
                 if (jo.get("error_message") == null){
                     finish();
                 } else {
-                    errorMessage.setVisibility(View.VISIBLE);
-                    errorMessage.setText(jo.get("error_message").getAsString());
+                    String e_message = jo.get("error_message").getAsString();
+                    if (e_message.equals("number")){
+                        showValtext(numberVal, "Invalid number", creditCardView);
+                    }
+                    if (e_message.equals("exp_month")){
+                        showValtext(monthVal, "Invalid month", expMonth);
+                    }
+                    if (e_message.equals("exp_year")){
+                        showValtext(yearVal, "Invalid year", expYear);
+                    }
+                    if (e_message.equals("cvc")){
+                        showValtext(cvcVal, "Invalid cvc", cvcView);
+                    }
                 }
             }
             showProgress(false);
