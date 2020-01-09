@@ -207,8 +207,10 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
             if (response != null){
                 JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
                 if (jo.get("error_message") == null){
-                    pm = new PaymentMethodObject(jo);
-                    setPaymentData();
+                    if (jo.get("data").getAsJsonArray().size() > 0){
+                        pm = new PaymentMethodObject(jo.get("data").getAsJsonArray().get(0).getAsJsonObject());
+                        setPaymentData();
+                    }
                 }
             }
             super.onPostExecute(response);

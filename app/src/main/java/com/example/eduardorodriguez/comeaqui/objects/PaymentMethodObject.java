@@ -20,9 +20,11 @@ public class PaymentMethodObject {
         brand = jo.get("brand").getAsString();
         switch(brand){
             case "Visa":
-                brandImage = R.drawable.visa_icon;
+                brandImage = R.drawable.visa_logo;
+                break;
             case "MasterCard":
                 brandImage = R.drawable.mastercard_icon;
+                break;
 
         }
     }

@@ -399,10 +399,12 @@ public class FoodLookActivity extends AppCompatActivity implements
             if (response != null){
                 JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
                 if (jo.get("error_message") == null){
-                    PaymentMethodObject pm = new PaymentMethodObject(jo);
-                    cardIcon.setImageDrawable(ContextCompat.getDrawable(getApplication(), pm.brandImage));
-                    cardLastNumbers.setText(pm.last4.substring(pm.last4.length() - 4));
-                    paymentMethod.setVisibility(View.VISIBLE);
+                    if (jo.get("data").getAsJsonArray().size() > 0){
+                        PaymentMethodObject pm = new PaymentMethodObject(jo);
+                        cardIcon.setImageDrawable(ContextCompat.getDrawable(getApplication(), pm.brandImage));
+                        cardLastNumbers.setText(pm.last4.substring(pm.last4.length() - 4));
+                        paymentMethod.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     pendingPaymentMethod.setVisibility(View.VISIBLE);
                     attendMealButton.setAlpha(0.5f);

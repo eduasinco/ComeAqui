@@ -38,6 +38,9 @@ public class CreditCardInformationActivity extends AppCompatActivity {
     Button saveCardButtonView;
 
     String cardType = "";
+    String currentS = "";
+    String card_number;
+
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     @Override
@@ -56,11 +59,38 @@ public class CreditCardInformationActivity extends AppCompatActivity {
         saveCardButtonView.setOnClickListener(v -> {
             PostAsyncTask post = new PostAsyncTask(getResources().getString(R.string.server) + "/card/");
             tasks.add(post.execute(
-                        new String[]{"last4", creditCardView.getText().toString(), ""},
+                        new String[]{"card_number", card_number, ""},
                         new String[]{"exp_month", expMonth.getText().toString(), ""},
                         new String[]{"exp_year", expYear.getText().toString(), ""},
                         new String[]{"cvc", cvcView.getText().toString(), ""}
                         ));
+        });
+
+        creditCardView.setOnClickListener(v -> creditCardView.setSelection(creditCardView.getText().length()));
+        creditCardView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String st = s.toString();
+                if (!currentS.equals(st)){
+                    String st_r = st.replaceAll("[^0-9]", "");
+                    StringBuilder s_to_show = new StringBuilder();
+                    for (int i = 0; i < st_r.length(); i++){
+                        if (i % 4 == 0){
+                            s_to_show.append(" ");
+                        }
+                        s_to_show.append(st_r.charAt(i));
+                    }
+                    card_number = st_r;
+                    currentS = s_to_show.toString();
+                    creditCardView.setText(s_to_show.toString());
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+                creditCardView.setSelection(creditCardView.getText().length());
+            }
         });
     }
 
@@ -167,6 +197,7 @@ public class CreditCardInformationActivity extends AppCompatActivity {
                 // Never log a raw card number. Avoid displaying it, but if necessary use getFormattedCardNumber()
                 resultDisplayStr = "Card Number: " + scanResult.getRedactedCardNumber() + "\n";
                 creditCardView.setText(scanResult.getRedactedCardNumber());
+                card_number = scanResult.getRedactedCardNumber();
                 cardType = (scanResult.getCardType() != null) ? scanResult.getCardType() + "" : " ";
 
                 resultDisplayStr += "Card Type: " + scanResult.getCardType() + "\n";

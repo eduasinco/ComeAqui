@@ -86,8 +86,12 @@ public class PaymentMethodsActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String response) {
-            if (response != null)
-                makeList(new JsonParser().parse(response).getAsJsonArray());
+            if (response != null) {
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                if (jo.get("error_message") == null){
+                    makeList(jo.get("data").getAsJsonArray());
+                }
+            }
             super.onPostExecute(response);
         }
     }
