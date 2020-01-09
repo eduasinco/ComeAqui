@@ -66,9 +66,9 @@ public class StripeAccountInfoObject implements Serializable {
     }
 
     public class DOB implements Serializable {
-        public int day;
-        public int month;
-        public int year;
+        public Integer day;
+        public Integer month;
+        public Integer year;
 
         public DOB(JsonObject jo){
             try { day = jo.get("day").getAsInt();} catch (Exception e){}
