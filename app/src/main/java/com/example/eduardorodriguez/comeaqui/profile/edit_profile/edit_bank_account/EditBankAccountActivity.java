@@ -59,11 +59,14 @@ public class EditBankAccountActivity extends AppCompatActivity {
     EditText ssn;
 
     CardView replaceCardFront;
-    CardView replaceCardBack;
     Button replaceFront;
     CardView cardFront;
-    CardView cardBack;
+    ImageView imageFront;
+
+    CardView replaceCardBack;
     Button replaceBack;
+    CardView cardBack;
+    ImageView imageBack;
 
     Button idFront;
     ProgressBar frontProgress;
@@ -131,14 +134,15 @@ public class EditBankAccountActivity extends AppCompatActivity {
         replaceCardFront = findViewById(R.id.replace_card_front);
         replaceFront = findViewById(R.id.id_front_replace);
         cardFront = findViewById(R.id.card_front);
-        idFront = findViewById(R.id.id_front);
         frontProgress = findViewById(R.id.front_progress);
+        imageFront = findViewById(R.id.image_front);
 
         idBack = findViewById(R.id.id_back);
         replaceCardBack = findViewById(R.id.replace_card_back);
         replaceBack = findViewById(R.id.id_back_replace);
         cardBack = findViewById(R.id.card_back);
         backProgress = findViewById(R.id.back_progress);
+        imageBack = findViewById(R.id.image_back);
 
         idNumber = findViewById(R.id.id_number);
         phone = findViewById(R.id.phone);
@@ -660,8 +664,10 @@ public class EditBankAccountActivity extends AppCompatActivity {
     void showUploadProgress(boolean show, String param){
         if (param.equals("front")){
             frontProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            imageFront.setVisibility(show ? View.GONE : View.VISIBLE);
         } else if (param.equals("back")){
             backProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            imageBack.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
