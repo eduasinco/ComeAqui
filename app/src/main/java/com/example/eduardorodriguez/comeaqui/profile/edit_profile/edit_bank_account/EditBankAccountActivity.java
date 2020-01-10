@@ -57,12 +57,19 @@ public class EditBankAccountActivity extends AppCompatActivity {
     EditText lastName;
     EditText birth;
     EditText ssn;
-    LinearLayout idFront;
-    ImageView imageFront;
+
+    CardView replaceCardFront;
+    CardView replaceCardBack;
+    Button replaceFront;
+    CardView cardFront;
+    CardView cardBack;
+    Button replaceBack;
+
+    Button idFront;
     ProgressBar frontProgress;
-    LinearLayout idBack;
-    ImageView imageBack;
+    Button idBack;
     ProgressBar backProgress;
+
     EditText idNumber;
     EditText phone;
     EditText address1;
@@ -119,12 +126,20 @@ public class EditBankAccountActivity extends AppCompatActivity {
         lastName = findViewById(R.id.last_name);
         birth = findViewById(R.id.date_of_birth);
         ssn = findViewById(R.id.ssn_digits);
+
         idFront = findViewById(R.id.id_front);
-        imageFront = findViewById(R.id.image_front);
+        replaceCardFront = findViewById(R.id.replace_card_front);
+        replaceFront = findViewById(R.id.id_front_replace);
+        cardFront = findViewById(R.id.card_front);
+        idFront = findViewById(R.id.id_front);
         frontProgress = findViewById(R.id.front_progress);
+
         idBack = findViewById(R.id.id_back);
-        imageBack = findViewById(R.id.image_back);
+        replaceCardBack = findViewById(R.id.replace_card_back);
+        replaceBack = findViewById(R.id.id_back_replace);
+        cardBack = findViewById(R.id.card_back);
         backProgress = findViewById(R.id.back_progress);
+
         idNumber = findViewById(R.id.id_number);
         phone = findViewById(R.id.phone);
         address1 = findViewById(R.id.address_line_1);
@@ -223,15 +238,6 @@ public class EditBankAccountActivity extends AppCompatActivity {
             }
         };
         birth.addTextChangedListener(tw);
-
-        idFront.setOnClickListener(v -> {
-            isFront = true;
-            checkPermissions();
-        });
-        idBack.setOnClickListener(v -> {
-            isBack = true;
-            checkPermissions();
-        });
     }
     boolean isDateValid() {
         try {
@@ -270,10 +276,12 @@ public class EditBankAccountActivity extends AppCompatActivity {
             ssn.setVisibility(View.INVISIBLE);
         }
         if (accountInfoObject.individual.verification.document.front != null) {
-            imageFront.setImageDrawable(ContextCompat.getDrawable(getApplication(), R.drawable.check));
+            replaceCardFront.setVisibility(View.VISIBLE);
+            cardFront.setVisibility(View.GONE);
         }
         if (accountInfoObject.individual.verification.document.back != null) {
-            imageBack.setImageDrawable(ContextCompat.getDrawable(getApplication(), R.drawable.check));
+            replaceCardBack.setVisibility(View.VISIBLE);
+            cardBack.setVisibility(View.GONE);
         }
         if (accountInfoObject.individual.id_number != null) {
             idNumber.setHint(accountInfoObject.individual.id_number);
@@ -366,6 +374,24 @@ public class EditBankAccountActivity extends AppCompatActivity {
                     break;
             }
         }
+
+        idFront.setOnClickListener(v -> {
+            isFront = true;
+            checkPermissions();
+        });
+        idBack.setOnClickListener(v -> {
+            isBack = true;
+            checkPermissions();
+        });
+
+        replaceFront.setOnClickListener(v -> {
+            replaceCardFront.setVisibility(View.GONE);
+            cardFront.setVisibility(View.VISIBLE);
+        });
+        replaceBack.setOnClickListener(v -> {
+            replaceCardBack.setVisibility(View.GONE);
+            cardBack.setVisibility(View.VISIBLE);
+        });
     }
 
     boolean validateFrom(){
@@ -463,6 +489,8 @@ public class EditBankAccountActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             showProgress(true);
+            showUploadProgress(true, "front");
+            showUploadProgress(true, "back");
             super.onPreExecute();
         }
         @Override
@@ -532,6 +560,8 @@ public class EditBankAccountActivity extends AppCompatActivity {
                 }
             }
             showProgress(false);
+            showUploadProgress(false, "front");
+            showUploadProgress(false, "back");
             super.onPostExecute(response);
         }
     }
@@ -608,10 +638,12 @@ public class EditBankAccountActivity extends AppCompatActivity {
                 if (jo.get("error_message") == null){
                     StripeAccountInfoObject saio = new StripeAccountInfoObject(jo);
                     if (saio.individual.verification.document.front != null) {
-                        imageFront.setImageDrawable(ContextCompat.getDrawable(getApplication(), R.drawable.check));
+                        replaceCardFront.setVisibility(View.VISIBLE);
+                        cardFront.setVisibility(View.GONE);
                     }
                     if (saio.individual.verification.document.back != null) {
-                        imageBack.setImageDrawable(ContextCompat.getDrawable(getApplication(), R.drawable.check));
+                        replaceCardBack.setVisibility(View.VISIBLE);
+                        cardBack.setVisibility(View.GONE);
                     }
                 }
             }
@@ -628,10 +660,8 @@ public class EditBankAccountActivity extends AppCompatActivity {
     void showUploadProgress(boolean show, String param){
         if (param.equals("front")){
             frontProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-            imageFront.setVisibility(show ? View.GONE: View.VISIBLE);
         } else if (param.equals("back")){
             backProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-            imageBack.setVisibility(show ? View.GONE: View.VISIBLE);
         }
     }
 
@@ -643,7 +673,6 @@ public class EditBankAccountActivity extends AppCompatActivity {
                     Uri photoUri = Uri.fromFile(photoFile);
                     if (photoUri != null) {
                         if (isFront){
-                            imageFront.setImageURI(photoUri);
                             try {
                                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
                                 uploadImage(bitmap, "front");
@@ -651,7 +680,6 @@ public class EditBankAccountActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                         } else if (isBack){
-                            imageBack.setImageURI(photoUri);
                             try {
                                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
                                 uploadImage(bitmap, "back");

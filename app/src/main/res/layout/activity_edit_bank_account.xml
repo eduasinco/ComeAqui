@@ -285,14 +285,32 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:text="Documents"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView49"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Font ID"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Back ID"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/id_front_val"
@@ -315,107 +333,232 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:gravity="center|center_horizontal"
                     android:orientation="horizontal">
 
-                    <androidx.cardview.widget.CardView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
                         android:layout_weight="1"
-                        android:clickable="false"
-                        app:cardCornerRadius="8dp">
+                        android:orientation="vertical">
 
-                        <LinearLayout
-                            android:id="@+id/id_front"
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/replace_card_front"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:clickable="true"
-                            android:orientation="horizontal">
+                            android:layout_margin="8dp"
+                            android:layout_weight="1"
+                            android:visibility="gone"
+                            app:cardCornerRadius="8dp">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="50dp"
-                                android:layout_weight="1"
-                                android:background="@android:color/transparent"
-                                android:ems="10"
-                                android:gravity="center_vertical"
-                                android:inputType="textPersonName|textCapSentences"
-                                android:paddingStart="16dp"
-                                android:text="Front"
-                                android:textColor="@color/colorPrimary"
-                                android:textSize="18sp" />
-
-                            <ProgressBar
-                                android:id="@+id/front_progress"
-                                style="?android:attr/progressBarStyle"
-                                android:layout_width="20dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0"
-                                android:visibility="gone" />
-
-                            <ImageView
-                                android:id="@+id/image_front"
-                                android:layout_width="60dp"
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginEnd="16dp"
-                                android:layout_weight="1"
-                                app:srcCompat="@android:drawable/ic_menu_upload" />
-                        </LinearLayout>
+                                android:orientation="horizontal">
 
-                    </androidx.cardview.widget.CardView>
+                                <Button
+                                    android:id="@+id/id_front_replace"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="50dp"
+                                    android:layout_weight="1"
+                                    android:background="@android:color/transparent"
+                                    android:ems="10"
+                                    android:gravity="center_vertical"
+                                    android:inputType="textPersonName|textCapSentences"
+                                    android:paddingStart="16dp"
+                                    android:text="Replace"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="18sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <androidx.cardview.widget.CardView
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_marginEnd="16dp"
+                                    android:layout_weight="1"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:srcCompat="@drawable/check" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/card_front"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="8dp"
+                            android:layout_weight="1"
+                            app:cardCornerRadius="8dp">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal">
+
+                                <Button
+                                    android:id="@+id/id_front"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="50dp"
+                                    android:layout_weight="1"
+                                    android:background="@android:color/transparent"
+                                    android:ems="10"
+                                    android:gravity="center_vertical"
+                                    android:inputType="textPersonName|textCapSentences"
+                                    android:paddingStart="16dp"
+                                    android:text="Front"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="18sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <ProgressBar
+                                    android:id="@+id/front_progress"
+                                    style="?android:attr/progressBarStyle"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_marginEnd="16dp"
+                                    android:layout_weight="0"
+                                    android:visibility="gone"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <ImageView
+                                    android:id="@+id/image_front"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_marginEnd="16dp"
+                                    android:layout_weight="1"
+                                    app:layout_constraintBottom_toBottomOf="@+id/id_front"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="@+id/id_front"
+                                    app:srcCompat="@android:drawable/ic_menu_upload" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        </androidx.cardview.widget.CardView>
+
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:clickable="true"
-                        app:cardCornerRadius="8dp">
+                        android:orientation="vertical">
 
-                        <LinearLayout
-                            android:id="@+id/id_back"
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/replace_card_back"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:clickable="true"
-                            android:orientation="horizontal">
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:layout_weight="1"
+                            android:visibility="gone"
+                            app:cardCornerRadius="8dp">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="50dp"
-                                android:layout_weight="1"
-                                android:background="@android:color/transparent"
-                                android:ems="10"
-                                android:gravity="center_vertical"
-                                android:hint="Back"
-                                android:inputType="textPersonName|textCapSentences"
-                                android:paddingStart="16dp"
-                                android:text="Back"
-                                android:textAlignment="viewStart"
-                                android:textColor="@color/colorPrimary"
-                                android:textSize="18sp" />
-
-                            <ProgressBar
-                                android:id="@+id/back_progress"
-                                style="?android:attr/progressBarStyle"
-                                android:layout_width="20dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0"
-                                android:visibility="gone" />
-
-                            <ImageView
-                                android:id="@+id/image_back"
-                                android:layout_width="60dp"
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginEnd="16dp"
-                                android:layout_weight="1"
-                                app:srcCompat="@android:drawable/ic_menu_upload" />
-                        </LinearLayout>
+                                android:orientation="horizontal">
 
-                    </androidx.cardview.widget.CardView>
+                                <Button
+                                    android:id="@+id/id_back_replace"
+                                    android:layout_width="0dp"
+                                    android:layout_height="50dp"
+                                    android:layout_weight="1"
+                                    android:background="@android:color/transparent"
+                                    android:ems="10"
+                                    android:gravity="center_vertical"
+                                    android:inputType="textPersonName|textCapSentences"
+                                    android:paddingStart="16dp"
+                                    android:text="Replace"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="18sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_marginEnd="16dp"
+                                    android:layout_weight="1"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:srcCompat="@drawable/check" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/card_back"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:layout_weight="1"
+                            app:cardCornerRadius="8dp">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal">
+
+                                <ProgressBar
+                                    android:id="@+id/back_progress"
+                                    style="?android:attr/progressBarStyle"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_marginEnd="16dp"
+                                    android:layout_weight="0"
+                                    android:visibility="gone"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <Button
+                                    android:id="@+id/id_back"
+                                    android:layout_width="0dp"
+                                    android:layout_height="50dp"
+                                    android:layout_weight="1"
+                                    android:background="@android:color/transparent"
+                                    android:ems="10"
+                                    android:gravity="center_vertical"
+                                    android:inputType="textPersonName|textCapSentences"
+                                    android:paddingStart="16dp"
+                                    android:text="Back"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="18sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <ImageView
+                                    android:id="@+id/image_back"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_marginEnd="16dp"
+                                    android:layout_weight="1"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:srcCompat="@android:drawable/ic_menu_upload" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        </androidx.cardview.widget.CardView>
+
+                    </LinearLayout>
 
                 </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -668,6 +811,7 @@
                     tools:visibility="visible" />
 
             </LinearLayout>
+
             <TextView
                 android:id="@+id/validation_text"
                 android:layout_width="match_parent"
