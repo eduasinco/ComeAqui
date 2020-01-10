@@ -63,7 +63,7 @@
                     android:src="@drawable/no_profile_photo"
                     app:civ_border_color="@android:color/white"
                     app:civ_shadow="false"
-                    app:civ_shadow_color="@color/colorPrimaryDark"
+                    app:civ_shadow_color="@color/colorSecondaryDark"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"

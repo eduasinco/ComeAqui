@@ -53,7 +53,7 @@
         android:clickable="true"
         android:tint="#FFFFFF"
         android:visibility="visible"
-        app:backgroundTint="@color/colorPrimary"
+        app:backgroundTint="@color/colorSecondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/add_food" />

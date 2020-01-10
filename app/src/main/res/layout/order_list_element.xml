@@ -47,7 +47,7 @@
                     android:lines="1"
                     android:maxLines="1"
                     android:text="Eduardo Rodriguez"
-                    android:textColor="@color/colorPrimaryDark" />
+                    android:textColor="@color/colorSecondaryDark" />
 
                 <TextView
                     android:id="@+id/order_status"

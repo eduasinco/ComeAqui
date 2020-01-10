@@ -35,7 +35,7 @@
                 android:layout_marginStart="16dp"
                 android:gravity="center_vertical"
                 android:text="Eduardo Rodriguez"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorSecondaryDark"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"

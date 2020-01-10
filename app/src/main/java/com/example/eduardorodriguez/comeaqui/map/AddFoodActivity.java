@@ -26,6 +26,7 @@ import com.example.eduardorodriguez.comeaqui.map.add_food.WordLimitEditTextFragm
 import com.example.eduardorodriguez.comeaqui.map.add_food.add_images.AddImagesFragment;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.SavedFoodPost;
+import com.example.eduardorodriguez.comeaqui.objects.StripeAccountInfoObject;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.AddBioActivity;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_bank_account.EditBankAccountActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.SelectImageFromFragment;
@@ -268,7 +269,7 @@ public class AddFoodActivity extends AppCompatActivity implements
     void setFoodPostIfItHas() {
         if (!foodPostDetail.plate_name.isEmpty())
             foodName.setText(foodPostDetail.plate_name);
-        price.setText(foodPostDetail.price);
+        price.setText(foodPostDetail.price_to_show);
         price_data = foodPostDetail.price;
         if (foodPostDetail.max_dinners != 0) {
             dinnerPicker.setText(foodPostDetail.max_dinners + "");
@@ -574,11 +575,8 @@ public class AddFoodActivity extends AppCompatActivity implements
             if (response != null){
                 JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
                 if (jo.get("error_message") == null){
-                    currentDue = new ArrayList<>();
-                    for (JsonElement je: jo.get("due").getAsJsonArray()){
-                        currentDue.add(je.getAsString());
-                    }
-                    if (currentDue.size() > 0){
+                    StripeAccountInfoObject saio = new StripeAccountInfoObject(jo);
+                    if (saio.requirements.currently_due.size() > 0){
                         bankAccountInfo.setVisibility(View.VISIBLE);
                         submit.setAlpha(0.5f);
                         submit.setClickable(false);

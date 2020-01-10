@@ -1,7 +1,6 @@
 package com.example.eduardorodriguez.comeaqui.utilities.message_fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
@@ -15,12 +14,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.craftman.cardform.Card;
 import com.example.eduardorodriguez.comeaqui.R;
 
 import static com.example.eduardorodriguez.comeaqui.R.color.canceled;
 import static com.example.eduardorodriguez.comeaqui.R.color.colorPrimary;
-import static com.example.eduardorodriguez.comeaqui.R.color.colorPrimaryLight;
 
 public class TwoOptionsMessageFragment extends Fragment {
     private static final String TITLE = "title";

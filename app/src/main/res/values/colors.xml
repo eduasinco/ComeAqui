@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#92278f</color>
-    <color name="colorPrimaryDark">#6B0067</color>
-    <color name="colorPrimaryLight">#945990</color>
-    <color name="colorPrimaryDim">#B98EB5</color>
-    <color name="colorPrimary_trans">#9992278F</color>
-    <color name="colorPrimaryLighter">#FFDBF9</color>
-    <color name="colorAccent">#49009c</color>
-    <color name="colorComeAqui">#92278f</color>
+    <color name="colorPrimary">#525252</color>
+    <color name="colorPrimaryLight">#6F6E6E</color>
+    <color name="colorPrimaryLighter">#ECECEC</color>
+    <color name="colorSecondary">#AD5D28</color>
+    <color name="colorSecondaryDark">#582801</color>
+    <color name="colorPrimaryDim">#BBBBBB</color>
+    <color name="colorPrimary_trans">#B3525252</color>
+
+    <color name="colorAccent">#B85200</color>
+    <color name="colorComeAqui">#b56628</color>
     <color name="colorBackground">#FFFFFF</color>
 
 
@@ -17,8 +19,6 @@
     <color name="grey_light2">#D1D1D1</color>
     <color name="grey_lighter">#FAFAFA</color>
 
-    <color name="mapPickerFill">#92278f</color>
-    <color name="mapPicker">#92278f</color>
     <color name="favourite">#FFBF00</color>
 
     <color name="bottom_bottom">#17000000</color>

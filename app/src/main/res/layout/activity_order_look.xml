@@ -109,10 +109,10 @@
                                 android:layout_height="40dp"
                                 android:layout_weight="0"
                                 android:src="@drawable/no_profile_photo"
-                                app:civ_border_color="@color/colorPrimaryDark"
+                                app:civ_border_color="@color/colorSecondaryDark"
                                 app:civ_border_width="0dp"
                                 app:civ_shadow="true"
-                                app:civ_shadow_color="@color/colorPrimaryDark"
+                                app:civ_shadow_color="@color/colorSecondaryDark"
                                 app:civ_shadow_radius="1"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
@@ -138,7 +138,7 @@
                                         android:gravity="center_vertical"
                                         android:lines="1"
                                         android:text="Eduardo Rodriguez Perez"
-                                        android:textColor="@color/colorPrimaryDark"
+                                        android:textColor="@color/colorSecondaryDark"
                                         android:textStyle="bold"
                                         tools:layout_editor_absoluteX="81dp"
                                         tools:layout_editor_absoluteY="22dp" />
@@ -366,7 +366,7 @@
                 android:id="@+id/chat_with_host_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorPrimaryDim"
+                android:background="@color/colorPrimaryLight"
                 android:text="Chat with host"
                 android:textColor="@android:color/white"
                 android:visibility="gone" />
