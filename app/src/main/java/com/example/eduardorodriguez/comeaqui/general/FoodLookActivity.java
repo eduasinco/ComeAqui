@@ -400,7 +400,7 @@ public class FoodLookActivity extends AppCompatActivity implements
                 JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
                 if (jo.get("error_message") == null){
                     if (jo.get("data").getAsJsonArray().size() > 0){
-                        PaymentMethodObject pm = new PaymentMethodObject(jo);
+                        PaymentMethodObject pm = new PaymentMethodObject(jo.get("data").getAsJsonArray().get(0).getAsJsonObject());
                         cardIcon.setImageDrawable(ContextCompat.getDrawable(getApplication(), pm.brandImage));
                         cardLastNumbers.setText(pm.last4.substring(pm.last4.length() - 4));
                         paymentMethod.setVisibility(View.VISIBLE);

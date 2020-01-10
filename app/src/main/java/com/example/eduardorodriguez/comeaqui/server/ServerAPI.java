@@ -42,7 +42,6 @@ public class ServerAPI {
         String result = null;
         try {
             connection = (HttpURLConnection) new URL(url).openConnection();
-            connection.setReadTimeout(3000);
             connection.setConnectTimeout(3000);
             connection.setRequestMethod("GET");
             connection.setDoInput(true);
@@ -77,7 +76,6 @@ public class ServerAPI {
         String result = null;
         try {
             connection = (HttpURLConnection) new URL(url).openConnection();
-            connection.setReadTimeout(3000);
             connection.setConnectTimeout(3000);
             connection.setRequestMethod("GET");
             connection.setDoInput(true);
@@ -113,7 +111,6 @@ public class ServerAPI {
         String result = null;
         try {
             connection = (HttpURLConnection) new URL(url).openConnection();
-            connection.setReadTimeout(10000);
             connection.setConnectTimeout(15000);
             connection.setRequestMethod(method);
             connection.setDoInput(true);
@@ -164,7 +161,6 @@ public class ServerAPI {
         String result = null;
         try {
             connection = (HttpURLConnection) new URL(url).openConnection();
-            connection.setReadTimeout(3000);
             connection.setConnectTimeout(3000);
             connection.setRequestMethod("DELETE");
             connection.setDoInput(true);
@@ -198,7 +194,6 @@ public class ServerAPI {
         String result = null;
         try {
             connection = (HttpURLConnection) new URL(url).openConnection();
-            connection.setReadTimeout(10000);
             connection.setConnectTimeout(15000);
             connection.setRequestMethod(method);
             connection.setUseCaches(false);
