@@ -88,6 +88,7 @@ public class FoodLookActivity extends AppCompatActivity implements
     TwoOptionsMessageFragment sureFragment;
     AttendFragment attendFragment;
 
+    int fpId;
     FoodPostDetail foodPostDetail;
     String userStatusInPost = "";
     int additionalGuests;
@@ -130,8 +131,7 @@ public class FoodLookActivity extends AppCompatActivity implements
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if(b != null && b.get("foodPostId") != null){
-            int fpId = b.getInt("foodPostId");
-            getFoodPostDetailsAndSet(fpId);
+            fpId = b.getInt("foodPostId");
         }
         changePaymentMethod.setOnClickListener(v -> {
             Intent paymentMethod = new Intent(this, PaymentMethodsActivity.class);
@@ -147,6 +147,105 @@ public class FoodLookActivity extends AppCompatActivity implements
 
     }
 
+    void setDetails(){
+        posterNameView.setText(foodPostDetail.owner.first_name + " " + foodPostDetail.owner.last_name);
+        usernameView.setText("@" + foodPostDetail.owner.username);
+        plateNameView.setText(foodPostDetail.plate_name);
+        descriptionView.setText(foodPostDetail.description);
+        posterLocationView.setText(foodPostDetail.formatted_address);
+        priceView.setText(foodPostDetail.price_to_show);
+        timeView.setText(foodPostDetail.time_range);
+        date.setText(foodPostDetail.time_to_show);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("type", foodPostDetail.type);
+        FoodTypeFragment fragment = new FoodTypeFragment();
+        fragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.types, fragment)
+                .commit();
+
+
+        if(!foodPostDetail.owner.profile_photo.contains("no-image")) {
+            Glide.with(this).load(foodPostDetail.owner.profile_photo).into(posterImage);
+            profileLook.setOnClickListener(v -> goToProfileView(foodPostDetail.owner));
+        }
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.static_map_frame, StaticMapFragment.newInstance(foodPostDetail.lat, foodPostDetail.lng))
+                .commit();
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(foodPostDetail.id, 0, 4, 200,0, 0))
+                .commit();
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.waiting_frame, WaitFragment.newInstance())
+                .commit();
+
+        sureFragment = TwoOptionsMessageFragment.newInstance("Delete", "Are you sure you want to delete this post?", "CANCEL", "DELETE", true);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.sure_message, sureFragment)
+                .commit();
+
+        attendFragment = AttendFragment.newInstance(foodPostDetail.dinners_left, foodPostDetail.price);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.attend_message, attendFragment)
+                .commit();
+
+        setPlaceButton();
+        setDinners();
+        if (USER.id != foodPostDetail.owner.id) {
+            getMyChosenCard();
+        }
+    }
+
+    void setDinners(){
+
+        dinnerArray = new ImageView[]{
+                findViewById(R.id.dinner0),
+                findViewById(R.id.dinner1),
+                findViewById(R.id.dinner2),
+                findViewById(R.id.dinner3),
+                findViewById(R.id.dinner4),
+                findViewById(R.id.dinner5),
+                findViewById(R.id.dinner6),
+        };
+        plusArray = new TextView[]{
+                findViewById(R.id.plus0),
+                findViewById(R.id.plus1),
+                findViewById(R.id.plus2),
+                findViewById(R.id.plus3),
+                findViewById(R.id.plus4),
+                findViewById(R.id.plus5),
+                findViewById(R.id.plus6),
+        };
+        TextView dinnersNumber = findViewById(R.id.dinners_number);
+
+        dinnersListView.setOnClickListener((v) -> {
+            if (foodPostDetail.confirmedOrdersList.size() > 0) {
+                startActivity(new Intent(this, DinnerListActivity.class).putExtra("foodPostId", foodPostDetail.id));
+            }
+        });
+
+        if (foodPostDetail.confirmedOrdersList.size() > 0){
+            dinnersNumber.setText((foodPostDetail.max_dinners - foodPostDetail.dinners_left) + "/" + foodPostDetail.max_dinners + " dinners for this meal");
+        } else {
+            dinnersNumber.setText("No dinners for this meal yet");
+        }
+        int i = 0;
+        while (i < dinnerArray.length && i < foodPostDetail.confirmedOrdersList.size()){
+            if(!foodPostDetail.confirmedOrdersList.get(i).owner.profile_photo.contains("no-image")) {
+                Glide.with(this).load(foodPostDetail.confirmedOrdersList.get(i).owner.profile_photo).into(dinnerArray[i]);
+                if (foodPostDetail.confirmedOrdersList.get(i).additionalGuests > 0){
+                    plusArray[i].setVisibility(View.VISIBLE);
+                    plusArray[i].setText("+" + foodPostDetail.confirmedOrdersList.get(i).additionalGuests);
+                }
+            }
+            dinnerArray[i].setVisibility(View.VISIBLE);
+            i++;
+        }
+    }
     void setToolbar(){
         collapsingToolbar.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
@@ -155,6 +254,12 @@ public class FoodLookActivity extends AppCompatActivity implements
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         collapsingToolbar.setTitleEnabled(true);
         collapsingToolbar.setExpandedTitleColor(ContextCompat.getColor(this, R.color.colorPrimary_trans));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getFoodPostDetailsAndSet(fpId);
     }
 
     @Override
@@ -233,106 +338,6 @@ public class FoodLookActivity extends AppCompatActivity implements
         startActivity(k);
     }
 
-    void setDinners(){
-
-        dinnerArray = new ImageView[]{
-                findViewById(R.id.dinner0),
-                findViewById(R.id.dinner1),
-                findViewById(R.id.dinner2),
-                findViewById(R.id.dinner3),
-                findViewById(R.id.dinner4),
-                findViewById(R.id.dinner5),
-                findViewById(R.id.dinner6),
-        };
-        plusArray = new TextView[]{
-                findViewById(R.id.plus0),
-                findViewById(R.id.plus1),
-                findViewById(R.id.plus2),
-                findViewById(R.id.plus3),
-                findViewById(R.id.plus4),
-                findViewById(R.id.plus5),
-                findViewById(R.id.plus6),
-        };
-        TextView dinnersNumber = findViewById(R.id.dinners_number);
-
-        dinnersListView.setOnClickListener((v) -> {
-            if (foodPostDetail.confirmedOrdersList.size() > 0) {
-                startActivity(new Intent(this, DinnerListActivity.class).putExtra("foodPostId", foodPostDetail.id));
-            }
-        });
-
-        if (foodPostDetail.confirmedOrdersList.size() > 0){
-            dinnersNumber.setText((foodPostDetail.max_dinners - foodPostDetail.dinners_left) + "/" + foodPostDetail.max_dinners + " dinners for this meal");
-        } else {
-            dinnersNumber.setText("No dinners for this meal yet");
-        }
-        int i = 0;
-        while (i < dinnerArray.length && i < foodPostDetail.confirmedOrdersList.size()){
-            if(!foodPostDetail.confirmedOrdersList.get(i).owner.profile_photo.contains("no-image")) {
-                Glide.with(this).load(foodPostDetail.confirmedOrdersList.get(i).owner.profile_photo).into(dinnerArray[i]);
-                if (foodPostDetail.confirmedOrdersList.get(i).additionalGuests > 0){
-                    plusArray[i].setVisibility(View.VISIBLE);
-                    plusArray[i].setText("+" + foodPostDetail.confirmedOrdersList.get(i).additionalGuests);
-                }
-            }
-            dinnerArray[i].setVisibility(View.VISIBLE);
-            i++;
-        }
-    }
-
-    void setDetails(){
-        posterNameView.setText(foodPostDetail.owner.first_name + " " + foodPostDetail.owner.last_name);
-        usernameView.setText("@" + foodPostDetail.owner.username);
-        plateNameView.setText(foodPostDetail.plate_name);
-        descriptionView.setText(foodPostDetail.description);
-        posterLocationView.setText(foodPostDetail.formatted_address);
-        priceView.setText(foodPostDetail.price_to_show);
-        timeView.setText(foodPostDetail.time_range);
-        date.setText(foodPostDetail.time_to_show);
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("type", foodPostDetail.type);
-        FoodTypeFragment fragment = new FoodTypeFragment();
-        fragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.types, fragment)
-                .commit();
-
-
-        if(!foodPostDetail.owner.profile_photo.contains("no-image")) {
-            Glide.with(this).load(foodPostDetail.owner.profile_photo).into(posterImage);
-            profileLook.setOnClickListener(v -> goToProfileView(foodPostDetail.owner));
-        }
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.static_map_frame, StaticMapFragment.newInstance(foodPostDetail.lat, foodPostDetail.lng))
-                .commit();
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(foodPostDetail.id, 0, 4, 200,0, 0))
-                .commit();
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.waiting_frame, WaitFragment.newInstance())
-                .commit();
-
-        sureFragment = TwoOptionsMessageFragment.newInstance("Delete", "Are you sure you want to delete this post?", "CANCEL", "DELETE", true);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.sure_message, sureFragment)
-                .commit();
-
-        attendFragment = AttendFragment.newInstance(foodPostDetail.dinners_left, foodPostDetail.price);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.attend_message, attendFragment)
-                .commit();
-
-        setPlaceButton();
-        setDinners();
-        if (USER.id != foodPostDetail.owner.id) {
-            getMyChosenCard();
-        }
-    }
-
     void getFoodPostDetailsAndSet(int foodPostId){
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/food_with_user_status/" + foodPostId + "/").execute());
     }
@@ -404,11 +409,15 @@ public class FoodLookActivity extends AppCompatActivity implements
                         cardIcon.setImageDrawable(ContextCompat.getDrawable(getApplication(), pm.brandImage));
                         cardLastNumbers.setText(pm.last4.substring(pm.last4.length() - 4));
                         paymentMethod.setVisibility(View.VISIBLE);
+
+                        pendingPaymentMethod.setVisibility(View.GONE);
+                        attendMealButton.setAlpha(1);
+                        attendMealButton.setClickable(true);
+                    } else {
+                        pendingPaymentMethod.setVisibility(View.VISIBLE);
+                        attendMealButton.setAlpha(0.5f);
+                        attendMealButton.setClickable(false);
                     }
-                } else {
-                    pendingPaymentMethod.setVisibility(View.VISIBLE);
-                    attendMealButton.setAlpha(0.5f);
-                    attendMealButton.setClickable(false);
                 }
             }
             super.onPostExecute(response);
