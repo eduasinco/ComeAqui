@@ -467,9 +467,9 @@ public class EditBankAccountActivity extends AppCompatActivity {
         tasks.add(new UploadAsyncTask(method,getResources().getString(R.string.server) + "/stripe_account/").execute(
                 new String[]{"first_name", firstName.getText().toString()},
                 new String[]{"last_name", lastName.getText().toString()},
-                new String[]{"day", day + ""},
-                new String[]{"month", mon + ""},
-                new String[]{"year", year + ""},
+                new String[]{"day", day == null ? "" : day + ""},
+                new String[]{"month", mon == null ? "" : mon + ""},
+                new String[]{"year", year == null ? "" : year + ""},
                 new String[]{"ssn_last_4", ssn.getText().toString()},
                 new String[]{"id_number", idNumber.getText().toString()},
                 new String[]{"phone", phone.getText().toString()},

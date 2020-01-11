@@ -97,9 +97,9 @@
                     android:textSize="18sp" />
             </LinearLayout>
 
-            <ImageView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            <ImageView
                 android:id="@+id/background_image"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:scaleType="centerCrop"
                 app:srcCompat="@drawable/background" />
