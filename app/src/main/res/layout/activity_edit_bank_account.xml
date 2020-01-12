@@ -296,7 +296,7 @@
                         android:layout_height="50dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Font ID"
+                        android:text="Front ID"
                         android:textColor="@color/colorPrimary"
                         android:textSize="18sp"
                         android:textStyle="bold" />

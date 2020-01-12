@@ -3,8 +3,8 @@
     <color name="colorPrimary">#525252</color>
     <color name="colorPrimaryLight">#6F6E6E</color>
     <color name="colorPrimaryLighter">#ECECEC</color>
-    <color name="colorSecondary">#AD5D28</color>
-    <color name="colorSecondaryDark">#582801</color>
+    <color name="colorSecondary">#C73800</color>
+    <color name="colorSecondaryDark">#992C00</color>
     <color name="colorPrimaryDim">#BBBBBB</color>
     <color name="colorPrimary_trans">#B3525252</color>
 
