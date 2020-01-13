@@ -547,6 +547,9 @@ public class EditBankAccountActivity extends AppCompatActivity {
                     if (e_message.contains("individual[address][city]")) {
                         showValtext(cityVal, "Invalid city", city);
                     }
+                    if (e_message.contains("individual[address][state]")) {
+                        showValtext(stateVal, "Invalid city", state);
+                    }
                     if (e_message.contains("individual[address][postal_code]")) {
                         showValtext(zipVal, "Invalid US postal code", zip);
                     }
