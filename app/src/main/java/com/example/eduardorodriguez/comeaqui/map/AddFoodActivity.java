@@ -27,7 +27,6 @@ import com.example.eduardorodriguez.comeaqui.map.add_food.add_images.AddImagesFr
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.SavedFoodPost;
 import com.example.eduardorodriguez.comeaqui.objects.StripeAccountInfoObject;
-import com.example.eduardorodriguez.comeaqui.profile.edit_profile.AddBioActivity;
 import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_bank_account.EditBankAccountActivity;
 import com.example.eduardorodriguez.comeaqui.utilities.SelectImageFromFragment;
 import com.example.eduardorodriguez.comeaqui.R;
@@ -36,11 +35,8 @@ import com.example.eduardorodriguez.comeaqui.utilities.message_fragments.OneOpti
 import com.example.eduardorodriguez.comeaqui.map.add_food.FoodTypeSelectorFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.message_fragments.TwoOptionsMessageFragment;
 import com.example.eduardorodriguez.comeaqui.utilities.place_autocomplete.PlaceAutocompleteFragment;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -355,7 +351,7 @@ public class AddFoodActivity extends AppCompatActivity implements
                 if (s.length() > 0) {
                     int intText = Integer.parseInt(s.toString());
                     price_data = intText;
-                    price.setText(String.format("%.02f", price_data / 100.d));
+                    price.setText("$" + String.format("%.02f", price_data / 100.d));
                 } else {
                     price.setText("$0.00");
                 }

@@ -164,7 +164,7 @@ TwoOptionsMessageFragment.OnFragmentInteractionListener{
         postNameView.setText(foodPostReview.plate_name);
         posterDescriptionView.setText(foodPostReview.description);
         posterDescriptionView.setVisibility(View.VISIBLE);
-        postPrice.setText(foodPostReview.price);
+        postPrice.setText(foodPostReview.price_to_show);
 
         String rating = "-.-";
         if (foodPostReview.rating != 0){
