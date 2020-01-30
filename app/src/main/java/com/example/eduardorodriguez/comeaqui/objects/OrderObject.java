@@ -12,6 +12,8 @@ public class OrderObject implements Serializable {
     public String status;
     public String createdAt;
     public int additionalGuests;
+    public int order_price;
+    public String price_to_show;
     public boolean seen;
     public OrderObject(JsonObject jo){
         id = jo.get("id").getAsInt();
@@ -21,6 +23,8 @@ public class OrderObject implements Serializable {
         status = jo.get("order_status").getAsString();
         seen = jo.get("seen").getAsBoolean();
         createdAt = jo.get("created_at").getAsString();
+        order_price = post.price * (1 + additionalGuests);
+        price_to_show = "$" + String.format("%.02f", (post.price * additionalGuests / 100.f));
         additionalGuests = jo.get("additional_guests").getAsInt();
 
     }

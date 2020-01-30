@@ -3,12 +3,22 @@ package com.example.eduardorodriguez.comeaqui.review;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -17,8 +27,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.objects.OrderObject;
+import com.example.eduardorodriguez.comeaqui.objects.PaymentMethodObject;
 import com.example.eduardorodriguez.comeaqui.objects.ReviewObject;
 
+import com.example.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
 import com.example.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -32,15 +44,28 @@ import static com.example.eduardorodriguez.comeaqui.R.color.secondary_text_defau
 
 
 public class ReviewHostActivity extends AppCompatActivity implements StarReasonFragment.OnFragmentInteractionListener {
-    enum SubmitButtonStatus{
-        NEXT, SUBMIT
-    }
 
     LinearLayout rateMealView;
     TextView posterRating;
     Button submitButton;
     ScrollView scrollView;
     View progress;
+
+    TextView tip;
+    EditText tipEText;
+    TextView customTip;
+    LinearLayout tipPercentages;
+    boolean percentageTipOn = true;
+
+    LinearLayout paymentMethod;
+    ImageView cardIcon;
+    TextView cardNumbers;
+    Button changePaymentMethod;
+
+    int tip_data;
+    int tipPercentageOption;
+    int[] percentage = {0, 15, 20, 25};
+
 
     OrderObject orderObject;
     int rating = 5;
@@ -64,6 +89,16 @@ public class ReviewHostActivity extends AppCompatActivity implements StarReasonF
         scrollView = findViewById(R.id.scrollView);
         progress = findViewById(R.id.review_progress);
 
+        tip = findViewById(R.id.priceView);
+        tipEText = findViewById(R.id.price);
+        customTip = findViewById(R.id.custom_tip);
+        tipPercentages = findViewById(R.id.tip_percentages);
+
+        paymentMethod = findViewById(R.id.payment_method_layout);
+        cardIcon = findViewById(R.id.card_icon);
+        cardNumbers = findViewById(R.id.card_last_numbers);
+        changePaymentMethod = findViewById(R.id.change_payment);
+
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if(b != null && b.get("order") != null) {
@@ -77,16 +112,95 @@ public class ReviewHostActivity extends AppCompatActivity implements StarReasonF
             blockSubmitButton(true);
 
             posterName.setText(orderObject.poster.first_name);
-            amount.setText("USD" + orderObject.post.price_to_show);
+            amount.setText(orderObject.price_to_show);
             cardLastNumbers.setText("USER CARD");
             posterRating.setText(orderObject.owner.rating + "");
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.star_reason_frame, StarReasonFragment.newInstance())
                     .commit();
+
+            getMyChosenCard();
+            setTipEText();
         }
 
+        changePaymentMethod.setOnClickListener(v -> {
+            Intent paymentMethod = new Intent(this, PaymentMethodsActivity.class);
+            paymentMethod.putExtra("changeMode", true);
+            startActivity(paymentMethod);
+        });
+
+        tipEText.setFocusableInTouchMode(false);
+        tipEText.setFocusable(false);
+        customTip.setOnClickListener(v -> {
+            percentageTipOn = !percentageTipOn;
+            if (percentageTipOn){
+                hideKeyboard();
+                tip_data = percentage[tipPercentageOption] * orderObject.post.price / 100;
+                tip.setText("$" + String.format("%.02f", tip_data / 100.d));
+            } else {
+                tipEText.setText("");
+                tip_data = 0;
+                tip.setText("$" + String.format("%.02f", tip_data / 100.d));
+            }
+            tipPercentages.setVisibility(percentageTipOn ? View.VISIBLE: View.GONE);
+            tipEText.setFocusableInTouchMode(!percentageTipOn);
+            tipEText.setFocusable(!percentageTipOn);
+            customTip.setText(percentageTipOn ? "Custom tip": "Percentage tip");
+        });
+
         setTipButtons();
+    }
+
+    private void hideKeyboard(){
+        View view = getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    void setTipEText(){
+        tipEText.setOnClickListener(v -> tipEText.setSelection(tipEText.getText().length()));
+        tipEText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged (CharSequence s,int start, int count, int after){
+                tipEText.setSelection(tipEText.getText().length());
+            }
+            @Override
+            public void onTextChanged ( final CharSequence s, int start, int before, int count){
+                tip.setBackground(ContextCompat.getDrawable(getApplication(), R.drawable.text_input_shape));
+                blockSubmitButton(false);
+                if (s.length() > 0) {
+                    int intText = Integer.parseInt(s.toString());
+                    tip_data = intText;
+                    tip.setText("$" + String.format("%.02f", tip_data / 100.d));
+                } else {
+                    tip.setText("$0.00");
+                }
+                tipEText.setSelection(tipEText.getText().length());
+            }
+            @Override
+            public void afterTextChanged ( final Editable s){
+                tipEText.setSelection(tipEText.getText().length());
+            }
+        });
+
+        final View activityRootView = findViewById(R.id.root_view);
+        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
+                if (heightDiff > dpToPx(getApplication(), 200)) {
+                    scrollView.fullScroll(View.FOCUS_DOWN);
+                }
+            }
+        });
+    }
+
+    public static float dpToPx(Context context, float valueInDp) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
     }
 
     void blockSubmitButton(boolean block){
@@ -111,7 +225,8 @@ public class ReviewHostActivity extends AppCompatActivity implements StarReasonF
                 new String[]{"order_id", "" + orderObject.id},
                 new String[]{"review", review},
                 new String[]{"rating", "" + rating},
-                new String[]{"star_reason", ""}
+                new String[]{"star_reason", ""},
+                new String[]{"tip", tip_data + ""}
         ));
     }
     private class PostAsyncTask extends AsyncTask<String[], Void, String> {
@@ -155,9 +270,14 @@ public class ReviewHostActivity extends AppCompatActivity implements StarReasonF
                 findViewById(R.id.tip2),
                 findViewById(R.id.tip3)
         };
+
         for (int i = 0; i < tipViews.length; i++){
             Button button = tipViews[i];
+            final int iFinal = i;
             button.setOnClickListener(v -> {
+                tipPercentageOption = iFinal;
+                tip_data = percentage[tipPercentageOption] * orderObject.order_price / 100;
+                tip.setText("$" + String.format("%.02f", tip_data / 100.d));
                 blockSubmitButton(false);
                 submitButton.setAlpha(1);
                 for (Button tip: tipViews){
@@ -171,6 +291,42 @@ public class ReviewHostActivity extends AppCompatActivity implements StarReasonF
                     }
                 }
             });
+        }
+    }
+
+    void getMyChosenCard(){
+        GetMyChosenCardAsyncTask process = new GetMyChosenCardAsyncTask(getResources().getString(R.string.server) + "/my_chosen_card/");
+        tasks.add(process.execute());
+    }
+    private class GetMyChosenCardAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetMyChosenCardAsyncTask(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                if (jo.get("error_message") == null){
+                    if (jo.get("data").getAsJsonArray().size() > 0){
+                        PaymentMethodObject pm = new PaymentMethodObject(jo.get("data").getAsJsonArray().get(0).getAsJsonObject());
+                        cardIcon.setImageDrawable(ContextCompat.getDrawable(getApplication(), pm.brandImage));
+                        cardNumbers.setText(pm.last4.substring(pm.last4.length() - 4));
+                    }
+                }
+            }
+            super.onPostExecute(response);
         }
     }
 
