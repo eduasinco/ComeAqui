@@ -103,10 +103,10 @@ public class SearchPeopleActivity extends AppCompatActivity {
                 if (s.length() > 0) {
                     deleteText.setVisibility(View.VISIBLE);
                     noListImage.setImageDrawable(ContextCompat.getDrawable(getApplication(), R.drawable.not_found));
-                    noListMessage.setText("No messages found");
+                    noListMessage.setText("No people found");
                 } else {
-                    noListImage.setImageDrawable(ContextCompat.getDrawable(getApplication(), R.drawable.no_messages));
-                    noListMessage.setText("No messages");
+                    noListImage.setImageDrawable(ContextCompat.getDrawable(getApplication(), R.drawable.not_found));
+                    noListMessage.setText("No people");
                     deleteText.setVisibility(View.GONE);
                     hideKeyboard();
                 }

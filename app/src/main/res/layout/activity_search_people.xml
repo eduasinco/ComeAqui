@@ -60,7 +60,7 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginBottom="16dp"
-                app:srcCompat="@drawable/no_messages" />
+                app:srcCompat="@drawable/not_found" />
 
             <TextView
                 android:id="@+id/no_list_message"
