@@ -201,7 +201,7 @@ public class MapFragment extends Fragment implements
 
     public void listenToPosts(){
         try {
-            URI uri = new URI(getResources().getString(R.string.server) + "/ws/posts/");
+            URI uri = new URI(getResources().getString(R.string.async_server) + "/ws/posts/");
             mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {

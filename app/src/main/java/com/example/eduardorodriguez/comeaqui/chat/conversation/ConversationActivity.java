@@ -350,7 +350,7 @@ public class ConversationActivity extends AppCompatActivity {
 
     public void start(String chatId){
         try {
-            String url = getResources().getString(R.string.server) + "/ws/chat/" + chatId + "/";
+            String url = getResources().getString(R.string.async_server) + "/ws/chat/" + chatId + "/";
             URI uri = new URI(url);
             mWebSocketClient = new WebSocketClient(uri) {
                 @Override

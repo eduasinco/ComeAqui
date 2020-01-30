@@ -202,7 +202,7 @@ public class ChatActivity extends AppCompatActivity{
 
     private void start(){
         try {
-            URI uri = new URI(getResources().getString(R.string.server) + "/ws/unread_messages/" + USER.id +  "/");
+            URI uri = new URI(getResources().getString(R.string.async_server) + "/ws/unread_messages/" + USER.id +  "/");
             mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {

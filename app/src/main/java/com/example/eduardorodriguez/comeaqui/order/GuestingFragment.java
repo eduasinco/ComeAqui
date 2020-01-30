@@ -162,7 +162,7 @@ public class GuestingFragment extends Fragment {
 
     private void start(){
         try {
-            URI uri = new URI(getActivity().getResources().getString(R.string.server) + "/ws/orders/" + USER.id +  "/");
+            URI uri = new URI(getActivity().getResources().getString(R.string.async_server) + "/ws/orders/" + USER.id +  "/");
             mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {

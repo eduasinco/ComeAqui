@@ -39,10 +39,9 @@ public class ViewPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         ImageView imageView = new ImageView(context);
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         Picasso.get()
                 .load(imageUrls.get(position))
-                .fit()
-                .centerCrop()
                 .into(imageView);
         container.addView(imageView);
 

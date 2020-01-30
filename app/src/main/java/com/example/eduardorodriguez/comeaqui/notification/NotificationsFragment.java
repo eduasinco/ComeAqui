@@ -172,7 +172,7 @@ public class NotificationsFragment extends Fragment {
 
     private void start(){
         try {
-            URI uri = new URI(getActivity().getResources().getString(R.string.server) + "/ws/notifications/" + USER.id +  "/");
+            URI uri = new URI(getActivity().getResources().getString(R.string.async_server) + "/ws/notifications/" + USER.id +  "/");
             mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {

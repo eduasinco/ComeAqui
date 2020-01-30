@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void listenToNotificationChanges(){
         try {
-            URI uri = new URI(getResources().getString(R.string.server) + "/ws/popups/" + USER.id +  "/");
+            URI uri = new URI(getResources().getString(R.string.async_server) + "/ws/popups/" + USER.id +  "/");
             mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {

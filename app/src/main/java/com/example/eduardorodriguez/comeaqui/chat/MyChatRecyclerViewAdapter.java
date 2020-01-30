@@ -42,7 +42,7 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
 
-        User chattingWith = USER.id == (holder.mItem.users.get(0).id) ? holder.mItem.users.get(1) : holder.mItem.users.get(0);
+        User chattingWith = (USER.id == holder.mItem.users.get(0).id) ? holder.mItem.users.get(1) : holder.mItem.users.get(0);
 
         holder.username.setText(chattingWith.first_name + " " + chattingWith.last_name);
         if (holder.mItem.last_message != null){
