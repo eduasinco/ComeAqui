@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.eduardorodriguez.comeaqui.BuildConfig;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.general.attend_message.AttendFragment;
 import com.example.eduardorodriguez.comeaqui.general.dinner_list.DinnerListActivity;
@@ -88,7 +89,7 @@ public class FoodLookActivity extends AppCompatActivity implements
     TwoOptionsMessageFragment sureFragment;
     AttendFragment attendFragment;
 
-    int fpId;
+    Integer fpId;
     FoodPostDetail foodPostDetail;
     String userStatusInPost = "";
     int additionalGuests;
@@ -147,6 +148,14 @@ public class FoodLookActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (fpId != null){
+            getFoodPostDetailsAndSet(fpId);
+        }
+    }
+
     void setDetails(){
         posterNameView.setText(foodPostDetail.owner.first_name + " " + foodPostDetail.owner.last_name);
         usernameView.setText("@" + foodPostDetail.owner.username);
@@ -192,6 +201,15 @@ public class FoodLookActivity extends AppCompatActivity implements
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.attend_message, attendFragment)
                 .commit();
+
+        findViewById(R.id.other).setOnClickListener(v -> {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT,
+                    "Hey check out my app at: https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID);
+            sendIntent.setType("text/plain");
+            startActivity(sendIntent);
+        });
 
         setPlaceButton();
         setDinners();
@@ -257,12 +275,6 @@ public class FoodLookActivity extends AppCompatActivity implements
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        getFoodPostDetailsAndSet(fpId);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.collapseMenu = menu;
         getMenuInflater().inflate(R.menu.main_menu, menu);
@@ -279,7 +291,7 @@ public class FoodLookActivity extends AppCompatActivity implements
                     final Drawable upArrow = getResources().getDrawable(R.drawable.back_arrow_white);
                     getSupportActionBar().setHomeAsUpIndicator(upArrow);
                     findViewById(R.id.action_settings).setBackground(ContextCompat.getDrawable(this, R.drawable.collapse_three_dots));
-                    findViewById(R.id.other).setBackground(ContextCompat.getDrawable(this, R.drawable.collapse_plus));
+                    findViewById(R.id.other).setBackground(ContextCompat.getDrawable(this, R.drawable.share_icon_collapsed));
                 }
             } else {
                 if (isCollapsed){
@@ -287,7 +299,7 @@ public class FoodLookActivity extends AppCompatActivity implements
                     final Drawable upArrow = getResources().getDrawable(R.drawable.back_arrow_with_background);
                     getSupportActionBar().setHomeAsUpIndicator(upArrow);
                     findViewById(R.id.action_settings).setBackground(ContextCompat.getDrawable(this, R.drawable.three_dots_with_background));
-                    findViewById(R.id.other).setBackground(ContextCompat.getDrawable(this, R.drawable.plus_with_bacground));
+                    findViewById(R.id.other).setBackground(ContextCompat.getDrawable(this, R.drawable.share_icon));
                 }
             }
             vo = verticalOffset;

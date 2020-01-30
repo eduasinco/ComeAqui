@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.example.eduardorodriguez.comeaqui.BuildConfig;
 import com.example.eduardorodriguez.comeaqui.R;
 import com.example.eduardorodriguez.comeaqui.general.FoodLookActivity;
 import com.example.eduardorodriguez.comeaqui.objects.FoodPost;
@@ -80,7 +81,7 @@ TwoOptionsMessageFragment.OnFragmentInteractionListener{
     ImageView meat;
     ImageView dairy;
 
-    int fpId;
+    Integer fpId;
     boolean isCollapsed = true;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
@@ -120,7 +121,6 @@ TwoOptionsMessageFragment.OnFragmentInteractionListener{
         Bundle b = intent.getExtras();
         if(b != null){
             fpId = b.getInt("foodPostId");
-            getReviewsFrompFoodPost(fpId);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.waiting_frame, WaitFragment.newInstance())
                     .commit();
@@ -157,7 +157,9 @@ TwoOptionsMessageFragment.OnFragmentInteractionListener{
     @Override
     protected void onResume() {
         super.onResume();
-        getReviewsFrompFoodPost(fpId);
+        if (fpId != null){
+            getReviewsFrompFoodPost(fpId);
+        }
     }
 
     void setViewFoodPost(){
@@ -173,6 +175,15 @@ TwoOptionsMessageFragment.OnFragmentInteractionListener{
         postRating.setText(rating);
         setTypes(foodPostReview.type);
         cardButtonView.setOnClickListener(v -> goToPostLook(foodPostReview.id));
+
+        findViewById(R.id.other).setOnClickListener(v -> {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT,
+                    "Hey check out my app at: https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID);
+            sendIntent.setType("text/plain");
+            startActivity(sendIntent);
+        });
     }
 
     void setTypes(String types){
@@ -229,7 +240,7 @@ TwoOptionsMessageFragment.OnFragmentInteractionListener{
                     final Drawable upArrow = getResources().getDrawable(R.drawable.back_arrow_white);
                     getSupportActionBar().setHomeAsUpIndicator(upArrow);
                     findViewById(R.id.action_settings).setBackground(ContextCompat.getDrawable(this, R.drawable.collapse_three_dots));
-                    findViewById(R.id.other).setBackground(ContextCompat.getDrawable(this, R.drawable.collapse_plus));
+                    findViewById(R.id.other).setBackground(ContextCompat.getDrawable(this, R.drawable.share_icon_collapsed));
                 }
             } else {
                 if (isCollapsed){
@@ -237,7 +248,7 @@ TwoOptionsMessageFragment.OnFragmentInteractionListener{
                     final Drawable upArrow = getResources().getDrawable(R.drawable.back_arrow_with_background);
                     getSupportActionBar().setHomeAsUpIndicator(upArrow);
                     findViewById(R.id.action_settings).setBackground(ContextCompat.getDrawable(this, R.drawable.three_dots_with_background));
-                    findViewById(R.id.other).setBackground(ContextCompat.getDrawable(this, R.drawable.plus_with_bacground));
+                    findViewById(R.id.other).setBackground(ContextCompat.getDrawable(this, R.drawable.share_icon));
                 }
             }
             vo = verticalOffset;
