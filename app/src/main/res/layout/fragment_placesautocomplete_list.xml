@@ -4,7 +4,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/recycler"
-        android:name="com.example.eduardorodriguez.comeaqui.PlacesAutocompleteFragment"
+        android:name="com.comeaqui.eduardorodriguez.comeaqui.PlacesAutocompleteFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="16dp"

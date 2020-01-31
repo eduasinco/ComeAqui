@@ -20,7 +20,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/hosting_list"
-        android:name="com.example.eduardorodriguez.comeaqui.order.HostingFragment"
+        android:name="com.comeaqui.eduardorodriguez.comeaqui.order.HostingFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="LinearLayoutManager"

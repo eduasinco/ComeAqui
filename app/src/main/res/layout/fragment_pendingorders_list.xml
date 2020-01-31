@@ -8,7 +8,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
-        android:name="com.example.eduardorodriguez.comeaqui.chat.PendingOrdersFragment"
+        android:name="com.comeaqui.eduardorodriguez.comeaqui.chat.PendingOrdersFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="LinearLayoutManager"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.eduardorodriguez.comeaqui">
+    package="com.comeaqui.eduardorodriguez.comeaqui">
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -22,7 +22,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
-        android:name=".App"
+        android:name="com.comeaqui.eduardorodriguez.comeaqui.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -30,52 +30,52 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".profile.edit_profile.edit_account_details.payment.CardLookActivity"></activity>
-        <activity android:name=".profile.edit_profile.edit_bank_account.EditBankAccountActivity" />
-        <activity android:name=".map.search_people.SearchPeopleActivity" />
-        <activity android:name=".map.add_food.image_look.ImageLookActivity" />
-        <activity android:name=".general.EditFoodPostActivity" />
-        <activity android:name=".general.FoodLookActivity" />
-        <activity android:name=".profile.edit_profile.edit_account_details.confirm_email.ConfirmEmailActivity" />
-        <activity android:name=".review.food_review_look.ReplyReviewActivity" />
-        <activity android:name=".review.food_review_look.FoodPostReviewLookActivity" />
-        <activity android:name=".general.dinner_list.DinnerListActivity" />
-        <activity android:name=".login_and_register.LoginOrRegisterActivity">
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.CardLookActivity"></activity>
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.profile.edit_profile.edit_bank_account.EditBankAccountActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.map.search_people.SearchPeopleActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.map.add_food.image_look.ImageLookActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.general.EditFoodPostActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.general.FoodLookActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.confirm_email.ConfirmEmailActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.review.food_review_look.ReplyReviewActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.review.food_review_look.FoodPostReviewLookActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.general.dinner_list.DinnerListActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.login_and_register.LoginOrRegisterActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".profile.settings.SettingsActivity" />
-        <activity android:name=".login_and_register.ChangePasswordActivity" />
-        <activity android:name=".login_and_register.forgot_password.ForgotPasswordActivity" />
-        <activity android:name=".login_and_register.phone_code_verification.VerifyPhoneActivity" />
-        <activity android:name=".login_and_register.register.VerifyEmailActivity" />
-        <activity android:name=".login_and_register.register.RegisterActivity" />
-        <activity android:name=".PrepareActivity">
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.profile.settings.SettingsActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.login_and_register.ChangePasswordActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.login_and_register.forgot_password.ForgotPasswordActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.login_and_register.phone_code_verification.VerifyPhoneActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.login_and_register.register.VerifyEmailActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.login_and_register.register.RegisterActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.PrepareActivity">
             <intent-filter>
                 <action android:name="PREPARE" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".review.ReviewGuestActivity" />
-        <activity android:name=".review.ReviewHostActivity" />
-        <activity android:name=".utilities.image_view_pager.ImagePagerActivity" />
-        <activity android:name=".profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity" />
-        <activity android:name=".profile.edit_profile.edit_account_details.EditAcountDetailsActivity" />
-        <activity android:name=".profile.edit_profile.AddBioActivity" />
-        <activity android:name=".notification.NotificationLookActivity" />
-        <activity android:name=".profile.ProfileViewActivity" />
-        <activity android:name=".chat.conversation.ConversationActivity">
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.review.ReviewGuestActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.review.ReviewHostActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.utilities.image_view_pager.ImagePagerActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.EditAcountDetailsActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.profile.edit_profile.AddBioActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.notification.NotificationLookActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.profile.ProfileViewActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity">
             <intent-filter>
                 <action android:name="CONVERSATION" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".chat.ChatActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.chat.ChatActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -85,7 +85,7 @@
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
         <service
-            android:name=".MyFirebaseMessagingService"
+            android:name="com.comeaqui.eduardorodriguez.comeaqui.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -97,9 +97,9 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".login_and_register.LoginActivity"
+            android:name="com.comeaqui.eduardorodriguez.comeaqui.login_and_register.LoginActivity"
             android:label="@string/title_activity_login" />
-        <activity android:name=".MainActivity">
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.MainActivity">
             <intent-filter>
                 <action android:name="MAIN" />
 
@@ -111,13 +111,13 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".map.AddFoodActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.map.AddFoodActivity" />
         <activity
-            android:name=".profile.edit_profile.EditProfileActivity"
+            android:name="com.comeaqui.eduardorodriguez.comeaqui.profile.edit_profile.EditProfileActivity"
             android:label="@string/title_activity_edit_profile"
             android:theme="@style/AppTheme" />
-        <activity android:name=".profile.edit_profile.edit_account_details.payment.CreditCardInformationActivity" />
-        <activity android:name=".order.OrderLookActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.CreditCardInformationActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.order.OrderLookActivity" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
@@ -125,7 +125,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.example.android.fileprovider"
+            android:authorities="com.comeaqui.android.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

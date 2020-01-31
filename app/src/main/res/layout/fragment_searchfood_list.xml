@@ -18,7 +18,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/food_search_list"
-            android:name="com.example.eduardorodriguez.comeaqui.map.search_food.SearchFoodFragment"
+            android:name="com.comeaqui.eduardorodriguez.comeaqui.map.search_food.SearchFoodFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="LinearLayoutManager"
