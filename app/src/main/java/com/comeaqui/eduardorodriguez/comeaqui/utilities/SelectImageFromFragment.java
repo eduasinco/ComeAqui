@@ -141,7 +141,7 @@ public class SelectImageFromFragment extends Fragment {
             }
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(getContext(),
-                        "com.example.android.fileprovider",
+                        "com.comeaqui.android.fileprovider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
