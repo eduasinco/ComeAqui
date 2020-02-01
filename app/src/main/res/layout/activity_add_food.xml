@@ -67,7 +67,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingStart="24dp"
-            android:paddingEnd="24dp">
+            android:paddingEnd="24dp"
+            android:paddingBottom="24dp">
 
             <TextView
                 android:id="@+id/textView43"
@@ -231,7 +232,7 @@
                 android:textColor="@color/colorSecondaryDark"
                 android:textSize="24sp"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintTop_toBottomOf="@+id/seekBar"/>
+                app:layout_constraintTop_toBottomOf="@+id/seekBar" />
 
             <FrameLayout
                 android:id="@+id/set_foot_types_frame"
@@ -281,8 +282,8 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/pending_bank_account_info"
-                    android:textColor="@color/colorPrimary"
-                    android:visibility="visible" />
+                    android:textColor="@color/canceled"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <Button

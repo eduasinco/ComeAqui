@@ -24,7 +24,7 @@ public class OrderObject implements Serializable {
         seen = jo.get("seen").getAsBoolean();
         createdAt = jo.get("created_at").getAsString();
         order_price = post.price * (1 + additionalGuests);
-        price_to_show = "$" + String.format("%.02f", (post.price * additionalGuests / 100.f));
+        price_to_show = "$" + String.format("%.02f", (post.price * (1 + additionalGuests) / 100.f));
         additionalGuests = jo.get("additional_guests").getAsInt();
 
     }

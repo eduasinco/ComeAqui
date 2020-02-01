@@ -253,6 +253,8 @@ public class AddFoodActivity extends AppCompatActivity implements
             foodName.clearFocus();
         });
 
+        submit.setAlpha(0.5f);
+        submit.setClickable(false);
         backView.setOnClickListener(v -> finish());
     }
 
@@ -576,6 +578,10 @@ public class AddFoodActivity extends AppCompatActivity implements
                         bankAccountInfo.setVisibility(View.VISIBLE);
                         submit.setAlpha(0.5f);
                         submit.setClickable(false);
+                    } else {
+                        bankAccountInfo.setVisibility(View.GONE);
+                        submit.setAlpha(1);
+                        submit.setClickable(true);
                     }
                 }
             }
