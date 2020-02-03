@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="8dp"
-            android:backgroundTint="@color/colorPrimary"
+            android:backgroundTint="@color/colorSecondary"
             android:orientation="horizontal"
             app:cardCornerRadius="32dp">
 
@@ -42,13 +42,13 @@
             android:layout_height="64dp"
             android:background="@drawable/box_login"
             android:text="LOG IN"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorSecondary" />
     </LinearLayout>
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
