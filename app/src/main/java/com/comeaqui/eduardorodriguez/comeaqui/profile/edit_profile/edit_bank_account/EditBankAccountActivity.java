@@ -66,7 +66,6 @@ public class EditBankAccountActivity extends AppCompatActivity {
     Button idBack;
     ProgressBar backProgress;
 
-    EditText idNumber;
     EditText phone;
     EditText address1;
     EditText address2;
@@ -83,7 +82,6 @@ public class EditBankAccountActivity extends AppCompatActivity {
     TextView ssnVal;
     LinearLayout ssnProvidedView;
     Button ssnReplaceButton;
-    TextView idNumberVal;
     TextView phoneVal;
     TextView address1Val;
     TextView address2Val;
@@ -137,7 +135,6 @@ public class EditBankAccountActivity extends AppCompatActivity {
         backProgress = findViewById(R.id.back_progress);
         imageBack = findViewById(R.id.image_back);
 
-        idNumber = findViewById(R.id.id_number);
         phone = findViewById(R.id.phone);
         address1 = findViewById(R.id.address_line_1);
         address2 = findViewById(R.id.address_line_2);
@@ -152,7 +149,6 @@ public class EditBankAccountActivity extends AppCompatActivity {
         lastNameVal = findViewById(R.id.last_name_val_text);
         birthVal = findViewById(R.id.date_of_birth_val_text);
         ssnVal = findViewById(R.id.ssn_val_text);
-        idNumberVal = findViewById(R.id.id_number_val);
         phoneVal = findViewById(R.id.phone_val_text);
         address1Val = findViewById(R.id.address1_val_text);
         address2Val = findViewById(R.id.address2_val_text);
@@ -176,7 +172,6 @@ public class EditBankAccountActivity extends AppCompatActivity {
         setEditText(lastName, lastNameVal);
         setEditText(birth, birthVal);
         setEditText(ssn, ssnVal);
-        setEditText(idNumber, idNumberVal);
         setEditText(phone, phoneVal);
         setEditText(address1, address1Val);
         setEditText(address2, address2Val);
@@ -281,7 +276,7 @@ public class EditBankAccountActivity extends AppCompatActivity {
             cardBack.setVisibility(View.GONE);
         }
         if (accountInfoObject.individual.id_number != null) {
-            idNumber.setHint(accountInfoObject.individual.id_number);
+            ssn.setHint(accountInfoObject.individual.id_number);
         }
         if (accountInfoObject.individual.phone != null && !accountInfoObject.individual.phone.isEmpty()) {
             phone.setHint(accountInfoObject.individual.phone);
@@ -367,7 +362,7 @@ public class EditBankAccountActivity extends AppCompatActivity {
                     ssn.setHintTextColor(color_red);
                     break;
                 case "individual.id_number":
-                    idNumber.setHintTextColor(color_red);
+                    ssn.setHintTextColor(color_red);
                     break;
             }
         }
@@ -397,8 +392,8 @@ public class EditBankAccountActivity extends AppCompatActivity {
             showValtext(birthVal, "Please, insert a valid date", birth);
             isValid = false;
         }
-        if (!ssn.getText().toString().isEmpty() && ssn.getText().toString().length() < 4){
-            showValtext(ssnVal, "SSN number should be at least 4 digits", ssn);
+        if (!ssn.getText().toString().isEmpty() && ssn.getText().toString().length() < 9){
+            showValtext(ssnVal, "SSN number should be at least 9 digits", ssn);
             isValid = false;
         }
         if (!routingN.getText().toString().isEmpty() && routingN.getText().toString().length() < 9){
@@ -464,7 +459,7 @@ public class EditBankAccountActivity extends AppCompatActivity {
                 new String[]{"month", mon == null ? "" : mon + ""},
                 new String[]{"year", year == null ? "" : year + ""},
                 new String[]{"ssn_last_4", ssn.getText().toString()},
-                new String[]{"id_number", idNumber.getText().toString()},
+                new String[]{"id_number", ssn.getText().toString()},
                 new String[]{"phone", phone.getText().toString()},
                 new String[]{"line1", address1.getText().toString()},
                 new String[]{"line2", address2.getText().toString()},
@@ -526,7 +521,7 @@ public class EditBankAccountActivity extends AppCompatActivity {
                         showValtext(ssnVal, "The ssn number is not valid", ssn);
                     }
                     if (e_message.contains("individual[id_number]")) {
-                        showValtext(idNumberVal, "The ID number is not valid", idNumber);
+                        showValtext(ssnVal, "The SSN number is not valid", ssn);
                     }
                     if (e_message.contains("individual[phone]")) {
                         showValtext(phoneVal, "The phone number is not valid", phone);
