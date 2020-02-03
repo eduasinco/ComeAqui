@@ -51,7 +51,7 @@
             android:id="@+id/profile_look"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:background="@color/colorPrimary"
+            android:background="@color/colorSecondary"
             android:gravity="center_vertical">
 
             <com.mikhaellopez.circularimageview.CircularImageView

@@ -172,7 +172,7 @@ public class FoodLookActivity extends AppCompatActivity implements
         fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.types, fragment)
-                .commit();
+                .commitAllowingStateLoss();
 
 
         if(!foodPostDetail.owner.profile_photo.contains("no-image")) {

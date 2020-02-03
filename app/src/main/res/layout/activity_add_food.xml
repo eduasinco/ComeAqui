@@ -36,9 +36,8 @@
                 android:background="@android:color/white"
                 android:gravity="center"
                 android:text="Add New Plate"
-                android:textColor="@color/colorPrimary"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textColor="@color/colorSecondaryDark"
+                android:textSize="18sp" />
 
             <ImageButton
                 android:id="@+id/options"
@@ -77,8 +76,8 @@
                 android:focusableInTouchMode="true"
                 android:gravity="bottom|center"
                 android:text="Meal Title"
-                android:textColor="@color/colorSecondaryDark"
-                android:textSize="24sp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintTop_toBottomOf="@+id/plateName" />
 
@@ -102,8 +101,8 @@
                 android:focusableInTouchMode="true"
                 android:gravity="bottom|center"
                 android:text="Location"
-                android:textColor="@color/colorSecondaryDark"
-                android:textSize="24sp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintTop_toBottomOf="@+id/plateName" />
 
@@ -123,8 +122,8 @@
                 android:focusableInTouchMode="true"
                 android:gravity="bottom|center"
                 android:text="Diners"
-                android:textColor="@color/colorSecondaryDark"
-                android:textSize="24sp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintTop_toBottomOf="@+id/locationAutocomplete" />
 
@@ -159,8 +158,8 @@
                 android:focusableInTouchMode="true"
                 android:gravity="bottom|center"
                 android:text="Date"
-                android:textColor="@color/colorSecondaryDark"
-                android:textSize="24sp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
 
@@ -178,8 +177,8 @@
                 android:gravity="bottom|center_vertical|center_horizontal|center"
                 android:text="Price"
                 android:textAlignment="center"
-                android:textColor="@color/colorSecondaryDark"
-                android:textSize="24sp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintTop_toBottomOf="@+id/timePicker" />
 
@@ -229,8 +228,8 @@
                 android:focusableInTouchMode="true"
                 android:gravity="bottom|center"
                 android:text="Description"
-                android:textColor="@color/colorSecondaryDark"
-                android:textSize="24sp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintTop_toBottomOf="@+id/seekBar" />
 
@@ -292,7 +291,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:background="@color/colorPrimary"
+                android:background="@color/colorSecondary"
                 android:fontFamily="sans-serif"
                 android:text="Submit"
                 android:textColor="@android:color/white"
