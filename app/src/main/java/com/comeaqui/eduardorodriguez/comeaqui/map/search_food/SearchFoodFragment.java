@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -67,6 +68,7 @@ public class SearchFoodFragment extends Fragment implements
     private TextView dietaryButton;
     private TextView delleteAllButton;
     private LinearLayout notPostFoundView;
+    private ProgressBar loadingFoodsProgress;
 
     private boolean[] onFilters = new boolean[]{false, false, false, false, false, false};
     int INITIAL_DISTANCE = 5000;
@@ -185,6 +187,7 @@ public class SearchFoodFragment extends Fragment implements
         dietaryButton = view.findViewById(R.id.dietary);
         delleteAllButton = view.findViewById(R.id.dellete_all);
         notPostFoundView = view.findViewById(R.id.no_messages);
+        loadingFoodsProgress = view.findViewById(R.id.loading_foods_progress);
 
         placeAutocompleteFragment = PlaceAutocompleteFragment.newInstance("", true);
         getChildFragmentManager().beginTransaction()
@@ -202,6 +205,16 @@ public class SearchFoodFragment extends Fragment implements
             showSearchList(false);
         });
         delleteAllButton.setOnClickListener(v -> deleteAllFilter());
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (!recyclerView.canScrollVertically(1)) {
+                    loadMoreData();
+                }
+            }
+        });
         return view;
     }
 
@@ -229,26 +242,6 @@ public class SearchFoodFragment extends Fragment implements
                         .commit();
 
             });
-        }
-    }
-
-    public void makeList(JsonArray jsonArray){
-        try {
-            foodPosts = new ArrayList<>();
-            for (JsonElement pa : jsonArray) {
-                JsonObject jo = pa.getAsJsonObject();
-                FoodPost chat = new FoodPost(jo);
-                foodPosts.add(chat);
-            }
-            if (foodPosts.size() > 0){
-                notPostFoundView.setVisibility(View.GONE);
-            } else{
-                notPostFoundView.setVisibility(View.VISIBLE);
-            }
-            adapter.addData(foodPosts);
-            adapter.notifyDataSetChanged();
-        } catch (Exception e){
-            e.printStackTrace();
         }
     }
 
@@ -381,11 +374,22 @@ public class SearchFoodFragment extends Fragment implements
         darkenFilterButton(true, dietaryButton);
     }
 
+    int page;
     void getFilteredPosts(){
         for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
-        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/food_query/" + createQuery() + "/").execute());
+        foodPosts = new ArrayList<>();
+        page = 0;
+        String q = createQuery() + "&page=" + page;
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/food_query/" + q + "/").execute());
+    }
+    void loadMoreData(){
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        String q = createQuery() + "&page=" + page;
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/food_query/" + q + "/").execute());
     }
 
     @Override
@@ -403,6 +407,7 @@ public class SearchFoodFragment extends Fragment implements
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            loadingFoodsProgress.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -418,10 +423,23 @@ public class SearchFoodFragment extends Fragment implements
         @Override
         protected void onPostExecute(String response) {
             if (response != null){
-                makeList(new JsonParser().parse(response).getAsJsonArray());
+                for (JsonElement pa : new JsonParser().parse(response).getAsJsonArray()) {
+                    JsonObject jo = pa.getAsJsonObject();
+                    FoodPost chat = new FoodPost(jo);
+                    foodPosts.add(chat);
+                }
+                if (foodPosts.size() > 0){
+                    notPostFoundView.setVisibility(View.GONE);
+                } else{
+                    notPostFoundView.setVisibility(View.VISIBLE);
+                }
+                adapter.addData(foodPosts);
+                adapter.notifyDataSetChanged();
+                page++;
                 super.onPostExecute(response);
             }
             super.onPostExecute(response);
+            loadingFoodsProgress.setVisibility(View.GONE);
         }
 
     }
