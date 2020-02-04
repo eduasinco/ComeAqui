@@ -135,7 +135,7 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/poster_username"
+                                android:id="@+id/meal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0"

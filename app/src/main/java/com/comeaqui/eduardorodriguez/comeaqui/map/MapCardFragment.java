@@ -68,7 +68,7 @@ public class MapCardFragment extends Fragment implements DragDownHideBehavior.On
         View view = inflater.inflate(R.layout.fragment_map_card, container, false);
 
         posterNameView = view.findViewById(R.id.poster_name);
-        posterUserName = view.findViewById(R.id.poster_username);
+        posterUserName = view.findViewById(R.id.meal);
         starView = view.findViewById(R.id.star);
         posterImageView = view.findViewById(R.id.poster_image);
         cardView = view.findViewById(R.id.map_card);

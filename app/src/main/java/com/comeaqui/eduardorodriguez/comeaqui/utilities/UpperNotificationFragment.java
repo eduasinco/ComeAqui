@@ -64,7 +64,7 @@ public class UpperNotificationFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_upper_notification, container, false);
 
         title = view.findViewById(R.id.title);
-        username = view.findViewById(R.id.poster_username);
+        username = view.findViewById(R.id.meal);
         plateName = view.findViewById(R.id.plate_name);
         time = view.findViewById(R.id.time);
         time2 = view.findViewById(R.id.time2);

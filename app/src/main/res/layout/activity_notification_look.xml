@@ -75,6 +75,17 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/textView18"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="24dp"
+                android:paddingEnd="24dp"
+                android:paddingBottom="8dp"
+                android:text="Description"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold" />
+
             <FrameLayout
                 android:id="@+id/types"
                 android:layout_width="wrap_content"
@@ -86,17 +97,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/plate_name">
 
             </FrameLayout>
-
-            <TextView
-                android:id="@+id/textView18"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="24dp"
-                android:paddingEnd="24dp"
-                android:paddingBottom="8dp"
-                android:text="Description"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/post_description"

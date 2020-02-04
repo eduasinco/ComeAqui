@@ -41,17 +41,17 @@ public class MyGuestingRecyclerViewAdapter extends RecyclerView.Adapter<MyGuesti
         holder.mItem = mValues.get(position);
 
         holder.posterName.setText(holder.mItem.poster.first_name + " " + holder.mItem.poster.last_name);
-        holder.posterUsername.setText(holder.mItem.poster.username);
+        holder.mealTitle.setText(holder.mItem.post.plate_name);
         holder.postAddress.setText(holder.mItem.post.formatted_address);
         String priceTextE = holder.mItem.price_to_show + " - ";
         holder.price.setText(priceTextE);
         holder.orderStatus.setText(holder.mItem.status);
         holder.orderStatus.setBackgroundColor(Color.TRANSPARENT);
 
-        if (holder.mItem.post.images.size() > 0){
-            Glide.with(holder.mView.getContext()).load(holder.mItem.post.images.get(0).image).into(holder.orderImage);
+        if (!holder.mItem.poster.profile_photo.equals("no-image")){
+            Glide.with(holder.mView.getContext()).load(holder.mItem.poster.profile_photo).into(holder.orderImage);
         } else {
-            holder.orderImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.empty_plate));
+            holder.orderImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.no_profile_photo));
         }
 
         if (!holder.mItem.seen){
@@ -90,7 +90,7 @@ public class MyGuestingRecyclerViewAdapter extends RecyclerView.Adapter<MyGuesti
         public final ImageView orderImage;
         public final TextView posterName;
         public final TextView price;
-        public final TextView posterUsername;
+        public final TextView mealTitle;
         public final TextView postAddress;
         public final TextView orderStatus;
         public final TextView dateView;
@@ -102,7 +102,7 @@ public class MyGuestingRecyclerViewAdapter extends RecyclerView.Adapter<MyGuesti
             orderImage = view.findViewById(R.id.order_image);
             posterName = view.findViewById(R.id.poster_name);
             price = view.findViewById(R.id.price);
-            posterUsername = view.findViewById(R.id.poster_username);
+            mealTitle = view.findViewById(R.id.meal);
             postAddress = view.findViewById(R.id.address);
             orderStatus = view.findViewById(R.id.order_status);
             dateView = view.findViewById(R.id.date);

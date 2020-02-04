@@ -76,7 +76,7 @@ public class OrderLookActivity extends AppCompatActivity implements TwoOptionsMe
         plateName = findViewById(R.id.plate_name);
         plateName = findViewById(R.id.plate_name);
         posterNameView = findViewById(R.id.poster_name);
-        posterUsername = findViewById(R.id.poster_username);
+        posterUsername = findViewById(R.id.meal);
         posterDescription = findViewById(R.id.description);
         posterLocationView = findViewById(R.id.posterLocation);
         price = findViewById(R.id.price);

@@ -60,10 +60,9 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/poster_username"
+                android:id="@+id/meal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@eduasinco"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
 
