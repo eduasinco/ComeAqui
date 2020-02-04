@@ -64,6 +64,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
     private SelectImageFromFragment selectImageFromFragment;
 
     int userId;
+    public int page_index;
 
 
     ArrayList<AsyncTask> tasks = new ArrayList<>();
@@ -150,6 +151,18 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
     }
     public void setProfile(User user){
         viewPager.setAdapter(new TestPagerAdapter(getChildFragmentManager()));
+        viewPager.setCurrentItem(page_index);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
+            @Override
+            public void onPageSelected(int position) {
+                page_index = position;
+            }
+            @Override
+            public void onPageScrollStateChanged(int state) {}
+        });
+
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.profile_rating, RatingFragment.newInstance(user.rating, user.ratingN))
                 .commitAllowingStateLoss();
