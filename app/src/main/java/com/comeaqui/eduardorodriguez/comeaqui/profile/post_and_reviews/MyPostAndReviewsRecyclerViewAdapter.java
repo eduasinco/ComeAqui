@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.comeaqui.eduardorodriguez.comeaqui.R;
+import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodPostImageObject;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodPostReview;
 import com.comeaqui.eduardorodriguez.comeaqui.review.food_review_look.FoodPostReviewLookActivity;
@@ -23,10 +24,15 @@ import java.util.List;
 
 public class MyPostAndReviewsRecyclerViewAdapter extends RecyclerView.Adapter<MyPostAndReviewsRecyclerViewAdapter.ViewHolder> {
 
-    private final List<FoodPostReview> mValues;
+    private List<FoodPostReview> mValues;
 
     public MyPostAndReviewsRecyclerViewAdapter(List<FoodPostReview> items) {
         mValues = items;
+    }
+
+    public void addData(ArrayList<FoodPostReview> data){
+        this.mValues = data;
+        this.notifyDataSetChanged();
     }
 
     @Override
@@ -58,6 +64,8 @@ public class MyPostAndReviewsRecyclerViewAdapter extends RecyclerView.Adapter<My
                 imageLook.putExtra("index", 0);
                 holder.mView.getContext().startActivity(imageLook);
             });
+        } else {
+            holder.imageView.setVisibility(View.GONE);
         }
 
         holder.mView.setOnClickListener(v -> {

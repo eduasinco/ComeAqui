@@ -9,14 +9,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.comeaqui.eduardorodriguez.comeaqui.R;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodPostReview;
 
 import com.comeaqui.eduardorodriguez.comeaqui.server.ServerAPI;
-import com.comeaqui.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -30,9 +29,10 @@ public class PostAndReviewsFragment extends Fragment {
     private static MyPostAndReviewsRecyclerViewAdapter adapter;
 
     RecyclerView recyclerView;
-    FrameLayout waitFrame;
     LinearLayout noPosts;
+    ArrayList<FoodPostReview> foodPostReviews = new ArrayList<>();
     ArrayList<AsyncTask> tasks = new ArrayList<>();
+    ProgressBar loadingFoodsProgress;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -65,12 +65,21 @@ public class PostAndReviewsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_postandreviews_list, container, false);
         recyclerView = view.findViewById(R.id.recycler_user_postandreviews);
-        waitFrame = view.findViewById(R.id.wait_frame);
         noPosts = view.findViewById(R.id.no_posts);
+        loadingFoodsProgress = view.findViewById(R.id.post_loading_progress);
 
-        getChildFragmentManager().beginTransaction()
-                .replace(R.id.wait_frame, WaitFragment.newInstance())
-                .commit();
+        adapter = new MyPostAndReviewsRecyclerViewAdapter(foodPostReviews);
+        recyclerView.setAdapter(adapter);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (!recyclerView.canScrollVertically(1)) {
+                    loadMorePosts();
+                }
+            }
+        });
 
         getPostFromUser();
         return view;
@@ -81,8 +90,21 @@ public class PostAndReviewsFragment extends Fragment {
         getPostFromUser();
     }
 
+    int page = 1;
     void getPostFromUser(){
-        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/user_food_posts_reviews/" + userId + "/" + 0 + "/").execute());
+        foodPostReviews = new ArrayList<>();
+        page = 1;
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/user_food_posts_reviews/" + userId + "/" + page + "/").execute());
+    }
+
+    void loadMorePosts(){
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/user_food_posts_reviews/" + userId + "/" + page + "/").execute());
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -92,7 +114,7 @@ public class PostAndReviewsFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            startWaitingFrame(false);
+            loadingFoodsProgress.setVisibility(View.VISIBLE);
             super.onPreExecute();
         }
 
@@ -109,21 +131,20 @@ public class PostAndReviewsFragment extends Fragment {
         @Override
         protected void onPostExecute(String response) {
             if (response != null){
-                ArrayList<FoodPostReview> data = new ArrayList<>();
                 for (JsonElement pa : new JsonParser().parse(response).getAsJsonArray()) {
                     JsonObject jo = pa.getAsJsonObject();
                     FoodPostReview foodPost = new FoodPostReview(jo);
-                    data.add(foodPost);
+                    foodPostReviews.add(foodPost);
                 }
-                if (data.size() > 0){
+                if (foodPostReviews.size() > 0){
                     noPosts.setVisibility(View.GONE);
                 } else {
                     noPosts.setVisibility(View.VISIBLE);
                 }
-                adapter = new MyPostAndReviewsRecyclerViewAdapter(data);
-                recyclerView.setAdapter(adapter);
+                adapter.addData(foodPostReviews);
+                page++;
             }
-            startWaitingFrame(false);
+            loadingFoodsProgress.setVisibility(View.GONE);
             super.onPostExecute(response);
         }
     }
@@ -140,11 +161,4 @@ public class PostAndReviewsFragment extends Fragment {
         super.onDestroy();
     }
 
-    void startWaitingFrame(boolean start){
-        if (start) {
-            waitFrame.setVisibility(View.VISIBLE);
-        } else {
-            waitFrame.setVisibility(View.GONE);
-        }
-    }
 }
