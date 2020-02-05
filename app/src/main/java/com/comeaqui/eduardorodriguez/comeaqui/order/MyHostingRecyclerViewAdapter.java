@@ -13,19 +13,26 @@ import com.bumptech.glide.Glide;
 import com.comeaqui.eduardorodriguez.comeaqui.R;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.SavedFoodPost;
+import com.comeaqui.eduardorodriguez.comeaqui.objects.User;
 import com.comeaqui.eduardorodriguez.comeaqui.order.HostingFragment.OnListFragmentInteractionListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class MyHostingRecyclerViewAdapter extends RecyclerView.Adapter<MyHostingRecyclerViewAdapter.ViewHolder> {
 
-    private final List<SavedFoodPost> mValues;
+    private List<SavedFoodPost> mValues;
     private final OnListFragmentInteractionListener mListener;
 
     public MyHostingRecyclerViewAdapter(List<SavedFoodPost> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
+    }
+
+    public void addData(List<SavedFoodPost> data){
+        this.mValues = data;
+        this.notifyDataSetChanged();
     }
 
     @Override

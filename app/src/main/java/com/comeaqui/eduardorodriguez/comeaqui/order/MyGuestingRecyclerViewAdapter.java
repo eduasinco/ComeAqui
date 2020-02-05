@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.comeaqui.eduardorodriguez.comeaqui.R;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.OrderObject;
+import com.comeaqui.eduardorodriguez.comeaqui.objects.SavedFoodPost;
 import com.comeaqui.eduardorodriguez.comeaqui.order.GuestingFragment.OnListFragmentInteractionListener;
 
 import java.util.List;
@@ -21,12 +22,17 @@ import java.util.List;
 
 public class MyGuestingRecyclerViewAdapter extends RecyclerView.Adapter<MyGuestingRecyclerViewAdapter.ViewHolder> {
 
-    private final List<OrderObject> mValues;
+    private List<OrderObject> mValues;
     private final OnListFragmentInteractionListener mListener;
 
     public MyGuestingRecyclerViewAdapter(List<OrderObject> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
+    }
+
+    public void addData(List<OrderObject> data){
+        this.mValues = data;
+        this.notifyDataSetChanged();
     }
 
     @Override

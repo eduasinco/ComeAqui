@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.comeaqui.eduardorodriguez.comeaqui.R;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodPost;
@@ -36,12 +37,12 @@ public class HostingFragment extends Fragment {
     RecyclerView recyclerView;
 
     SwipeRefreshLayout pullToRefresh;
-    LinkedHashMap<Integer, SavedFoodPost> data;
+    LinkedHashMap<Integer, SavedFoodPost> data = new LinkedHashMap<>();
     MyHostingRecyclerViewAdapter hostingAdapter;
     WebSocketClient mWebSocketClient;
     LinearLayout noHosting;
+    ProgressBar loadingProgress;
 
-    FrameLayout waitFrame;
     View view;
 
     ArrayList<AsyncTask> tasks = new ArrayList<>();
@@ -56,7 +57,6 @@ public class HostingFragment extends Fragment {
 
     void makeList(JsonArray jsonArray){
         try {
-            data = new LinkedHashMap<>();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
                 SavedFoodPost oo = new SavedFoodPost(jo);
@@ -67,8 +67,7 @@ public class HostingFragment extends Fragment {
             } else {
                 noHosting.setVisibility(View.VISIBLE);
             }
-            hostingAdapter = new MyHostingRecyclerViewAdapter(new ArrayList<>(data.values()), mListener);
-            recyclerView.setAdapter(hostingAdapter);
+            hostingAdapter.addData(new ArrayList<>(data.values()));
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -85,11 +84,20 @@ public class HostingFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_hosting_list, container, false);
         recyclerView = view.findViewById(R.id.hosting_list);
         noHosting = view.findViewById(R.id.no_hosting);
-        waitFrame = view.findViewById(R.id.wait_frame);
+        loadingProgress = view.findViewById(R.id.loading_progress);
 
-        getChildFragmentManager().beginTransaction()
-                .replace(R.id.wait_frame, WaitFragment.newInstance())
-                .commit();
+        hostingAdapter = new MyHostingRecyclerViewAdapter(new ArrayList<>(data.values()), mListener);
+        recyclerView.setAdapter(hostingAdapter);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (!recyclerView.canScrollVertically(1)) {
+                    loadMoreData();
+                }
+            }
+        });
         return view;
     }
 
@@ -99,9 +107,23 @@ public class HostingFragment extends Fragment {
         getDataAndSet();
     }
 
+    int page = 1;
     void getDataAndSet(){
-        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_hosting/").execute());
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        page = 1;
+        data = new LinkedHashMap<>();
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_hosting/" + page + "/").execute());
     }
+
+    void loadMoreData(){
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_hosting/"+ page + "/").execute());
+    }
+
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
         public GetAsyncTask(String uri){
@@ -110,7 +132,7 @@ public class HostingFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            startWaitingFrame(true);
+            loadingProgress.setVisibility(View.VISIBLE);
             super.onPreExecute();
         }
 
@@ -126,20 +148,14 @@ public class HostingFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String response) {
-            if (response != null)
+            if (response != null) {
                 makeList(new JsonParser().parse(response).getAsJsonArray());
-            startWaitingFrame(false);
+                page++;
+            }
+            loadingProgress.setVisibility(View.GONE);
             super.onPostExecute(response);
         }
 
-    }
-
-    void startWaitingFrame(boolean start){
-        if (start) {
-            waitFrame.setVisibility(View.VISIBLE);
-        } else {
-            waitFrame.setVisibility(View.GONE);
-        }
     }
 
 
