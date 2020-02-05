@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.comeaqui.eduardorodriguez.comeaqui.R;
 import com.comeaqui.eduardorodriguez.comeaqui.chat.chat_objects.MessageObject;
+import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.comeaqui.eduardorodriguez.comeaqui.utilities.DateFormatting;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -34,6 +35,10 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
         notifyItemInserted(listMensaje.size());
     }
 
+    public void addMensajes(ArrayList<MessageObject> messageObjects){
+        listMensaje = messageObjects;
+        notifyDataSetChanged();
+    }
 
     @Override
     public AdapterMensajes.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

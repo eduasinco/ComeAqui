@@ -32,6 +32,7 @@ public class MySearchFoodRecyclerViewAdapter extends RecyclerView.Adapter<MySear
 
     public void addData(ArrayList<FoodPost> data){
         this.mValues = data;
+        this.notifyDataSetChanged();
     }
 
     @Override

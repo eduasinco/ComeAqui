@@ -62,10 +62,13 @@ public class ConversationActivity extends AppCompatActivity {
     private ImageView btnEnviar;
     private View backView;
     private AdapterMensajes adapter;
+    private ProgressBar loadingProgress;
 
     boolean isKeyboardShowing = false;
     WebSocketClient mWebSocketClient;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
+    String chatId;
+    ArrayList<MessageObject> messageObjects = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +86,7 @@ public class ConversationActivity extends AppCompatActivity {
         txtMensaje = findViewById(R.id.txtMensaje);
         btnEnviar = findViewById(R.id.btnEnviar);
         backView = findViewById(R.id.back);
+        loadingProgress = findViewById(R.id.loading_progress);
 
         adapter = new AdapterMensajes(this);
         LinearLayoutManager l = new LinearLayoutManager(this);
@@ -108,8 +112,9 @@ public class ConversationActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         if(b != null) {
-            String chatId = b.getString("chatId");
-            getChatMessages(chatId);
+            chatId = b.getString("chatId");
+            getChat(chatId);
+            getMessages(chatId);
             start(chatId);
         }
 
@@ -166,6 +171,16 @@ public class ConversationActivity extends AppCompatActivity {
         btnEnviar.setOnClickListener(view -> {
             sendMessage(validJsonString(txtMensaje.getText().toString()));
         });
+
+        rvMensajes.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (!recyclerView.canScrollVertically(-1)) {
+                    loadMoreMessages(chatId);
+                }
+            }
+        });
         unblockButton.setOnClickListener(v -> unBlockUser());
     }
 
@@ -219,7 +234,7 @@ public class ConversationActivity extends AppCompatActivity {
         }
     }
 
-    private void getChatMessages(String chatId){
+    private void getChat(String chatId){
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/chat_detail/" + chatId + "/").execute());
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
@@ -247,17 +262,61 @@ public class ConversationActivity extends AppCompatActivity {
         protected void onPostExecute(String response) {
             if (response != null) {
                 JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
-                JsonObject chatJson = jo.get("chat").getAsJsonObject();
-                for (JsonElement je: chatJson.get("message_set").getAsJsonArray()){
-                    MessageObject currentMessage = new MessageObject(je.getAsJsonObject());
-                    setMessageStatus(currentMessage);
-                    adapter.addMensaje(currentMessage);
-                }
-                chat = new ChatObject(chatJson);
+                chat = new ChatObject(jo.get("chat").getAsJsonObject());
                 isUserBlocked = jo.get("blocked").getAsBoolean();
                 setChat();
                 setOptions();
                 setBlockView();
+            }
+            super.onPostExecute(response);
+        }
+    }
+
+    int page = 1;
+    private void getMessages(String chatId){
+        page = 1;
+        messageObjects = new ArrayList<>();
+        tasks.add(new GetMessagesAsyncTask(getResources().getString(R.string.server) + "/chat_messages/" + chatId + "/" + page + "/").execute());
+    }
+    private void loadMoreMessages(String chatId){
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        tasks.add(new GetMessagesAsyncTask(getResources().getString(R.string.server) + "/chat_messages/" + chatId + "/" + page + "/").execute());
+    }
+
+    class GetMessagesAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetMessagesAsyncTask(String uri){
+            this.uri = uri;
+            loadingProgress.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null) {
+                for (JsonElement je: new JsonParser().parse(response).getAsJsonArray()){
+                    MessageObject currentMessage = new MessageObject(je.getAsJsonObject());
+                    setMessageStatus(currentMessage);
+                    messageObjects.add(0, currentMessage);
+                }
+                adapter.addMensajes(messageObjects);
+                page++;
+                loadingProgress.setVisibility(View.GONE);
             }
             super.onPostExecute(response);
         }

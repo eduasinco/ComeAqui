@@ -434,7 +434,6 @@ public class SearchFoodFragment extends Fragment implements
                     notPostFoundView.setVisibility(View.VISIBLE);
                 }
                 adapter.addData(foodPosts);
-                adapter.notifyDataSetChanged();
                 page++;
                 super.onPostExecute(response);
             }
