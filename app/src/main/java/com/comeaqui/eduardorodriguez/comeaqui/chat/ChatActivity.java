@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.comeaqui.eduardorodriguez.comeaqui.R;
@@ -43,18 +44,18 @@ import static com.comeaqui.eduardorodriguez.comeaqui.App.USER;
 
 public class ChatActivity extends AppCompatActivity{
 
-    ArrayList<ChatObject> data;
+    ArrayList<ChatObject> data = new ArrayList<>();
     MyChatRecyclerViewAdapter adapter;
-    HashMap<Integer, ChatObject> chatObjectHashMap;
+    HashMap<Integer, ChatObject> chatObjectHashMap = new HashMap<>();
     WebSocketClient mWebSocketClient;
 
     RecyclerView recyclerView;
-    FrameLayout waitFrame;
     LinearLayout noMessages;
     EditText searchBox;
     ImageButton deleteText;
     ImageView noListImage;
     TextView noListMessage;
+    ProgressBar loadingProgress;
 
     String query = "query=";
     ArrayList<AsyncTask> tasks = new ArrayList<>();
@@ -72,19 +73,28 @@ public class ChatActivity extends AppCompatActivity{
         setContentView(R.layout.activity_chat);
 
         recyclerView = findViewById(R.id.recycler_chat);
-        waitFrame = findViewById(R.id.wait_frame);
         noMessages = findViewById(R.id.no_messages);
         searchBox = findViewById(R.id.search_box);
         deleteText = findViewById(R.id.delete_text);
         noListImage = findViewById(R.id.no_list_image);
         noListMessage = findViewById(R.id.no_list_message);
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.wait_frame, WaitFragment.newInstance())
-                .commit();
+        loadingProgress = findViewById(R.id.loading_progress);
 
         setSearchListener();
         start();
+
+        adapter = new MyChatRecyclerViewAdapter(data);
+        recyclerView.setAdapter(adapter);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (!recyclerView.canScrollVertically(1)) {
+                    loadMoreData();
+                }
+            }
+        });
 
         deleteText.setOnClickListener(v -> searchBox.setText(""));
         View backView = findViewById(R.id.back);
@@ -128,8 +138,6 @@ public class ChatActivity extends AppCompatActivity{
 
     public void makeList(JsonArray jsonArray){
         try {
-            data = new ArrayList<>();
-            chatObjectHashMap = new HashMap<>();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
                 ChatObject chat = new ChatObject(jo);
@@ -141,18 +149,28 @@ public class ChatActivity extends AppCompatActivity{
             } else{
                 noMessages.setVisibility(View.VISIBLE);
             }
-            adapter = new MyChatRecyclerViewAdapter(data);
-            recyclerView.setAdapter(adapter);
+            adapter.addData(data);
         } catch (Exception e){
             e.printStackTrace();
         }
     }
 
+    int page = 1;
     void getChatsAndSet(){
         for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
-        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_chats/" + query.toString() + "/").execute());
+        page = 1;
+        data = new ArrayList<>();
+        chatObjectHashMap = new HashMap<>();
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_chats/" + query.toString() + "/" + page + "/").execute());
+    }
+
+    void loadMoreData(){
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_chats/" + query.toString() + "/" + page + "/").execute());
     }
 
     private class GetAsyncTask extends AsyncTask<String[], Void, String> {
@@ -163,7 +181,7 @@ public class ChatActivity extends AppCompatActivity{
 
         @Override
         protected void onPreExecute() {
-            startWaitingFrame(true);
+            loadingProgress.setVisibility(View.VISIBLE);
             super.onPreExecute();
         }
 
@@ -181,20 +199,12 @@ public class ChatActivity extends AppCompatActivity{
         protected void onPostExecute(String response) {
             if (response != null){
                 makeList(new JsonParser().parse(response).getAsJsonArray());
+                page++;
             }
-            startWaitingFrame(false);
+            loadingProgress.setVisibility(View.GONE);
             super.onPostExecute(response);
         }
 
-    }
-
-
-    void startWaitingFrame(boolean start){
-        if (start) {
-            waitFrame.setVisibility(View.VISIBLE);
-        } else {
-            waitFrame.setVisibility(View.GONE);
-        }
     }
 
     private void start(){

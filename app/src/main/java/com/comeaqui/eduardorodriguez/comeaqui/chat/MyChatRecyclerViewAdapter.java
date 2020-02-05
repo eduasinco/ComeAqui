@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.comeaqui.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
+import com.comeaqui.eduardorodriguez.comeaqui.objects.NotificationObject;
 import com.comeaqui.eduardorodriguez.comeaqui.utilities.DateFormatting;
 import com.comeaqui.eduardorodriguez.comeaqui.R;
 import com.comeaqui.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
@@ -18,6 +19,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.comeaqui.eduardorodriguez.comeaqui.App.USER;
 
@@ -28,6 +30,11 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
 
     public MyChatRecyclerViewAdapter(ArrayList<ChatObject> items) {
         mValues = items;
+    }
+
+    public void addData(ArrayList<ChatObject> data){
+        this.mValues = data;
+        this.notifyDataSetChanged();
     }
 
     @Override
