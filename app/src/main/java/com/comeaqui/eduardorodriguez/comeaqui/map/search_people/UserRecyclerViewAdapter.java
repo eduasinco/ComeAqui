@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.comeaqui.eduardorodriguez.comeaqui.R;
+import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -25,6 +26,10 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     public UserRecyclerViewAdapter(ArrayList<User> items, SearchPeopleActivity activity) {
         mValues = items;
         this.activity = activity;
+    }
+
+    public void addData(ArrayList<User> data){
+        this.mValues = data;
     }
 
     @Override
