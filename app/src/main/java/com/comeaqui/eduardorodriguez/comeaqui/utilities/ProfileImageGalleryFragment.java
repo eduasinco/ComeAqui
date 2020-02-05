@@ -10,10 +10,14 @@ import android.util.DisplayMetrics;
 import android.view.ViewOutlineProvider;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 
 import com.bumptech.glide.Glide;
 import com.comeaqui.eduardorodriguez.comeaqui.R;
@@ -44,6 +48,8 @@ public class ProfileImageGalleryFragment extends Fragment {
     LinearLayout imageListLayout;
     LinearLayout currentHorizontalLayout;
     LinearLayout noMedia;
+    ProgressBar progressBar;
+    NestedScrollView scrollView;
 
     DisplayMetrics displayMetrics;
 
@@ -82,10 +88,19 @@ public class ProfileImageGalleryFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_profile_image_gallery, container, false);
         noMedia = view.findViewById(R.id.no_media);
+        progressBar = view.findViewById(R.id.progress);
+        scrollView = view.findViewById(R.id.scrollView);
+
         count = 0;
         displayMetrics = view.getContext().getResources().getDisplayMetrics();
         initializeFirstLayout();
         getPostFromUser();
+
+        scrollView.setOnScrollChangeListener((View.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            if (!scrollView.canScrollVertically(1)) {
+                loadMoreImages();
+            }
+        });
         return view;
     }
 
@@ -104,15 +119,33 @@ public class ProfileImageGalleryFragment extends Fragment {
         return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
-
+    int page = 1;
     void getPostFromUser(){
-        GetAsyncTask process = new GetAsyncTask(getResources().getString(R.string.server) + "/user_images/" + userId + "/");
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        page = 1;
+        GetAsyncTask process = new GetAsyncTask(getResources().getString(R.string.server) + "/user_images/" + userId + "/" + page + "/");
+        tasks.add(process.execute());
+    }
+
+    void loadMoreImages(){
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        GetAsyncTask process = new GetAsyncTask(getResources().getString(R.string.server) + "/user_images/" + userId + "/" + page + "/");
         tasks.add(process.execute());
     }
     private class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
         public GetAsyncTask(String uri){
             this.uri = uri;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -129,17 +162,19 @@ public class ProfileImageGalleryFragment extends Fragment {
             if (response != null) {
                 JsonArray jsonArray = new JsonParser().parse(response).getAsJsonArray();
                 makeList(jsonArray);
+                page++;
             }
+            progressBar.setVisibility(View.GONE);
             super.onPostExecute(response);
         }
     }
 
     void makeList(JsonArray jsonArray){
         ArrayList<String> imageUrls = new ArrayList<>();
-        if (jsonArray.size() > 0){
-            noMedia.setVisibility(View.GONE);
-        } else {
+        if (page == 1 && jsonArray.size() == 0){
             noMedia.setVisibility(View.VISIBLE);
+        } else {
+            noMedia.setVisibility(View.GONE);
         }
         for (int i = 0; i <jsonArray.size(); i++){
             JsonElement pa = jsonArray.get(i);
