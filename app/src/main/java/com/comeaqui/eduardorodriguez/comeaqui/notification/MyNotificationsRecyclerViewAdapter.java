@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.NotificationObject;
+import com.comeaqui.eduardorodriguez.comeaqui.objects.SavedFoodPost;
 import com.comeaqui.eduardorodriguez.comeaqui.review.food_review_look.FoodPostReviewLookActivity;
 import com.comeaqui.eduardorodriguez.comeaqui.utilities.DateFormatting;
 import com.comeaqui.eduardorodriguez.comeaqui.R;
@@ -30,6 +31,12 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
         this.context = context;
         this.mValues = data;
     }
+
+    public void addData(List<NotificationObject> data){
+        this.mValues = data;
+        this.notifyDataSetChanged();
+    }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

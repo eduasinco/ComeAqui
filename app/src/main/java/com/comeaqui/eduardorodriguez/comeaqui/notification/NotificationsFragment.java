@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.comeaqui.eduardorodriguez.comeaqui.objects.NotificationObject;
@@ -32,19 +33,20 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import static com.comeaqui.eduardorodriguez.comeaqui.App.USER;
 
 public class NotificationsFragment extends Fragment {
 
-    ArrayList<NotificationObject> data;
+    ArrayList<NotificationObject> data = new ArrayList<>();
     static MyNotificationsRecyclerViewAdapter notificationAdapter;
 
     RecyclerView recyclerView;
     SwipeController swipeController = null;
-    FrameLayout waitFrame;
     WebSocketClient mWebSocketClient;
     LinearLayout noNotifications;
+    ProgressBar loadingProgress;
 
     static NotificationsFragment f;
 
@@ -67,8 +69,7 @@ public class NotificationsFragment extends Fragment {
             } else {
                 noNotifications.setVisibility(View.VISIBLE);
             }
-            notificationAdapter = new MyNotificationsRecyclerViewAdapter(getContext(), data);
-            recyclerView.setAdapter(notificationAdapter);
+            notificationAdapter.addData(data);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -85,12 +86,12 @@ public class NotificationsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_notifications_list, container, false);
         f = this;
         recyclerView = view.findViewById(R.id.recycler);
-        waitFrame = view.findViewById(R.id.wait_frame);
         noNotifications = view.findViewById(R.id.no_notifications);
+        loadingProgress = view.findViewById(R.id.loading_progress);
 
-        getChildFragmentManager().beginTransaction()
-                .replace(R.id.wait_frame, WaitFragment.newInstance())
-                .commit();
+        notificationAdapter = new MyNotificationsRecyclerViewAdapter(getContext(), data);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(notificationAdapter);
 
         getData();
         setupRecyclerView();
@@ -99,11 +100,6 @@ public class NotificationsFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        recyclerView.setAdapter(notificationAdapter);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(notificationAdapter);
-
         swipeController = new SwipeController(new SwipeControllerActions() {
             @Override
             public void onRightClicked(int position) {
@@ -125,10 +121,32 @@ public class NotificationsFragment extends Fragment {
                 swipeController.onDraw(c);
             }
         });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (!recyclerView.canScrollVertically(1)) {
+                    loadMoreData();
+                }
+            }
+        });
     }
 
+    int page = 1;
     void getData(){
-        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_notifications/").execute());
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        page = 1;
+        data = new ArrayList<>();
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_notifications/" + page + "/").execute());
+    }
+    void loadMoreData(){
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_notifications/" + page + "/").execute());
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -138,7 +156,7 @@ public class NotificationsFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            startWaitingFrame(true);
+            loadingProgress.setVisibility(View.VISIBLE);
             super.onPreExecute();
         }
 
@@ -154,20 +172,14 @@ public class NotificationsFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String response) {
-            if (response != null)
+            if (response != null){
                 makeList(new JsonParser().parse(response).getAsJsonArray());
-            startWaitingFrame(false);
+                page++;
+            }
+            loadingProgress.setVisibility(View.GONE);
             super.onPostExecute(response);
         }
 
-    }
-
-    void startWaitingFrame(boolean start){
-        if (start) {
-            waitFrame.setVisibility(View.VISIBLE);
-        } else {
-            waitFrame.setVisibility(View.GONE);
-        }
     }
 
     private void start(){

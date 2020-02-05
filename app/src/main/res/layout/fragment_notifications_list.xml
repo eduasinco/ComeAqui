@@ -12,8 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/grey_light"
+        android:clipToPadding="false"
         android:divider="@color/grey_light"
         android:dividerHeight="15dp"
+        android:paddingBottom="50dp"
         android:visibility="visible"
         app:layoutManager="LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -23,17 +25,14 @@
         tools:context=".notification.NotificationsFragment"
         tools:listitem="@layout/fragment_notifications_element" />
 
-    <FrameLayout
-        android:id="@+id/wait_frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible"
+    <ProgressBar
+        android:id="@+id/loading_progress"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </FrameLayout>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:id="@+id/no_notifications"
@@ -41,7 +40,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/wait_frame"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
