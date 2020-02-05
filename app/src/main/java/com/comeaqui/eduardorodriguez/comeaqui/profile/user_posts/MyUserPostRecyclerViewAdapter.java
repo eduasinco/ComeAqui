@@ -63,6 +63,8 @@ public class MyUserPostRecyclerViewAdapter extends RecyclerView.Adapter<MyUserPo
                 imageLook.putExtra("index", 0);
                 holder.mView.getContext().startActivity(imageLook);
             });
+        } else {
+            holder.imageView.setVisibility(View.GONE);
         }
 
         holder.cardButtonView.setOnClickListener(v -> {

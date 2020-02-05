@@ -374,13 +374,13 @@ public class SearchFoodFragment extends Fragment implements
         darkenFilterButton(true, dietaryButton);
     }
 
-    int page;
+    int page = 1;
     void getFilteredPosts(){
         for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
         foodPosts = new ArrayList<>();
-        page = 0;
+        page = 1;
         String q = createQuery() + "&page=" + page;
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/food_query/" + q + "/").execute());
     }

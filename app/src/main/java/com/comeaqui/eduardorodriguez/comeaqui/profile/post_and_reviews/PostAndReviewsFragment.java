@@ -82,7 +82,7 @@ public class PostAndReviewsFragment extends Fragment {
     }
 
     void getPostFromUser(){
-        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/user_food_posts_reviews/" + userId + "/").execute());
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/user_food_posts_reviews/" + userId + "/" + 0 + "/").execute());
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;

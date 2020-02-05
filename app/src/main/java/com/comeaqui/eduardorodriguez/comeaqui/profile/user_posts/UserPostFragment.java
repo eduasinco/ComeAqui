@@ -9,13 +9,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.comeaqui.eduardorodriguez.comeaqui.R;
 import com.comeaqui.eduardorodriguez.comeaqui.server.ServerAPI;
-import com.comeaqui.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -31,13 +30,14 @@ public class UserPostFragment extends Fragment {
     // TODO: Customize parameters
     private int userId;
 
-    private static ArrayList<FoodPost> data;
+    private static ArrayList<FoodPost> foodPosts;
     private static MyUserPostRecyclerViewAdapter adapter;
 
 
     RecyclerView recyclerView;
-    FrameLayout waitFrame;
     LinearLayout noPosts;
+    ProgressBar loadingFoodsProgress;
+
 
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
@@ -46,19 +46,17 @@ public class UserPostFragment extends Fragment {
 
 
     void makeList(JsonArray jsonArray){
-        data = new ArrayList<>();
         for (JsonElement pa : jsonArray) {
             JsonObject jo = pa.getAsJsonObject();
             FoodPost foodPost = new FoodPost(jo);
-            data.add(foodPost);
+            foodPosts.add(foodPost);
         }
-        if (data.size() > 0){
+        if (foodPosts.size() > 0){
             noPosts.setVisibility(View.GONE);
         } else {
             noPosts.setVisibility(View.VISIBLE);
         }
-        recyclerView.setAdapter(this.adapter);
-        adapter.addNewRow(data);
+        adapter.addNewRow(foodPosts);
     }
 
     public static UserPostFragment newInstance(int userId) {
@@ -87,25 +85,39 @@ public class UserPostFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_userpost_list, container, false);
-        this.adapter = new MyUserPostRecyclerViewAdapter(data);
 
         Context context = view.getContext();
         recyclerView = view.findViewById(R.id.recycler_user_post);
-        waitFrame = view.findViewById(R.id.wait_frame);
         noPosts = view.findViewById(R.id.no_posts);
-
-        getChildFragmentManager().beginTransaction()
-                .replace(R.id.wait_frame, WaitFragment.newInstance())
-                .commit();
+        loadingFoodsProgress = view.findViewById(R.id.post_loading_progress);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        getPostFromUser(userId);
+        adapter = new MyUserPostRecyclerViewAdapter(foodPosts);
+        recyclerView.setAdapter(adapter);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (!recyclerView.canScrollVertically(1)) {
+                    loadMorePosts(userId);
+                }
+            }
+        });
         return view;
     }
 
-
+    int page = 1;
     void getPostFromUser(int userId){
-        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/user_food_posts/" + userId + "/").execute());
+        page = 1;
+        foodPosts = new ArrayList<>();
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/user_food_posts/" + userId + "/" + page + "/").execute());
+    }
+    void loadMorePosts(int userId){
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/user_food_posts/" + userId + "/" + page + "/").execute());
     }
 
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
@@ -116,7 +128,7 @@ public class UserPostFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            startWaitingFrame(false);
+            loadingFoodsProgress.setVisibility(View.VISIBLE);
             super.onPreExecute();
         }
 
@@ -134,20 +146,13 @@ public class UserPostFragment extends Fragment {
         protected void onPostExecute(String response) {
             if (response != null){
                 makeList(new JsonParser().parse(response).getAsJsonArray());
+                page++;
                 super.onPostExecute(response);
             }
-            startWaitingFrame(false);
+            loadingFoodsProgress.setVisibility(View.GONE);
             super.onPostExecute(response);
         }
 
-    }
-
-    void startWaitingFrame(boolean start){
-        if (start) {
-            waitFrame.setVisibility(View.VISIBLE);
-        } else {
-            waitFrame.setVisibility(View.GONE);
-        }
     }
 
     @Override

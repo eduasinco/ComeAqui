@@ -143,12 +143,12 @@ public class SearchPeopleActivity extends AppCompatActivity {
         }
     }
 
-    int page;
+    int page = 1;
     void getPeopleAndSet(){
         for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
-        page = 0;
+        page = 1;
         users = new ArrayList<>();
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/user_search/" + query + "&page=" + page +  "/").execute());
     }
