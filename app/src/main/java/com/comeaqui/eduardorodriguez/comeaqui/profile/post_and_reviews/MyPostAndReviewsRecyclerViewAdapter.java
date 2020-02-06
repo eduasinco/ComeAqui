@@ -81,11 +81,14 @@ public class MyPostAndReviewsRecyclerViewAdapter extends RecyclerView.Adapter<My
             }
             holder.reviewerName.setText(foodPost.reviews.get(0).owner.username);
             holder.review.setText(foodPost.reviews.get(0).review);
+        } else {
+            holder.wholeReview.setVisibility(View.GONE);
         }
 
         setTypes(foodPost.type, holder);
-        if (foodPost.reviews.size() > 0)
+        if (foodPost.reviews.size() > 0) {
             setStars(holder, foodPost.reviews.get(0).rating);
+        }
     }
 
     void setTypes(String types, ViewHolder holder){

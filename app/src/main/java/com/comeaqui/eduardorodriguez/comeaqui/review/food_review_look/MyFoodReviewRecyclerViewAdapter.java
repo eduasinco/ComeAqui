@@ -61,6 +61,8 @@ public class MyFoodReviewRecyclerViewAdapter extends RecyclerView.Adapter<MyFood
 
         if(!holder.mItem.owner.profile_photo.contains("no-image")) {
             Glide.with(holder.mView.getContext()).load(holder.mItem.owner.profile_photo).into(holder.reviewerImage);
+        } else {
+            holder.reviewerImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.no_profile_photo));
         }
         holder.reviewerImage.setOnClickListener(v -> mListener.onGoToProfile(holder.mItem.owner));
 
@@ -73,8 +75,12 @@ public class MyFoodReviewRecyclerViewAdapter extends RecyclerView.Adapter<MyFood
 
             if(!holder.mItem.replies.get(0).owner.profile_photo.contains("no-image")) {
                 Glide.with(holder.mView.getContext()).load(holder.mItem.replies.get(0).owner.profile_photo).into(holder.replyerImage);
+            } else {
+                holder.replyerImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.no_profile_photo));
             }
             holder.replyerImage.setOnClickListener(v -> mListener.onGoToProfile(holder.mItem.replies.get(0).owner));
+        } else {
+            holder.replyWhole.setVisibility(View.GONE);
         }
         setOptionsMenu(holder);
         setStars(holder, holder.mItem.rating);

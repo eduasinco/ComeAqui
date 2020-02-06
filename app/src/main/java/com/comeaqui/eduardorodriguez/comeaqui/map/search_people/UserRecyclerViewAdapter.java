@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -47,14 +48,20 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         holder.name.setText(holder.mItem.first_name + " " + holder.mItem.last_name);
         holder.username.setText(holder.mItem.username);
         if (holder.mItem.bio != null){
+            holder.description.setVisibility(View.VISIBLE);
             holder.description.setText(holder.mItem.bio);
+        } else {
+            holder.description.setVisibility(View.GONE);
         }
         holder.mView.setOnClickListener(v -> {
             activity.onFragmentInteraction(holder.mItem);
         });
 
-        if (!holder.mItem.profile_photo.contains("no-image"))
+        if (!holder.mItem.profile_photo.contains("no-image")) {
             Glide.with(holder.mView.getContext()).load(holder.mItem.profile_photo).into(holder.image);
+        } else {
+            holder.image.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.no_profile_photo));
+        }
     }
 
     @Override

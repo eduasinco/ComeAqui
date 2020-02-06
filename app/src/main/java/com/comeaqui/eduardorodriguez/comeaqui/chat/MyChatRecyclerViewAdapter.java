@@ -2,6 +2,7 @@ package com.comeaqui.eduardorodriguez.comeaqui.chat;
 
 import android.content.Intent;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,8 +55,9 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
         holder.username.setText(chattingWith.first_name + " " + chattingWith.last_name);
         if (holder.mItem.last_message != null){
             holder.lastMessage.setText(holder.mItem.last_message.message);
+        } else {
+            holder.lastMessage.setText("");
         }
-        holder.notChat.setVisibility(View.INVISIBLE);
 
         holder.mView.setOnClickListener(v -> {
             Intent conversation = new Intent(holder.mView.getContext(), ConversationActivity.class);
@@ -66,9 +68,15 @@ public class MyChatRecyclerViewAdapter extends RecyclerView.Adapter<MyChatRecycl
         if (holder.mItem.userUnseenCount.getOrDefault(USER.id, 0) > 0 ){
             holder.notChat.setVisibility(View.VISIBLE);
             holder.notChat.setText("" + holder.mItem.userUnseenCount.get(USER.id));
+        } else {
+            holder.notChat.setVisibility(View.INVISIBLE);
         }
-        if (!chattingWith.profile_photo.contains("no-image"))
+
+        if (!chattingWith.profile_photo.contains("no-image")) {
             Glide.with(holder.mView.getContext()).load(chattingWith.profile_photo).into(holder.chattererImage);
+        } else {
+            holder.chattererImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.no_profile_photo));
+        }
 
         if (holder.mItem.last_message != null){
             holder.dateView.setText(DateFormatting.hYesterdayWeekDay(holder.mItem.last_message.createdAt));

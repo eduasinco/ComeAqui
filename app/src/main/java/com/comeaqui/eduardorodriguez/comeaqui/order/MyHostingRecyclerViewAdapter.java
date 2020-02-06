@@ -47,11 +47,17 @@ public class MyHostingRecyclerViewAdapter extends RecyclerView.Adapter<MyHosting
         holder.mItem = mValues.get(position);
 
         if (!holder.mItem.plate_name.isEmpty()){
+            holder.mealTitle.setVisibility(View.VISIBLE);
             holder.mealTitle.setText(holder.mItem.plate_name);
+        } else {
+            holder.mealTitle.setVisibility(View.GONE);
         }
+
         if (!holder.mItem.time_to_show.isEmpty()){
             holder.mealTime.setText(holder.mItem.time_to_show);
-            holder.mealTitle.setVisibility(View.VISIBLE);
+            holder.mealTime.setVisibility(View.VISIBLE);
+        } else {
+            holder.mealTime.setVisibility(View.GONE);
         }
 
         if (checkIfInfoMissing(holder.mItem)){
@@ -59,6 +65,8 @@ public class MyHostingRecyclerViewAdapter extends RecyclerView.Adapter<MyHosting
         } else if (!holder.mItem.visible){
             holder.notCompletedMessage.setVisibility(View.VISIBLE);
             holder.notCompletedMessage.setText("Meal not posted yet");
+        } else {
+            holder.notCompletedMessage.setVisibility(View.GONE);
         }
 
         if (holder.mItem.images.size() > 0){
@@ -80,6 +88,8 @@ public class MyHostingRecyclerViewAdapter extends RecyclerView.Adapter<MyHosting
         if (holder.mItem.time_to_show != null){
             holder.mealTime.setVisibility(View.VISIBLE);
             holder.mealTime.setText(holder.mItem.time_to_show);
+        } else {
+            holder.mealTime.setVisibility(View.GONE);
         }
     }
 

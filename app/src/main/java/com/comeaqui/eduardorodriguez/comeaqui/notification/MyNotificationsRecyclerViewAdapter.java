@@ -51,8 +51,11 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
         holder.usernameView.setText(holder.mItem.from_user.username);
         holder.notificationView.setText(holder.mItem.title);
         holder.date.setText(DateFormatting.hYesterdayWeekDay(holder.mItem.createdAt));
-        if (!holder.mItem.from_user.profile_photo.contains("no-image"))
+        if (!holder.mItem.from_user.profile_photo.contains("no-image")) {
             Glide.with(holder.mView.getContext()).load(holder.mItem.from_user.profile_photo).into(holder.senderImageView);
+        } else {
+            holder.senderImageView.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.no_profile_photo));
+        }
 
         switch (holder.mItem.type){
             case "PENDING":

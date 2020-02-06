@@ -11,7 +11,7 @@ class ImageStringProcessor {
             return "";
         }
         if (!imageString.contains("http")) {
-            String s = server1 + imageString;
+            String s = server2 + imageString;
             return s;
         }
         return imageString;
