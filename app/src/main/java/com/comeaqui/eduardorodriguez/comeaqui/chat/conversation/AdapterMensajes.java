@@ -53,7 +53,7 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
 
         holder.mItem = listMensaje.get(position);
         holder.messageView.setText(holder.mItem.message);
-        holder.dateView.setText(DateFormatting.todayYesterdayWeekDay(holder.mItem.createdAt));
+        holder.dateView.setText(DateFormatting.h(holder.mItem.createdAt));
         holder.datePopContainer.setVisibility(View.GONE);
 
         int paddingSides = holder.wholeMessage.getPaddingLeft();
