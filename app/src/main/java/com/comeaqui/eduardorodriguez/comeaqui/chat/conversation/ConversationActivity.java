@@ -69,6 +69,7 @@ public class ConversationActivity extends AppCompatActivity {
     WebSocketClient mWebSocketClient;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
     String chatId;
+    MessageObject firstMessage = null;
     ArrayList<MessageObject> messageObjects = new ArrayList<>();
 
     @Override
@@ -298,6 +299,9 @@ public class ConversationActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            if (firstMessage != null){
+                firstMessage.newDay = false;
+            }
         }
 
         @Override
@@ -314,9 +318,12 @@ public class ConversationActivity extends AppCompatActivity {
             if (response != null) {
                 JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
                 for (JsonElement je: ja){
-                    MessageObject currentMessage = new MessageObject(je.getAsJsonObject());
-                    setMessageStatus(currentMessage);
-                    messageObjects.add(currentMessage);
+                    firstMessage = new MessageObject(je.getAsJsonObject());
+                    setMessageStatus(firstMessage);
+                    messageObjects.add(firstMessage);
+                }
+                if (firstMessage != null) {
+                    firstMessage.newDay = true;
                 }
                 adapter.addMensajes(messageObjects);
                 if (page == 1){
@@ -390,7 +397,9 @@ public class ConversationActivity extends AppCompatActivity {
 
         String currentMessageDate = DateFormatting.todayYesterdayWeekDay(currentMessage.createdAt);
         if (!lastMessageDate.equals(currentMessageDate)){
-            currentMessage.newDay = true;
+            if (lastMessage != null) {
+                lastMessage.newDay = true;
+            }
         }
         lastMessageDate = currentMessageDate;
 
