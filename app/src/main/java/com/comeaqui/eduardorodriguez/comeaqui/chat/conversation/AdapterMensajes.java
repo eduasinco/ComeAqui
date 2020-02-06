@@ -31,8 +31,8 @@ public class AdapterMensajes extends RecyclerView.Adapter<AdapterMensajes.ViewHo
     }
 
     public void addMensaje(MessageObject m){
-        listMensaje.add(m);
-        notifyItemInserted(listMensaje.size());
+        listMensaje.add(0, m);
+        notifyItemInserted(0);
     }
 
     public void addMensajes(ArrayList<MessageObject> messageObjects){

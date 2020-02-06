@@ -27,6 +27,7 @@ import com.comeaqui.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.comeaqui.eduardorodriguez.comeaqui.server.PutAsyncTask;
 import com.comeaqui.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.comeaqui.eduardorodriguez.comeaqui.utilities.DateFormatting;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -90,6 +91,8 @@ public class ConversationActivity extends AppCompatActivity {
 
         adapter = new AdapterMensajes(this);
         LinearLayoutManager l = new LinearLayoutManager(this);
+        l.setReverseLayout(true);
+        l.setStackFromEnd(true);
         rvMensajes.setLayoutManager(l);
         rvMensajes.setAdapter(adapter);
 
@@ -309,12 +312,16 @@ public class ConversationActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String response) {
             if (response != null) {
-                for (JsonElement je: new JsonParser().parse(response).getAsJsonArray()){
+                JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
+                for (JsonElement je: ja){
                     MessageObject currentMessage = new MessageObject(je.getAsJsonObject());
                     setMessageStatus(currentMessage);
-                    messageObjects.add(0, currentMessage);
+                    messageObjects.add(currentMessage);
                 }
                 adapter.addMensajes(messageObjects);
+                if (page == 1){
+                    setScrollbar();
+                }
                 page++;
                 loadingProgress.setVisibility(View.GONE);
             }
@@ -403,7 +410,7 @@ public class ConversationActivity extends AppCompatActivity {
 
 
     private void setScrollbar(){
-        rvMensajes.scrollToPosition(adapter.getItemCount() - 1);
+        rvMensajes.scrollToPosition(0);
     }
 
 
