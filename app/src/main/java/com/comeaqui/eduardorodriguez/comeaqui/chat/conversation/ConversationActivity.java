@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -41,6 +42,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import static com.comeaqui.eduardorodriguez.comeaqui.App.USER;
+import static com.yalantis.ucrop.UCropFragment.TAG;
 
 public class ConversationActivity extends AppCompatActivity {
 
@@ -199,7 +201,7 @@ public class ConversationActivity extends AppCompatActivity {
             );
         } catch (Exception e){
             e.printStackTrace();
-            Toast.makeText(this, "The message was not able to be delivered", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "The message was not able to be delivered", Toast.LENGTH_SHORT).show();
         }
         txtMensaje.setText("");
     }
@@ -423,14 +425,25 @@ public class ConversationActivity extends AppCompatActivity {
     }
 
 
+    Handler handler = new Handler();
+    ArrayList<Toast> toasts = new ArrayList<>();
     public void start(String chatId){
         try {
+            if (null != handler){
+                handler.removeCallbacksAndMessages(null);
+            }
+            if (null != mWebSocketClient){
+                mWebSocketClient.close();
+            }
+            Toast t = Toast.makeText(getApplication(), "Connecting...", Toast.LENGTH_SHORT);
+            t.show();
+            toasts.add(t);
             String url = getResources().getString(R.string.async_server) + "/ws/chat/" + chatId + "/";
             URI uri = new URI(url);
             mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
-                    // runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Connection Established!", Toast.LENGTH_LONG).show());
+                    for (Toast t: toasts){ t.cancel(); }
                 }
                 @Override
                 public void onMessage(String s) {
@@ -445,7 +458,7 @@ public class ConversationActivity extends AppCompatActivity {
                             }
                         } else {
                             if (jo.get("to").getAsInt() == USER.id) {
-                                Toast.makeText(getApplication(), jo.get("error_message").getAsString(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplication(), jo.get("error_message").getAsString(), Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -453,7 +466,7 @@ public class ConversationActivity extends AppCompatActivity {
                 }
                 @Override
                 public void onClose(int i, String s, boolean b) {
-                    Log.i("Websocket", "Closed " + s);
+                    handler.postDelayed(() -> start(chatId), 1000);
                 }
                 @Override
                 public void onError(Exception e) {
@@ -501,7 +514,13 @@ public class ConversationActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        mWebSocketClient.close();
+        if (null != mWebSocketClient) {
+            mWebSocketClient.close();
+            if (null != handler){
+                handler.removeCallbacksAndMessages(null);
+                handler = null;
+            }
+        }
         for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }

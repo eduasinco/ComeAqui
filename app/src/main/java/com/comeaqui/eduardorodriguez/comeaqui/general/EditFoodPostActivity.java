@@ -180,7 +180,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
             isValid = false;
         }
         if (!isValid){
-            Toast.makeText(this, "Some fields are not valid", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Some fields are not valid", Toast.LENGTH_SHORT).show();
         }
         return isValid;
     }

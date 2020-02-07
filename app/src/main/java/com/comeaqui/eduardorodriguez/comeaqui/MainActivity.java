@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
@@ -39,8 +40,10 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 import static com.comeaqui.eduardorodriguez.comeaqui.App.USER;
+import static com.yalantis.ucrop.UCropFragment.TAG;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -82,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         context = getApplicationContext();
         checkRatings();
-        listenToNotificationChanges();
     }
 
     @Override
@@ -160,6 +162,8 @@ public class MainActivity extends AppCompatActivity {
         navProfile.setOnClickListener(v -> {
             openFragment(3);
         });
+
+        listenToNotificationChanges();
     }
 
     private void openFragment(int i){
@@ -255,16 +259,26 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, fragment).commit();
         mainFrame.setVisibility(View.VISIBLE);
     }
+
+    Handler handler = new Handler();
+    ArrayList<Toast> toasts = new ArrayList<>();
     public void listenToNotificationChanges(){
         try {
+            URI uri = new URI(getResources().getString(R.string.async_server) + "/ws/popups/" + USER.id +  "/");
+            if (null != handler){
+                handler.removeCallbacksAndMessages(null);
+            }
             if (null != mWebSocketClient){
                 mWebSocketClient.close();
             }
-            URI uri = new URI(getResources().getString(R.string.async_server) + "/ws/popups/" + USER.id +  "/");
+
+            Toast t = Toast.makeText(getApplication(), "Connecting...", Toast.LENGTH_SHORT);
+            t.show();
+            toasts.add(t);
             mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
-                    runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Connected", Toast.LENGTH_LONG).show());
+                    for (Toast t: toasts){ t.cancel(); }
                 }
                 @Override
                 public void onMessage(String s) {
@@ -304,11 +318,10 @@ public class MainActivity extends AppCompatActivity {
                 }
                 @Override
                 public void onClose(int i, String s, boolean b) {
-                    runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Closed", Toast.LENGTH_LONG).show());
+                    handler.postDelayed(() -> listenToNotificationChanges(), 1000);
                 }
                 @Override
                 public void onError(Exception e) {
-                    Log.i("Websocket", "Error " + e.getMessage());
                 }
             };
             mWebSocketClient.connect();
@@ -319,7 +332,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        mWebSocketClient.close();
+        if (null != mWebSocketClient) {
+            mWebSocketClient.close();
+            if (null != handler){
+                handler.removeCallbacksAndMessages(null);
+                handler = null;
+            }
+        }
         super.onDestroy();
     }
 
@@ -359,7 +378,7 @@ public class MainActivity extends AppCompatActivity {
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_LOCATION);
             }
-            Toast.makeText(this, "Not location access", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Not location access", Toast.LENGTH_SHORT).show();
             return false;
         } else {
             return true;

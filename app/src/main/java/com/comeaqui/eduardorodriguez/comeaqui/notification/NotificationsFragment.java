@@ -1,5 +1,7 @@
 package com.comeaqui.eduardorodriguez.comeaqui.notification;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Canvas;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.comeaqui.eduardorodriguez.comeaqui.MainActivity;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.NotificationObject;
 import com.comeaqui.eduardorodriguez.comeaqui.R;
 import com.comeaqui.eduardorodriguez.comeaqui.server.ServerAPI;
@@ -34,6 +38,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+
+import okhttp3.Response;
+import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
+import okio.ByteString;
 
 import static com.comeaqui.eduardorodriguez.comeaqui.App.USER;
 
@@ -182,15 +191,25 @@ public class NotificationsFragment extends Fragment {
 
     }
 
+    Handler handler = new Handler();
+    ArrayList<Toast> toasts = new ArrayList<>();
     private void start(){
         try {
-            URI uri = new URI(getActivity().getResources().getString(R.string.async_server) + "/ws/notifications/" + USER.id +  "/");
+            if (null != handler){
+                handler.removeCallbacksAndMessages(null);
+            }
+            if (null != mWebSocketClient){
+                mWebSocketClient.close();
+            }
+            Toast t = Toast.makeText(getContext(), "Connecting...", Toast.LENGTH_SHORT);
+            t.show();
+            toasts.add(t);
+            URI uri = new URI(getResources().getString(R.string.async_server) + "/ws/notifications/" + USER.id +  "/");
             mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
-                    // getActivity().runOnUiThread(() -> {
-                    //    Toast.makeText(getActivity(), "Connection Established!", Toast.LENGTH_LONG).show();
-                    // });
+                    for (Toast t: toasts){ t.cancel();}
+                    // getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), "Connected", Toast.LENGTH_SHORT).show());
                 }
                 @Override
                 public void onMessage(String s) {
@@ -203,10 +222,10 @@ public class NotificationsFragment extends Fragment {
                 }
                 @Override
                 public void onClose(int i, String s, boolean b) {
-                    Log.i("Websocket", "Closed " + s);
-                    getActivity().runOnUiThread(() -> {
-                        Toast.makeText(getActivity(), "No connection", Toast.LENGTH_LONG).show();
-                    });
+                    if (null != handler){
+                        handler.postDelayed(() -> start(), 1000);
+                    }
+                    // getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Closed", Toast.LENGTH_SHORT).show());
                 }
                 @Override
                 public void onError(Exception e) {
@@ -222,7 +241,13 @@ public class NotificationsFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mWebSocketClient.close();
+        if (null != mWebSocketClient) {
+            mWebSocketClient.close();
+        }
+        if (null != handler){
+            handler.removeCallbacksAndMessages(null);
+            handler = null;
+        }
     }
     @Override
     public void onDestroy() {

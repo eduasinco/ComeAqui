@@ -499,7 +499,7 @@ public class EditBankAccountActivity extends AppCompatActivity {
             if (response != null){
                 JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
                 if (jo.get("error_message") == null){
-                    Toast.makeText(getApplication(), "Account saved", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplication(), "Account saved", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
                     String e_message = jo.get("error_message").getAsString();
@@ -551,7 +551,7 @@ public class EditBankAccountActivity extends AppCompatActivity {
                         showValtext(accountVal, "The account number is not valid", accountN);
                     }
 
-                    Toast.makeText(getApplication(), "Some errors have occurred", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplication(), "Some errors have occurred", Toast.LENGTH_SHORT).show();
                 }
             }
             showProgress(false);

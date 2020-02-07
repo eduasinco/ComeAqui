@@ -191,7 +191,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 //        FirebaseAuth auth = FirebaseAuth.getInstance();
 //        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
 //            if (!task.isSuccessful()){
-//                Toast.makeText(LoginActivity.this, "Firebase sign in problem", Toast.LENGTH_LONG).show();
+//                Toast.makeText(LoginActivity.this, "Firebase sign in problem", Toast.LENGTH_SHORT).show();
 //            }
 //        });
     }

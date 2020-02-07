@@ -103,10 +103,10 @@ public class CardLookActivity extends AppCompatActivity {
             if (response != null){
                 JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
                 if (jo.get("error_message") == null){
-                    Toast.makeText(getApplication(), "Payment set as default", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplication(), "Payment set as default", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    Toast.makeText(getApplication(), jo.get("error_message").getAsString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplication(), jo.get("error_message").getAsString(), Toast.LENGTH_SHORT).show();
                 }
             }
             super.onPostExecute(response);
@@ -136,10 +136,10 @@ public class CardLookActivity extends AppCompatActivity {
             if (response != null){
                 JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
                 if (jo.get("error_message") == null){
-                    Toast.makeText(getApplication(), "Payment deleted", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplication(), "Payment deleted", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    Toast.makeText(getApplication(), jo.get("error_message").getAsString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplication(), jo.get("error_message").getAsString(), Toast.LENGTH_SHORT).show();
                 }
             }
             super.onPostExecute(response);
@@ -171,7 +171,7 @@ public class CardLookActivity extends AppCompatActivity {
                     card = new PaymentMethodObject(new JsonParser().parse(response).getAsJsonObject());
                     setView();
                 } else {
-                    Toast.makeText(getApplication(), jo.get("error_message").getAsString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplication(), jo.get("error_message").getAsString(), Toast.LENGTH_SHORT).show();
                 }
             }
             super.onPostExecute(response);

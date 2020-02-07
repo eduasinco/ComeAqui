@@ -78,7 +78,7 @@ public class FoodTypeSelectorFragment extends Fragment {
                 } else {
                     message = "It can not be vegetarian and contain meat";
                 }
-                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             }
             if(pressed[0])
                 vegetarian.setImageResource(R.drawable.vegetarianfill);
@@ -106,7 +106,7 @@ public class FoodTypeSelectorFragment extends Fragment {
                 } else {
                     message = "It can not be vegetarian and contain diary";
                 }
-                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             }
             if(pressed[1])
                 vegan.setImageResource(R.drawable.veganfill);
@@ -143,7 +143,7 @@ public class FoodTypeSelectorFragment extends Fragment {
                 } else {
                     message = "It can not contain fish and be vegan";
                 }
-                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             }
             if(pressed[4])
                 fish.setImageResource(R.drawable.fishfill);
@@ -163,7 +163,7 @@ public class FoodTypeSelectorFragment extends Fragment {
                 } else {
                     message = "It can not contain meat and be vegan";
                 }
-                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             }
             if(pressed[5])
                 meat.setImageResource(R.drawable.meatfill);
@@ -177,7 +177,7 @@ public class FoodTypeSelectorFragment extends Fragment {
             } else {
                 String message;
                 message = "It can not contain diary and be vegan";
-                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             }
             if(pressed[6])
                 dairy.setImageResource(R.drawable.dairyfill);

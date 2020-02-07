@@ -1,6 +1,8 @@
 package com.comeaqui.eduardorodriguez.comeaqui.map;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
@@ -21,11 +23,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.comeaqui.eduardorodriguez.comeaqui.R;
 import com.google.android.gms.maps.*;
@@ -199,13 +203,21 @@ public class MapFragment extends Fragment implements
         cancelMapPicker();
     }
 
+
+    Handler handler = new Handler();
     public void listenToPosts(){
         try {
+            if (null != handler){
+                handler.removeCallbacksAndMessages(null);
+            }
+            if (null != mWebSocketClient){
+                mWebSocketClient.close();
+            }
             URI uri = new URI(getResources().getString(R.string.async_server) + "/ws/posts/");
             mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
-                    // runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Unread Messages!", Toast.LENGTH_LONG).show());
+                    // getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), "Connected", Toast.LENGTH_SHORT).show());
                 }
                 @Override
                 public void onMessage(String s) {
@@ -230,7 +242,8 @@ public class MapFragment extends Fragment implements
                 }
                 @Override
                 public void onClose(int i, String s, boolean b) {
-                    Log.i("Websocket", "Closed " + s);
+                    handler.postDelayed(() -> listenToPosts(), 1000);
+                    //getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Closed", Toast.LENGTH_SHORT).show());
                 }
                 @Override
                 public void onError(Exception e) {
@@ -648,7 +661,13 @@ public class MapFragment extends Fragment implements
 
     @Override
     public void onDetach() {
-        mWebSocketClient.close();
+        if (null != mWebSocketClient) {
+            mWebSocketClient.close();
+        }
+        if (null != handler){
+            handler.removeCallbacksAndMessages(null);
+            handler = null;
+        }
         super.onDetach();
     }
 }

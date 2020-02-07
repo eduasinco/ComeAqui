@@ -649,10 +649,10 @@ public class AddFoodActivity extends AppCompatActivity implements
                     } else {
                         addImageFragment.initializeFoodPost(foodPostDetail.id);
                         setOptionsMenu();
-                        Toast.makeText(getApplication(), "Meal saved", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplication(), "Meal saved", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(getApplication(), jo.get("error_message").getAsString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplication(), jo.get("error_message").getAsString(), Toast.LENGTH_SHORT).show();
                 }
             }
             showProgress(false);

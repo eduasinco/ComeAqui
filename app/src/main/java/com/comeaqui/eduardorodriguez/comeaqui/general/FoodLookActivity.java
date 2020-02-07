@@ -559,7 +559,7 @@ public class FoodLookActivity extends AppCompatActivity implements
                         finish();
                     } catch (Exception e){}
                 } else {
-                    Toast.makeText(getApplication(), jo.get("error_message").getAsString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplication(), jo.get("error_message").getAsString(), Toast.LENGTH_SHORT).show();
                 }
             }
             showProgress(false);

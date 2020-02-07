@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.comeaqui.eduardorodriguez.comeaqui.R;
 import com.comeaqui.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
@@ -41,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static com.comeaqui.eduardorodriguez.comeaqui.App.USER;
+import static com.yalantis.ucrop.UCropFragment.TAG;
 
 public class ChatActivity extends AppCompatActivity{
 
@@ -207,15 +209,26 @@ public class ChatActivity extends AppCompatActivity{
 
     }
 
+    Handler handler = new Handler();
+    ArrayList<Toast> toasts = new ArrayList<>();
     private void start(){
         try {
+            if (null != handler){
+                handler.removeCallbacksAndMessages(null);
+            }
+            if (null != mWebSocketClient){
+                mWebSocketClient.close();
+            }
+
+            Toast t = Toast.makeText(getApplication(), "Connecting...", Toast.LENGTH_SHORT);
+            t.show();
+            toasts.add(t);
             URI uri = new URI(getResources().getString(R.string.async_server) + "/ws/unread_messages/" + USER.id +  "/");
             mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
-                    // getActivity().runOnUiThread(() -> {
-                    //    Toast.makeText(getActivity(), "Connection Established!", Toast.LENGTH_LONG).show();
-                    // });
+                    Log.w(TAG, "Connected");
+                    for (Toast t: toasts){ t.cancel(); }
                 }
                 @Override
                 public void onMessage(String s) {
@@ -237,7 +250,9 @@ public class ChatActivity extends AppCompatActivity{
                 }
                 @Override
                 public void onClose(int i, String s, boolean b) {
-                    Log.i("Websocket", "Closed " + s);
+                    if (null != handler){
+                        handler.postDelayed(() -> start(), 1000);
+                    }
                 }
                 @Override
                 public void onError(Exception e) {
