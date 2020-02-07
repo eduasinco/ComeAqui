@@ -60,6 +60,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
     private TabLayout tabLayout;
 
     private ImageButton settingsButton;
+    ProgressBar loadingProgress;
 
     private SelectImageFromFragment selectImageFromFragment;
 
@@ -103,6 +104,13 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         GetAsyncTask(String uri){
             this.uri = uri;
         }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loadingProgress.setVisibility(View.VISIBLE);
+        }
+
         @Override
         protected String doInBackground(String[]... params) {
             try {
@@ -118,6 +126,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
                 user = new User(new JsonParser().parse(response).getAsJsonObject());
                 setProfile(user);
             }
+            loadingProgress.setVisibility(View.GONE);
             super.onPostExecute(response);
         }
     }
@@ -137,6 +146,7 @@ public class ProfileFragment extends Fragment implements SelectImageFromFragment
         addProfilePhotoView = view.findViewById(R.id.add_profile_photo);
         addBackGroundPhotoView = view.findViewById(R.id.add_background_photo);
         settingsButton = view.findViewById(R.id.settings_profile_button);
+        loadingProgress = view.findViewById(R.id.loading_progress);
 
         viewPager = view.findViewById(R.id.viewpager);
         tabLayout = view.findViewById(R.id.tab_layout);

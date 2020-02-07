@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.comeaqui.eduardorodriguez.comeaqui.R;
 import com.google.android.gms.maps.*;
@@ -68,6 +69,7 @@ public class MapFragment extends Fragment implements
     MapCardFragment mapCardFragment;
     UpperNotificationFragment upperNotificationFragment;
     SearchFoodFragment searchFoodFragment;
+    ProgressBar loadingProgress;
 
     private FloatingActionButton searchButton;
     FloatingActionButton myFab;
@@ -141,6 +143,7 @@ public class MapFragment extends Fragment implements
         mMapView = view.findViewById(R.id.mapView);
         myFab = view.findViewById(R.id.fab);
         centerButton = view.findViewById(R.id.center_map);
+        loadingProgress = view.findViewById(R.id.loading_progress);
         mMapView.onCreate(savedInstanceState);
 
         mapPickerFragment = MapPickerFragment.newInstance();
@@ -419,6 +422,7 @@ public class MapFragment extends Fragment implements
         markerHashMap = new HashMap<>();
     }
 
+    boolean markersFinished = false;
     void setMapMarkers(){
         removeAllMarkers();
         tasks.add(new GetMarkersAsyncTask(getResources().getString(R.string.server) + "/foods/").execute());
@@ -428,6 +432,13 @@ public class MapFragment extends Fragment implements
         public GetMarkersAsyncTask(String uri){
             this.uri = uri;
         }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loadingProgress.setVisibility(View.VISIBLE);
+        }
+
         @Override
         protected String doInBackground(String[]... params) {
             try {
@@ -439,13 +450,19 @@ public class MapFragment extends Fragment implements
         }
         @Override
         protected void onPostExecute(String response) {
-            if (response != null)
+            if (response != null) {
                 makeList(new JsonParser().parse(response).getAsJsonArray(), false);
-            setMapFavouriteMarkers();
+                setMapFavouriteMarkers();
+            }
+            markersFinished = true;
+            if (favouriteFinished){
+                loadingProgress.setVisibility(View.GONE);
+            }
             super.onPostExecute(response);
         }
     }
 
+    boolean favouriteFinished = false;
     void setMapFavouriteMarkers(){
         tasks.add(new GetFavouriteMarkersAsyncTask(getResources().getString(R.string.server) + "/my_favourites/").execute());
     }
@@ -454,6 +471,13 @@ public class MapFragment extends Fragment implements
         public GetFavouriteMarkersAsyncTask(String uri){
             this.uri = uri;
         }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loadingProgress.setVisibility(View.VISIBLE);
+        }
+
         @Override
         protected String doInBackground(String[]... params) {
             try {
@@ -465,9 +489,14 @@ public class MapFragment extends Fragment implements
         }
         @Override
         protected void onPostExecute(String response) {
-            if (response != null)
+            if (response != null) {
                 makeList(new JsonParser().parse(response).getAsJsonArray(), true);
-            setMarkers();
+                setMarkers();
+            }
+            favouriteFinished = true;
+            if (markersFinished){
+                loadingProgress.setVisibility(View.GONE);
+            }
             super.onPostExecute(response);
         }
     }

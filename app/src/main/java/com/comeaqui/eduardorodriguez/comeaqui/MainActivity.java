@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         context = getApplicationContext();
         checkRatings();
+        listenToNotificationChanges();
     }
 
     @Override
@@ -159,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
         navProfile.setOnClickListener(v -> {
             openFragment(3);
         });
-        listenToNotificationChanges();
     }
 
     private void openFragment(int i){
@@ -257,11 +257,14 @@ public class MainActivity extends AppCompatActivity {
     }
     public void listenToNotificationChanges(){
         try {
+            if (null != mWebSocketClient){
+                mWebSocketClient.close();
+            }
             URI uri = new URI(getResources().getString(R.string.async_server) + "/ws/popups/" + USER.id +  "/");
             mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
-                    // runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Orders!", Toast.LENGTH_LONG).show());
+                    runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Connected", Toast.LENGTH_LONG).show());
                 }
                 @Override
                 public void onMessage(String s) {
@@ -301,7 +304,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 @Override
                 public void onClose(int i, String s, boolean b) {
-                    Log.i("Websocket", "Closed " + s);
+                    runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Closed", Toast.LENGTH_LONG).show());
                 }
                 @Override
                 public void onError(Exception e) {

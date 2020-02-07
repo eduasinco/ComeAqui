@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.comeaqui.eduardorodriguez.comeaqui.R;
 
@@ -64,9 +65,20 @@ public class FoodTypeSelectorFragment extends Fragment {
     }
 
     void setFoodTypes(){
+        String[] tags = {"vegan", "vegetarian", "contain gluten", "spicy", "fish", "meat", "contain diary"};
         vegetarian.setOnClickListener(v -> {
             if(!pressed[4] && !pressed[5]){
                 pressed[0] = !pressed[0];
+            } else {
+                String message;
+                if (pressed[4] && pressed[5]){
+                    message = "It can not be vegetarian and contain fish or meat";
+                } else if (pressed[4]){
+                    message = "It can not be vegetarian and contain fish";
+                } else {
+                    message = "It can not be vegetarian and contain meat";
+                }
+                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
             }
             if(pressed[0])
                 vegetarian.setImageResource(R.drawable.vegetarianfill);
@@ -77,6 +89,24 @@ public class FoodTypeSelectorFragment extends Fragment {
         vegan.setOnClickListener(v -> {
             if(!pressed[4] && !pressed[5] && !pressed[6]){
                 pressed[1] = !pressed[1];
+            } else {
+                String message;
+                if (pressed[4] && pressed[5] && pressed[6]){
+                    message = "It can not be vegetarian and contain fish or meat or diary";
+                } else if (pressed[4] && pressed[5]){
+                    message = "It can not be vegetarian and contain fish or meat";
+                } else if (pressed[4] && pressed[6]){
+                    message = "It can not be vegetarian and contain fish or diary";
+                } else if (pressed[5] && pressed[6]){
+                    message = "It can not be vegetarian and contain meat or diary";
+                } else if (pressed[4]){
+                    message = "It can not be vegetarian and contain fish";
+                } else if (pressed[5]){
+                    message = "It can not be vegetarian and contain meat";
+                } else {
+                    message = "It can not be vegetarian and contain diary";
+                }
+                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
             }
             if(pressed[1])
                 vegan.setImageResource(R.drawable.veganfill);
@@ -104,6 +134,16 @@ public class FoodTypeSelectorFragment extends Fragment {
         fish.setOnClickListener(v -> {
             if(!pressed[0] && !pressed[1]){
                 pressed[4] = !pressed[4];
+            } else {
+                String message;
+                if (pressed[0] && pressed[1]){
+                    message = "It can not contain fish and be vegan or vegetarian";
+                } else if (pressed[0]){
+                    message = "It can not contain fish and be vegetarian";
+                } else {
+                    message = "It can not contain fish and be vegan";
+                }
+                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
             }
             if(pressed[4])
                 fish.setImageResource(R.drawable.fishfill);
@@ -114,6 +154,16 @@ public class FoodTypeSelectorFragment extends Fragment {
         meat.setOnClickListener(v -> {
             if(!pressed[0] && !pressed[1]){
                 pressed[5] = !pressed[5];
+            } else {
+                String message;
+                if (pressed[0] && pressed[1]){
+                    message = "It can not contain meat and be vegan or vegetarian";
+                } else if (pressed[0]){
+                    message = "It can not contain meat and be vegetarian";
+                } else {
+                    message = "It can not contain meat and be vegan";
+                }
+                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
             }
             if(pressed[5])
                 meat.setImageResource(R.drawable.meatfill);
@@ -124,6 +174,10 @@ public class FoodTypeSelectorFragment extends Fragment {
         dairy.setOnClickListener(v -> {
             if(!pressed[1]){
                 pressed[6] = !pressed[6];
+            } else {
+                String message;
+                message = "It can not contain diary and be vegan";
+                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
             }
             if(pressed[6])
                 dairy.setImageResource(R.drawable.dairyfill);
