@@ -415,7 +415,7 @@ TwoOptionsMessageFragment.OnFragmentInteractionListener{
 
     @Override
     public void onReplyCreate(ReviewObject review) {
-        Intent paymentMethod = new Intent(this, ReplyReviewActivity.class);
+        Intent paymentMethod = new Intent(this, ReplyReviewOrCommentActivity.class);
         paymentMethod.putExtra("review", review);
         startActivity(paymentMethod);
     }

@@ -26,6 +26,9 @@ import com.comeaqui.eduardorodriguez.comeaqui.BuildConfig;
 import com.comeaqui.eduardorodriguez.comeaqui.R;
 import com.comeaqui.eduardorodriguez.comeaqui.general.attend_message.AttendFragment;
 import com.comeaqui.eduardorodriguez.comeaqui.general.dinner_list.DinnerListActivity;
+import com.comeaqui.eduardorodriguez.comeaqui.general.food_post_comments.FoodCommentFragment;
+import com.comeaqui.eduardorodriguez.comeaqui.general.food_post_comments.MyFoodCommentRecyclerViewAdapter;
+import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodCommentObject;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.PaymentMethodObject;
@@ -35,6 +38,8 @@ import com.comeaqui.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.comeaqui.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
 
 
+import com.comeaqui.eduardorodriguez.comeaqui.review.food_review_look.ReplyReviewOrCommentActivity;
+import com.comeaqui.eduardorodriguez.comeaqui.server.Server;
 import com.comeaqui.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.comeaqui.eduardorodriguez.comeaqui.utilities.message_fragments.OneOptionMessageFragment;
 import com.comeaqui.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
@@ -48,12 +53,14 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import static com.comeaqui.eduardorodriguez.comeaqui.App.USER;
 
 public class FoodLookActivity extends AppCompatActivity implements
         TwoOptionsMessageFragment.OnFragmentInteractionListener,
-        AttendFragment.OnFragmentInteractionListener {
+        AttendFragment.OnFragmentInteractionListener,
+        MyFoodCommentRecyclerViewAdapter.OnListFragmentInteractionListener {
 
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbar;
@@ -88,6 +95,7 @@ public class FoodLookActivity extends AppCompatActivity implements
 
     TwoOptionsMessageFragment sureFragment;
     AttendFragment attendFragment;
+    FoodCommentFragment foodCommentFragment;
 
     Integer fpId;
     FoodPostDetail foodPostDetail;
@@ -200,6 +208,11 @@ public class FoodLookActivity extends AppCompatActivity implements
         attendFragment = AttendFragment.newInstance(foodPostDetail.dinners_left, foodPostDetail.price);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.attend_message, attendFragment)
+                .commit();
+
+        foodCommentFragment = FoodCommentFragment.newInstance(foodPostDetail.id);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.foodpost_comments, foodCommentFragment)
                 .commit();
 
         findViewById(R.id.other).setOnClickListener(v -> {
@@ -584,6 +597,34 @@ public class FoodLookActivity extends AppCompatActivity implements
                         "Error during posting",
                         "Please make sure that you have connection to the internet"))
                 .commit();
+    }
+
+    void deleteComment(int commentId){
+        Server deleteFoodPost = new Server(this,"DELETE", getResources().getString(R.string.server) + "/delete_food_post_comment/" + commentId + "/");
+        try {
+            deleteFoodPost.execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onCommentDelete(FoodCommentObject comment) {
+        deleteComment(comment.id);
+    }
+
+    @Override
+    public void onCommentCreate(FoodCommentObject comment) {
+        Intent paymentMethod = new Intent(this, ReplyReviewOrCommentActivity.class);
+        paymentMethod.putExtra("comment", comment);
+        startActivity(paymentMethod);
+    }
+
+    @Override
+    public void onGoToProfile(User user){
+        Intent profile = new Intent(this, ProfileViewActivity.class);
+        profile.putExtra("userId", user.id);
+        startActivity(profile);
     }
 
     @Override

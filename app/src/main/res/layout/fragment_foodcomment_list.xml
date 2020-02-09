@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/comment_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_weight="0"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name" />
+
+    <Button
+        android:id="@+id/comment_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:text="Comment" />
+
+    <androidx.recyclerview.widget.RecyclerView
+
+        android:id="@+id/list"
+        android:name="com.comeaqui.eduardorodriguez.comeaqui.general.food_post_comments.FoodCommentFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_weight="0"
+        app:layoutManager="LinearLayoutManager"
+        tools:context=".general.food_post_comments.FoodCommentFragment"
+        tools:listitem="@layout/fragment_foodcomment" />
+
+</LinearLayout>

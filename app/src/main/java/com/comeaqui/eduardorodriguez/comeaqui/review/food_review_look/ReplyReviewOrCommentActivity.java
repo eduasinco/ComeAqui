@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.comeaqui.eduardorodriguez.comeaqui.R;
+import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodCommentObject;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.ReviewObject;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.ReviewReplyObject;
 
@@ -25,7 +26,7 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ReplyReviewActivity extends AppCompatActivity {
+public class ReplyReviewOrCommentActivity extends AppCompatActivity {
 
     TextView review;
     TextView usernameTime;
@@ -36,6 +37,7 @@ public class ReplyReviewActivity extends AppCompatActivity {
     FrameLayout errorMessage;
 
     ReviewObject reviewObject;
+    FoodCommentObject commentObject;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +56,24 @@ public class ReplyReviewActivity extends AppCompatActivity {
         Bundle b = intent.getExtras();
         if(b != null && b.get("review") != null){
             reviewObject = (ReviewObject) b.get("review");
-            setThings();
+            setReview();
+        } else if(b != null && b.get("comment") != null){
+            commentObject = (FoodCommentObject) b.get("comment");
+            setCommentObject();
         }
     }
 
-    void setThings(){
+    void setReview(){
         review.setText(reviewObject.review);
         usernameTime.setText(reviewObject.owner.username + " " + reviewObject.createdAt);
         post.setOnClickListener(v -> postReviewReply());
+        close.setOnClickListener(v -> finish());
+    }
+
+    void setCommentObject(){
+        review.setText(commentObject.message);
+        usernameTime.setText(commentObject.owner.username + " " + commentObject.createdAt);
+        post.setOnClickListener(v -> commentCreate());
         close.setOnClickListener(v -> finish());
     }
 
@@ -71,6 +83,15 @@ public class ReplyReviewActivity extends AppCompatActivity {
                 new String[]{"review_id", reviewObject.id + ""}
         ));
     }
+
+    void commentCreate(){
+        tasks.add(new PostAsyncTask(getResources().getString(R.string.server) + "/food_post_comment/0/").execute(
+                new String[]{"post_id", ""},
+                new String[]{"comment_id", commentObject.id + ""},
+                new String[]{"message", reply.getText().toString()}
+        ));
+    }
+
     private class PostAsyncTask extends AsyncTask<String[], Void, String> {
         String uri;
         public PostAsyncTask(String uri){
@@ -94,7 +115,6 @@ public class ReplyReviewActivity extends AppCompatActivity {
         protected void onPostExecute(String response) {
             if (null != response){
                 JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
-                ReviewReplyObject reviewObject = new ReviewReplyObject(jo);
                 finish();
             }
             startWaitingFrame(false);

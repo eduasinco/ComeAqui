@@ -37,7 +37,7 @@
         <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.general.EditFoodPostActivity" />
         <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.general.FoodLookActivity" />
         <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.confirm_email.ConfirmEmailActivity" />
-        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.review.food_review_look.ReplyReviewActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.review.food_review_look.ReplyReviewOrCommentActivity" />
         <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.review.food_review_look.FoodPostReviewLookActivity" />
         <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.general.dinner_list.DinnerListActivity" />
         <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.login_and_register.LoginOrRegisterActivity">
