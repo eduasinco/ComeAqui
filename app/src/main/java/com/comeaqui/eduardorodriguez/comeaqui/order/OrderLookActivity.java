@@ -9,7 +9,6 @@ import androidx.cardview.widget.CardView;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -21,23 +20,32 @@ import com.comeaqui.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
 import com.comeaqui.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
 import com.comeaqui.eduardorodriguez.comeaqui.general.FoodLookActivity;
 import com.comeaqui.eduardorodriguez.comeaqui.general.StaticMapFragment;
+import com.comeaqui.eduardorodriguez.comeaqui.general.food_post_comments.FoodCommentFragment;
+import com.comeaqui.eduardorodriguez.comeaqui.general.food_post_comments.MyFoodCommentRecyclerViewAdapter;
+import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodCommentObject;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.comeaqui.eduardorodriguez.comeaqui.R;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.User;
 import com.comeaqui.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 
 
+import com.comeaqui.eduardorodriguez.comeaqui.review.food_review_look.ReplyReviewOrCommentActivity;
+import com.comeaqui.eduardorodriguez.comeaqui.server.Server;
 import com.comeaqui.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.comeaqui.eduardorodriguez.comeaqui.utilities.HorizontalImageDisplayFragment;
 import com.comeaqui.eduardorodriguez.comeaqui.utilities.RatingFragment;
 import com.comeaqui.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.comeaqui.eduardorodriguez.comeaqui.utilities.message_fragments.TwoOptionsMessageFragment;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
-public class OrderLookActivity extends AppCompatActivity implements TwoOptionsMessageFragment.OnFragmentInteractionListener {
+public class OrderLookActivity extends AppCompatActivity implements
+        TwoOptionsMessageFragment.OnFragmentInteractionListener,
+        MyFoodCommentRecyclerViewAdapter.OnListFragmentInteractionListener{
 
     ImageButton back;
     ImageButton options;
@@ -52,12 +60,11 @@ public class OrderLookActivity extends AppCompatActivity implements TwoOptionsMe
     TextView posterNameView;
     TextView posterUsername;
     TextView orderStatus;
-    Button chatWithHostButton;
 
     ImageView posterImageView;
     FrameLayout waitingFrame;
 
-
+    FoodCommentFragment foodCommentFragment;
     TwoOptionsMessageFragment continueCancelFragment;
     OrderObject order;
 
@@ -84,7 +91,6 @@ public class OrderLookActivity extends AppCompatActivity implements TwoOptionsMe
         totalPriceView = findViewById(R.id.totalPrice);
         mealTimeView = findViewById(R.id.time);
         orderStatus = findViewById(R.id.order_status);
-        chatWithHostButton = findViewById(R.id.chat_with_host_button);
 
         posterImageView = findViewById(R.id.poster_image);
         waitingFrame = findViewById(R.id.waiting_frame);
@@ -165,17 +171,17 @@ public class OrderLookActivity extends AppCompatActivity implements TwoOptionsMe
                 .replace(R.id.profile_rating, RatingFragment.newInstance(order.poster.rating, order.poster.ratingN))
                 .commit();
 
-        setChatWithHostButton();
+        setCommentsIfConfirmed();
         orderCard.setOnClickListener(v -> goToPostLook(order.post.id));
     }
 
-    void setChatWithHostButton(){
+    void setCommentsIfConfirmed(){
         if (order.status.equals("CONFIRMED") || order.status.equals("PENDING")){
-            chatWithHostButton.setVisibility(View.VISIBLE);
+            foodCommentFragment = FoodCommentFragment.newInstance(order.post.id);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.foodpost_comments, foodCommentFragment)
+                    .commit();
         }
-        chatWithHostButton.setOnClickListener(v -> {
-            goToConversationWithUser(order.poster);
-        });
     }
 
     void setOptionsActions(String title){
@@ -283,45 +289,124 @@ public class OrderLookActivity extends AppCompatActivity implements TwoOptionsMe
         }
     }
 
-    void goToConversationWithUser(User user){
-        new GetOrCreateChatAsyncTask(getResources().getString(R.string.server) + "/get_or_create_chat/" + user.id + "/").execute();
+
+    void deleteComment(int commentId){
+        tasks.add(new DeletePostAsyncTask(getResources().getString(R.string.server) + "/delete_food_post_comment/" + commentId + "/").execute());
     }
-    class GetOrCreateChatAsyncTask extends AsyncTask<String[], Void, String> {
+
+    void deleteCommentVote(int commentId){
+        if (!anyTaskRunning()) {
+            tasks.add(new DeletePostAsyncTask(getResources().getString(R.string.server) + "/vote_comment/" + commentId + "/").execute());
+        }
+    }
+
+    class DeletePostAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
-        public GetOrCreateChatAsyncTask(String uri){
+        public DeletePostAsyncTask(String uri){
             this.uri = uri;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            startWaitingFrame(true);
         }
 
         @Override
         protected String doInBackground(String[]... params) {
             try {
-                return ServerAPI.get(getApplicationContext(), this.uri);
+                return ServerAPI.delete(getApplicationContext(), this.uri);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             return null;
         }
-
         @Override
         protected void onPostExecute(String response) {
-            if (response != null) {
-                ChatObject chat = new ChatObject(new JsonParser().parse(response).getAsJsonObject());
-                goToConversationActivity(chat);
+            if (null != response){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                foodCommentFragment.updateElement(new FoodCommentObject(jo));
             }
+            startWaitingFrame(false);
             super.onPostExecute(response);
         }
-
     }
 
-    void goToConversationActivity(ChatObject chat){
-        Intent k = new Intent(this, ConversationActivity.class);
-        k.putExtra("chatId", chat.id + "");
-        startActivity(k);
+
+    void onCommentVote(int comment_id, boolean is_up_vote){
+        if (!anyTaskRunning()){
+            tasks.add(new PostVoteAsyncTask(getResources().getString(R.string.server) + "/vote_comment/" + comment_id + "/").execute(
+                    new String[]{"is_up_vote", is_up_vote ? "True" : "False"}
+            ));
+        }
+    }
+
+    private class PostVoteAsyncTask extends AsyncTask<String[], Void, String> {
+        String uri;
+        public PostVoteAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected void onPreExecute() {
+            startWaitingFrame(true);
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.upload(getApplicationContext(), "POST", this.uri, params);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (null != response){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                foodCommentFragment.updateElement(new FoodCommentObject(jo));
+            }
+            startWaitingFrame(false);
+            super.onPostExecute(response);
+        }
+    }
+
+    boolean anyTaskRunning(){
+        for (AsyncTask task: tasks){
+            if (task != null && task.getStatus() == AsyncTask.Status.RUNNING){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void onCommentDelete(FoodCommentObject comment) {
+        deleteComment(comment.id);
+    }
+
+    @Override
+    public void onVoteComment(FoodCommentObject comment, boolean is_up_vote) {
+        onCommentVote(comment.id, is_up_vote);
+    }
+
+    @Override
+    public void onDeleteVoteComment(FoodCommentObject comment) {
+        deleteCommentVote(comment.id);
+    }
+
+    @Override
+    public void onCommentCreate(FoodCommentObject comment) {
+        Intent paymentMethod = new Intent(this, ReplyReviewOrCommentActivity.class);
+        paymentMethod.putExtra("comment", comment);
+        startActivity(paymentMethod);
+    }
+
+    @Override
+    public void onGoToProfile(User user){
+        Intent profile = new Intent(this, ProfileViewActivity.class);
+        profile.putExtra("userId", user.id);
+        startActivity(profile);
     }
 
     @Override

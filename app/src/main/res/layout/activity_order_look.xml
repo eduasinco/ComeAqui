@@ -246,13 +246,14 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
             <FrameLayout
                 android:id="@+id/image_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
             </FrameLayout>
+
+
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout4"
@@ -361,15 +362,34 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-
-            <Button
-                android:id="@+id/chat_with_host_button"
+            <LinearLayout
+                android:id="@+id/comments_whole"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimaryLight"
-                android:text="Chat with host"
-                android:textColor="@android:color/white"
-                android:visibility="gone" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView52"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="Comments"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <FrameLayout
+                    android:id="@+id/foodpost_comments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+
         </LinearLayout>
     </ScrollView>
 

@@ -12,6 +12,8 @@ public class FoodCommentObject implements Serializable {
     public FoodPost post;
     public ArrayList<FoodCommentObject> replies;
     public String message;
+    public int votes_n;
+    public Boolean is_user_up_vote;
     public String createdAt;
     public FoodCommentObject(JsonObject jo){
         id = jo.get("id").getAsInt();
@@ -25,6 +27,8 @@ public class FoodCommentObject implements Serializable {
             }
         }catch (Exception e){
         }
+        votes_n = jo.get("votes_n").getAsInt();
+        try{is_user_up_vote = jo.get("is_user_up_vote").getAsBoolean();} catch (Exception e){};
         createdAt = jo.get("created_at").getAsString();
     }
 }

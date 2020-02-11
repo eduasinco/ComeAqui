@@ -3,10 +3,12 @@ package com.comeaqui.eduardorodriguez.comeaqui.general;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,8 +62,7 @@ import static com.comeaqui.eduardorodriguez.comeaqui.App.USER;
 
 public class FoodLookActivity extends AppCompatActivity implements
         TwoOptionsMessageFragment.OnFragmentInteractionListener,
-        AttendFragment.OnFragmentInteractionListener,
-        MyFoodCommentRecyclerViewAdapter.OnListFragmentInteractionListener {
+        AttendFragment.OnFragmentInteractionListener{
 
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbar;
@@ -92,10 +94,10 @@ public class FoodLookActivity extends AppCompatActivity implements
     TextView pendingPaymentMethodText;
     TextView cardLastNumbers;
     ImageView cardIcon;
+    NestedScrollView scrollView;
 
     TwoOptionsMessageFragment sureFragment;
     AttendFragment attendFragment;
-    FoodCommentFragment foodCommentFragment;
 
     Integer fpId;
     FoodPostDetail foodPostDetail;
@@ -133,6 +135,7 @@ public class FoodLookActivity extends AppCompatActivity implements
         pendingPaymentMethod = findViewById(R.id.pending_payment_method);
         cardIcon = findViewById(R.id.card_icon);
         cardLastNumbers = findViewById(R.id.card_last_numbers);
+        scrollView = findViewById(R.id.scrollableview);
 
         waitingFrame = findViewById(R.id.waiting_frame);
         setToolbar();
@@ -208,11 +211,6 @@ public class FoodLookActivity extends AppCompatActivity implements
         attendFragment = AttendFragment.newInstance(foodPostDetail.dinners_left, foodPostDetail.price);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.attend_message, attendFragment)
-                .commit();
-
-        foodCommentFragment = FoodCommentFragment.newInstance(foodPostDetail.id);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.foodpost_comments, foodCommentFragment)
                 .commit();
 
         findViewById(R.id.other).setOnClickListener(v -> {
@@ -606,25 +604,6 @@ public class FoodLookActivity extends AppCompatActivity implements
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onCommentDelete(FoodCommentObject comment) {
-        deleteComment(comment.id);
-    }
-
-    @Override
-    public void onCommentCreate(FoodCommentObject comment) {
-        Intent paymentMethod = new Intent(this, ReplyReviewOrCommentActivity.class);
-        paymentMethod.putExtra("comment", comment);
-        startActivity(paymentMethod);
-    }
-
-    @Override
-    public void onGoToProfile(User user){
-        Intent profile = new Intent(this, ProfileViewActivity.class);
-        profile.putExtra("userId", user.id);
-        startActivity(profile);
     }
 
     @Override

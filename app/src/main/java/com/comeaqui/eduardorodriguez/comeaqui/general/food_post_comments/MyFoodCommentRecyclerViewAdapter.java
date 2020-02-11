@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -45,6 +44,7 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         if (holder.mItem.replies.size() > 0){
+            holder.replyList.setVisibility(View.VISIBLE);
             holder.replyList.setLayoutManager(new LinearLayoutManager(holder.mView.getContext()));
             adapter = new MyFoodCommentRecyclerViewAdapter(holder.mItem.replies, mListener);
             holder.replyList.setAdapter(adapter);
@@ -56,13 +56,60 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
         holder.reviewerName.setText(holder.mItem.owner.first_name + ", " + holder.mItem.owner.last_name);
         holder.reviewerUsername.setText(holder.mItem.owner.username);
         holder.review.setText(holder.mItem.message);
+        holder.votes.setText(holder.mItem.votes_n + "");
+
+        holder.votes.setTextColor(ContextCompat.getColor(holder.mView.getContext(), R.color.colorPrimary));
+        holder.upVote.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.upvote));
+        holder.downVote.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.downvote));
+
+        if (holder.mItem.is_user_up_vote != null){
+            holder.votes.setTextColor(ContextCompat.getColor(holder.mView.getContext(), R.color.colorSecondary));
+            if (holder.mItem.is_user_up_vote){
+                holder.upVote.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.upvoted));
+            } else {
+                holder.downVote.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.downvoted));
+            }
+        }
 
         if(!holder.mItem.owner.profile_photo.contains("no-image")) {
             Glide.with(holder.mView.getContext()).load(holder.mItem.owner.profile_photo).into(holder.reviewerImage);
         } else {
             holder.reviewerImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.no_profile_photo));
         }
+
+        if (holder.mItem.owner.id == USER.id){
+            holder.replyComment.setVisibility(View.GONE);
+        } else {
+            holder.replyComment.setVisibility(View.VISIBLE);
+            holder.replyComment.setOnClickListener(v -> {
+                mListener.onCommentCreate(holder.mItem);
+            });
+        }
+
+
         holder.reviewerImage.setOnClickListener(v -> mListener.onGoToProfile(holder.mItem.owner));
+        holder.upVote.setOnClickListener(v -> {
+            if (holder.mItem.is_user_up_vote == null){
+                mListener.onVoteComment(holder.mItem, true);
+            } else {
+                if (holder.mItem.is_user_up_vote){
+                    mListener.onDeleteVoteComment(holder.mItem);
+                } else {
+                    mListener.onVoteComment(holder.mItem, true);
+                }
+            }
+        });
+        holder.downVote.setOnClickListener(v -> {
+            if (holder.mItem.is_user_up_vote == null){
+                mListener.onVoteComment(holder.mItem, false);
+            } else {
+                if (holder.mItem.is_user_up_vote){
+                    mListener.onVoteComment(holder.mItem, false);
+                } else {
+                    mListener.onDeleteVoteComment(holder.mItem);
+                }
+            }
+        });
         setOptionsMenu(holder);
     }
 
@@ -111,7 +158,9 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
         public final TextView review;
         public final ImageView optionsReview;
         public final ImageView replyComment;
-        public final ImageView likeComment;
+        public final ImageView upVote;
+        public final TextView votes;
+        public final ImageView downVote;
 
         public final TextView replyerName;
         public final TextView replyerUsername;
@@ -135,13 +184,17 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
             optionsReply = view.findViewById(R.id.options_review_reply);
             replyList = view.findViewById(R.id.reply_list);
             replyComment = view.findViewById(R.id.reply_comment);
-            likeComment = view.findViewById(R.id.like_comment);
+            upVote = view.findViewById(R.id.upvote);
+            votes = view.findViewById(R.id.votes);
+            downVote = view.findViewById(R.id.downvote);
         }
     }
 
     public interface OnListFragmentInteractionListener {
         void onCommentCreate(FoodCommentObject comment);
         void onCommentDelete(FoodCommentObject comment);
+        void onVoteComment(FoodCommentObject comment, boolean is_up_vote);
+        void onDeleteVoteComment(FoodCommentObject comment);
         void onGoToProfile(User user);
     }
 }

@@ -23,6 +23,8 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 public class FoodCommentFragment extends Fragment {
 
     // TODO: Customize parameter argument names
@@ -36,6 +38,8 @@ public class FoodCommentFragment extends Fragment {
     private RecyclerView recyclerView;
 
     private ArrayList<FoodCommentObject> foodComments;
+    private HashMap<Integer, FoodCommentObject> foodCommentObjectHashMap;
+    private HashMap<Integer, Integer> idToIndex;
     private MyFoodCommentRecyclerViewAdapter adapter;
     public FoodCommentFragment() { }
 
@@ -49,6 +53,11 @@ public class FoodCommentFragment extends Fragment {
         args.putInt(FOODPOST_ID, foodPostId);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public void updateElement(FoodCommentObject fco){
+        foodComments.set(idToIndex.get(fco.id), fco);
+        adapter.notifyItemChanged(idToIndex.get(fco.id));
     }
 
     @Override
@@ -97,8 +106,13 @@ public class FoodCommentFragment extends Fragment {
         protected void onPostExecute(String response) {
             if (response != null){
                 foodComments = new ArrayList<>();
+                foodCommentObjectHashMap = new HashMap<>();
+                idToIndex = new HashMap<>();
                 for(JsonElement je: new JsonParser().parse(response).getAsJsonArray()){
-                    foodComments.add(new FoodCommentObject(je.getAsJsonObject()));
+                    FoodCommentObject fco = new FoodCommentObject(je.getAsJsonObject());
+                    foodCommentObjectHashMap.put(fco.id, fco);
+                    idToIndex.put(fco.id, foodComments.size());
+                    foodComments.add(fco);
                 }
                 adapter = new MyFoodCommentRecyclerViewAdapter(foodComments, mListener);
                 recyclerView.setAdapter(adapter);
