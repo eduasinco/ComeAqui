@@ -13,11 +13,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.comeaqui.eduardorodriguez.comeaqui.chat.chat_objects.ChatObject;
-import com.comeaqui.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity;
 import com.comeaqui.eduardorodriguez.comeaqui.general.FoodLookActivity;
 import com.comeaqui.eduardorodriguez.comeaqui.general.StaticMapFragment;
 import com.comeaqui.eduardorodriguez.comeaqui.general.food_post_comments.FoodCommentFragment;
@@ -30,18 +29,17 @@ import com.comeaqui.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 
 
 import com.comeaqui.eduardorodriguez.comeaqui.review.food_review_look.ReplyReviewOrCommentActivity;
-import com.comeaqui.eduardorodriguez.comeaqui.server.Server;
 import com.comeaqui.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.comeaqui.eduardorodriguez.comeaqui.utilities.HorizontalImageDisplayFragment;
 import com.comeaqui.eduardorodriguez.comeaqui.utilities.RatingFragment;
 import com.comeaqui.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.comeaqui.eduardorodriguez.comeaqui.utilities.message_fragments.TwoOptionsMessageFragment;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 public class OrderLookActivity extends AppCompatActivity implements
         TwoOptionsMessageFragment.OnFragmentInteractionListener,
@@ -60,6 +58,7 @@ public class OrderLookActivity extends AppCompatActivity implements
     TextView posterNameView;
     TextView posterUsername;
     TextView orderStatus;
+    ScrollView scrollView;
 
     ImageView posterImageView;
     FrameLayout waitingFrame;
@@ -71,6 +70,7 @@ public class OrderLookActivity extends AppCompatActivity implements
     Context context;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
+    FoodCommentObject commentResponded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +91,7 @@ public class OrderLookActivity extends AppCompatActivity implements
         totalPriceView = findViewById(R.id.totalPrice);
         mealTimeView = findViewById(R.id.time);
         orderStatus = findViewById(R.id.order_status);
+        scrollView = findViewById(R.id.scrollView);
 
         posterImageView = findViewById(R.id.poster_image);
         waitingFrame = findViewById(R.id.waiting_frame);
@@ -98,6 +99,8 @@ public class OrderLookActivity extends AppCompatActivity implements
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.waiting_frame, WaitFragment.newInstance())
                 .commit();
+
+
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -173,6 +176,18 @@ public class OrderLookActivity extends AppCompatActivity implements
 
         setCommentsIfConfirmed();
         orderCard.setOnClickListener(v -> goToPostLook(order.post.id));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (commentResponded != null){
+            while (commentResponded.comment != null){
+                commentResponded = commentResponded.comment;
+            }
+            getFoodPostComment(commentResponded.id);
+            commentResponded = null;
+        }
     }
 
     void setCommentsIfConfirmed(){
@@ -290,19 +305,52 @@ public class OrderLookActivity extends AppCompatActivity implements
     }
 
 
+    void getFoodPostComment(int commentId){
+        tasks.add(new GetCommentAsyncTask(getResources().getString(R.string.server) + "/comment_detail/" + commentId + "/").execute());
+    }
+    class GetCommentAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetCommentAsyncTask(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getApplication(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (null != response){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                foodCommentFragment.updateElement(new FoodCommentObject(jo.get("comment").getAsJsonObject()), jo.get("trace").getAsJsonArray());
+            }
+            super.onPostExecute(response);
+        }
+    }
+
+
     void deleteComment(int commentId){
-        tasks.add(new DeletePostAsyncTask(getResources().getString(R.string.server) + "/delete_food_post_comment/" + commentId + "/").execute());
+        tasks.add(new DeleteCommentAsyncTask(getResources().getString(R.string.server) + "/delete_food_post_comment/" + commentId + "/").execute());
     }
 
     void deleteCommentVote(int commentId){
         if (!anyTaskRunning()) {
-            tasks.add(new DeletePostAsyncTask(getResources().getString(R.string.server) + "/vote_comment/" + commentId + "/").execute());
+            tasks.add(new DeleteCommentVoteAsyncTask(getResources().getString(R.string.server) + "/vote_comment/" + commentId + "/").execute());
         }
     }
 
-    class DeletePostAsyncTask extends AsyncTask<String[], Void, String> {
+    class DeleteCommentAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
-        public DeletePostAsyncTask(String uri){
+        public DeleteCommentAsyncTask(String uri){
             this.uri = uri;
         }
 
@@ -325,7 +373,39 @@ public class OrderLookActivity extends AppCompatActivity implements
         protected void onPostExecute(String response) {
             if (null != response){
                 JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
-                foodCommentFragment.updateElement(new FoodCommentObject(jo));
+                foodCommentFragment.deleteElement(new FoodCommentObject(jo.get("comment").getAsJsonObject()), jo.get("trace").getAsJsonArray());
+            }
+            startWaitingFrame(false);
+            super.onPostExecute(response);
+        }
+    }
+
+    class DeleteCommentVoteAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public DeleteCommentVoteAsyncTask(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            startWaitingFrame(true);
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.delete(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (null != response){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                foodCommentFragment.updateElement(new FoodCommentObject(jo.get("comment").getAsJsonObject()), jo.get("trace").getAsJsonArray());
             }
             startWaitingFrame(false);
             super.onPostExecute(response);
@@ -364,7 +444,7 @@ public class OrderLookActivity extends AppCompatActivity implements
         protected void onPostExecute(String response) {
             if (null != response){
                 JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
-                foodCommentFragment.updateElement(new FoodCommentObject(jo));
+                foodCommentFragment.updateElement(new FoodCommentObject(jo.get("comment").getAsJsonObject()), jo.get("trace").getAsJsonArray());
             }
             startWaitingFrame(false);
             super.onPostExecute(response);
@@ -397,6 +477,7 @@ public class OrderLookActivity extends AppCompatActivity implements
 
     @Override
     public void onCommentCreate(FoodCommentObject comment) {
+        commentResponded = comment;
         Intent paymentMethod = new Intent(this, ReplyReviewOrCommentActivity.class);
         paymentMethod.putExtra("comment", comment);
         startActivity(paymentMethod);

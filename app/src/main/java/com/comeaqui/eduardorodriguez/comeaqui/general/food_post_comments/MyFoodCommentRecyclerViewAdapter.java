@@ -17,6 +17,8 @@ import com.comeaqui.eduardorodriguez.comeaqui.R;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodCommentObject;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.User;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.comeaqui.eduardorodriguez.comeaqui.App.USER;
@@ -25,8 +27,8 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
 
     private final List<FoodCommentObject> mValues;
     private final OnListFragmentInteractionListener mListener;
-    MyFoodCommentRecyclerViewAdapter adapter;
 
+    public HashMap<Integer, MyFoodCommentRecyclerViewAdapter> adapters = new HashMap<>();
 
     public MyFoodCommentRecyclerViewAdapter(List<FoodCommentObject> items, OnListFragmentInteractionListener listener) {
         mValues = items;
@@ -37,80 +39,88 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_foodcomment, parent, false);
-        return new ViewHolder(view);
+        ViewHolder viewHolder = new ViewHolder(view);
+        return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        if (holder.mItem.replies.size() > 0){
-            holder.replyList.setVisibility(View.VISIBLE);
-            holder.replyList.setLayoutManager(new LinearLayoutManager(holder.mView.getContext()));
-            adapter = new MyFoodCommentRecyclerViewAdapter(holder.mItem.replies, mListener);
-            holder.replyList.setAdapter(adapter);
+
+        if (holder.mItem.hide){
+            holder.mView.setVisibility(View.GONE);
         } else {
-            holder.replyList.setVisibility(View.GONE);
-        }
-
-        holder.mItem = mValues.get(position);
-        holder.reviewerName.setText(holder.mItem.owner.first_name + ", " + holder.mItem.owner.last_name);
-        holder.reviewerUsername.setText(holder.mItem.owner.username);
-        holder.review.setText(holder.mItem.message);
-        holder.votes.setText(holder.mItem.votes_n + "");
-
-        holder.votes.setTextColor(ContextCompat.getColor(holder.mView.getContext(), R.color.colorPrimary));
-        holder.upVote.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.upvote));
-        holder.downVote.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.downvote));
-
-        if (holder.mItem.is_user_up_vote != null){
-            holder.votes.setTextColor(ContextCompat.getColor(holder.mView.getContext(), R.color.colorSecondary));
-            if (holder.mItem.is_user_up_vote){
-                holder.upVote.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.upvoted));
+            holder.mView.setVisibility(View.VISIBLE);
+            if (holder.mItem.replies.size() > 0){
+                holder.replyList.setVisibility(View.VISIBLE);
+                holder.replyList.setLayoutManager(new LinearLayoutManager(holder.mView.getContext()));
+                MyFoodCommentRecyclerViewAdapter adapter = new MyFoodCommentRecyclerViewAdapter(holder.mItem.replies, mListener);
+                adapters.put(holder.mItem.id, adapter);
+                holder.replyList.setAdapter(adapter);
             } else {
-                holder.downVote.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.downvoted));
+                holder.replyList.setVisibility(View.GONE);
             }
-        }
 
-        if(!holder.mItem.owner.profile_photo.contains("no-image")) {
-            Glide.with(holder.mView.getContext()).load(holder.mItem.owner.profile_photo).into(holder.reviewerImage);
-        } else {
-            holder.reviewerImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.no_profile_photo));
-        }
+            holder.mItem = mValues.get(position);
+            holder.reviewerName.setText(holder.mItem.owner.first_name + ", " + holder.mItem.owner.last_name);
+            holder.reviewerUsername.setText(holder.mItem.owner.username);
+            holder.review.setText(holder.mItem.message);
+            holder.votes.setText(holder.mItem.votes_n + "");
 
-        if (holder.mItem.owner.id == USER.id){
-            holder.replyComment.setVisibility(View.GONE);
-        } else {
-            holder.replyComment.setVisibility(View.VISIBLE);
-            holder.replyComment.setOnClickListener(v -> {
-                mListener.onCommentCreate(holder.mItem);
-            });
-        }
+            holder.votes.setTextColor(ContextCompat.getColor(holder.mView.getContext(), R.color.colorPrimary));
+            holder.upVote.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.upvote));
+            holder.downVote.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.downvote));
 
-
-        holder.reviewerImage.setOnClickListener(v -> mListener.onGoToProfile(holder.mItem.owner));
-        holder.upVote.setOnClickListener(v -> {
-            if (holder.mItem.is_user_up_vote == null){
-                mListener.onVoteComment(holder.mItem, true);
-            } else {
+            if (holder.mItem.is_user_up_vote != null){
+                holder.votes.setTextColor(ContextCompat.getColor(holder.mView.getContext(), R.color.colorSecondary));
                 if (holder.mItem.is_user_up_vote){
-                    mListener.onDeleteVoteComment(holder.mItem);
+                    holder.upVote.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.upvoted));
                 } else {
-                    mListener.onVoteComment(holder.mItem, true);
+                    holder.downVote.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.downvoted));
                 }
             }
-        });
-        holder.downVote.setOnClickListener(v -> {
-            if (holder.mItem.is_user_up_vote == null){
-                mListener.onVoteComment(holder.mItem, false);
+
+            if(!holder.mItem.owner.profile_photo.contains("no-image")) {
+                Glide.with(holder.mView.getContext()).load(holder.mItem.owner.profile_photo).into(holder.reviewerImage);
             } else {
-                if (holder.mItem.is_user_up_vote){
+                holder.reviewerImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.no_profile_photo));
+            }
+
+            if (holder.mItem.owner.id == USER.id){
+                holder.replyComment.setVisibility(View.GONE);
+            } else {
+                holder.replyComment.setVisibility(View.VISIBLE);
+                holder.replyComment.setOnClickListener(v -> {
+                    mListener.onCommentCreate(holder.mItem);
+                });
+            }
+
+
+            holder.reviewerImage.setOnClickListener(v -> mListener.onGoToProfile(holder.mItem.owner));
+            holder.upVote.setOnClickListener(v -> {
+                if (holder.mItem.is_user_up_vote == null){
+                    mListener.onVoteComment(holder.mItem, true);
+                } else {
+                    if (holder.mItem.is_user_up_vote){
+                        mListener.onDeleteVoteComment(holder.mItem);
+                    } else {
+                        mListener.onVoteComment(holder.mItem, true);
+                    }
+                }
+            });
+            holder.downVote.setOnClickListener(v -> {
+                if (holder.mItem.is_user_up_vote == null){
                     mListener.onVoteComment(holder.mItem, false);
                 } else {
-                    mListener.onDeleteVoteComment(holder.mItem);
+                    if (holder.mItem.is_user_up_vote){
+                        mListener.onVoteComment(holder.mItem, false);
+                    } else {
+                        mListener.onDeleteVoteComment(holder.mItem);
+                    }
                 }
-            }
-        });
-        setOptionsMenu(holder);
+            });
+            setOptionsMenu(holder);
+        }
     }
 
     void setOptionsMenu(MyFoodCommentRecyclerViewAdapter.ViewHolder holder){

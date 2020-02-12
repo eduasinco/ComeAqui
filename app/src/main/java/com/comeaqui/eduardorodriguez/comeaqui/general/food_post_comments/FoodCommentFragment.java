@@ -10,20 +10,29 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.comeaqui.eduardorodriguez.comeaqui.R;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodCommentObject;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.ReviewObject;
+import com.comeaqui.eduardorodriguez.comeaqui.objects.User;
 import com.comeaqui.eduardorodriguez.comeaqui.server.ServerAPI;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public class FoodCommentFragment extends Fragment {
 
@@ -37,9 +46,10 @@ public class FoodCommentFragment extends Fragment {
     private Button commentButton;
     private RecyclerView recyclerView;
 
-    private ArrayList<FoodCommentObject> foodComments;
+    private ProgressBar sendLoadingProgress;
+
+    private List<FoodCommentObject> foodComments;
     private HashMap<Integer, FoodCommentObject> foodCommentObjectHashMap;
-    private HashMap<Integer, Integer> idToIndex;
     private MyFoodCommentRecyclerViewAdapter adapter;
     public FoodCommentFragment() { }
 
@@ -55,9 +65,57 @@ public class FoodCommentFragment extends Fragment {
         return fragment;
     }
 
-    public void updateElement(FoodCommentObject fco){
-        foodComments.set(idToIndex.get(fco.id), fco);
-        adapter.notifyItemChanged(idToIndex.get(fco.id));
+    private void hideKeyboard(){
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    class RecurseComment {
+        MyFoodCommentRecyclerViewAdapter adapter;
+        List<FoodCommentObject> replies;
+        HashMap<Integer, FoodCommentObject> repliesHashMap;
+
+        RecurseComment(MyFoodCommentRecyclerViewAdapter adapter, List<FoodCommentObject> replies, HashMap<Integer, FoodCommentObject> repliesHashMap){
+            this.adapter = adapter;
+            this.replies = replies;
+            this.repliesHashMap = repliesHashMap;
+        }
+    }
+    private RecurseComment recurseToComment(FoodCommentObject newComment, JsonArray trace){
+        MyFoodCommentRecyclerViewAdapter adapter = this.adapter;
+        HashMap<Integer, FoodCommentObject> repliesHasMap = this.foodCommentObjectHashMap;
+        List<FoodCommentObject> replies = this.foodComments;
+        for (JsonElement je: trace){
+            adapter = adapter.adapters.get(je.getAsInt());
+            FoodCommentObject c = repliesHasMap.get(je.getAsInt());
+            repliesHasMap = c.repliesHashMap;
+            replies = c.replies;
+        }
+        return new RecurseComment(adapter, replies, repliesHasMap);
+    }
+
+    public void updateElement(FoodCommentObject newComment, JsonArray trace){
+        RecurseComment rc = recurseToComment(newComment, trace);
+        FoodCommentObject commentInList = rc.repliesHashMap.get(newComment.id);
+        rc.replies.set(rc.replies.indexOf(commentInList), newComment);
+        rc.repliesHashMap.put(newComment.id, newComment);
+        rc.adapter.notifyItemChanged(rc.replies.indexOf(newComment));
+    }
+
+    public void deleteElement(FoodCommentObject newComment, JsonArray trace){
+        RecurseComment rc = recurseToComment(newComment, trace);
+        rc.adapter.notifyItemRemoved(rc.replies.indexOf(rc.repliesHashMap.get(newComment.id)));
+        rc.replies.remove(rc.repliesHashMap.get(newComment.id));
+    }
+
+    public void addElement(FoodCommentObject newComment, JsonArray trace){
+        RecurseComment rc = recurseToComment(newComment, trace);
+        rc.replies.add(0, newComment);
+        rc.repliesHashMap.put(newComment.id, newComment);
+        rc.adapter.notifyItemInserted(0);
     }
 
     @Override
@@ -75,7 +133,16 @@ public class FoodCommentFragment extends Fragment {
         commentEditText = view.findViewById(R.id.comment_edit_text);
         commentButton = view.findViewById(R.id.comment_button);
         recyclerView = view.findViewById(R.id.list);
-        commentButton.setOnClickListener(v -> createAPostComment());
+        sendLoadingProgress = view.findViewById(R.id.send_loading);
+        recyclerView.setNestedScrollingEnabled(false);
+        commentButton.setOnClickListener(v -> {
+            if (!commentEditText.getText().toString().isEmpty()){
+                createAPostComment();
+                hideKeyboard();
+            } else {
+                Toast.makeText(getContext(), "You have to write something", Toast.LENGTH_SHORT).show();
+            }
+        });
         getFoodPostComment();
         return view;
     }
@@ -105,13 +172,11 @@ public class FoodCommentFragment extends Fragment {
         @Override
         protected void onPostExecute(String response) {
             if (response != null){
-                foodComments = new ArrayList<>();
+                foodComments = new LinkedList<>();
                 foodCommentObjectHashMap = new HashMap<>();
-                idToIndex = new HashMap<>();
                 for(JsonElement je: new JsonParser().parse(response).getAsJsonArray()){
                     FoodCommentObject fco = new FoodCommentObject(je.getAsJsonObject());
                     foodCommentObjectHashMap.put(fco.id, fco);
-                    idToIndex.put(fco.id, foodComments.size());
                     foodComments.add(fco);
                 }
                 adapter = new MyFoodCommentRecyclerViewAdapter(foodComments, mListener);
@@ -137,6 +202,8 @@ public class FoodCommentFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            sendLoadingProgress.setVisibility(View.VISIBLE);
+            commentButton.setVisibility(View.GONE);
         }
         @Override
         protected String doInBackground(String[]... params) {
@@ -151,7 +218,11 @@ public class FoodCommentFragment extends Fragment {
         protected void onPostExecute(String response) {
             if (null != response){
                 JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                addElement(new FoodCommentObject(jo.get("comment").getAsJsonObject()), jo.get("trace").getAsJsonArray());
             }
+            commentEditText.setText("");
+            sendLoadingProgress.setVisibility(View.GONE);
+            commentButton.setVisibility(View.VISIBLE);
             super.onPostExecute(response);
         }
     }
