@@ -4,12 +4,12 @@
     <item android:id="@+id/other"
         android:orderInCategory="100"
         android:title="Add"
-        android:icon="@drawable/nothing"
+        android:icon="@drawable/flag_transparent"
         app:showAsAction="ifRoom"/>
 
     <item android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="Setting"
-        android:icon="@drawable/nothing"
+        android:icon="@drawable/flag_transparent"
         app:showAsAction="ifRoom"/>
 </menu>

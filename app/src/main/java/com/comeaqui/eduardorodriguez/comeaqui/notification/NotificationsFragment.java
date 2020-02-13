@@ -67,7 +67,6 @@ public class NotificationsFragment extends Fragment {
 
     public void makeList(JsonArray jsonArray){
         try {
-            data = new ArrayList<>();
             for (JsonElement pa : jsonArray) {
                 JsonObject jo = pa.getAsJsonObject();
                 NotificationObject oo = new NotificationObject(jo);

@@ -62,6 +62,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         app:layoutManager="LinearLayoutManager"
         tools:context=".general.food_post_comments.FoodCommentFragment"
         tools:listitem="@layout/fragment_foodcomment" />

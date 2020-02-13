@@ -3,8 +3,8 @@
 <!--    <string name="server">http://13.52.249.41</string>-->
 <!--    <string name="async_server">http://13.52.249.41:8001</string>-->
 
-    <string name="server">http://10.0.0.33:65100</string>
-    <string name="async_server">http://10.0.0.33:65100</string>
+    <string name="server">http://10.0.0.44:65100</string>
+    <string name="async_server">http://10.0.0.44:65100</string>
 
 <!--    <string name="server">http://127.0.0.1:8000</string>-->
 <!--    <string name="async_server">http://127.0.0.1:8000</string>-->

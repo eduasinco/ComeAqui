@@ -65,6 +65,12 @@ public class FoodCommentFragment extends Fragment {
         return fragment;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        hideKeyboard();
+    }
+
     private void hideKeyboard(){
         View view = getActivity().getCurrentFocus();
         if (view != null) {
