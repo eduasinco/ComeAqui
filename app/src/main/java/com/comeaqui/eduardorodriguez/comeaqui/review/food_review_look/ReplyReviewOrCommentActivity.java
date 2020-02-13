@@ -39,6 +39,8 @@ public class ReplyReviewOrCommentActivity extends AppCompatActivity {
     ReviewObject reviewObject;
     FoodCommentObject commentObject;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
+    int foodPostId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +59,9 @@ public class ReplyReviewOrCommentActivity extends AppCompatActivity {
         if(b != null && b.get("review") != null){
             reviewObject = (ReviewObject) b.get("review");
             setReview();
-        } else if(b != null && b.get("comment") != null){
+        } else if(b != null && b.get("comment") != null  && b.get("foodPostId") != null){
             commentObject = (FoodCommentObject) b.get("comment");
+            foodPostId = b.getInt("foodPostId");
             setCommentObject();
         }
     }
@@ -85,7 +88,7 @@ public class ReplyReviewOrCommentActivity extends AppCompatActivity {
     }
 
     void commentCreate(){
-        tasks.add(new PostAsyncTask(getResources().getString(R.string.server) + "/food_post_comment/0/").execute(
+        tasks.add(new PostAsyncTask(getResources().getString(R.string.server) + "/food_post_comment/" + foodPostId + "/").execute(
                 new String[]{"post_id", ""},
                 new String[]{"comment_id", commentObject.id + ""},
                 new String[]{"message", reply.getText().toString()}

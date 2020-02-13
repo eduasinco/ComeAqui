@@ -18,8 +18,8 @@ import android.widget.Toast;
 
 import com.comeaqui.eduardorodriguez.comeaqui.R;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodCommentObject;
-import com.comeaqui.eduardorodriguez.comeaqui.objects.ReviewObject;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.User;
+import com.comeaqui.eduardorodriguez.comeaqui.order.OrderLookActivity;
 import com.comeaqui.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -27,20 +27,18 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 public class FoodCommentFragment extends Fragment {
 
     // TODO: Customize parameter argument names
-    private static final String FOODPOST_ID = "column-count";
+    private static final String FOODPOST_ID = "food_post_id";
     // TODO: Customize parameters
     private int foodPostId;
-    private MyFoodCommentRecyclerViewAdapter.OnListFragmentInteractionListener mListener;
+    private OrderLookActivity mListener;
 
     private EditText commentEditText;
     private Button commentButton;
@@ -90,7 +88,7 @@ public class FoodCommentFragment extends Fragment {
             this.repliesHashMap = repliesHashMap;
         }
     }
-    private RecurseComment recurseToComment(FoodCommentObject newComment, JsonArray trace){
+    private RecurseComment recurseToComment(JsonArray trace){
         MyFoodCommentRecyclerViewAdapter adapter = this.adapter;
         HashMap<Integer, FoodCommentObject> repliesHasMap = this.foodCommentObjectHashMap;
         List<FoodCommentObject> replies = this.foodComments;
@@ -104,21 +102,27 @@ public class FoodCommentFragment extends Fragment {
     }
 
     public void updateElement(FoodCommentObject newComment, JsonArray trace){
-        RecurseComment rc = recurseToComment(newComment, trace);
+        RecurseComment rc = recurseToComment(trace);
         FoodCommentObject commentInList = rc.repliesHashMap.get(newComment.id);
         rc.replies.set(rc.replies.indexOf(commentInList), newComment);
         rc.repliesHashMap.put(newComment.id, newComment);
         rc.adapter.notifyItemChanged(rc.replies.indexOf(newComment));
     }
 
+    public void goToElement(int commentId, JsonArray trace){
+        RecurseComment rc = recurseToComment(trace);
+        FoodCommentObject commentInList = rc.repliesHashMap.get(commentId);
+        rc.adapter.notifyItemChanged(rc.replies.indexOf(commentInList));
+    }
+
     public void deleteElement(FoodCommentObject newComment, JsonArray trace){
-        RecurseComment rc = recurseToComment(newComment, trace);
+        RecurseComment rc = recurseToComment(trace);
         rc.adapter.notifyItemRemoved(rc.replies.indexOf(rc.repliesHashMap.get(newComment.id)));
         rc.replies.remove(rc.repliesHashMap.get(newComment.id));
     }
 
     public void addElement(FoodCommentObject newComment, JsonArray trace){
-        RecurseComment rc = recurseToComment(newComment, trace);
+        RecurseComment rc = recurseToComment(trace);
         rc.replies.add(0, newComment);
         rc.repliesHashMap.put(newComment.id, newComment);
         rc.adapter.notifyItemInserted(0);
@@ -187,6 +191,42 @@ public class FoodCommentFragment extends Fragment {
                 }
                 adapter = new MyFoodCommentRecyclerViewAdapter(foodComments, mListener);
                 recyclerView.setAdapter(adapter);
+                mListener.onCommentsLoaded();
+            }
+            super.onPostExecute(response);
+        }
+    }
+
+    public void getAndUpdateComment(int commentId){
+        tasks.add(new GetCommentAsyncTask(getResources().getString(R.string.server) + "/comment_detail/" + commentId + "/").execute());
+    }
+    class GetCommentAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetCommentAsyncTask(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(getActivity(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (null != response){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                try {
+                    updateElement(new FoodCommentObject(jo.get("comment").getAsJsonObject()), jo.get("trace").getAsJsonArray());
+                } catch (Exception e){}
+
             }
             super.onPostExecute(response);
         }
@@ -238,7 +278,7 @@ public class FoodCommentFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof MyFoodCommentRecyclerViewAdapter.OnListFragmentInteractionListener) {
-            mListener = (MyFoodCommentRecyclerViewAdapter.OnListFragmentInteractionListener) context;
+            mListener = (OrderLookActivity) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
@@ -252,5 +292,10 @@ public class FoodCommentFragment extends Fragment {
             if (task != null) task.cancel(true);
         }
         mListener = null;
+    }
+
+
+    public interface OnFragmentInteractionListener {
+        void onCommentsLoaded();
     }
 }

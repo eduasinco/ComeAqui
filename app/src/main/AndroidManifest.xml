@@ -66,7 +66,13 @@
         <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity" />
         <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.EditAcountDetailsActivity" />
         <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.profile.edit_profile.AddBioActivity" />
-        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.notification.NotificationLookActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.notification.NotificationLookActivity">
+            <intent-filter>
+                <action android:name="NOTIFICATION_LOOK" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.profile.ProfileViewActivity" />
         <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.chat.conversation.ConversationActivity">
             <intent-filter>
@@ -117,7 +123,12 @@
             android:label="@string/title_activity_edit_profile"
             android:theme="@style/AppTheme" />
         <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.CreditCardInformationActivity" />
-        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.order.OrderLookActivity" />
+        <activity android:name="com.comeaqui.eduardorodriguez.comeaqui.order.OrderLookActivity" >
+            <intent-filter>
+                <action android:name="ORDER_LOOK" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"

@@ -43,7 +43,8 @@ import java.util.ArrayList;
 
 public class OrderLookActivity extends AppCompatActivity implements
         TwoOptionsMessageFragment.OnFragmentInteractionListener,
-        MyFoodCommentRecyclerViewAdapter.OnListFragmentInteractionListener{
+        MyFoodCommentRecyclerViewAdapter.OnListFragmentInteractionListener,
+        FoodCommentFragment.OnFragmentInteractionListener{
 
     ImageButton back;
     ImageButton options;
@@ -66,11 +67,12 @@ public class OrderLookActivity extends AppCompatActivity implements
     FoodCommentFragment foodCommentFragment;
     TwoOptionsMessageFragment continueCancelFragment;
     OrderObject order;
+    FoodCommentObject commentResponded;
+    Integer commentId;
 
     Context context;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
-    FoodCommentObject commentResponded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,12 +103,15 @@ public class OrderLookActivity extends AppCompatActivity implements
                 .commit();
 
 
-
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
-        if (b != null){
+        if (b != null && b.get("orderId") != null){
             int orderId = b.getInt("orderId");
             getOrderDetails(orderId);
+        }
+
+        if (b != null && b.get("commentId") != null){
+            commentId = b.getInt("commentId");
         }
 
         continueCancelFragment = TwoOptionsMessageFragment.newInstance(
@@ -185,7 +190,7 @@ public class OrderLookActivity extends AppCompatActivity implements
             while (commentResponded.comment != null){
                 commentResponded = commentResponded.comment;
             }
-            getFoodPostComment(commentResponded.id);
+            foodCommentFragment.getAndUpdateComment(commentResponded.id);
             commentResponded = null;
         }
     }
@@ -211,6 +216,13 @@ public class OrderLookActivity extends AppCompatActivity implements
 
     void getOrderDetails(int orderId){
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/order_detail/" + orderId + "/").execute());
+    }
+
+    @Override
+    public void onCommentsLoaded() {
+        if (commentId != null && commentId != 0){
+            foodCommentFragment.getAndUpdateComment(commentId);
+        }
     }
 
     private class GetAsyncTask extends AsyncTask<String[], Void, String> {
@@ -300,39 +312,6 @@ public class OrderLookActivity extends AppCompatActivity implements
         protected void onPostExecute(String response) {
             continueCancelFragment.show(false);
             finish();
-            super.onPostExecute(response);
-        }
-    }
-
-
-    void getFoodPostComment(int commentId){
-        tasks.add(new GetCommentAsyncTask(getResources().getString(R.string.server) + "/comment_detail/" + commentId + "/").execute());
-    }
-    class GetCommentAsyncTask extends AsyncTask<String[], Void, String> {
-        private String uri;
-        public GetCommentAsyncTask(String uri){
-            this.uri = uri;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-        @Override
-        protected String doInBackground(String[]... params) {
-            try {
-                return ServerAPI.get(getApplication(), this.uri);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(String response) {
-            if (null != response){
-                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
-                foodCommentFragment.updateElement(new FoodCommentObject(jo.get("comment").getAsJsonObject()), jo.get("trace").getAsJsonArray());
-            }
             super.onPostExecute(response);
         }
     }
@@ -480,6 +459,7 @@ public class OrderLookActivity extends AppCompatActivity implements
         commentResponded = comment;
         Intent paymentMethod = new Intent(this, ReplyReviewOrCommentActivity.class);
         paymentMethod.putExtra("comment", comment);
+        paymentMethod.putExtra("foodPostId", order.post.id);
         startActivity(paymentMethod);
     }
 

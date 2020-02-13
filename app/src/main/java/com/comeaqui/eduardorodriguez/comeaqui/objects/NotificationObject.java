@@ -11,6 +11,7 @@ public class NotificationObject implements Serializable {
     public String type;
     public String title;
     public String body;
+    public String extra;
     public String createdAt;
     public int type_id;
 
@@ -22,6 +23,7 @@ public class NotificationObject implements Serializable {
         type_id = jo.get("type_id").getAsInt();
         title = jo.get("title").getAsString();
         body = jo.get("body").getAsString();
+        extra = jo.get("extra").getAsString();
         createdAt = jo.get("created_at").getAsString();
     }
 }

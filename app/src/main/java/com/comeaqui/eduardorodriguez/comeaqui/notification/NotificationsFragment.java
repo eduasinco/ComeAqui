@@ -66,21 +66,17 @@ public class NotificationsFragment extends Fragment {
     }
 
     public void makeList(JsonArray jsonArray){
-        try {
-            for (JsonElement pa : jsonArray) {
-                JsonObject jo = pa.getAsJsonObject();
-                NotificationObject oo = new NotificationObject(jo);
-                data.add(oo);
-            }
-            if (data.size() > 0){
-                noNotifications.setVisibility(View.GONE);
-            } else {
-                noNotifications.setVisibility(View.VISIBLE);
-            }
-            notificationAdapter.addData(data);
-        } catch (Exception e){
-            e.printStackTrace();
+        for (JsonElement pa : jsonArray) {
+            JsonObject jo = pa.getAsJsonObject();
+            NotificationObject oo = new NotificationObject(jo);
+            data.add(oo);
         }
+        if (data.size() > 0){
+            noNotifications.setVisibility(View.GONE);
+        } else {
+            noNotifications.setVisibility(View.VISIBLE);
+        }
+        notificationAdapter.addData(data);
     }
 
     @Override

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.NotificationObject;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.SavedFoodPost;
+import com.comeaqui.eduardorodriguez.comeaqui.order.OrderLookActivity;
 import com.comeaqui.eduardorodriguez.comeaqui.review.food_review_look.FoodPostReviewLookActivity;
 import com.comeaqui.eduardorodriguez.comeaqui.utilities.DateFormatting;
 import com.comeaqui.eduardorodriguez.comeaqui.R;
@@ -83,14 +84,13 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
                     context.startActivity(notification);
                 });
                 break;
-
             case "REVIEW":
                 holder.typeImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.social_not));
                 holder.mView.setOnClickListener(v -> goToFoodPostReview(holder.mItem.type_id));
                 break;
-            case "REVIEW_REPLY":
+            case "COMMENT":
                 holder.typeImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.social_not));
-                holder.mView.setOnClickListener(v -> goToFoodPostReview(holder.mItem.type_id));
+                holder.mView.setOnClickListener(v -> goToOrder(holder.mItem.type_id, Integer.parseInt(holder.mItem.extra)));
                 break;
             case "INFO":
                 break;
@@ -101,6 +101,13 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
         Intent notification = new Intent(context, FoodPostReviewLookActivity.class);
         notification.putExtra("foodPostId", foodPostId);
         context.startActivity(notification);
+    }
+
+    void goToOrder(int orderId, int commentId){
+        Intent order = new Intent(context, OrderLookActivity.class);
+        order.putExtra("orderId", orderId);
+        order.putExtra("commentId", commentId);
+        context.startActivity(order);
     }
     @Override
     public int getItemCount() {

@@ -168,8 +168,16 @@ public class NotificationLookActivity extends AppCompatActivity implements TwoOp
     }
 
     void setDetails(){
-        posterNameView.setText(orderObject.owner.first_name + " " + orderObject.owner.last_name);
-        usernameView.setText(orderObject.owner.username);
+        User userToShow = orderObject.owner.id == USER.id  ? orderObject.poster : orderObject.owner;
+        posterNameView.setText(userToShow.first_name + " " + userToShow.last_name);
+        usernameView.setText(userToShow.username);
+        dinnerImage.setOnClickListener(v -> {
+            goToProfileView(userToShow.id);
+        });
+        if(!userToShow.profile_photo.contains("no-image")){
+            Glide.with(this).load(userToShow.profile_photo).into(dinnerImage);
+        }
+
         if (orderObject.additionalGuests > 0){
             plusGuests.setVisibility(View.VISIBLE);
             plusGuests.setText("+" + orderObject.additionalGuests);
@@ -198,20 +206,11 @@ public class NotificationLookActivity extends AppCompatActivity implements TwoOp
             case "CANCELED":
                 orderAction.setText("Meal canceled");
                 orderAction.setBackground(ContextCompat.getDrawable(this, R.color.canceled));
-
-                if(!orderObject.owner.profile_photo.contains("no-image")){
-                    Glide.with(this).load(orderObject.owner.profile_photo).into(dinnerImage);
-                }
                 break;
             case "FINISHED":
                 orderAction.setText("Has eaten with you");
                 orderAction.setBackground(ContextCompat.getDrawable(this, R.color.colorPrimary));
                 break;
-        }
-
-        User userToShow = orderObject.owner.id == USER.id  ? orderObject.poster : orderObject.owner;
-        if(!userToShow.profile_photo.contains("no-image")){
-            Glide.with(this).load(userToShow.profile_photo).into(dinnerImage);
         }
 
         Bundle bundle = new Bundle();
@@ -229,10 +228,6 @@ public class NotificationLookActivity extends AppCompatActivity implements TwoOp
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.static_map_frame, StaticMapFragment.newInstance(orderObject.post.lat, orderObject.post.lng))
                 .commit();
-
-        dinnerImage.setOnClickListener(v -> {
-            goToProfileView(userToShow.id);
-        });
         setConfirmCancelButton();
     }
 
