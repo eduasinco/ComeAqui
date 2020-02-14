@@ -52,6 +52,7 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
         holder.mItem = mValues.get(position);
         holder.usernameView.setText(holder.mItem.from_user.username);
         holder.notificationView.setText(holder.mItem.title);
+        holder.body.setText(holder.mItem.body);
         holder.date.setText(DateFormatting.hYesterdayWeekDay(holder.mItem.createdAt));
         if (!holder.mItem.from_user.profile_photo.contains("no-image")) {
             Glide.with(holder.mView.getContext()).load(holder.mItem.from_user.profile_photo).into(holder.senderImageView);
@@ -90,7 +91,7 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
                 holder.mView.setOnClickListener(v -> goToFoodPostReview(holder.mItem.type_id));
                 break;
             case "COMMENT":
-                holder.typeImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.social_not));
+                holder.typeImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.comment_not));
                 holder.mView.setOnClickListener(v -> goToFoodPost(holder.mItem.type_id));
                 break;
             case "INFO":
@@ -118,6 +119,7 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
         public final View mView;
         public final TextView usernameView;
         public final TextView notificationView;
+        public final TextView body;
         public final ImageView typeImage;
         public final TextView date;
         public final ImageView senderImageView;
@@ -131,6 +133,7 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
             senderImageView = view.findViewById(R.id.dinner_image);
             typeImage = view.findViewById(R.id.type_image);
             date = view.findViewById(R.id.date);
+            body = view.findViewById(R.id.body);
         }
     }
 }

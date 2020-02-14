@@ -513,6 +513,10 @@ public class FoodLookActivity extends AppCompatActivity implements
                         attendMealButton.setAlpha(0.5f);
                         attendMealButton.setClickable(false);
                     }
+                } else {
+                    pendingPaymentMethod.setVisibility(View.VISIBLE);
+                    attendMealButton.setAlpha(0.5f);
+                    attendMealButton.setClickable(false);
                 }
             }
             super.onPostExecute(response);
