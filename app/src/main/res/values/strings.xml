@@ -13,6 +13,7 @@
     <string name="delete_all"><u>Delete All</u></string>
     <string name="pending_bank_account_info">You still have some pending <u>bank account</u> info</string>
     <string name="pending_payment_method">You still have to add a <u>payment method</u></string>
+    <string name="attend_to_comment"><u>Attend meal to comment</u></string>
     <string name="add_payment_method"><u>Add payment method</u></string>
 
     <string name="app_name">ComeAqui</string>

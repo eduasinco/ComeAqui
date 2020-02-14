@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.comeaqui.eduardorodriguez.comeaqui.R;
+import com.comeaqui.eduardorodriguez.comeaqui.general.FoodLookActivity;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodCommentObject;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.User;
 import com.comeaqui.eduardorodriguez.comeaqui.order.OrderLookActivity;
@@ -38,7 +39,7 @@ public class FoodCommentFragment extends Fragment {
     private static final String FOODPOST_ID = "food_post_id";
     // TODO: Customize parameters
     private int foodPostId;
-    private OrderLookActivity mListener;
+    private FoodLookActivity mListener;
 
     private EditText commentEditText;
     private Button commentButton;
@@ -278,7 +279,7 @@ public class FoodCommentFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof MyFoodCommentRecyclerViewAdapter.OnListFragmentInteractionListener) {
-            mListener = (OrderLookActivity) context;
+            mListener = (FoodLookActivity) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");

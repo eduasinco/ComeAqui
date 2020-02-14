@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.comeaqui.eduardorodriguez.comeaqui.general.FoodLookActivity;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.NotificationObject;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.SavedFoodPost;
 import com.comeaqui.eduardorodriguez.comeaqui.order.OrderLookActivity;
@@ -90,7 +91,7 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
                 break;
             case "COMMENT":
                 holder.typeImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.social_not));
-                holder.mView.setOnClickListener(v -> goToOrder(holder.mItem.type_id, Integer.parseInt(holder.mItem.extra)));
+                holder.mView.setOnClickListener(v -> goToFoodPost(holder.mItem.type_id));
                 break;
             case "INFO":
                 break;
@@ -103,11 +104,10 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
         context.startActivity(notification);
     }
 
-    void goToOrder(int orderId, int commentId){
-        Intent order = new Intent(context, OrderLookActivity.class);
-        order.putExtra("orderId", orderId);
-        order.putExtra("commentId", commentId);
-        context.startActivity(order);
+    void goToFoodPost(int foodPostId){
+        Intent foodLook = new Intent(context, FoodLookActivity.class);
+        foodLook.putExtra("foodPostId", foodPostId);
+        context.startActivity(foodLook);
     }
     @Override
     public int getItemCount() {

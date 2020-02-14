@@ -362,30 +362,26 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/comments_whole"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textView52"
+                    android:id="@+id/go_to_meal"
                     android:layout_width="match_parent"
-                    android:layout_height="42dp"
-                    android:gravity="center_vertical"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:background="@color/colorSecondary"
+                    android:gravity="center|center_vertical"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:text="Comments"
-                    android:textColor="@color/colorPrimary"
+                    android:text="Go to meal"
+                    android:textColor="@android:color/white"
                     android:textSize="18sp"
                     android:textStyle="bold" />
-
-                <FrameLayout
-                    android:id="@+id/foodpost_comments"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                </FrameLayout>
 
             </LinearLayout>
 

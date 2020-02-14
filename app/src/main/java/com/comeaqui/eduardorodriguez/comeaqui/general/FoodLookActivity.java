@@ -62,7 +62,9 @@ import static com.comeaqui.eduardorodriguez.comeaqui.App.USER;
 
 public class FoodLookActivity extends AppCompatActivity implements
         TwoOptionsMessageFragment.OnFragmentInteractionListener,
-        AttendFragment.OnFragmentInteractionListener{
+        AttendFragment.OnFragmentInteractionListener,
+        MyFoodCommentRecyclerViewAdapter.OnListFragmentInteractionListener,
+        FoodCommentFragment.OnFragmentInteractionListener{
 
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbar;
@@ -78,6 +80,8 @@ public class FoodLookActivity extends AppCompatActivity implements
     TextView posterNameView;
     TextView posterLocationView;
     TextView changePaymentMethod;
+    TextView postStatus;
+    TextView attendToComment;
     Button attendMealButton;
 
     ImageView posterImage;
@@ -104,6 +108,12 @@ public class FoodLookActivity extends AppCompatActivity implements
     String userStatusInPost = "";
     int additionalGuests;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
+
+    FoodCommentObject commentResponded;
+    FoodCommentFragment foodCommentFragment;
+    Integer commentId;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +146,9 @@ public class FoodLookActivity extends AppCompatActivity implements
         cardIcon = findViewById(R.id.card_icon);
         cardLastNumbers = findViewById(R.id.card_last_numbers);
         scrollView = findViewById(R.id.scrollableview);
+        postStatus = findViewById(R.id.post_status);
+        attendToComment = findViewById(R.id.attend_to_comment);
+
 
         waitingFrame = findViewById(R.id.waiting_frame);
         setToolbar();
@@ -164,6 +177,13 @@ public class FoodLookActivity extends AppCompatActivity implements
         super.onResume();
         if (fpId != null){
             getFoodPostDetailsAndSet(fpId);
+        }
+        if (commentResponded != null){
+            while (commentResponded.comment != null){
+                commentResponded = commentResponded.comment;
+            }
+            foodCommentFragment.getAndUpdateComment(commentResponded.id);
+            commentResponded = null;
         }
     }
 
@@ -229,6 +249,59 @@ public class FoodLookActivity extends AppCompatActivity implements
         }
     }
 
+    void setStatus(String message, int color){
+        postStatus.setVisibility(View.VISIBLE);
+        postStatus.setText(message);
+        postStatus.setBackground(ContextCompat.getDrawable(this, color));
+
+        attendMealButton.setText(message);
+        attendMealButton.setBackgroundColor(Color.TRANSPARENT);
+        attendMealButton.setTextColor(ContextCompat.getColor(this, color));
+    }
+
+    void setPlaceButton(){
+        if (foodPostDetail.owner.id != USER.id){
+            if (userStatusInPost.equals("CONFIRMED")) {
+                foodCommentFragment = FoodCommentFragment.newInstance(foodPostDetail.id);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.foodpost_comments, foodCommentFragment)
+                        .commit();
+
+                setStatus("Confirmed", R.color.success);
+            } else if (userStatusInPost.equals("PENDING")) {
+                setStatus("Pending", R.color.colorPrimary);
+            } else if (userStatusInPost.equals("CANCELED")) {
+                setStatus("Candeled", R.color.canceled);
+            } else if (userStatusInPost.equals("REJECTED")) {
+                setStatus("Rejected", R.color.canceled);
+            } else if (userStatusInPost.equals("FINISHED")) {
+                setStatus("Finished", R.color.colorPrimary);
+            } else if (foodPostDetail.dinners_left == 0){
+                setStatus("Finished", R.color.colorPrimary);
+            } else {
+                if (foodPostDetail.status.equals("OPEN")) {
+                    attendMealButton.setOnClickListener(v -> {
+                        attendFragment.show(true);
+                    });
+                    attendToComment.setOnClickListener(v -> {
+                        attendFragment.show(true);
+                    });
+                    paymentMethod.setVisibility(View.VISIBLE);
+                    attendToComment.setVisibility(View.VISIBLE);
+                } else if (foodPostDetail.status.equals("IN_COURSE")){
+                    setStatus("Meal in course", R.color.colorPrimary);
+                } else if(foodPostDetail.status.equals("FINISHED")){
+                    setStatus("Meal finished", R.color.colorPrimary);
+                }
+            }
+            attendMealButton.setVisibility(View.VISIBLE);
+        } else {
+            foodCommentFragment = FoodCommentFragment.newInstance(foodPostDetail.id);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.foodpost_comments, foodCommentFragment)
+                    .commit();
+        }
+    }
     void setDinners(){
 
         dinnerArray = new ImageView[]{
@@ -431,7 +504,6 @@ public class FoodLookActivity extends AppCompatActivity implements
                         PaymentMethodObject pm = new PaymentMethodObject(jo.get("data").getAsJsonArray().get(0).getAsJsonObject());
                         cardIcon.setImageDrawable(ContextCompat.getDrawable(getApplication(), pm.brandImage));
                         cardLastNumbers.setText(pm.last4.substring(pm.last4.length() - 4));
-                        paymentMethod.setVisibility(View.VISIBLE);
 
                         pendingPaymentMethod.setVisibility(View.GONE);
                         attendMealButton.setAlpha(1);
@@ -468,39 +540,6 @@ public class FoodLookActivity extends AppCompatActivity implements
         } else {
             attendMealButton.setVisibility(View.VISIBLE);
             progress.setVisibility(View.GONE);
-        }
-    }
-
-    void setPlaceButton(){
-        if (foodPostDetail.owner.id != USER.id){
-            if (foodPostDetail.dinners_left == 0){
-                attendMealButton.setText("Event full");
-                attendMealButton.setBackgroundColor(Color.TRANSPARENT);
-                attendMealButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
-            } else if (userStatusInPost.equals("CONFIRMED")) {
-                attendMealButton.setText("Meal confirmed");
-                attendMealButton.setBackgroundColor(Color.TRANSPARENT);
-                attendMealButton.setTextColor(ContextCompat.getColor(this, R.color.success));
-            } else if (userStatusInPost.equals("PENDING")) {
-                attendMealButton.setText("Meal pending confirmation");
-                attendMealButton.setBackgroundColor(Color.TRANSPARENT);
-                attendMealButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
-            } else {
-                if (foodPostDetail.status.equals("OPEN")) {
-                    attendMealButton.setOnClickListener(v -> {
-                        attendFragment.show(true);
-                    });
-                } else if (foodPostDetail.status.equals("IN_COURSE")){
-                    attendMealButton.setText("Meal in course");
-                    attendMealButton.setBackgroundColor(Color.TRANSPARENT);
-                    attendMealButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
-                } else if(foodPostDetail.status.equals("FINISHED")){
-                    attendMealButton.setText("Meal has finished");
-                    attendMealButton.setBackgroundColor(Color.TRANSPARENT);
-                    attendMealButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
-                }
-            }
-            attendMealButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -598,12 +637,163 @@ public class FoodLookActivity extends AppCompatActivity implements
     }
 
     void deleteComment(int commentId){
-        Server deleteFoodPost = new Server(this,"DELETE", getResources().getString(R.string.server) + "/delete_food_post_comment/" + commentId + "/");
-        try {
-            deleteFoodPost.execute().get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+        tasks.add(new DeleteCommentAsyncTask(getResources().getString(R.string.server) + "/delete_food_post_comment/" + commentId + "/").execute());
+    }
+
+    void deleteCommentVote(int commentId){
+        if (!anyTaskRunning()) {
+            tasks.add(new DeleteCommentVoteAsyncTask(getResources().getString(R.string.server) + "/vote_comment/" + commentId + "/").execute());
         }
+    }
+
+    class DeleteCommentAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public DeleteCommentAsyncTask(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            startWaitingFrame(true);
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.delete(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (null != response){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                foodCommentFragment.deleteElement(new FoodCommentObject(jo.get("comment").getAsJsonObject()), jo.get("trace").getAsJsonArray());
+            }
+            startWaitingFrame(false);
+            super.onPostExecute(response);
+        }
+    }
+
+    class DeleteCommentVoteAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public DeleteCommentVoteAsyncTask(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            startWaitingFrame(true);
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.delete(getApplicationContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (null != response){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                foodCommentFragment.updateElement(new FoodCommentObject(jo.get("comment").getAsJsonObject()), jo.get("trace").getAsJsonArray());
+            }
+            startWaitingFrame(false);
+            super.onPostExecute(response);
+        }
+    }
+
+    void onCommentVote(int comment_id, boolean is_up_vote){
+        if (!anyTaskRunning()){
+            tasks.add(new PostVoteAsyncTask(getResources().getString(R.string.server) + "/vote_comment/" + comment_id + "/").execute(
+                    new String[]{"is_up_vote", is_up_vote ? "True" : "False"}
+            ));
+        }
+    }
+
+    private class PostVoteAsyncTask extends AsyncTask<String[], Void, String> {
+        String uri;
+        public PostVoteAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected void onPreExecute() {
+            startWaitingFrame(true);
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.upload(getApplicationContext(), "POST", this.uri, params);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (null != response){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                foodCommentFragment.updateElement(new FoodCommentObject(jo.get("comment").getAsJsonObject()), jo.get("trace").getAsJsonArray());
+            }
+            startWaitingFrame(false);
+            super.onPostExecute(response);
+        }
+    }
+
+    @Override
+    public void onCommentsLoaded() {
+        if (commentId != null && commentId != 0){
+            foodCommentFragment.getAndUpdateComment(commentId);
+        }
+    }
+
+    @Override
+    public void onCommentDelete(FoodCommentObject comment) {
+        deleteComment(comment.id);
+    }
+
+    @Override
+    public void onVoteComment(FoodCommentObject comment, boolean is_up_vote) {
+        onCommentVote(comment.id, is_up_vote);
+    }
+
+    @Override
+    public void onDeleteVoteComment(FoodCommentObject comment) {
+        deleteCommentVote(comment.id);
+    }
+
+    @Override
+    public void onCommentCreate(FoodCommentObject comment) {
+        commentResponded = comment;
+        Intent paymentMethod = new Intent(this, ReplyReviewOrCommentActivity.class);
+        paymentMethod.putExtra("comment", comment);
+        paymentMethod.putExtra("foodPostId", foodPostDetail.id);
+        startActivity(paymentMethod);
+    }
+
+    boolean anyTaskRunning(){
+        for (AsyncTask task: tasks){
+            if (task != null && task.getStatus() == AsyncTask.Status.RUNNING){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    @Override
+    public void onGoToProfile(User user){
+        Intent profile = new Intent(this, ProfileViewActivity.class);
+        profile.putExtra("userId", user.id);
+        startActivity(profile);
     }
 
     @Override

@@ -48,53 +48,60 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         <LinearLayout
-            android:id="@+id/profile_look"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:background="@color/colorSecondary"
-            android:gravity="center_vertical">
-
-            <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/poster_image"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_marginLeft="16dp"
-                android:src="@drawable/no_profile_photo"
-                app:civ_border_color="@android:color/white"
-                app:civ_border_width="1dp"
-                app:civ_shadow="true"
-                app:civ_shadow_color="@color/colorSecondaryDark"
-                app:civ_shadow_radius="1"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/back"
-                app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
             <LinearLayout
+                android:id="@+id/profile_look"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/poster_image"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_height="56dp"
+                android:background="@color/colorSecondary"
+                android:gravity="center_vertical">
 
-                <TextView
-                    android:id="@+id/poster_name"
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/poster_image"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/no_profile_photo"
+                    app:civ_border_color="@android:color/white"
+                    app:civ_border_width="1dp"
+                    app:civ_shadow="true"
+                    app:civ_shadow_color="@color/colorSecondaryDark"
+                    app:civ_shadow_radius="1"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/back"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="-"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/poster_image"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/username"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="-"
-                    android:textColor="@android:color/white" />
+                    <TextView
+                        android:id="@+id/poster_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="-"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/username"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="-"
+                        android:textColor="@android:color/white" />
+                </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>
@@ -112,6 +119,17 @@
             android:layout_height="match_parent"
             android:background="@color/grey_lighter"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/post_status"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary"
+                android:padding="4dp"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/postPlateName"
@@ -531,6 +549,50 @@
                 android:paddingStart="24dp"
                 android:paddingEnd="24dp"
                 android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/comments_whole"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp"
+                    android:paddingEnd="16dp">
+
+                    <TextView
+                        android:id="@+id/textView52"
+                        android:layout_width="match_parent"
+                        android:layout_height="42dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Comments"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/attend_to_comment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0"
+                        android:gravity="center"
+                        android:text="@string/attend_to_comment"
+                        android:textColor="@color/success"
+                        android:visibility="invisible" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:id="@+id/foodpost_comments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </FrameLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
