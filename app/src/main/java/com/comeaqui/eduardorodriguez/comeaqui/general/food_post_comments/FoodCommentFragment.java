@@ -190,7 +190,7 @@ public class FoodCommentFragment extends Fragment {
                     foodCommentObjectHashMap.put(fco.id, fco);
                     foodComments.add(fco);
                 }
-                adapter = new MyFoodCommentRecyclerViewAdapter(foodComments, mListener);
+                adapter = new MyFoodCommentRecyclerViewAdapter(foodComments, mListener, null);
                 recyclerView.setAdapter(adapter);
                 mListener.onCommentsLoaded();
             }

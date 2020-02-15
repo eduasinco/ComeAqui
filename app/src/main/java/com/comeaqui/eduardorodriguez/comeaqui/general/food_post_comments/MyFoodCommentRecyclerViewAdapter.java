@@ -1,14 +1,18 @@
 package com.comeaqui.eduardorodriguez.comeaqui.general.food_post_comments;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -16,7 +20,13 @@ import com.bumptech.glide.Glide;
 import com.comeaqui.eduardorodriguez.comeaqui.R;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodCommentObject;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.User;
+import com.comeaqui.eduardorodriguez.comeaqui.server.ServerAPI;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,14 +35,19 @@ import static com.comeaqui.eduardorodriguez.comeaqui.App.USER;
 
 public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoodCommentRecyclerViewAdapter.ViewHolder> {
 
+    Context context;
     private final List<FoodCommentObject> mValues;
     private final OnListFragmentInteractionListener mListener;
+    private FoodCommentObject comment;
 
     public HashMap<Integer, MyFoodCommentRecyclerViewAdapter> adapters = new HashMap<>();
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
-    public MyFoodCommentRecyclerViewAdapter(List<FoodCommentObject> items, OnListFragmentInteractionListener listener) {
+
+    public MyFoodCommentRecyclerViewAdapter(List<FoodCommentObject> items, OnListFragmentInteractionListener listener, FoodCommentObject comment) {
         mValues = items;
         mListener = listener;
+        this.comment = comment;
     }
 
     @Override
@@ -40,6 +55,7 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_foodcomment, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
+        context = viewHolder.mView.getContext();
         return viewHolder;
     }
 
@@ -47,19 +63,34 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
 
-        if (holder.mItem.hide){
-            holder.mView.setVisibility(View.GONE);
+        if (holder.mItem.is_last){
+            holder.wholeView.setVisibility(View.GONE);
+            holder.moreInList.setVisibility(View.VISIBLE);
+
+            holder.moreInList.setOnClickListener(v -> getMoreComments());
+
         } else {
-            holder.mView.setVisibility(View.VISIBLE);
+            holder.wholeView.setVisibility(View.VISIBLE);
+            holder.moreInList.setVisibility(View.GONE);
+
             if (holder.mItem.replies.size() > 0){
                 holder.replyList.setVisibility(View.VISIBLE);
                 holder.replyList.setLayoutManager(new LinearLayoutManager(holder.mView.getContext()));
-                MyFoodCommentRecyclerViewAdapter adapter = new MyFoodCommentRecyclerViewAdapter(holder.mItem.replies, mListener);
+                MyFoodCommentRecyclerViewAdapter adapter = new MyFoodCommentRecyclerViewAdapter(holder.mItem.replies, mListener, holder.mItem);
                 adapters.put(holder.mItem.id, adapter);
                 holder.replyList.setAdapter(adapter);
             } else {
                 holder.replyList.setVisibility(View.GONE);
             }
+
+            if (holder.mItem.is_max_depth){
+                holder.continueConversation.setVisibility(View.VISIBLE);
+                holder.continueConversation.setOnClickListener(v -> mListener.continueConversation(holder.mItem));
+            } else {
+                holder.continueConversation.setVisibility(View.GONE);
+            }
+
+
 
             holder.mItem = mValues.get(position);
             holder.reviewerName.setText(holder.mItem.owner.first_name + ", " + holder.mItem.owner.last_name);
@@ -123,6 +154,53 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
         }
     }
 
+    boolean anyTaskRunning(){
+        for (AsyncTask task: tasks){
+            if (task != null && task.getStatus() == AsyncTask.Status.RUNNING){
+                return true;
+            }
+        }
+        return false;
+    }
+    int page = 2;
+    public void getMoreComments(){
+        if (!anyTaskRunning()){
+            tasks.add(new GetCommentAsyncTask(context.getString(R.string.server) + "/comment_comments/" + this.comment.id + "/" + page + "/").execute());
+        }
+    }
+    class GetCommentAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public GetCommentAsyncTask(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.get(context, this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (null != response){
+                JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
+                for (JsonElement je: ja){
+                    comment.replies.add(new FoodCommentObject(je.getAsJsonObject()));
+                }
+                notifyDataSetChanged();
+                page ++;
+            }
+            super.onPostExecute(response);
+        }
+    }
+
     void setOptionsMenu(MyFoodCommentRecyclerViewAdapter.ViewHolder holder){
         holder.optionsReview.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(holder.mView.getContext(), holder.optionsReview);
@@ -161,6 +239,7 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
+        public final LinearLayout wholeView;
         public final ImageView reviewerImage;
         public final ImageView replyerImage;
         public final TextView reviewerName;
@@ -175,6 +254,9 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
         public final TextView replyerName;
         public final TextView replyerUsername;
         public final TextView reply;
+        public final TextView moreInList;
+        public final TextView continueConversation;
+
         public final ImageButton optionsReply;
         public final RecyclerView replyList;
         public FoodCommentObject mItem;
@@ -182,6 +264,7 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
         public ViewHolder(View view) {
             super(view);
             mView = view;
+            wholeView = view.findViewById(R.id.whole_view);
             reviewerImage = view.findViewById(R.id.reviewer_image);
             replyerImage = view.findViewById(R.id.reviewer_image_ans);
             reviewerName = view.findViewById(R.id.reviewer_name);
@@ -197,6 +280,8 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
             upVote = view.findViewById(R.id.upvote);
             votes = view.findViewById(R.id.votes);
             downVote = view.findViewById(R.id.downvote);
+            moreInList = view.findViewById(R.id.more_in_list);
+            continueConversation = view.findViewById(R.id.continue_conversation);
         }
     }
 
@@ -205,6 +290,12 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
         void onCommentDelete(FoodCommentObject comment);
         void onVoteComment(FoodCommentObject comment, boolean is_up_vote);
         void onDeleteVoteComment(FoodCommentObject comment);
+        void continueConversation(FoodCommentObject comment);
         void onGoToProfile(User user);
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
     }
 }

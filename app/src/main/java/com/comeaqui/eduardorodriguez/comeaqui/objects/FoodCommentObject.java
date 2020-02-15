@@ -19,9 +19,10 @@ public class FoodCommentObject implements Serializable {
     public String message;
     public int votes_n;
     public Boolean is_user_up_vote;
+    public boolean is_max_depth;
+    public boolean is_last;
     public String createdAt;
 
-    public boolean hide = false;
     public MyFoodCommentRecyclerViewAdapter adapter;
     public FoodCommentObject(JsonObject jo){
         id = jo.get("id").getAsInt();
@@ -41,6 +42,8 @@ public class FoodCommentObject implements Serializable {
         }catch (Exception e){}
         votes_n = jo.get("votes_n").getAsInt();
         try{is_user_up_vote = jo.get("is_user_up_vote").getAsBoolean();} catch (Exception e){};
+        is_max_depth = jo.get("is_max_depth").getAsBoolean();
+        is_last = jo.get("is_last").getAsBoolean();
         createdAt = DateFormatting.hYesterdayWeekDay(jo.get("created_at").getAsString());
     }
 }

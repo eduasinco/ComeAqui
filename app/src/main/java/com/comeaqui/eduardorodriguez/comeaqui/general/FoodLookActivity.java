@@ -774,6 +774,12 @@ public class FoodLookActivity extends AppCompatActivity implements
         deleteCommentVote(comment.id);
     }
 
+
+    @Override
+    public void continueConversation(FoodCommentObject comment) {
+
+    }
+
     @Override
     public void onCommentCreate(FoodCommentObject comment) {
         commentResponded = comment;
