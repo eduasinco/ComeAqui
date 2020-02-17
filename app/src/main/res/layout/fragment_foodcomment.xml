@@ -8,16 +8,6 @@
     android:layout_marginLeft="16dp"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/more_in_list"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="@color/colorPrimaryLighter"
-        android:gravity="center"
-        android:text="more in list..."
-        android:visibility="gone"
-        tools:visibility="visible" />
-
     <LinearLayout
         android:id="@+id/whole_view"
         android:layout_width="match_parent"
@@ -146,5 +136,15 @@
             tools:visibility="visible" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/more_in_list"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@color/colorPrimaryLighter"
+        android:gravity="center"
+        android:text="more in list..."
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </LinearLayout>

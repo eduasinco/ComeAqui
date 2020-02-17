@@ -63,95 +63,95 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
 
-        if (holder.mItem.is_last){
-            holder.wholeView.setVisibility(View.GONE);
-            holder.moreInList.setVisibility(View.VISIBLE);
+        holder.wholeView.setVisibility(View.VISIBLE);
+        holder.moreInList.setVisibility(View.GONE);
 
-            holder.moreInList.setOnClickListener(v -> getMoreComments());
-
+        if (holder.mItem.replies.size() > 0){
+            holder.replyList.setVisibility(View.VISIBLE);
+            holder.replyList.setLayoutManager(new LinearLayoutManager(holder.mView.getContext()));
+            MyFoodCommentRecyclerViewAdapter adapter = new MyFoodCommentRecyclerViewAdapter(holder.mItem.replies, mListener, holder.mItem);
+            adapters.put(holder.mItem.id, adapter);
+            holder.replyList.setAdapter(adapter);
         } else {
-            holder.wholeView.setVisibility(View.VISIBLE);
-            holder.moreInList.setVisibility(View.GONE);
+            holder.replyList.setVisibility(View.GONE);
+        }
 
-            if (holder.mItem.replies.size() > 0){
-                holder.replyList.setVisibility(View.VISIBLE);
-                holder.replyList.setLayoutManager(new LinearLayoutManager(holder.mView.getContext()));
-                MyFoodCommentRecyclerViewAdapter adapter = new MyFoodCommentRecyclerViewAdapter(holder.mItem.replies, mListener, holder.mItem);
-                adapters.put(holder.mItem.id, adapter);
-                holder.replyList.setAdapter(adapter);
-            } else {
-                holder.replyList.setVisibility(View.GONE);
-            }
-
-            if (holder.mItem.is_max_depth){
-                holder.continueConversation.setVisibility(View.VISIBLE);
-                holder.continueConversation.setOnClickListener(v -> mListener.continueConversation(holder.mItem));
-            } else {
-                holder.continueConversation.setVisibility(View.GONE);
-            }
-
-
-
-            holder.mItem = mValues.get(position);
-            holder.reviewerName.setText(holder.mItem.owner.first_name + ", " + holder.mItem.owner.last_name);
-            holder.reviewerUsername.setText(holder.mItem.owner.username);
-            holder.review.setText(holder.mItem.message);
-            holder.votes.setText(holder.mItem.votes_n + "");
-
-            holder.votes.setTextColor(ContextCompat.getColor(holder.mView.getContext(), R.color.colorPrimary));
-            holder.upVote.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.upvote));
-            holder.downVote.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.downvote));
-
-            if (holder.mItem.is_user_up_vote != null){
-                holder.votes.setTextColor(ContextCompat.getColor(holder.mView.getContext(), R.color.colorSecondary));
-                if (holder.mItem.is_user_up_vote){
-                    holder.upVote.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.upvoted));
-                } else {
-                    holder.downVote.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.downvoted));
-                }
-            }
-
-            if(!holder.mItem.owner.profile_photo.contains("no-image")) {
-                Glide.with(holder.mView.getContext()).load(holder.mItem.owner.profile_photo).into(holder.reviewerImage);
-            } else {
-                holder.reviewerImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.no_profile_photo));
-            }
-
-            if (holder.mItem.owner.id == USER.id){
-                holder.replyComment.setVisibility(View.GONE);
-            } else {
-                holder.replyComment.setVisibility(View.VISIBLE);
-                holder.replyComment.setOnClickListener(v -> {
-                    mListener.onCommentCreate(holder.mItem);
-                });
-            }
-
-
-            holder.reviewerImage.setOnClickListener(v -> mListener.onGoToProfile(holder.mItem.owner));
-            holder.upVote.setOnClickListener(v -> {
-                if (holder.mItem.is_user_up_vote == null){
-                    mListener.onVoteComment(holder.mItem, true);
-                } else {
-                    if (holder.mItem.is_user_up_vote){
-                        mListener.onDeleteVoteComment(holder.mItem);
-                    } else {
-                        mListener.onVoteComment(holder.mItem, true);
-                    }
-                }
+        if (holder.mItem.is_max_depth){
+            holder.continueConversation.setVisibility(View.VISIBLE);
+            holder.continueConversation.setOnClickListener(v -> mListener.continueConversation(holder.mItem));
+        } else {
+            holder.continueConversation.setVisibility(View.GONE);
+        }
+        if (holder.mItem.is_last){
+            holder.moreInList.setVisibility(View.VISIBLE);
+            holder.moreInList.setOnClickListener(v -> {
+                getMoreComments();
+                holder.mItem.is_last = false;
             });
-            holder.downVote.setOnClickListener(v -> {
-                if (holder.mItem.is_user_up_vote == null){
+        } else {
+            holder.moreInList.setVisibility(View.GONE);
+        }
+
+
+        holder.mItem = mValues.get(position);
+        holder.reviewerName.setText(holder.mItem.owner.first_name + ", " + holder.mItem.owner.last_name);
+        holder.reviewerUsername.setText(holder.mItem.owner.username);
+        holder.review.setText(holder.mItem.message);
+        holder.votes.setText(holder.mItem.votes_n + "");
+
+        holder.votes.setTextColor(ContextCompat.getColor(holder.mView.getContext(), R.color.colorPrimary));
+        holder.upVote.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.upvote));
+        holder.downVote.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.downvote));
+
+        if (holder.mItem.is_user_up_vote != null){
+            holder.votes.setTextColor(ContextCompat.getColor(holder.mView.getContext(), R.color.colorSecondary));
+            if (holder.mItem.is_user_up_vote){
+                holder.upVote.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.upvoted));
+            } else {
+                holder.downVote.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.downvoted));
+            }
+        }
+
+        if(!holder.mItem.owner.profile_photo.contains("no-image")) {
+            Glide.with(holder.mView.getContext()).load(holder.mItem.owner.profile_photo).into(holder.reviewerImage);
+        } else {
+            holder.reviewerImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.no_profile_photo));
+        }
+
+        if (holder.mItem.owner.id == USER.id){
+            holder.replyComment.setVisibility(View.GONE);
+        } else {
+            holder.replyComment.setVisibility(View.VISIBLE);
+            holder.replyComment.setOnClickListener(v -> {
+                mListener.onCommentCreate(holder.mItem);
+            });
+        }
+
+
+        holder.reviewerImage.setOnClickListener(v -> mListener.onGoToProfile(holder.mItem.owner));
+        holder.upVote.setOnClickListener(v -> {
+            if (holder.mItem.is_user_up_vote == null){
+                mListener.onVoteComment(holder.mItem, true);
+            } else {
+                if (holder.mItem.is_user_up_vote){
+                    mListener.onDeleteVoteComment(holder.mItem);
+                } else {
+                    mListener.onVoteComment(holder.mItem, true);
+                }
+            }
+        });
+        holder.downVote.setOnClickListener(v -> {
+            if (holder.mItem.is_user_up_vote == null){
+                mListener.onVoteComment(holder.mItem, false);
+            } else {
+                if (holder.mItem.is_user_up_vote){
                     mListener.onVoteComment(holder.mItem, false);
                 } else {
-                    if (holder.mItem.is_user_up_vote){
-                        mListener.onVoteComment(holder.mItem, false);
-                    } else {
-                        mListener.onDeleteVoteComment(holder.mItem);
-                    }
+                    mListener.onDeleteVoteComment(holder.mItem);
                 }
-            });
-            setOptionsMenu(holder);
-        }
+            }
+        });
+        setOptionsMenu(holder);
     }
 
     boolean anyTaskRunning(){
@@ -192,8 +192,11 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
             if (null != response){
                 JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
                 for (JsonElement je: ja){
-                    comment.replies.add(new FoodCommentObject(je.getAsJsonObject()));
+                    FoodCommentObject moreComment = new FoodCommentObject(je.getAsJsonObject());
+                    comment.replies.add(moreComment);
+                    comment.repliesHashMap.put(moreComment.id, moreComment);
                 }
+                comment.replies.get(comment.replies.size() - 1).is_last = true;
                 notifyDataSetChanged();
                 page ++;
             }
