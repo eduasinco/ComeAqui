@@ -189,6 +189,8 @@ public class FoodCommentFragment extends Fragment{
         private String uri;
         public GetAsyncTask(String uri){
             this.uri = uri;
+            sendLoadingProgress.setVisibility(View.VISIBLE);
+            commentButton.setVisibility(View.GONE);
         }
 
         @Override
@@ -220,6 +222,8 @@ public class FoodCommentFragment extends Fragment{
                 if (commentId != null && commentId != 0){
                     getAndUpdateComment(commentId);
                 }
+                sendLoadingProgress.setVisibility(View.GONE);
+                commentButton.setVisibility(View.VISIBLE);
             }
             super.onPostExecute(response);
         }
@@ -261,7 +265,7 @@ public class FoodCommentFragment extends Fragment{
     }
 
     void createAPostComment(){
-        tasks.add(new PostAsyncTask(getResources().getString(R.string.server) + "/food_post_comment/" + foodPostId + "/").execute(
+        tasks.add(new PostAsyncTask(getResources().getString(R.string.server) + "/food_post_comment/" + type + "/" + foodPostId + "/").execute(
                 new String[]{"post_id", foodPostId + ""},
                 new String[]{"comment_id", ""},
                 new String[]{"message", commentEditText.getText().toString()}

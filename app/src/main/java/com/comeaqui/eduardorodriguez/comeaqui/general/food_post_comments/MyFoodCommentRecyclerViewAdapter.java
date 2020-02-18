@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -84,8 +85,7 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
             holder.moreInList.setVisibility(View.VISIBLE);
             holder.moreInList.setText(holder.mItem.extra_comments_in_list + " more comments...");
             holder.moreInList.setOnClickListener(v -> {
-                getMoreComments();
-                holder.mItem.extra_comments_in_list = null;
+                getMoreComments(holder);
             });
         } else {
             holder.moreInList.setVisibility(View.GONE);
@@ -161,21 +161,24 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
         }
         return false;
     }
-    int page = 2;
-    public void getMoreComments(){
+    public void getMoreComments(ViewHolder holder){
         if (!anyTaskRunning()){
-            tasks.add(new GetCommentAsyncTask(context.getString(R.string.server) + "/comment_comments/" + this.comment.id + "/").execute());
+            tasks.add(new GetCommentAsyncTask(context.getString(R.string.server) + "/comment_comments/" + this.comment.id + "/", holder).execute());
         }
     }
     class GetCommentAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
-        public GetCommentAsyncTask(String uri){
+        private ViewHolder holder;
+        public GetCommentAsyncTask(String uri, ViewHolder holder){
             this.uri = uri;
+            this.holder = holder;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            holder.moreInList.setVisibility(View.GONE);
+            holder.moreInListProgress.setVisibility(View.VISIBLE);
         }
         @Override
         protected String doInBackground(String[]... params) {
@@ -196,7 +199,8 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
                     comment.repliesHashMap.put(moreComment.id, moreComment);
                 }
                 notifyDataSetChanged();
-                page ++;
+                holder.mItem.extra_comments_in_list = null;
+                holder.moreInListProgress.setVisibility(View.GONE);
             }
             super.onPostExecute(response);
         }
@@ -257,6 +261,8 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
         public final TextView reply;
         public final TextView moreInList;
         public final TextView continueConversation;
+        public final ProgressBar continueProgressBar;
+        public final ProgressBar moreInListProgress;
 
         public final ImageButton optionsReply;
         public final RecyclerView replyList;
@@ -283,6 +289,8 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
             downVote = view.findViewById(R.id.downvote);
             moreInList = view.findViewById(R.id.more_in_list);
             continueConversation = view.findViewById(R.id.continue_conversation);
+            continueProgressBar = view.findViewById(R.id.continue_progress);
+            moreInListProgress = view.findViewById(R.id.more_in_list_progress);
         }
     }
 
