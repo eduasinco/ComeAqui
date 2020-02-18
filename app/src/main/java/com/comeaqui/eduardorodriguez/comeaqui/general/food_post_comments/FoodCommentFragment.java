@@ -138,11 +138,6 @@ public class FoodCommentFragment extends Fragment{
         rc.adapter.notifyItemChanged(rc.replies.indexOf(commentInList));
     }
 
-    public void deleteElement(FoodCommentObject newComment, JsonArray trace){
-        RecurseComment rc = recurseToComment(trace);
-        rc.adapter.notifyItemRemoved(rc.replies.indexOf(rc.repliesHashMap.get(newComment.id)));
-        rc.replies.remove(rc.repliesHashMap.get(newComment.id));
-    }
 
     public void addElement(FoodCommentObject newComment, JsonArray trace){
         RecurseComment rc = recurseToComment(trace);
@@ -216,7 +211,7 @@ public class FoodCommentFragment extends Fragment{
                     foodCommentObjectHashMap.put(fco.id, fco);
                     foodComments.add(fco);
                 }
-                adapter = new MyFoodCommentRecyclerViewAdapter(foodComments, f, null);
+                adapter = new MyFoodCommentRecyclerViewAdapter(foodComments, foodCommentObjectHashMap, f, null);
                 recyclerView.setAdapter(adapter);
 
                 if (commentId != null && commentId != 0){
@@ -305,45 +300,6 @@ public class FoodCommentFragment extends Fragment{
         }
     }
 
-
-
-    void deleteComment(int commentId){
-        tasks.add(new DeleteCommentAsyncTask(getResources().getString(R.string.server) + "/delete_food_post_comment/" + commentId + "/").execute());
-    }
-
-    class DeleteCommentAsyncTask extends AsyncTask<String[], Void, String> {
-        private String uri;
-        public DeleteCommentAsyncTask(String uri){
-            this.uri = uri;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String[]... params) {
-            try {
-                return ServerAPI.delete(getActivity(), this.uri);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(String response) {
-            if (null != response){
-                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
-                deleteElement(new FoodCommentObject(jo.get("comment").getAsJsonObject()), jo.get("trace").getAsJsonArray());
-            }
-            super.onPostExecute(response);
-        }
-    }
-
-    public void onCommentDelete(FoodCommentObject comment) {
-        deleteComment(comment.id);
-    }
 
 
     public void continueConversation(FoodCommentObject comment) {

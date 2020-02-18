@@ -37,6 +37,7 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
 
     Context context;
     private final List<FoodCommentObject> mValues;
+    private final HashMap<Integer, FoodCommentObject> mValuesHashMap;
     private final FoodCommentFragment mListener;
     private FoodCommentObject comment;
 
@@ -44,9 +45,10 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
 
-    public MyFoodCommentRecyclerViewAdapter(List<FoodCommentObject> items, FoodCommentFragment listener, FoodCommentObject comment) {
+    public MyFoodCommentRecyclerViewAdapter(List<FoodCommentObject> items, HashMap<Integer, FoodCommentObject> mValuesHashMap,FoodCommentFragment listener, FoodCommentObject comment) {
         mValues = items;
         mListener = listener;
+        this.mValuesHashMap = mValuesHashMap;
         this.comment = comment;
     }
 
@@ -71,7 +73,7 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
             holder.replyList.setVisibility(View.VISIBLE);
             LinearLayoutManager lln = new LinearLayoutManager(holder.mView.getContext());
             holder.replyList.setLayoutManager(lln);
-            MyFoodCommentRecyclerViewAdapter adapter = new MyFoodCommentRecyclerViewAdapter(holder.mItem.replies, mListener, holder.mItem);
+            MyFoodCommentRecyclerViewAdapter adapter = new MyFoodCommentRecyclerViewAdapter(holder.mItem.replies,holder.mItem.repliesHashMap, mListener, holder.mItem);
             adapters.put(holder.mItem.id, adapter);
             holder.replyList.setAdapter(adapter);
         } else {
@@ -88,7 +90,7 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
             holder.moreInList.setVisibility(View.VISIBLE);
             holder.moreInList.setText(holder.mItem.extra_comments_in_list + " more comments...");
             holder.moreInList.setOnClickListener(v -> {
-                getMoreComments(holder);
+                getMoreComments(holder, holder.mItem.extra_comments_in_list);
             });
         } else {
             holder.moreInList.setVisibility(View.GONE);
@@ -164,10 +166,8 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
         }
         return false;
     }
-    public void getMoreComments(ViewHolder holder){
-        if (!anyTaskRunning()){
-            tasks.add(new GetCommentAsyncTask(context.getString(R.string.server) + "/comment_comments/" + this.comment.id + "/", holder).execute());
-        }
+    public void getMoreComments(ViewHolder holder, int nLasts){
+        tasks.add(new GetCommentAsyncTask(context.getString(R.string.server) + "/comment_comments/" + this.comment.id + "/" + nLasts + "/", holder).execute());
     }
     class GetCommentAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -198,12 +198,61 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
                 JsonArray ja = new JsonParser().parse(response).getAsJsonArray();
                 for (JsonElement je: ja){
                     FoodCommentObject moreComment = new FoodCommentObject(je.getAsJsonObject());
-                    comment.replies.add(moreComment);
-                    comment.repliesHashMap.put(moreComment.id, moreComment);
+                    mValues.add(moreComment);
+                    mValuesHashMap.put(moreComment.id, moreComment);
                 }
                 notifyDataSetChanged();
                 holder.mItem.extra_comments_in_list = null;
                 holder.moreInListProgress.setVisibility(View.GONE);
+            }
+            super.onPostExecute(response);
+        }
+    }
+
+    void deleteComment(ViewHolder holder){
+        tasks.add(new DeleteCommentAsyncTask(holder.mView.getResources().getString(R.string.server) + "/delete_food_post_comment/" + holder.mItem.id + "/", holder).execute());
+    }
+
+    class DeleteCommentAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        private ViewHolder holder;
+
+        public DeleteCommentAsyncTask(String uri, ViewHolder holder){
+            this.uri = uri;
+            this.holder = holder;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.delete(holder.mView.getContext(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (null != response){
+                int deletedCommentId = new JsonParser().parse(response).getAsInt();
+                FoodCommentObject commentToDelete = mValuesHashMap.get(deletedCommentId);
+                Integer extraCommentsInList =  commentToDelete.extra_comments_in_list;
+                int indexInList = mValues.indexOf(commentToDelete);
+                notifyItemRemoved(indexInList);
+                mValues.remove(mValuesHashMap.get(deletedCommentId));
+                if (extraCommentsInList != null){
+                    if (indexInList == 0){
+                        getMoreComments(holder, extraCommentsInList);
+                    } else {
+                        mValues.get(indexInList - 1).extra_comments_in_list = extraCommentsInList;
+                        notifyItemChanged(indexInList - 1);
+                    }
+                }
             }
             super.onPostExecute(response);
         }
@@ -322,7 +371,7 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
                 mListener.onCommentCreate(holder.mItem);
                 break;
             case "Delete":
-                mListener.onCommentDelete(holder.mItem);
+                deleteComment(holder);
                 break;
             case "Report":
                 break;

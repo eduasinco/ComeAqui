@@ -152,6 +152,9 @@ public class FoodLookActivity extends AppCompatActivity implements
         Bundle b = intent.getExtras();
         if(b != null && b.get("foodPostId") != null){
             fpId = b.getInt("foodPostId");
+            if (fpId != null){
+                getFoodPostDetailsAndSet(fpId);
+            }
         }
         changePaymentMethod.setOnClickListener(v -> {
             Intent paymentMethod = new Intent(this, PaymentMethodsActivity.class);
@@ -170,9 +173,6 @@ public class FoodLookActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        if (fpId != null){
-            getFoodPostDetailsAndSet(fpId);
-        }
     }
 
     void setDetails(){
@@ -220,6 +220,7 @@ public class FoodLookActivity extends AppCompatActivity implements
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.attend_message, attendFragment)
                 .commit();
+
 
         findViewById(R.id.other).setOnClickListener(v -> {
             Intent sendIntent = new Intent();
@@ -425,12 +426,6 @@ public class FoodLookActivity extends AppCompatActivity implements
     void getFoodPostDetailsAndSet(int foodPostId){
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/food_with_user_status/" + foodPostId + "/").execute());
     }
-
-    @Override
-    public void onSomething() {
-
-    }
-
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
         public GetAsyncTask(String uri){
@@ -637,6 +632,11 @@ public class FoodLookActivity extends AppCompatActivity implements
     @Override
     public void rightButtonPressed() {
         deletePost();
+    }
+
+    @Override
+    public void onSomething() {
+
     }
 
     @Override
