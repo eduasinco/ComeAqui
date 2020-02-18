@@ -1,6 +1,7 @@
 package com.comeaqui.eduardorodriguez.comeaqui.general.food_post_comments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -18,9 +19,12 @@ import android.widget.Toast;
 
 import com.comeaqui.eduardorodriguez.comeaqui.R;
 import com.comeaqui.eduardorodriguez.comeaqui.general.FoodLookActivity;
+import com.comeaqui.eduardorodriguez.comeaqui.general.continue_conversation.ContinueCommentConversationActivity;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodCommentObject;
+import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.User;
-import com.comeaqui.eduardorodriguez.comeaqui.order.OrderLookActivity;
+import com.comeaqui.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
+import com.comeaqui.eduardorodriguez.comeaqui.review.food_review_look.ReplyReviewOrCommentActivity;
 import com.comeaqui.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -33,13 +37,16 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class FoodCommentFragment extends Fragment {
+
+public class FoodCommentFragment extends Fragment{
 
     // TODO: Customize parameter argument names
-    private static final String FOODPOST_ID = "food_post_id";
+    private static final String FOODPOST_OR_COMMENT_ID = "id";
+    private static final String TYPE = "type";
     // TODO: Customize parameters
     private int foodPostId;
-    private FoodLookActivity mListener;
+    private String type;
+    private OnFragmentInteractionListener mListener;
 
     private EditText commentEditText;
     private Button commentButton;
@@ -50,16 +57,23 @@ public class FoodCommentFragment extends Fragment {
     private List<FoodCommentObject> foodComments;
     private HashMap<Integer, FoodCommentObject> foodCommentObjectHashMap;
     private MyFoodCommentRecyclerViewAdapter adapter;
+    private FoodCommentFragment f;
+
     public FoodCommentFragment() { }
+
+
+    FoodCommentObject commentResponded;
+    Integer commentId;
 
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static FoodCommentFragment newInstance(int foodPostId) {
+    public static FoodCommentFragment newInstance(int foodPostId, String type) {
         FoodCommentFragment fragment = new FoodCommentFragment();
         Bundle args = new Bundle();
-        args.putInt(FOODPOST_ID, foodPostId);
+        args.putInt(FOODPOST_OR_COMMENT_ID, foodPostId);
+        args.putString(TYPE, type);
         fragment.setArguments(args);
         return fragment;
     }
@@ -68,6 +82,13 @@ public class FoodCommentFragment extends Fragment {
     public void onResume() {
         super.onResume();
         hideKeyboard();
+        if (commentResponded != null){
+            while (commentResponded.comment != null){
+                commentResponded = commentResponded.comment;
+            }
+            getAndUpdateComment(commentResponded.id);
+            commentResponded = null;
+        }
     }
 
     private void hideKeyboard(){
@@ -106,6 +127,7 @@ public class FoodCommentFragment extends Fragment {
         RecurseComment rc = recurseToComment(trace);
         FoodCommentObject commentInList = rc.repliesHashMap.get(newComment.id);
         rc.replies.set(rc.replies.indexOf(commentInList), newComment);
+        newComment.extra_comments_in_list = commentInList.extra_comments_in_list;
         rc.repliesHashMap.put(newComment.id, newComment);
         rc.adapter.notifyItemChanged(rc.replies.indexOf(newComment));
     }
@@ -133,7 +155,8 @@ public class FoodCommentFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            foodPostId = getArguments().getInt(FOODPOST_ID);
+            foodPostId = getArguments().getInt(FOODPOST_OR_COMMENT_ID);
+            type = getArguments().getString(TYPE);
         }
     }
 
@@ -141,6 +164,7 @@ public class FoodCommentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_foodcomment_list, container, false);
+        f = this;
         commentEditText = view.findViewById(R.id.comment_edit_text);
         commentButton = view.findViewById(R.id.comment_button);
         recyclerView = view.findViewById(R.id.list);
@@ -154,12 +178,12 @@ public class FoodCommentFragment extends Fragment {
                 Toast.makeText(getContext(), "You have to write something", Toast.LENGTH_SHORT).show();
             }
         });
-        getFoodPostComment();
+        getFoodPostComments();
         return view;
     }
 
-    void getFoodPostComment(){
-        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/food_post_comment/" + foodPostId + "/").execute());
+    void getFoodPostComments(){
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/food_post_comment/" + type + "/" + foodPostId + "/").execute());
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -190,9 +214,12 @@ public class FoodCommentFragment extends Fragment {
                     foodCommentObjectHashMap.put(fco.id, fco);
                     foodComments.add(fco);
                 }
-                adapter = new MyFoodCommentRecyclerViewAdapter(foodComments, mListener, null);
+                adapter = new MyFoodCommentRecyclerViewAdapter(foodComments, f, null);
                 recyclerView.setAdapter(adapter);
-                mListener.onCommentsLoaded();
+
+                if (commentId != null && commentId != 0){
+                    getAndUpdateComment(commentId);
+                }
             }
             super.onPostExecute(response);
         }
@@ -275,11 +302,171 @@ public class FoodCommentFragment extends Fragment {
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
+    void deleteComment(int commentId){
+        tasks.add(new DeleteCommentAsyncTask(getResources().getString(R.string.server) + "/delete_food_post_comment/" + commentId + "/").execute());
+    }
+
+    void deleteCommentVote(int commentId){
+        if (!anyTaskRunning()) {
+            tasks.add(new DeleteCommentVoteAsyncTask(getResources().getString(R.string.server) + "/vote_comment/" + commentId + "/").execute());
+        }
+    }
+
+    class DeleteCommentAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public DeleteCommentAsyncTask(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.delete(getActivity(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (null != response){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                deleteElement(new FoodCommentObject(jo.get("comment").getAsJsonObject()), jo.get("trace").getAsJsonArray());
+            }
+            super.onPostExecute(response);
+        }
+    }
+
+    class DeleteCommentVoteAsyncTask extends AsyncTask<String[], Void, String> {
+        private String uri;
+        public DeleteCommentVoteAsyncTask(String uri){
+            this.uri = uri;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.delete(getActivity(), this.uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (null != response){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                updateElement(new FoodCommentObject(jo.get("comment").getAsJsonObject()), jo.get("trace").getAsJsonArray());
+            }
+            super.onPostExecute(response);
+        }
+    }
+
+    void onCommentVote(int comment_id, boolean is_up_vote){
+        if (!anyTaskRunning()){
+            tasks.add(new PostVoteAsyncTask(getResources().getString(R.string.server) + "/vote_comment/" + comment_id + "/").execute(
+                    new String[]{"is_up_vote", is_up_vote ? "True" : "False"}
+            ));
+        }
+    }
+
+    private class PostVoteAsyncTask extends AsyncTask<String[], Void, String> {
+        String uri;
+        public PostVoteAsyncTask(String uri){
+            this.uri = uri;
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(String[]... params) {
+            try {
+                return ServerAPI.upload(getActivity(), "POST", this.uri, params);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String response) {
+            if (null != response){
+                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                updateElement(new FoodCommentObject(jo.get("comment").getAsJsonObject()), jo.get("trace").getAsJsonArray());
+            }
+            super.onPostExecute(response);
+        }
+    }
+
+    public void onCommentDelete(FoodCommentObject comment) {
+        deleteComment(comment.id);
+    }
+
+    public void onVoteComment(FoodCommentObject comment, boolean is_up_vote) {
+        onCommentVote(comment.id, is_up_vote);
+    }
+
+    public void onDeleteVoteComment(FoodCommentObject comment) {
+        deleteCommentVote(comment.id);
+    }
+
+
+    public void continueConversation(FoodCommentObject comment) {
+        Intent paymentMethod = new Intent(getActivity(), ContinueCommentConversationActivity.class);
+        paymentMethod.putExtra("commentId", comment.id);
+        startActivity(paymentMethod);
+    }
+
+    public void onCommentCreate(FoodCommentObject comment) {
+        commentResponded = comment;
+        Intent paymentMethod = new Intent(getActivity(), ReplyReviewOrCommentActivity.class);
+        paymentMethod.putExtra("comment", comment);
+        paymentMethod.putExtra("foodPostId", foodPostId);
+        startActivity(paymentMethod);
+    }
+
+    boolean anyTaskRunning(){
+        for (AsyncTask task: tasks){
+            if (task != null && task.getStatus() == AsyncTask.Status.RUNNING){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    public void onGoToProfile(User user){
+        Intent profile = new Intent(getActivity(), ProfileViewActivity.class);
+        profile.putExtra("userId", user.id);
+        startActivity(profile);
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof MyFoodCommentRecyclerViewAdapter.OnListFragmentInteractionListener) {
-            mListener = (FoodLookActivity) context;
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
@@ -295,8 +482,8 @@ public class FoodCommentFragment extends Fragment {
         mListener = null;
     }
 
-
     public interface OnFragmentInteractionListener {
-        void onCommentsLoaded();
+        void onSomething();
     }
+
 }

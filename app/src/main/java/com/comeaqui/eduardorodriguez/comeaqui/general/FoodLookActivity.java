@@ -28,6 +28,7 @@ import com.bumptech.glide.Glide;
 import com.comeaqui.eduardorodriguez.comeaqui.BuildConfig;
 import com.comeaqui.eduardorodriguez.comeaqui.R;
 import com.comeaqui.eduardorodriguez.comeaqui.general.attend_message.AttendFragment;
+import com.comeaqui.eduardorodriguez.comeaqui.general.continue_conversation.ContinueCommentConversationActivity;
 import com.comeaqui.eduardorodriguez.comeaqui.general.dinner_list.DinnerListActivity;
 import com.comeaqui.eduardorodriguez.comeaqui.general.food_post_comments.FoodCommentFragment;
 import com.comeaqui.eduardorodriguez.comeaqui.general.food_post_comments.MyFoodCommentRecyclerViewAdapter;
@@ -63,7 +64,6 @@ import static com.comeaqui.eduardorodriguez.comeaqui.App.USER;
 public class FoodLookActivity extends AppCompatActivity implements
         TwoOptionsMessageFragment.OnFragmentInteractionListener,
         AttendFragment.OnFragmentInteractionListener,
-        MyFoodCommentRecyclerViewAdapter.OnListFragmentInteractionListener,
         FoodCommentFragment.OnFragmentInteractionListener{
 
     private Toolbar toolbar;
@@ -88,7 +88,6 @@ public class FoodLookActivity extends AppCompatActivity implements
     LinearLayout paymentMethod;
     LinearLayout profileLook;
     View progress;
-    FrameLayout placeOrderErrorMessage;
     LinearLayout dinnersListView;
     ImageView[] dinnerArray;
     TextView[] plusArray;
@@ -109,11 +108,7 @@ public class FoodLookActivity extends AppCompatActivity implements
     int additionalGuests;
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
-    FoodCommentObject commentResponded;
     FoodCommentFragment foodCommentFragment;
-    Integer commentId;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,13 +172,6 @@ public class FoodLookActivity extends AppCompatActivity implements
         super.onResume();
         if (fpId != null){
             getFoodPostDetailsAndSet(fpId);
-        }
-        if (commentResponded != null){
-            while (commentResponded.comment != null){
-                commentResponded = commentResponded.comment;
-            }
-            foodCommentFragment.getAndUpdateComment(commentResponded.id);
-            commentResponded = null;
         }
     }
 
@@ -262,7 +250,7 @@ public class FoodLookActivity extends AppCompatActivity implements
     void setPlaceButton(){
         if (foodPostDetail.owner.id != USER.id){
             if (userStatusInPost.equals("CONFIRMED")) {
-                foodCommentFragment = FoodCommentFragment.newInstance(foodPostDetail.id);
+                foodCommentFragment = FoodCommentFragment.newInstance(foodPostDetail.id, "post");
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.foodpost_comments, foodCommentFragment)
                         .commit();
@@ -296,7 +284,7 @@ public class FoodLookActivity extends AppCompatActivity implements
             }
             attendMealButton.setVisibility(View.VISIBLE);
         } else {
-            foodCommentFragment = FoodCommentFragment.newInstance(foodPostDetail.id);
+            foodCommentFragment = FoodCommentFragment.newInstance(foodPostDetail.id, "post");
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.foodpost_comments, foodCommentFragment)
                     .commit();
@@ -436,6 +424,11 @@ public class FoodLookActivity extends AppCompatActivity implements
 
     void getFoodPostDetailsAndSet(int foodPostId){
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/food_with_user_status/" + foodPostId + "/").execute());
+    }
+
+    @Override
+    public void onSomething() {
+
     }
 
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
@@ -631,180 +624,6 @@ public class FoodLookActivity extends AppCompatActivity implements
         }
     }
 
-    void showErrorMessage(){
-        placeOrderErrorMessage.setVisibility(View.VISIBLE);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.error_message_frame, OneOptionMessageFragment.newInstance(
-                        "Error during posting",
-                        "Please make sure that you have connection to the internet"))
-                .commit();
-    }
-
-    void deleteComment(int commentId){
-        tasks.add(new DeleteCommentAsyncTask(getResources().getString(R.string.server) + "/delete_food_post_comment/" + commentId + "/").execute());
-    }
-
-    void deleteCommentVote(int commentId){
-        if (!anyTaskRunning()) {
-            tasks.add(new DeleteCommentVoteAsyncTask(getResources().getString(R.string.server) + "/vote_comment/" + commentId + "/").execute());
-        }
-    }
-
-    class DeleteCommentAsyncTask extends AsyncTask<String[], Void, String> {
-        private String uri;
-        public DeleteCommentAsyncTask(String uri){
-            this.uri = uri;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            startWaitingFrame(true);
-        }
-
-        @Override
-        protected String doInBackground(String[]... params) {
-            try {
-                return ServerAPI.delete(getApplicationContext(), this.uri);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(String response) {
-            if (null != response){
-                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
-                foodCommentFragment.deleteElement(new FoodCommentObject(jo.get("comment").getAsJsonObject()), jo.get("trace").getAsJsonArray());
-            }
-            startWaitingFrame(false);
-            super.onPostExecute(response);
-        }
-    }
-
-    class DeleteCommentVoteAsyncTask extends AsyncTask<String[], Void, String> {
-        private String uri;
-        public DeleteCommentVoteAsyncTask(String uri){
-            this.uri = uri;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            startWaitingFrame(true);
-        }
-
-        @Override
-        protected String doInBackground(String[]... params) {
-            try {
-                return ServerAPI.delete(getApplicationContext(), this.uri);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(String response) {
-            if (null != response){
-                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
-                foodCommentFragment.updateElement(new FoodCommentObject(jo.get("comment").getAsJsonObject()), jo.get("trace").getAsJsonArray());
-            }
-            startWaitingFrame(false);
-            super.onPostExecute(response);
-        }
-    }
-
-    void onCommentVote(int comment_id, boolean is_up_vote){
-        if (!anyTaskRunning()){
-            tasks.add(new PostVoteAsyncTask(getResources().getString(R.string.server) + "/vote_comment/" + comment_id + "/").execute(
-                    new String[]{"is_up_vote", is_up_vote ? "True" : "False"}
-            ));
-        }
-    }
-
-    private class PostVoteAsyncTask extends AsyncTask<String[], Void, String> {
-        String uri;
-        public PostVoteAsyncTask(String uri){
-            this.uri = uri;
-        }
-        @Override
-        protected void onPreExecute() {
-            startWaitingFrame(true);
-            super.onPreExecute();
-        }
-        @Override
-        protected String doInBackground(String[]... params) {
-            try {
-                return ServerAPI.upload(getApplicationContext(), "POST", this.uri, params);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(String response) {
-            if (null != response){
-                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
-                foodCommentFragment.updateElement(new FoodCommentObject(jo.get("comment").getAsJsonObject()), jo.get("trace").getAsJsonArray());
-            }
-            startWaitingFrame(false);
-            super.onPostExecute(response);
-        }
-    }
-
-    @Override
-    public void onCommentsLoaded() {
-        if (commentId != null && commentId != 0){
-            foodCommentFragment.getAndUpdateComment(commentId);
-        }
-    }
-
-    @Override
-    public void onCommentDelete(FoodCommentObject comment) {
-        deleteComment(comment.id);
-    }
-
-    @Override
-    public void onVoteComment(FoodCommentObject comment, boolean is_up_vote) {
-        onCommentVote(comment.id, is_up_vote);
-    }
-
-    @Override
-    public void onDeleteVoteComment(FoodCommentObject comment) {
-        deleteCommentVote(comment.id);
-    }
-
-
-    @Override
-    public void continueConversation(FoodCommentObject comment) {
-
-    }
-
-    @Override
-    public void onCommentCreate(FoodCommentObject comment) {
-        commentResponded = comment;
-        Intent paymentMethod = new Intent(this, ReplyReviewOrCommentActivity.class);
-        paymentMethod.putExtra("comment", comment);
-        paymentMethod.putExtra("foodPostId", foodPostDetail.id);
-        startActivity(paymentMethod);
-    }
-
-    boolean anyTaskRunning(){
-        for (AsyncTask task: tasks){
-            if (task != null && task.getStatus() == AsyncTask.Status.RUNNING){
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    @Override
-    public void onGoToProfile(User user){
-        Intent profile = new Intent(this, ProfileViewActivity.class);
-        profile.putExtra("userId", user.id);
-        startActivity(profile);
-    }
 
     @Override
     public void onConfirmAttend(int additionalGuests) {

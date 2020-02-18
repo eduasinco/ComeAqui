@@ -20,7 +20,7 @@ public class FoodCommentObject implements Serializable {
     public int votes_n;
     public Boolean is_user_up_vote;
     public boolean is_max_depth;
-    public boolean is_last;
+    public Integer extra_comments_in_list;
     public String createdAt;
 
     public MyFoodCommentRecyclerViewAdapter adapter;
@@ -39,7 +39,7 @@ public class FoodCommentObject implements Serializable {
                 replies.add(comment);
                 repliesHashMap.put(comment.id, comment);
             } catch (Exception e){
-                replies.get(replies.size() - 1).is_last = true;
+                replies.get(replies.size() - 1).extra_comments_in_list = je.getAsInt();
             }
 
         }

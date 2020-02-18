@@ -19,11 +19,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.comeaqui.eduardorodriguez.comeaqui.R;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodCommentObject;
-import com.comeaqui.eduardorodriguez.comeaqui.objects.User;
 import com.comeaqui.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
@@ -37,14 +35,14 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
 
     Context context;
     private final List<FoodCommentObject> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private final FoodCommentFragment mListener;
     private FoodCommentObject comment;
 
     public HashMap<Integer, MyFoodCommentRecyclerViewAdapter> adapters = new HashMap<>();
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
 
-    public MyFoodCommentRecyclerViewAdapter(List<FoodCommentObject> items, OnListFragmentInteractionListener listener, FoodCommentObject comment) {
+    public MyFoodCommentRecyclerViewAdapter(List<FoodCommentObject> items, FoodCommentFragment listener, FoodCommentObject comment) {
         mValues = items;
         mListener = listener;
         this.comment = comment;
@@ -82,11 +80,12 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
         } else {
             holder.continueConversation.setVisibility(View.GONE);
         }
-        if (holder.mItem.is_last){
+        if (null != holder.mItem.extra_comments_in_list){
             holder.moreInList.setVisibility(View.VISIBLE);
+            holder.moreInList.setText(holder.mItem.extra_comments_in_list + " more comments...");
             holder.moreInList.setOnClickListener(v -> {
                 getMoreComments();
-                holder.mItem.is_last = false;
+                holder.mItem.extra_comments_in_list = null;
             });
         } else {
             holder.moreInList.setVisibility(View.GONE);
@@ -165,7 +164,7 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
     int page = 2;
     public void getMoreComments(){
         if (!anyTaskRunning()){
-            tasks.add(new GetCommentAsyncTask(context.getString(R.string.server) + "/comment_comments/" + this.comment.id + "/" + page + "/").execute());
+            tasks.add(new GetCommentAsyncTask(context.getString(R.string.server) + "/comment_comments/" + this.comment.id + "/").execute());
         }
     }
     class GetCommentAsyncTask extends AsyncTask<String[], Void, String> {
@@ -196,7 +195,6 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
                     comment.replies.add(moreComment);
                     comment.repliesHashMap.put(moreComment.id, moreComment);
                 }
-                comment.replies.get(comment.replies.size() - 1).is_last = true;
                 notifyDataSetChanged();
                 page ++;
             }
@@ -286,15 +284,6 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
             moreInList = view.findViewById(R.id.more_in_list);
             continueConversation = view.findViewById(R.id.continue_conversation);
         }
-    }
-
-    public interface OnListFragmentInteractionListener {
-        void onCommentCreate(FoodCommentObject comment);
-        void onCommentDelete(FoodCommentObject comment);
-        void onVoteComment(FoodCommentObject comment, boolean is_up_vote);
-        void onDeleteVoteComment(FoodCommentObject comment);
-        void continueConversation(FoodCommentObject comment);
-        void onGoToProfile(User user);
     }
 
     @Override
