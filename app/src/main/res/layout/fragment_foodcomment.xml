@@ -39,14 +39,12 @@
                     android:id="@+id/reviewer_name"
                     android:layout_width="match_parent"
                     android:layout_height="15dp"
-                    android:text="TextView"
                     android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/reviewer_username"
                     android:layout_width="match_parent"
                     android:layout_height="15dp"
-                    android:text="TextView"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -57,7 +55,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
-            android:text="@string/common_google_play_services_enable_text"
             android:textColor="@color/colorPrimary" />
 
         <androidx.constraintlayout.widget.ConstraintLayout

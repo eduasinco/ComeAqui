@@ -33,16 +33,19 @@ public class FoodCommentObject implements Serializable {
 
         replies = new ArrayList<>();
         repliesHashMap = new HashMap<>();
-        for (JsonElement je : jo.get("replies").getAsJsonArray()) {
-            try {
-                FoodCommentObject comment = new FoodCommentObject(je.getAsJsonObject());
-                replies.add(comment);
-                repliesHashMap.put(comment.id, comment);
-            } catch (Exception e){
-                replies.get(replies.size() - 1).extra_comments_in_list = je.getAsInt();
-            }
+        try{
+            for (JsonElement je : jo.get("replies").getAsJsonArray()) {
+                try {
+                    FoodCommentObject comment = new FoodCommentObject(je.getAsJsonObject());
+                    replies.add(comment);
+                    repliesHashMap.put(comment.id, comment);
+                } catch (Exception e){
+                    replies.get(replies.size() - 1).extra_comments_in_list = je.getAsInt();
+                }
 
-        }
+            }
+        }catch (Exception e){};
+
         votes_n = jo.get("votes_n").getAsInt();
         try{is_user_up_vote = jo.get("is_user_up_vote").getAsBoolean();} catch (Exception e){};
         is_max_depth = jo.get("is_max_depth").getAsBoolean();

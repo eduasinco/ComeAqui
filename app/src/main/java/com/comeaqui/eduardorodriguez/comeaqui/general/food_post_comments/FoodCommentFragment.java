@@ -307,24 +307,8 @@ public class FoodCommentFragment extends Fragment{
 
 
 
-
-
-
-
-
-
-
-
-
-
     void deleteComment(int commentId){
         tasks.add(new DeleteCommentAsyncTask(getResources().getString(R.string.server) + "/delete_food_post_comment/" + commentId + "/").execute());
-    }
-
-    void deleteCommentVote(int commentId){
-        if (!anyTaskRunning()) {
-            tasks.add(new DeleteCommentVoteAsyncTask(getResources().getString(R.string.server) + "/vote_comment/" + commentId + "/").execute());
-        }
     }
 
     class DeleteCommentAsyncTask extends AsyncTask<String[], Void, String> {
@@ -357,82 +341,8 @@ public class FoodCommentFragment extends Fragment{
         }
     }
 
-    class DeleteCommentVoteAsyncTask extends AsyncTask<String[], Void, String> {
-        private String uri;
-        public DeleteCommentVoteAsyncTask(String uri){
-            this.uri = uri;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String[]... params) {
-            try {
-                return ServerAPI.delete(getActivity(), this.uri);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(String response) {
-            if (null != response){
-                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
-                updateElement(new FoodCommentObject(jo.get("comment").getAsJsonObject()), jo.get("trace").getAsJsonArray());
-            }
-            super.onPostExecute(response);
-        }
-    }
-
-    void onCommentVote(int comment_id, boolean is_up_vote){
-        if (!anyTaskRunning()){
-            tasks.add(new PostVoteAsyncTask(getResources().getString(R.string.server) + "/vote_comment/" + comment_id + "/").execute(
-                    new String[]{"is_up_vote", is_up_vote ? "True" : "False"}
-            ));
-        }
-    }
-
-    private class PostVoteAsyncTask extends AsyncTask<String[], Void, String> {
-        String uri;
-        public PostVoteAsyncTask(String uri){
-            this.uri = uri;
-        }
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-        @Override
-        protected String doInBackground(String[]... params) {
-            try {
-                return ServerAPI.upload(getActivity(), "POST", this.uri, params);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(String response) {
-            if (null != response){
-                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
-                updateElement(new FoodCommentObject(jo.get("comment").getAsJsonObject()), jo.get("trace").getAsJsonArray());
-            }
-            super.onPostExecute(response);
-        }
-    }
-
     public void onCommentDelete(FoodCommentObject comment) {
         deleteComment(comment.id);
-    }
-
-    public void onVoteComment(FoodCommentObject comment, boolean is_up_vote) {
-        onCommentVote(comment.id, is_up_vote);
-    }
-
-    public void onDeleteVoteComment(FoodCommentObject comment) {
-        deleteCommentVote(comment.id);
     }
 
 
@@ -448,15 +358,6 @@ public class FoodCommentFragment extends Fragment{
         paymentMethod.putExtra("comment", comment);
         paymentMethod.putExtra("foodPostId", foodPostId);
         startActivity(paymentMethod);
-    }
-
-    boolean anyTaskRunning(){
-        for (AsyncTask task: tasks){
-            if (task != null && task.getStatus() == AsyncTask.Status.RUNNING){
-                return true;
-            }
-        }
-        return false;
     }
 
 
