@@ -44,7 +44,7 @@ public class FoodCommentFragment extends Fragment{
     private static final String FOODPOST_OR_COMMENT_ID = "id";
     private static final String TYPE = "type";
     // TODO: Customize parameters
-    private int foodPostId;
+    private int foodPostOrCommentId;
     private String type;
     private OnFragmentInteractionListener mListener;
 
@@ -57,13 +57,14 @@ public class FoodCommentFragment extends Fragment{
     private List<FoodCommentObject> foodComments;
     private HashMap<Integer, FoodCommentObject> foodCommentObjectHashMap;
     private MyFoodCommentRecyclerViewAdapter adapter;
+    private static HashMap<Integer, MyFoodCommentRecyclerViewAdapter> commentToAdapter = new HashMap<>();
+
     private FoodCommentFragment f;
 
     public FoodCommentFragment() { }
 
 
-    FoodCommentObject commentResponded;
-    Integer commentId;
+    static FoodCommentObject commentResponded;
 
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
@@ -82,13 +83,6 @@ public class FoodCommentFragment extends Fragment{
     public void onResume() {
         super.onResume();
         hideKeyboard();
-        if (commentResponded != null){
-            while (commentResponded.comment != null){
-                commentResponded = commentResponded.comment;
-            }
-            getAndUpdateComment(commentResponded.id);
-            commentResponded = null;
-        }
     }
 
     private void hideKeyboard(){
@@ -99,58 +93,25 @@ public class FoodCommentFragment extends Fragment{
         }
     }
 
-    class RecurseComment {
-        MyFoodCommentRecyclerViewAdapter adapter;
-        List<FoodCommentObject> replies;
-        HashMap<Integer, FoodCommentObject> repliesHashMap;
-
-        RecurseComment(MyFoodCommentRecyclerViewAdapter adapter, List<FoodCommentObject> replies, HashMap<Integer, FoodCommentObject> repliesHashMap){
-            this.adapter = adapter;
-            this.replies = replies;
-            this.repliesHashMap = repliesHashMap;
-        }
-    }
-    private RecurseComment recurseToComment(JsonArray trace){
-        MyFoodCommentRecyclerViewAdapter adapter = this.adapter;
-        HashMap<Integer, FoodCommentObject> repliesHasMap = this.foodCommentObjectHashMap;
-        List<FoodCommentObject> replies = this.foodComments;
-        for (JsonElement je: trace){
-            adapter = adapter.adapters.get(je.getAsInt());
-            FoodCommentObject c = repliesHasMap.get(je.getAsInt());
-            repliesHasMap = c.repliesHashMap;
-            replies = c.replies;
-        }
-        return new RecurseComment(adapter, replies, repliesHasMap);
-    }
-
-    public void updateElement(FoodCommentObject newComment, JsonArray trace){
-        RecurseComment rc = recurseToComment(trace);
-        FoodCommentObject commentInList = rc.repliesHashMap.get(newComment.id);
-        rc.replies.set(rc.replies.indexOf(commentInList), newComment);
-        newComment.extra_comments_in_list = commentInList.extra_comments_in_list;
-        rc.repliesHashMap.put(newComment.id, newComment);
-        rc.adapter.notifyItemChanged(rc.replies.indexOf(newComment));
-    }
-
-    public void goToElement(int commentId, JsonArray trace){
-        RecurseComment rc = recurseToComment(trace);
-        FoodCommentObject commentInList = rc.repliesHashMap.get(commentId);
-        rc.adapter.notifyItemChanged(rc.replies.indexOf(commentInList));
+    public static void updateRespondedCommentList(FoodCommentObject newComment){
+        commentResponded.replies.add(0, newComment);
+        commentResponded.repliesHashMap.put(newComment.id, newComment);
+        commentToAdapter.get(commentResponded.id).notifyItemInserted(0);
+        commentResponded = null;
     }
 
 
-    public void addElement(FoodCommentObject newComment, JsonArray trace){
-        RecurseComment rc = recurseToComment(trace);
-        rc.replies.add(0, newComment);
-        rc.repliesHashMap.put(newComment.id, newComment);
-        rc.adapter.notifyItemInserted(0);
+    public void addElement(FoodCommentObject newComment){
+        foodComments.add(0, newComment);
+        foodCommentObjectHashMap.put(newComment.id, newComment);
+        adapter.notifyItemInserted(0);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            foodPostId = getArguments().getInt(FOODPOST_OR_COMMENT_ID);
+            foodPostOrCommentId = getArguments().getInt(FOODPOST_OR_COMMENT_ID);
             type = getArguments().getString(TYPE);
         }
     }
@@ -178,7 +139,7 @@ public class FoodCommentFragment extends Fragment{
     }
 
     void getFoodPostComments(){
-        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/food_post_comment/" + type + "/" + foodPostId + "/").execute());
+        tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/food_post_comment/" + type + "/" + foodPostOrCommentId + "/").execute());
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -210,13 +171,11 @@ public class FoodCommentFragment extends Fragment{
                     FoodCommentObject fco = new FoodCommentObject(je.getAsJsonObject());
                     foodCommentObjectHashMap.put(fco.id, fco);
                     foodComments.add(fco);
+                    commentToAdapter.put(fco.id, adapter);
                 }
-                adapter = new MyFoodCommentRecyclerViewAdapter(foodComments, foodCommentObjectHashMap, f, null);
-                recyclerView.setAdapter(adapter);
+                adapter = new MyFoodCommentRecyclerViewAdapter(foodComments, foodCommentObjectHashMap, commentToAdapter, f, null);
 
-                if (commentId != null && commentId != 0){
-                    getAndUpdateComment(commentId);
-                }
+                recyclerView.setAdapter(adapter);
                 sendLoadingProgress.setVisibility(View.GONE);
                 commentButton.setVisibility(View.VISIBLE);
             }
@@ -224,45 +183,10 @@ public class FoodCommentFragment extends Fragment{
         }
     }
 
-    public void getAndUpdateComment(int commentId){
-        tasks.add(new GetCommentAsyncTask(getResources().getString(R.string.server) + "/comment_detail/" + commentId + "/").execute());
-    }
-    class GetCommentAsyncTask extends AsyncTask<String[], Void, String> {
-        private String uri;
-        public GetCommentAsyncTask(String uri){
-            this.uri = uri;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-        @Override
-        protected String doInBackground(String[]... params) {
-            try {
-                return ServerAPI.get(getActivity(), this.uri);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(String response) {
-            if (null != response){
-                JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
-                try {
-                    updateElement(new FoodCommentObject(jo.get("comment").getAsJsonObject()), jo.get("trace").getAsJsonArray());
-                } catch (Exception e){}
-
-            }
-            super.onPostExecute(response);
-        }
-    }
-
     void createAPostComment(){
-        tasks.add(new PostAsyncTask(getResources().getString(R.string.server) + "/food_post_comment/" + type + "/" + foodPostId + "/").execute(
-                new String[]{"post_id", foodPostId + ""},
-                new String[]{"comment_id", ""},
+        tasks.add(new PostAsyncTask(getResources().getString(R.string.server) + "/food_post_comment/" + foodPostOrCommentId + "/").execute(
+                new String[]{"post_id", type.equals("post") ? foodPostOrCommentId + "" : ""},
+                new String[]{"comment_id", type.equals("comment") ? foodPostOrCommentId + "" : ""},
                 new String[]{"message", commentEditText.getText().toString()}
         ));
     }
@@ -291,7 +215,7 @@ public class FoodCommentFragment extends Fragment{
         protected void onPostExecute(String response) {
             if (null != response){
                 JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
-                addElement(new FoodCommentObject(jo.get("comment").getAsJsonObject()), jo.get("trace").getAsJsonArray());
+                addElement(new FoodCommentObject(jo));
             }
             commentEditText.setText("");
             sendLoadingProgress.setVisibility(View.GONE);
@@ -312,7 +236,7 @@ public class FoodCommentFragment extends Fragment{
         commentResponded = comment;
         Intent paymentMethod = new Intent(getActivity(), ReplyReviewOrCommentActivity.class);
         paymentMethod.putExtra("comment", comment);
-        paymentMethod.putExtra("foodPostId", foodPostId);
+        paymentMethod.putExtra("foodPostId", foodPostOrCommentId);
         startActivity(paymentMethod);
     }
 

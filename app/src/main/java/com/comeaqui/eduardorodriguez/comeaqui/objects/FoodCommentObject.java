@@ -23,7 +23,6 @@ public class FoodCommentObject implements Serializable {
     public Integer extra_comments_in_list;
     public String createdAt;
 
-    public MyFoodCommentRecyclerViewAdapter adapter;
     public FoodCommentObject(JsonObject jo){
         id = jo.get("id").getAsInt();
         owner = new User(jo.get("owner").getAsJsonObject());

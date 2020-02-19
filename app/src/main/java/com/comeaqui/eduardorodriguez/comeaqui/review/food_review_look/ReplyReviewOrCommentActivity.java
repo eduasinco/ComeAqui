@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.comeaqui.eduardorodriguez.comeaqui.R;
+import com.comeaqui.eduardorodriguez.comeaqui.general.food_post_comments.FoodCommentFragment;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodCommentObject;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.ReviewObject;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.ReviewReplyObject;
@@ -88,7 +89,7 @@ public class ReplyReviewOrCommentActivity extends AppCompatActivity {
     }
 
     void commentCreate(){
-        tasks.add(new PostAsyncTask(getResources().getString(R.string.server) + "/add_food_post_comment/" + foodPostId + "/").execute(
+        tasks.add(new PostAsyncTask(getResources().getString(R.string.server) + "/food_post_comment/" + foodPostId + "/").execute(
                 new String[]{"post_id", ""},
                 new String[]{"comment_id", commentObject.id + ""},
                 new String[]{"message", reply.getText().toString()}
@@ -118,6 +119,7 @@ public class ReplyReviewOrCommentActivity extends AppCompatActivity {
         protected void onPostExecute(String response) {
             if (null != response){
                 JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
+                FoodCommentFragment.updateRespondedCommentList(new FoodCommentObject(jo));
                 finish();
             }
             startWaitingFrame(false);

@@ -40,15 +40,18 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
     private final HashMap<Integer, FoodCommentObject> mValuesHashMap;
     private final FoodCommentFragment mListener;
     private FoodCommentObject comment;
+    private HashMap<Integer, MyFoodCommentRecyclerViewAdapter> commentToAdapter;
+
 
     public HashMap<Integer, MyFoodCommentRecyclerViewAdapter> adapters = new HashMap<>();
     ArrayList<AsyncTask> tasks = new ArrayList<>();
 
 
-    public MyFoodCommentRecyclerViewAdapter(List<FoodCommentObject> items, HashMap<Integer, FoodCommentObject> mValuesHashMap,FoodCommentFragment listener, FoodCommentObject comment) {
+    public MyFoodCommentRecyclerViewAdapter(List<FoodCommentObject> items, HashMap<Integer, FoodCommentObject> mValuesHashMap, HashMap<Integer, MyFoodCommentRecyclerViewAdapter> commentToAdapter, FoodCommentFragment listener, FoodCommentObject comment) {
         mValues = items;
         mListener = listener;
         this.mValuesHashMap = mValuesHashMap;
+        this.commentToAdapter = commentToAdapter;
         this.comment = comment;
     }
 
@@ -73,7 +76,8 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
             holder.replyList.setVisibility(View.VISIBLE);
             LinearLayoutManager lln = new LinearLayoutManager(holder.mView.getContext());
             holder.replyList.setLayoutManager(lln);
-            MyFoodCommentRecyclerViewAdapter adapter = new MyFoodCommentRecyclerViewAdapter(holder.mItem.replies,holder.mItem.repliesHashMap, mListener, holder.mItem);
+            MyFoodCommentRecyclerViewAdapter adapter = new MyFoodCommentRecyclerViewAdapter(holder.mItem.replies, holder.mItem.repliesHashMap, commentToAdapter, mListener, holder.mItem);
+            commentToAdapter.put(holder.mItem.id, adapter);
             adapters.put(holder.mItem.id, adapter);
             holder.replyList.setAdapter(adapter);
         } else {
@@ -210,7 +214,7 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
     }
 
     void deleteComment(ViewHolder holder){
-        tasks.add(new DeleteCommentAsyncTask(holder.mView.getResources().getString(R.string.server) + "/delete_food_post_comment/" + holder.mItem.id + "/", holder).execute());
+        tasks.add(new DeleteCommentAsyncTask(holder.mView.getResources().getString(R.string.server) + "/food_post_comment/" + holder.mItem.id + "/", holder).execute());
     }
 
     class DeleteCommentAsyncTask extends AsyncTask<String[], Void, String> {
