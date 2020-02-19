@@ -44,6 +44,7 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 
+import static com.comeaqui.eduardorodriguez.comeaqui.App.MAX_CONNECTIONS_TRIES;
 import static com.comeaqui.eduardorodriguez.comeaqui.App.USER;
 
 public class NotificationsFragment extends Fragment {
@@ -186,6 +187,7 @@ public class NotificationsFragment extends Fragment {
 
     }
 
+    int tries;
     Handler handler = new Handler();
     ArrayList<Toast> toasts = new ArrayList<>();
     private void start(){
@@ -196,6 +198,8 @@ public class NotificationsFragment extends Fragment {
             if (null != mWebSocketClient){
                 mWebSocketClient.close();
             }
+
+            tries++;
             Toast t = Toast.makeText(getContext(), "Connecting...", Toast.LENGTH_SHORT);
             t.show();
             toasts.add(t);
@@ -204,6 +208,7 @@ public class NotificationsFragment extends Fragment {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
                     for (Toast t: toasts){ t.cancel();}
+                    tries = 0;
                     // getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), "Connected", Toast.LENGTH_SHORT).show());
                 }
                 @Override
@@ -217,7 +222,7 @@ public class NotificationsFragment extends Fragment {
                 }
                 @Override
                 public void onClose(int i, String s, boolean b) {
-                    if (null != handler){
+                    if (null != handler && tries < MAX_CONNECTIONS_TRIES) {
                         handler.postDelayed(() -> start(), 1000);
                     }
                     // getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Closed", Toast.LENGTH_SHORT).show());

@@ -36,6 +36,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+import static com.comeaqui.eduardorodriguez.comeaqui.App.MAX_CONNECTIONS_TRIES;
 import static com.comeaqui.eduardorodriguez.comeaqui.App.USER;
 import static com.comeaqui.eduardorodriguez.comeaqui.R.layout.fragment_pendingorders_list;
 
@@ -175,7 +176,7 @@ public class GuestingFragment extends Fragment {
 
     }
 
-
+    int tries;
     Handler handler = new Handler();
     ArrayList<Toast> toasts = new ArrayList<>();
     private void start(){
@@ -186,6 +187,8 @@ public class GuestingFragment extends Fragment {
             if (null != mWebSocketClient){
                 mWebSocketClient.close();
             }
+
+            tries++;
             Toast t = Toast.makeText(getContext(), "Connecting...", Toast.LENGTH_SHORT);
             t.show();
             toasts.add(t);
@@ -194,6 +197,7 @@ public class GuestingFragment extends Fragment {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
                     for (Toast t: toasts){ t.cancel();}
+                    tries = 0;
                     // getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), "Connected", Toast.LENGTH_SHORT).show());
                 }
                 @Override
@@ -208,7 +212,7 @@ public class GuestingFragment extends Fragment {
                 }
                 @Override
                 public void onClose(int i, String s, boolean b) {
-                    if (null != handler){
+                    if (null != handler && tries < MAX_CONNECTIONS_TRIES) {
                          handler.postDelayed(() -> start(), 1000);
                     }
                     // getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Closed", Toast.LENGTH_SHORT).show());

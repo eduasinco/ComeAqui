@@ -10,7 +10,7 @@ import com.comeaqui.eduardorodriguez.comeaqui.objects.User;
 public class App extends Application {
 
     public static User USER;
-
+    public static int MAX_CONNECTIONS_TRIES = 4;
     public static final String MESSAGES_CHANNEL_ID = "messages";
     public static final String NOTIFICATIONS_CHANNEL_ID = "notifications";
 

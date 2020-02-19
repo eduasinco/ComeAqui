@@ -96,7 +96,10 @@ public class FoodCommentFragment extends Fragment{
     public static void updateRespondedCommentList(FoodCommentObject newComment){
         commentResponded.replies.add(0, newComment);
         commentResponded.repliesHashMap.put(newComment.id, newComment);
-        commentToAdapter.get(commentResponded.id).notifyItemInserted(0);
+        MyFoodCommentRecyclerViewAdapter adapter = commentToAdapter.get(commentResponded.id);
+        if (null != adapter){
+            adapter.notifyItemInserted(0);
+        }
         commentResponded = null;
     }
 

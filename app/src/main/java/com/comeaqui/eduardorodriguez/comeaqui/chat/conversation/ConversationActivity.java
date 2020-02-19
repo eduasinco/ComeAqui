@@ -41,6 +41,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
+import static com.comeaqui.eduardorodriguez.comeaqui.App.MAX_CONNECTIONS_TRIES;
 import static com.comeaqui.eduardorodriguez.comeaqui.App.USER;
 import static com.yalantis.ucrop.UCropFragment.TAG;
 
@@ -424,7 +425,7 @@ public class ConversationActivity extends AppCompatActivity {
         rvMensajes.scrollToPosition(0);
     }
 
-
+    int tries;
     Handler handler = new Handler();
     ArrayList<Toast> toasts = new ArrayList<>();
     public void start(String chatId){
@@ -435,6 +436,7 @@ public class ConversationActivity extends AppCompatActivity {
             if (null != mWebSocketClient){
                 mWebSocketClient.close();
             }
+            tries++;
             Toast t = Toast.makeText(getApplication(), "Connecting...", Toast.LENGTH_SHORT);
             t.show();
             toasts.add(t);
@@ -444,6 +446,7 @@ public class ConversationActivity extends AppCompatActivity {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
                     for (Toast t: toasts){ t.cancel(); }
+                    tries = 0;
                 }
                 @Override
                 public void onMessage(String s) {
@@ -466,7 +469,9 @@ public class ConversationActivity extends AppCompatActivity {
                 }
                 @Override
                 public void onClose(int i, String s, boolean b) {
-                    handler.postDelayed(() -> start(chatId), 1000);
+                    if (null != handler && tries < MAX_CONNECTIONS_TRIES) {
+                        handler.postDelayed(() -> start(chatId), 1000);
+                    }
                 }
                 @Override
                 public void onError(Exception e) {

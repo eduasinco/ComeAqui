@@ -173,6 +173,9 @@ public class FoodLookActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        if (USER.id != fpId) {
+            getMyChosenCard();
+        }
     }
 
     void setDetails(){
@@ -233,9 +236,6 @@ public class FoodLookActivity extends AppCompatActivity implements
 
         setPlaceButton();
         setDinners();
-        if (USER.id != foodPostDetail.owner.id) {
-            getMyChosenCard();
-        }
     }
 
     void setStatus(String message, int color){

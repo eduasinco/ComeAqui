@@ -42,6 +42,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
+import static com.comeaqui.eduardorodriguez.comeaqui.App.MAX_CONNECTIONS_TRIES;
 import static com.comeaqui.eduardorodriguez.comeaqui.App.USER;
 import static com.yalantis.ucrop.UCropFragment.TAG;
 
@@ -260,6 +261,7 @@ public class MainActivity extends AppCompatActivity {
         mainFrame.setVisibility(View.VISIBLE);
     }
 
+    int tries;
     Handler handler = new Handler();
     ArrayList<Toast> toasts = new ArrayList<>();
     public void listenToNotificationChanges(){
@@ -272,6 +274,7 @@ public class MainActivity extends AppCompatActivity {
                 mWebSocketClient.close();
             }
 
+            tries++;
             Toast t = Toast.makeText(getApplication(), "Connecting...", Toast.LENGTH_SHORT);
             t.show();
             toasts.add(t);
@@ -279,6 +282,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
                     for (Toast t: toasts){ t.cancel(); }
+                    tries = 0;
                 }
                 @Override
                 public void onMessage(String s) {
@@ -318,7 +322,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 @Override
                 public void onClose(int i, String s, boolean b) {
-                    handler.postDelayed(() -> listenToNotificationChanges(), 1000);
+                    if (tries < MAX_CONNECTIONS_TRIES) {
+                        handler.postDelayed(() -> listenToNotificationChanges(), 1000);
+                    }
                 }
                 @Override
                 public void onError(Exception e) {
