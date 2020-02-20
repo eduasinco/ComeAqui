@@ -230,9 +230,13 @@ public class ChatActivity extends AppCompatActivity{
             mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
-                    Log.w(TAG, "Connected");
-                    for (Toast t: toasts){ t.cancel(); }
-                    tries = 0;
+                    runOnUiThread(() -> {
+                        Log.w(TAG, "Connected");
+                        for (Toast t : toasts) {
+                            t.cancel();
+                        }
+                        tries = 0;
+                    });
                 }
                 @Override
                 public void onMessage(String s) {
@@ -254,9 +258,11 @@ public class ChatActivity extends AppCompatActivity{
                 }
                 @Override
                 public void onClose(int i, String s, boolean b) {
-                    if (null != handler && tries < MAX_CONNECTIONS_TRIES){
-                        handler.postDelayed(() -> start(), 1000);
-                    }
+                    runOnUiThread(() -> {
+                        if (null != handler && tries < MAX_CONNECTIONS_TRIES){
+                            handler.postDelayed(() -> start(), 1000);
+                        }
+                    });
                 }
                 @Override
                 public void onError(Exception e) {

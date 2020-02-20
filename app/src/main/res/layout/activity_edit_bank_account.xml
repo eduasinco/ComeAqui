@@ -71,7 +71,7 @@
                         android:background="@drawable/text_input_shape"
                         android:ems="10"
                         android:hint="Name"
-                        android:inputType="textPersonName|textCapSentences"
+                        android:inputType="textCapWords"
                         android:paddingStart="16dp" />
 
                     <EditText
@@ -83,7 +83,7 @@
                         android:background="@drawable/text_input_shape"
                         android:ems="10"
                         android:hint="Last Name"
-                        android:inputType="textPersonName|textCapSentences"
+                        android:inputType="textCapWords"
                         android:paddingStart="16dp" />
                 </LinearLayout>
             </LinearLayout>
@@ -587,7 +587,7 @@
                     android:background="@drawable/text_input_shape"
                     android:ems="10"
                     android:hint="Address line 1"
-                    android:inputType="textEmailAddress"
+                    android:inputType="textCapWords"
                     android:paddingStart="16dp"
                     android:visibility="visible"
                     tools:visibility="visible" />
@@ -609,7 +609,7 @@
                     android:background="@drawable/text_input_shape"
                     android:ems="10"
                     android:hint="Address line 2"
-                    android:inputType="textEmailAddress"
+                    android:inputType="textCapWords"
                     android:paddingStart="16dp"
                     android:visibility="visible"
                     tools:visibility="visible" />
@@ -631,7 +631,7 @@
                     android:background="@drawable/text_input_shape"
                     android:ems="10"
                     android:hint="City"
-                    android:inputType="textEmailAddress"
+                    android:inputType="textCapWords"
                     android:paddingStart="16dp"
                     android:visibility="visible"
                     tools:visibility="visible" />
@@ -653,7 +653,7 @@
                     android:background="@drawable/text_input_shape"
                     android:ems="10"
                     android:hint="State"
-                    android:inputType="textEmailAddress"
+                    android:inputType="textCapWords"
                     android:paddingStart="16dp"
                     android:visibility="visible"
                     tools:visibility="visible" />
@@ -697,7 +697,7 @@
                     android:background="@drawable/text_input_shape"
                     android:ems="10"
                     android:hint="US available only"
-                    android:inputType="textEmailAddress"
+                    android:inputType="textCapWords"
                     android:paddingStart="16dp"
                     android:visibility="visible"
                     tools:visibility="visible" />

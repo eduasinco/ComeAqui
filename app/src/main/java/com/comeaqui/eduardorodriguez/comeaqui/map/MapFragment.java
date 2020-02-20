@@ -50,6 +50,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.comeaqui.eduardorodriguez.comeaqui.App.MAX_CONNECTIONS_TRIES;
 import static com.comeaqui.eduardorodriguez.comeaqui.App.USER;
 
 /**
@@ -203,7 +204,7 @@ public class MapFragment extends Fragment implements
         cancelMapPicker();
     }
 
-
+    int tries;
     Handler handler = new Handler();
     public void listenToPosts(){
         try {
@@ -213,11 +214,15 @@ public class MapFragment extends Fragment implements
             if (null != mWebSocketClient){
                 mWebSocketClient.close();
             }
+
+            tries++;
             URI uri = new URI(getResources().getString(R.string.async_server) + "/ws/posts/");
             mWebSocketClient = new WebSocketClient(uri) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
-                    // getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), "Connected", Toast.LENGTH_SHORT).show());
+                    tries = 0;
+                    getActivity().runOnUiThread(() ->
+                            Toast.makeText(getActivity(), "Connected", Toast.LENGTH_SHORT).show());
                 }
                 @Override
                 public void onMessage(String s) {
@@ -242,7 +247,9 @@ public class MapFragment extends Fragment implements
                 }
                 @Override
                 public void onClose(int i, String s, boolean b) {
-                    handler.postDelayed(() -> listenToPosts(), 1000);
+                    if (null != handler && tries < MAX_CONNECTIONS_TRIES) {
+                        handler.postDelayed(() -> listenToPosts(), 1000);
+                    }
                     //getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Closed", Toast.LENGTH_SHORT).show());
                 }
                 @Override
