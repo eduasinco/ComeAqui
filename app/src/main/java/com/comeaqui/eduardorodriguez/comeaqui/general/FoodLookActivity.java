@@ -264,6 +264,11 @@ public class FoodLookActivity extends AppCompatActivity implements
             } else if (userStatusInPost.equals("REJECTED")) {
                 setStatus("Rejected", R.color.canceled);
             } else if (userStatusInPost.equals("FINISHED")) {
+                foodCommentFragment = FoodCommentFragment.newInstance(foodPostDetail.id, "post");
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.foodpost_comments, foodCommentFragment)
+                        .commit();
+
                 setStatus("Finished", R.color.colorPrimary);
             } else if (foodPostDetail.dinners_left == 0){
                 setStatus("Finished", R.color.colorPrimary);
