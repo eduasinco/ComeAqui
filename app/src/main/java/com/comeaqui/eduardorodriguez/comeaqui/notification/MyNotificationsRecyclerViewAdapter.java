@@ -64,26 +64,20 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
             case "PENDING":
                 holder.typeImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.order_pending_not));
                 holder.mView.setOnClickListener(v -> {
-                    Intent notification = new Intent(context, NotificationLookActivity.class);
-                    notification.putExtra("orderId", holder.mItem.type_id);
-                    context.startActivity(notification);
+                    goToNotificationLook(holder.mItem.type_id);
                 });
                 break;
             case "CONFIRMED":
                 holder.typeImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.order_confirmed_not));
                 holder.mView.setOnClickListener(v -> {
-                    Intent notification = new Intent(context, NotificationLookActivity.class);
-                    notification.putExtra("orderId", holder.mItem.type_id);
-                    context.startActivity(notification);
+                    goToOrderLook(holder.mItem.type_id);
                 });
                 break;
             case "REJECTED":
             case "CANCELED":
                 holder.typeImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.order_canceled_not));
                 holder.mView.setOnClickListener(v -> {
-                    Intent notification = new Intent(context, NotificationLookActivity.class);
-                    notification.putExtra("orderId", holder.mItem.type_id);
-                    context.startActivity(notification);
+                    goToOrderLook(holder.mItem.type_id);
                 });
                 break;
             case "REVIEW":
@@ -109,6 +103,16 @@ public class MyNotificationsRecyclerViewAdapter extends RecyclerView.Adapter<MyN
         Intent foodLook = new Intent(context, FoodLookActivity.class);
         foodLook.putExtra("foodPostId", foodPostId);
         context.startActivity(foodLook);
+    }
+    void goToNotificationLook(int orderId){
+        Intent notification = new Intent(context, NotificationLookActivity.class);
+        notification.putExtra("orderId", orderId);
+        context.startActivity(notification);
+    }
+    void goToOrderLook(int orderId){
+        Intent orderLook = new Intent(context, OrderLookActivity.class);
+        orderLook.putExtra("orderId", orderId);
+        context.startActivity(orderLook);
     }
     @Override
     public int getItemCount() {
