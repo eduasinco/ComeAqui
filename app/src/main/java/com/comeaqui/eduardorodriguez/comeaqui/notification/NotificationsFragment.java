@@ -128,11 +128,16 @@ public class NotificationsFragment extends Fragment {
         });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            boolean isRecyclerScrollable(RecyclerView recyclerView) {
+                return recyclerView.computeHorizontalScrollRange() > recyclerView.getWidth() || recyclerView.computeVerticalScrollRange() > recyclerView.getHeight();
+            }
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (!recyclerView.canScrollVertically(1)) {
-                    loadMoreData();
+                if (isRecyclerScrollable(recyclerView)){
+                    if (!recyclerView.canScrollVertically(1)) {
+                        loadMoreData();
+                    }
                 }
             }
         });
