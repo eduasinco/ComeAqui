@@ -72,17 +72,18 @@ public class MyFoodCommentRecyclerViewAdapter extends RecyclerView.Adapter<MyFoo
         holder.wholeView.setVisibility(View.VISIBLE);
         holder.moreInList.setVisibility(View.GONE);
 
-        if (holder.mItem.replies.size() > 0){
-            holder.replyList.setVisibility(View.VISIBLE);
-            LinearLayoutManager lln = new LinearLayoutManager(holder.mView.getContext());
-            holder.replyList.setLayoutManager(lln);
-            MyFoodCommentRecyclerViewAdapter adapter = new MyFoodCommentRecyclerViewAdapter(holder.mItem.replies, holder.mItem.repliesHashMap, commentToAdapter, mListener, holder.mItem);
-            commentToAdapter.put(holder.mItem.id, adapter);
-            adapters.put(holder.mItem.id, adapter);
-            holder.replyList.setAdapter(adapter);
-        } else {
-            holder.replyList.setVisibility(View.GONE);
-        }
+        LinearLayoutManager lln = new LinearLayoutManager(holder.mView.getContext());
+        holder.replyList.setLayoutManager(lln);
+        MyFoodCommentRecyclerViewAdapter adapter = new MyFoodCommentRecyclerViewAdapter(holder.mItem.replies, holder.mItem.repliesHashMap, commentToAdapter, mListener, holder.mItem);
+        commentToAdapter.put(holder.mItem.id, adapter);
+        adapters.put(holder.mItem.id, adapter);
+        holder.replyList.setAdapter(adapter);
+
+//        if (holder.mItem.replies.size() > 0){
+//            holder.replyList.setVisibility(View.VISIBLE);
+//        } else {
+//            holder.replyList.setVisibility(View.GONE);
+//        }
 
         if (holder.mItem.is_max_depth){
             holder.continueConversation.setVisibility(View.VISIBLE);
