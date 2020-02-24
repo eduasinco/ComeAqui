@@ -280,7 +280,6 @@ public class FoodLookActivity extends AppCompatActivity implements
                     attendToComment.setOnClickListener(v -> {
                         attendFragment.show(true);
                     });
-                    paymentMethod.setVisibility(View.VISIBLE);
                     attendToComment.setVisibility(View.VISIBLE);
                 } else if (foodPostDetail.status.equals("IN_COURSE")){
                     setStatus("Meal in course", R.color.colorPrimary);
@@ -501,6 +500,9 @@ public class FoodLookActivity extends AppCompatActivity implements
                         pendingPaymentMethod.setVisibility(View.GONE);
                         attendMealButton.setAlpha(1);
                         attendMealButton.setClickable(true);
+                        if (foodPostDetail.status.equals("OPEN")){
+                            paymentMethod.setVisibility(View.VISIBLE);
+                        }
                     } else {
                         if (USER.id != foodPostDetail.owner.id){
                             pendingPaymentMethod.setVisibility(View.VISIBLE);

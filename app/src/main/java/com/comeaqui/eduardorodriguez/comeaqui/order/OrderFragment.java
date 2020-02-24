@@ -67,7 +67,7 @@ public class OrderFragment extends Fragment implements HostingFragment.OnListFra
 
         @Override
         public Fragment getItem(int position) {
-            Fragment[] tabFragment = {HostingFragment.newInstance(), GuestingFragment.newInstance()};
+            Fragment[] tabFragment = {GuestingFragment.newInstance(), HostingFragment.newInstance()};
             return tabFragment[position];
         }
 
@@ -78,7 +78,7 @@ public class OrderFragment extends Fragment implements HostingFragment.OnListFra
 
         @Override
         public CharSequence getPageTitle(int position) {
-            String[] titles = {"Hosting", "Guesting"};
+            String[] titles = {"Guesting", "Hosting"};
             return titles[position];
         }
     }
