@@ -5,10 +5,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,7 +20,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,11 +27,9 @@ import com.bumptech.glide.Glide;
 import com.comeaqui.eduardorodriguez.comeaqui.BuildConfig;
 import com.comeaqui.eduardorodriguez.comeaqui.R;
 import com.comeaqui.eduardorodriguez.comeaqui.general.attend_message.AttendFragment;
-import com.comeaqui.eduardorodriguez.comeaqui.general.continue_conversation.ContinueCommentConversationActivity;
 import com.comeaqui.eduardorodriguez.comeaqui.general.dinner_list.DinnerListActivity;
 import com.comeaqui.eduardorodriguez.comeaqui.general.food_post_comments.FoodCommentFragment;
-import com.comeaqui.eduardorodriguez.comeaqui.general.food_post_comments.MyFoodCommentRecyclerViewAdapter;
-import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodCommentObject;
+import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.PaymentMethodObject;
@@ -42,10 +39,7 @@ import com.comeaqui.eduardorodriguez.comeaqui.profile.ProfileViewActivity;
 import com.comeaqui.eduardorodriguez.comeaqui.profile.edit_profile.edit_account_details.payment.PaymentMethodsActivity;
 
 
-import com.comeaqui.eduardorodriguez.comeaqui.review.food_review_look.ReplyReviewOrCommentActivity;
-import com.comeaqui.eduardorodriguez.comeaqui.server.Server;
 import com.comeaqui.eduardorodriguez.comeaqui.server.ServerAPI;
-import com.comeaqui.eduardorodriguez.comeaqui.utilities.message_fragments.OneOptionMessageFragment;
 import com.comeaqui.eduardorodriguez.comeaqui.utilities.FoodTypeFragment;
 import com.comeaqui.eduardorodriguez.comeaqui.utilities.HorizontalImageDisplayFragment;
 import com.comeaqui.eduardorodriguez.comeaqui.utilities.WaitFragment;
@@ -57,7 +51,6 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import static com.comeaqui.eduardorodriguez.comeaqui.App.USER;
 
@@ -66,6 +59,7 @@ public class FoodLookActivity extends AppCompatActivity implements
         AttendFragment.OnFragmentInteractionListener,
         FoodCommentFragment.OnFragmentInteractionListener{
 
+    private static final int REQUEST_EDITED_FOODPOST = 1;
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbar;
     private AppBarLayout appBarLayout;
@@ -156,6 +150,7 @@ public class FoodLookActivity extends AppCompatActivity implements
                 getFoodPostDetailsAndSet(fpId);
             }
         }
+
         changePaymentMethod.setOnClickListener(v -> {
             Intent paymentMethod = new Intent(this, PaymentMethodsActivity.class);
             paymentMethod.putExtra("changeMode", true);
@@ -204,25 +199,25 @@ public class FoodLookActivity extends AppCompatActivity implements
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.static_map_frame, StaticMapFragment.newInstance(foodPostDetail.lat, foodPostDetail.lng))
-                .commit();
+                .commitAllowingStateLoss();
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.image_list, HorizontalImageDisplayFragment.newInstance(foodPostDetail.id, 0, 4, 200,0, 0))
-                .commit();
+                .commitAllowingStateLoss();
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.waiting_frame, WaitFragment.newInstance())
-                .commit();
+                .commitAllowingStateLoss();
 
         sureFragment = TwoOptionsMessageFragment.newInstance("Delete", "Are you sure you want to delete this post?", "CANCEL", "DELETE", true);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.sure_message, sureFragment)
-                .commit();
+                .commitAllowingStateLoss();
 
         attendFragment = AttendFragment.newInstance(foodPostDetail.dinners_left, foodPostDetail.price);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.attend_message, attendFragment)
-                .commit();
+                .commitAllowingStateLoss();
 
 
         findViewById(R.id.other).setOnClickListener(v -> {
@@ -254,7 +249,7 @@ public class FoodLookActivity extends AppCompatActivity implements
                 foodCommentFragment = FoodCommentFragment.newInstance(foodPostDetail.id, "post");
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.foodpost_comments, foodCommentFragment)
-                        .commit();
+                        .commitAllowingStateLoss();
 
                 setStatus("Confirmed", R.color.success);
             } else if (userStatusInPost.equals("PENDING")) {
@@ -267,7 +262,7 @@ public class FoodLookActivity extends AppCompatActivity implements
                 foodCommentFragment = FoodCommentFragment.newInstance(foodPostDetail.id, "post");
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.foodpost_comments, foodCommentFragment)
-                        .commit();
+                        .commitAllowingStateLoss();
 
                 setStatus("Finished", R.color.colorPrimary);
             } else if (foodPostDetail.dinners_left == 0){
@@ -292,7 +287,7 @@ public class FoodLookActivity extends AppCompatActivity implements
             foodCommentFragment = FoodCommentFragment.newInstance(foodPostDetail.id, "post");
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.foodpost_comments, foodCommentFragment)
-                    .commit();
+                    .commitAllowingStateLoss();
         }
     }
     void setDinners(){
@@ -424,7 +419,15 @@ public class FoodLookActivity extends AppCompatActivity implements
     void editFoodPost(){
         Intent k = new Intent(this, EditFoodPostActivity.class);
         k.putExtra("foodPostId", foodPostDetail.id);
-        startActivity(k);
+        startActivityForResult(k, REQUEST_EDITED_FOODPOST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_EDITED_FOODPOST && resultCode == Activity.RESULT_OK) {
+            foodPostDetail = (FoodPostDetail) data.getSerializableExtra("foodPost");
+            setDetails();
+        }
     }
 
     void getFoodPostDetailsAndSet(int foodPostId){
@@ -649,6 +652,7 @@ public class FoodLookActivity extends AppCompatActivity implements
     public void onSomething() {
 
     }
+
 
     @Override
     public void onDestroy() {

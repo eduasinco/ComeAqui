@@ -55,7 +55,7 @@ public class ReviewGuestActivity extends AppCompatActivity implements StarReason
             orderObject = (OrderObject) b.get("order");
 
             if(!orderObject.owner.profile_photo.contains("no-image")) {
-                Glide.with(this).load(orderObject.poster.profile_photo).into(guestImage);
+                Glide.with(this).load(orderObject.owner.profile_photo).into(guestImage);
             }
             guestName.setText(orderObject.owner.first_name);
             rating.setText(String.format("%.01f", orderObject.owner.rating));

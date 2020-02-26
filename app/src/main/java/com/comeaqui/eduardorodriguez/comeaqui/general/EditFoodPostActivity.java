@@ -3,6 +3,7 @@ package com.comeaqui.eduardorodriguez.comeaqui.general;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -20,6 +21,7 @@ import com.comeaqui.eduardorodriguez.comeaqui.map.add_food.FoodDateTimePickerFra
 import com.comeaqui.eduardorodriguez.comeaqui.map.add_food.FoodTypeSelectorFragment;
 import com.comeaqui.eduardorodriguez.comeaqui.map.add_food.WordLimitEditTextFragment;
 import com.comeaqui.eduardorodriguez.comeaqui.map.add_food.add_images.AddImagesFragment;
+import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodPost;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.FoodPostDetail;
 import com.comeaqui.eduardorodriguez.comeaqui.utilities.SelectImageFromFragment;
 import com.comeaqui.eduardorodriguez.comeaqui.server.ServerAPI;
@@ -163,8 +165,12 @@ public class EditFoodPostActivity extends AppCompatActivity implements
         }
         @Override
         protected void onPostExecute(String response) {
+            if (response != null){
+                foodPostDetail = new FoodPostDetail(new JsonParser().parse(response).getAsJsonObject());
+                setResult(Activity.RESULT_OK, new Intent().putExtra("foodPost", foodPostDetail));
+                finish();
+            }
             showProgress(false);
-            finish();
             super.onPostExecute(response);
         }
     }
@@ -252,6 +258,7 @@ public class EditFoodPostActivity extends AppCompatActivity implements
             super.onPostExecute(response);
         }
     }
+
     @Override
     public void onDestroy() {
         for (AsyncTask task: tasks){
