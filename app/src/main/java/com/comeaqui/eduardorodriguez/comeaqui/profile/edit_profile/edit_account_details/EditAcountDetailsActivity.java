@@ -121,7 +121,7 @@ public class EditAcountDetailsActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String response) {
             if (response != null){
-                USER = new User(new JsonParser().parse(response).getAsJsonArray().get(0).getAsJsonObject());
+                USER = new User(new JsonParser().parse(response).getAsJsonObject());
                 setData();
             }
         }

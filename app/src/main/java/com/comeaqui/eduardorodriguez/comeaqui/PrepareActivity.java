@@ -119,7 +119,7 @@ public class PrepareActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putString("user", response);
                 editor.apply();
-                USER = new User(new JsonParser().parse(response).getAsJsonArray().get(0).getAsJsonObject());
+                USER = new User(new JsonParser().parse(response).getAsJsonObject());
                 getFirebaseToken();
             } else {
                 signOut();

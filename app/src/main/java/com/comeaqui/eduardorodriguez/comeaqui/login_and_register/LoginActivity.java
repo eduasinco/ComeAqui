@@ -10,7 +10,11 @@ import androidx.annotation.NonNull;
 import com.comeaqui.eduardorodriguez.comeaqui.PrepareActivity;
 import com.comeaqui.eduardorodriguez.comeaqui.R;
 import com.comeaqui.eduardorodriguez.comeaqui.login_and_register.forgot_password.ForgotPasswordActivity;
+import com.comeaqui.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.LoaderManager.LoaderCallbacks;
@@ -35,6 +39,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -61,6 +66,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     // UI references.
     private AutoCompleteTextView mEmailView;
+    private TextView mPasswordViewVal;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
@@ -77,13 +83,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         populateAutoComplete();
 
         mPasswordView = findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener((textView, id, keyEvent) -> {
-            if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                attemptLogin();
-                return true;
-            }
-            return false;
-        });
+        mPasswordViewVal = findViewById(R.id.password_val_text);
 
         Button mEmailSignInButton = findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(view -> attemptLogin());
@@ -156,8 +156,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
 
         // Store values at the start_time of the login attempt.
         String email = mEmailView.getText().toString();
@@ -203,9 +201,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
             startActivity(k);
             overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up);
-        } else {
-            mPasswordView.setError(getString(R.string.error_incorrect_password));
-            mPasswordView.requestFocus();
         }
         showProgress(false);
     }
@@ -315,6 +310,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mPasswordViewVal.setVisibility(View.GONE);
+        }
+
+        @Override
         protected Boolean doInBackground(Void... params) {
             HttpClient client = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(getResources().getString(R.string.server) + "/login/");
@@ -340,6 +341,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                     return true;
                 } else {
+                    mPasswordViewVal.setText("Wrong (email/username)/password or email not confirmed yet");
+                    mPasswordViewVal.setVisibility(View.VISIBLE);
+
+//                    InputStream stream = response.getEntity().getContent();
+//                    if (stream != null) {
+//                        String r = ServerAPI.readStream(stream);
+//                        JsonObject jo = new JsonParser().parse(r).getAsJsonObject();
+//                        if (jo.get("error_message") != null) {
+//                            if (jo.get("error_message").getAsJsonObject().get("email") != null){
+//                                mEmailViewVal.setText(jo.get("error_message").getAsJsonObject().get("email").getAsString());
+//                            }
+//                            if (jo.get("error_message").getAsJsonObject().get("password") != null){
+//
+//                            }
+//                        }
+//                    }
                     return false;
                 }
             } catch (ClientProtocolException e) {

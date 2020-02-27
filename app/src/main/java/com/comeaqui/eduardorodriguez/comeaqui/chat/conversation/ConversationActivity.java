@@ -110,7 +110,7 @@ public class ConversationActivity extends AppCompatActivity {
         SharedPreferences pref = getSharedPreferences("Login", MODE_PRIVATE);
 
         if (pref.getBoolean("signed_in", false)) {
-            USER = new User(new JsonParser().parse(pref.getString("user", "")).getAsJsonArray().get(0).getAsJsonObject());
+            USER = new User(new JsonParser().parse(pref.getString("user", "")).getAsJsonObject());
         } else {
             Intent a = new Intent(this, LoginOrRegisterActivity.class);
             startActivity(a);

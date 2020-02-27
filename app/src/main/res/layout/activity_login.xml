@@ -34,6 +34,7 @@
                 android:id="@+id/senderEmail"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/text_input_shape"
                 android:hint="Username or email"
                 android:inputType="textEmailAddress"
@@ -45,7 +46,6 @@
                 android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="8dp"
                 android:background="@drawable/text_input_shape"
                 android:hint="Password"
                 android:imeActionId="6"
@@ -55,6 +55,15 @@
                 android:maxLines="1"
                 android:paddingStart="8dp"
                 android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/password_val_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Error"
+                android:textColor="@color/canceled"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/email_sign_in_button"
