@@ -53,7 +53,6 @@ public class NotificationsFragment extends Fragment {
     static MyNotificationsRecyclerViewAdapter notificationAdapter;
 
     RecyclerView recyclerView;
-    SwipeController swipeController = null;
     WebSocketClient mWebSocketClient;
     LinearLayout noNotifications;
     ProgressBar loadingProgress;
@@ -105,28 +104,6 @@ public class NotificationsFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        swipeController = new SwipeController(new SwipeControllerActions() {
-            @Override
-            public void onRightClicked(int position) {
-                //confirmOrder(notificationAdapter.mValues.get(position), false, getContext());
-            }
-
-            @Override
-            public void onLeftClicked(int position) {
-                //confirmOrder(notificationAdapter.mValues.get(position), true, getContext());
-            }
-        });
-
-        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
-        itemTouchhelper.attachToRecyclerView(recyclerView);
-
-        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-                swipeController.onDraw(c);
-            }
-        });
-
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             boolean isRecyclerScrollable(RecyclerView recyclerView) {
                 return recyclerView.computeHorizontalScrollRange() > recyclerView.getWidth() || recyclerView.computeVerticalScrollRange() > recyclerView.getHeight();
