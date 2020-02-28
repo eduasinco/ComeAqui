@@ -119,10 +119,10 @@ public class DateFormatting {
                 DateFormat df = new SimpleDateFormat("EEE, MMM d");
                 df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
                 result = df.format(date);
-            }else if (now < date.getTime() - TimeUnit.DAYS.toMillis(1)){
+            } else if (now < date.getTime() - TimeUnit.DAYS.toMillis(1)){
                 DateFormat df = new SimpleDateFormat("h:mm aa");
                 df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
-                result =  "TOMORROW " + df.format(date) + " - " + df.format(endDate);
+                result =  "TOMORROW";
             } else if (now < date.getTime()) {
                 DateFormat df = new SimpleDateFormat("h:mm aa");
                 df.setTimeZone(TimeZone.getTimeZone(USER.timeZone));
