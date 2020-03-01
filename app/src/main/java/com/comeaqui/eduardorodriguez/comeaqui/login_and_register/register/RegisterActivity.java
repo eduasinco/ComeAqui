@@ -18,7 +18,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.comeaqui.eduardorodriguez.comeaqui.R;
+import com.comeaqui.eduardorodriguez.comeaqui.objects.OrderObject;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.User;
+import com.comeaqui.eduardorodriguez.comeaqui.review.ReviewGuestActivity;
+import com.comeaqui.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.rilixtech.widget.countrycodepicker.CountryCodePicker;
@@ -36,8 +39,10 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -113,15 +118,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    void submit(){
-        new RegisterAsyncTask(getResources().getString(R.string.server) + "/register/").execute(
-                new String[]{"username", username.getText().toString()},
-                new String[]{"first_name", name.getText().toString()},
-                new String[]{"last_name", surname.getText().toString()},
-                new String[]{"email", email.getText().toString()},
-                new String[]{"password", password.getText().toString()}
-        );
-    }
 
     void goToVerifyEmailActivity(User newUser){
         Intent imageLook = new Intent(this, VerifyEmailActivity.class);
@@ -194,62 +190,35 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    public class RegisterAsyncTask extends AsyncTask<String[], Void, String>
-    {
-        public RegisterAsyncTask(String uri){
+    void submit(){
+        tasks.add(new PostAsyncTask(getResources().getString(R.string.server) + "/register/").execute(
+                new String[]{"username", username.getText().toString()},
+                new String[]{"first_name", name.getText().toString()},
+                new String[]{"last_name", surname.getText().toString()},
+                new String[]{"email", email.getText().toString()},
+                new String[]{"password", password.getText().toString()}
+        ));
+    }
+    private class PostAsyncTask extends AsyncTask<String[], Void, String> {
+        public Bitmap bitmap;
+        String uri;
+
+        public PostAsyncTask(String uri){
             this.uri = uri;
         }
-        String uri;
-        public Bitmap bitmap;
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             showProgress(true);
         }
-
         @Override
-        protected String doInBackground(String[]... params)
-        {
-
-            HttpPost httpPost = new HttpPost(uri);
-            HttpClient httpclient = new DefaultHttpClient();
-            String boundary = "-------------" + System.currentTimeMillis();
-
-            MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create()
-                    .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
-                    .setBoundary(boundary);
-
-            for(String[] ss: params){
-                if (ss[0].equals("food_photo") && bitmap != null) {
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                    byte[] imageBytes = baos.toByteArray();
-                    entityBuilder.addPart(ss[0], new ByteArrayBody(imageBytes, "ANDROID.png"));
-                } else {
-                    entityBuilder.addPart(ss[0], new StringBody(ss[1], ContentType.TEXT_PLAIN));
-                }
-            }
-
-            HttpEntity entity = entityBuilder.build();
-
-            httpPost.setEntity(entity);
+        protected String doInBackground(String[]... params) {
             try {
-                HttpResponse response = httpclient.execute(httpPost);
-                InputStream instream = response.getEntity().getContent();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(instream));
-                StringBuffer stringBuffer = new StringBuffer();
-                String line;
-                while ((line = bufferedReader.readLine()) != null)
-                {
-                    stringBuffer.append(line);
-                }
-                return stringBuffer.toString();
-
-            }  catch (Exception e){
+                return ServerAPI.uploadNoCredentials("POST", this.uri, params);
+            } catch (IOException e) {
                 e.printStackTrace();
-                return null;
             }
+            return null;
         }
         @Override
         protected void onPostExecute(String response) {
@@ -272,5 +241,14 @@ public class RegisterActivity extends AppCompatActivity {
             showProgress(false);
             super.onPostExecute(response);
         }
+    }
+
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
+    @Override
+    public void onDestroy() {
+        for (AsyncTask task: tasks){
+            if (task != null) task.cancel(true);
+        }
+        super.onDestroy();
     }
 }

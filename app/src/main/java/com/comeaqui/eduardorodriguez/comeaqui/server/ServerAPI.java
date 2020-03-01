@@ -151,6 +151,53 @@ public class ServerAPI {
         return result;
     }
 
+    public static String uploadNoCredentials(String method, String url, String[][] params) throws IOException {
+
+        InputStream stream = null;
+        HttpURLConnection connection = null;
+        String result = null;
+        try {
+            connection = (HttpURLConnection) new URL(url).openConnection();
+            connection.setConnectTimeout(15000);
+            connection.setRequestMethod(method);
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+
+            List<NameValuePair> paramsArr = new ArrayList<>();
+            for (String[] ss: params){
+                paramsArr.add(new BasicNameValuePair(ss[0], ss[1]));
+            }
+            OutputStream os = connection.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(os, "UTF-8"));
+            writer.write(getQuery(paramsArr));
+            writer.flush();
+            writer.close();
+            os.close();
+            connection.connect();
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpsURLConnection.HTTP_BAD_REQUEST) {
+                return readStream(connection.getErrorStream());
+            }
+            if (responseCode == HttpsURLConnection.HTTP_UNAUTHORIZED) {
+                return readStream(connection.getErrorStream());
+            }
+            stream = connection.getInputStream();
+            if (stream != null) {
+                result = readStream(stream);
+            }
+        } finally {
+            if (stream != null) {
+                stream.close();
+            }
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+        return result;
+    }
+
     public static String delete(Context context, String url) throws IOException {
 
         String credentials = getCredentials(context);
