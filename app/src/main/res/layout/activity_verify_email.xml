@@ -21,7 +21,27 @@
             android:id="@+id/text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Than you for subscribing to ComeAqui! \n Please verify your email and have fun cooking! ;)"
+            android:text="Than you for subscribing"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/verify_email"
+            android:textAlignment="center"
+            android:textColor="@color/colorSecondary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="and you are all set :)"
             android:textAlignment="center"
             android:textColor="@color/colorPrimary"
             android:textSize="24sp"
@@ -31,11 +51,10 @@
             android:id="@+id/go_to_login"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@color/colorPrimary"
-            android:text="login"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
+            android:layout_height="64dp"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/box_login"
+            android:text="LOG IN"
+            android:textColor="@color/colorSecondary" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

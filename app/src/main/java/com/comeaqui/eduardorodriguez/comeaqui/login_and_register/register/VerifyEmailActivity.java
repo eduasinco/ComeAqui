@@ -25,7 +25,7 @@ public class VerifyEmailActivity extends AppCompatActivity {
         Bundle b = intent.getExtras();
         if(b != null && b.get("user") != null) {
             User user = (User) b.getSerializable("user");
-            text.setText("Thank you " + user.first_name + " for subscribing to ComeAqui! \n Please verify your email and have fun cooking! ;)");
+            text.setText("Thank you " + user.first_name + " for subscribing to ComeAqui!");
         }
 
         goToLogin.setOnClickListener((v) -> {
