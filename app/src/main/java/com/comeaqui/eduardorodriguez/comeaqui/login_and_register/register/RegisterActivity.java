@@ -192,10 +192,10 @@ public class RegisterActivity extends AppCompatActivity {
 
     void submit(){
         tasks.add(new PostAsyncTask(getResources().getString(R.string.server) + "/register/").execute(
-                new String[]{"username", username.getText().toString()},
+                new String[]{"username", username.getText().toString().toLowerCase()},
                 new String[]{"first_name", name.getText().toString()},
                 new String[]{"last_name", surname.getText().toString()},
-                new String[]{"email", email.getText().toString()},
+                new String[]{"email", email.getText().toString().toLowerCase()},
                 new String[]{"password", password.getText().toString()}
         ));
     }

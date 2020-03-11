@@ -1,13 +1,13 @@
 <resources>
     <string name="google_key">AIzaSyDqkl1DgwHu03SmMoqVey3sgR62GnJ-VY4</string>
-    <string name="server">http://13.52.249.41</string>
-    <string name="async_server">http://13.52.249.41:8001</string>
+<!--    <string name="server">http://54.193.13.44</string>-->
+<!--    <string name="async_server">http://54.193.13.44:8001</string>-->
 
-<!--    <string name="server">http://10.0.0.33:65100</string>-->
-<!--    <string name="async_server">http://10.0.0.33:65100</string>-->
+    <string name="server">http://10.0.0.33:65100</string>
+    <string name="async_server">http://10.0.0.33:65100</string>
 
-    <!--    <string name="server">http://127.0.0.1:8000</string>-->
-    <!--    <string name="async_server">http://127.0.0.1:8000</string>-->
+<!--    <string name="server">http://127.0.0.1:8000</string>-->
+<!--    <string name="async_server">http://127.0.0.1:8000</string>-->
     <string name="default_notification_channel_id">1</string>
 
     <string name="delete_all"><u>Delete All</u></string>
