@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.comeaqui.eduardorodriguez.comeaqui.R;
@@ -21,7 +22,7 @@ import java.io.IOException;
 
 public class VerifyEmailActivity extends AppCompatActivity {
 
-    Button progress;
+    ProgressBar progress;
     Button sendVerificationEmailAgain;
     User user;
 
@@ -33,7 +34,7 @@ public class VerifyEmailActivity extends AppCompatActivity {
         TextView text = findViewById(R.id.text);
         Button goToLogin = findViewById(R.id.go_to_login);
         sendVerificationEmailAgain = findViewById(R.id.send_verification_email_again);
-        progress = findViewById(R.id.send_verification_email_again);
+        progress = findViewById(R.id.progress);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -68,9 +69,9 @@ public class VerifyEmailActivity extends AppCompatActivity {
         }
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
             sendVerificationEmailAgain.setVisibility(View.GONE);
             progress.setVisibility(View.VISIBLE);
+            super.onPreExecute();
         }
         @Override
         protected String doInBackground(String[]... params) {

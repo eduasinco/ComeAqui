@@ -52,6 +52,7 @@
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_weight="1 "
             android:text="@string/send_verification_email_again"
             android:textColor="@color/colorSecondary"
             android:visibility="visible" />
@@ -61,6 +62,7 @@
             style="?android:attr/progressBarStyle"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:visibility="gone" />
 
         <Button
