@@ -16,6 +16,7 @@
     <string name="verify_email"><u>Verify your email</u></string>
     <string name="attend_to_comment"><u>Attend meal to comment</u></string>
     <string name="add_payment_method"><u>Add payment method</u></string>
+    <string name="send_verification_email_again">Email did not arrive? <u>Send again</u></string>
 
     <string name="app_name">ComeAqui</string>
     <string name="nav_get">Get</string>

@@ -48,13 +48,28 @@
             android:textStyle="bold" />
 
         <Button
+            android:id="@+id/send_verification_email_again"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/send_verification_email_again"
+            android:textColor="@color/colorSecondary"
+            android:visibility="visible" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:visibility="gone" />
+
+        <Button
             android:id="@+id/go_to_login"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            android:layout_marginTop="50dp"
             android:background="@drawable/box_login"
-            android:text="LOG IN"
+            android:text="GO TO LOG IN"
             android:textColor="@color/colorSecondary" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
