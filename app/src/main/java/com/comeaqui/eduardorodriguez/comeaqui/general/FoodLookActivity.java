@@ -503,7 +503,7 @@ public class FoodLookActivity extends AppCompatActivity implements
                         pendingPaymentMethod.setVisibility(View.GONE);
                         attendMealButton.setAlpha(1);
                         attendMealButton.setClickable(true);
-                        if (foodPostDetail.status.equals("OPEN")){
+                        if (foodPostDetail.status.equals("OPEN") && USER.id != foodPostDetail.owner.id){
                             paymentMethod.setVisibility(View.VISIBLE);
                         }
                     } else {

@@ -4,6 +4,7 @@ class ImageStringProcessor {
 
     public static String server1 = "http://10.0.0.33:65100";
     public static String server2 = "http://54.193.13.44";
+    public static String server3 = "http://10.153.30.138:65100";
 
     static String processString(String imageString){
 
@@ -11,7 +12,7 @@ class ImageStringProcessor {
             return "";
         }
         if (!imageString.contains("http")) {
-            String s = server2 + imageString;
+            String s = server3 + imageString;
             return s;
         }
         return imageString;

@@ -28,6 +28,8 @@ import com.comeaqui.eduardorodriguez.comeaqui.server.Server;
 
 import com.comeaqui.eduardorodriguez.comeaqui.utilities.HorizontalImageDisplayFragment;
 import com.comeaqui.eduardorodriguez.comeaqui.utilities.RatingFragment;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -153,22 +155,16 @@ public class MapCardFragment extends Fragment implements DragDownHideBehavior.On
 
     void setFavourite(){
         starView.setOnClickListener(v -> {
+            starView.setImageResource(foodPost.favourite ? R.drawable.star_fill: R.drawable.star);
+            MapFragment.setMarkerDesign(MapFragment.markerHashMap.get(foodPost.id), true);
+            PostAsyncTask putFavourite = new PostAsyncTask(getResources().getString(R.string.server) + "/favourites/");
+            tasks.add(putFavourite.execute(new String[]{"food_post_id", "" + foodPost.id}));
+
             foodPost.favourite = !foodPost.favourite;
             starView.setImageResource(foodPost.favourite ? R.drawable.star_fill: R.drawable.star);
-            if (foodPost.favourite) {
-                MapFragment.setMarkerDesign(MapFragment.markerHashMap.get(foodPost.id), true);
-                PostAsyncTask putFavourite = new PostAsyncTask(getResources().getString(R.string.server) + "/favourites/");
-                tasks.add(putFavourite.execute(new String[]{"food_post_id", "" + foodPost.id}));
-            } else {
-                String uri = getResources().getString(R.string.server) + "/favourite_detail/" + favouriteId + "/";
-                Server deleteFoodPost = new Server(getContext(),"DELETE", uri);
-                try {
-                    deleteFoodPost.execute().get();
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-                MapFragment.setMarkerDesign(MapFragment.markerHashMap.get(foodPost.id), true);
-            }
+
+            MapFragment.setMarkerDesign(MapFragment.markerHashMap.get(foodPost.id), true);
+
         });
     }
 
@@ -200,7 +196,7 @@ public class MapCardFragment extends Fragment implements DragDownHideBehavior.On
         @Override
         protected void onPostExecute(String response) {
             if (null != response){
-                favouriteId = Integer.parseInt(response);
+                foodPost.favourite = new JsonParser().parse(response).getAsJsonObject().get("favourite").getAsBoolean();
             }
             super.onPostExecute(response);
         }
