@@ -11,12 +11,13 @@ public class SavedFoodPost extends FoodPost {
 
     public SavedFoodPost(JsonObject jo){
         id = jo.get("id").getAsInt();
+        owner = new User(jo.get("owner").getAsJsonObject());
         plate_name = jo.get("plate_name") instanceof JsonNull ? "" : jo.get("plate_name").getAsString();
 
         formatted_address = jo.get("formatted_address") instanceof JsonNull ? "" : jo.get("formatted_address").getAsString();
         place_id = jo.get("place_id") instanceof JsonNull ? "" : jo.get("place_id").getAsString();
-        lat = jo.get("lat").getAsDouble();
-        lng = jo.get("lng").getAsDouble();
+        lat = jo.get("lat") instanceof JsonNull ? null : jo.get("lat").getAsDouble();
+        lng = jo.get("lng") instanceof JsonNull ? null : jo.get("lng").getAsDouble();
         street_n = jo.get("street_n") instanceof JsonNull ? "" : jo.get("street_n").getAsString();
         route = jo.get("route") instanceof JsonNull ? "" : jo.get("route").getAsString();
         administrative_area_level_2 = jo.get("administrative_area_level_2") instanceof JsonNull ? "" : jo.get("administrative_area_level_2").getAsString();
@@ -41,7 +42,6 @@ public class SavedFoodPost extends FoodPost {
         }catch (Exception ignore){}
 
         rating = jo.get("rating").getAsInt();
-        owner = new User(jo.get("owner").getAsJsonObject());
         visible = jo.get("visible").getAsBoolean();
     }
 }
