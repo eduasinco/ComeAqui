@@ -51,7 +51,7 @@ public class ServerAPI {
 //                throw new IOException("HTTP error code: " + responseCode);
 //            }
 
-            if (responseCode == HttpsURLConnection.HTTP_NOT_FOUND) {
+            if (responseCode >= 400) {
                 return readStream(connection.getErrorStream());
             }
             stream = connection.getInputStream();
@@ -84,7 +84,7 @@ public class ServerAPI {
 //                throw new IOException("HTTP error code: " + responseCode);
 //            }
 
-            if (responseCode == HttpsURLConnection.HTTP_NOT_FOUND) {
+            if (responseCode >= 400) {
                 return readStream(connection.getErrorStream());
             }
             stream = connection.getInputStream();

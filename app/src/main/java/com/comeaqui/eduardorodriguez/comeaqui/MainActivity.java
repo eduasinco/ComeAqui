@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
         chatView = findViewById(R.id.chat);
 
+        System.out.print("");
         map = findViewById(R.id.map);
         orders = findViewById(R.id.order);
         notifications = findViewById(R.id.notification);

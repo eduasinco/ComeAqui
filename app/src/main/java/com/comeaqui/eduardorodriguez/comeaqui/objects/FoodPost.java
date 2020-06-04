@@ -62,12 +62,15 @@ public class FoodPost implements Serializable {
 
         start_time = jo.get("start_time") instanceof JsonNull ? "" : jo.get("start_time").getAsString();
         end_time = jo.get("end_time") instanceof JsonNull ? "" : jo.get("end_time").getAsString();
+        try {time_range = DateFormatting.timeRange(start_time, end_time);} catch (Exception ignored){}
         time_to_show = jo.get("start_time") instanceof JsonNull && jo.get("end_time") instanceof JsonNull ? "" : DateFormatting.hhmmHappenedNowTodayYesterdayWeekDay(start_time, end_time);
         max_dinners = jo.get("max_dinners") instanceof JsonNull ? 0 : jo.get("max_dinners").getAsInt();
+        dinners_left = jo.get("dinners_left").getAsInt();
         price = jo.get("price") instanceof JsonNull ? 0 :  jo.get("price").getAsInt();
         price_to_show = "$" + String.format("%.02f", (price / 100.f));
         type = jo.get("food_type") instanceof JsonNull ? "" : jo.get("food_type").getAsString();
         description = jo.get("description") instanceof JsonNull ? "" : jo.get("description").getAsString();
+
 
         try {status = jo.get("status").getAsString();} catch (Exception ignored){}
 
