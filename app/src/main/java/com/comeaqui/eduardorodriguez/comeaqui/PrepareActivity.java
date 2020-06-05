@@ -93,6 +93,11 @@ public class PrepareActivity extends AppCompatActivity {
         }
     }
 
+    void goToLogingOrRegister(){
+        Intent a = new Intent(this, LoginOrRegisterActivity.class);
+        startActivity(a);
+    }
+
     public void initializeUser(){
         tasks.add(new GetAsyncTask( getResources().getString(R.string.server) + "/my_profile/").execute());
     }
@@ -119,8 +124,18 @@ public class PrepareActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putString("user", response);
                 editor.apply();
-                USER = new User(new JsonParser().parse(response).getAsJsonObject());
-                getFirebaseToken();
+                try {
+                    USER = new User(new JsonParser().parse(response).getAsJsonObject());
+                    getFirebaseToken();
+                } catch (Exception e){
+                    SharedPreferences pref = getSharedPreferences("Login", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor edt = pref.edit();
+                    edt.putBoolean("signed_in", false);
+                    edt.remove("email");
+                    edt.remove("password");
+                    edt.apply();
+                    goToLogingOrRegister();
+                }
             } else {
                 signOut();
             }

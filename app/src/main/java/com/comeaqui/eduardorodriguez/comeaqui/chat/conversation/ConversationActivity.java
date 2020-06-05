@@ -193,7 +193,7 @@ public class ConversationActivity extends AppCompatActivity {
                 }
             }
         });
-        unblockButton.setOnClickListener(v -> unBlockUser());
+        unblockButton.setOnClickListener(v -> blockUser(false));
     }
 
 
@@ -344,8 +344,8 @@ public class ConversationActivity extends AppCompatActivity {
         }
     }
 
-    void blockUser(){
-        tasks.add(new BlockUserAsyncTask(getResources().getString(R.string.server) + "/block_user/" + chattingWith.id + "/").execute());
+    void blockUser(Boolean block){
+        tasks.add(new BlockUserAsyncTask(getResources().getString(R.string.server) + "/block_user/" + chattingWith.id + "/" + (block ? "block": "unblock") + "/").execute());
     }
     class BlockUserAsyncTask extends AsyncTask<String[], Void, String> {
         private String uri;
@@ -374,32 +374,6 @@ public class ConversationActivity extends AppCompatActivity {
         }
     }
 
-    void unBlockUser(){
-        tasks.add(new UnblockAsyncTask(getResources().getString(R.string.server) + "/block_user/" + chattingWith.id + "/").execute());
-    }
-    class UnblockAsyncTask extends AsyncTask<String[], Void, String> {
-        private String uri;
-        public UnblockAsyncTask(String uri){
-            this.uri = uri;
-        }
-        @Override
-        protected String doInBackground(String[]... params) {
-            try {
-                return ServerAPI.delete(getApplicationContext(), this.uri);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(String response) {
-            if (response != null){
-                isUserBlocked = false;
-                setBlockView();
-            }
-            super.onPostExecute(response);
-        }
-    }
 
     public void setMessageStatus(MessageObject currentMessage){
 
@@ -512,10 +486,10 @@ public class ConversationActivity extends AppCompatActivity {
                 goToProfileView(chattingWith);
                 break;
             case "Block":
-                blockUser();
+                blockUser(true);
                 break;
             case "Unblock":
-                unBlockUser();
+                blockUser(false);
                 break;
             case "Report":
                 break;
