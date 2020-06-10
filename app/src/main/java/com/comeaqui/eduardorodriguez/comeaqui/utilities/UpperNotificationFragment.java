@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -112,6 +113,8 @@ public class UpperNotificationFragment extends Fragment {
             time.setText(orderObject.post.time_to_show);
             if(!orderObject.poster.profile_photo.contains("no-image")) {
                 Glide.with(getActivity()).load(orderObject.poster.profile_photo).into(posterImage);
+            } else {
+                posterImage.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.no_profile_photo));
             }
         } else {
             orderCard.setVisibility(View.GONE);
