@@ -54,7 +54,7 @@ public class MyGuestingRecyclerViewAdapter extends RecyclerView.Adapter<MyGuesti
         holder.orderStatus.setText(holder.mItem.status);
         holder.orderStatus.setBackgroundColor(Color.TRANSPARENT);
 
-        if (!holder.mItem.poster.profile_photo.equals("no-image")){
+        if (!holder.mItem.poster.profile_photo.contains("no-image")){
             Glide.with(holder.mView.getContext()).load(holder.mItem.poster.profile_photo).into(holder.orderImage);
         } else {
             holder.orderImage.setImageDrawable(ContextCompat.getDrawable(holder.mView.getContext(), R.drawable.no_profile_photo));

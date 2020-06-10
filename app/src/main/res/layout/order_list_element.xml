@@ -20,8 +20,8 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_weight="0"
-            android:visibility="visible"
-            app:srcCompat="@drawable/empty_plate" />
+            android:src="@drawable/no_profile_photo"
+            android:visibility="visible" />
 
         <LinearLayout
 
