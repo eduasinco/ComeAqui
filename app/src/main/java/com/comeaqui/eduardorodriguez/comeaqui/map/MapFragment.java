@@ -39,6 +39,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.java_websocket.client.DefaultSSLWebSocketClientFactory;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -49,6 +50,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.net.ssl.SSLContext;
 
 import static com.comeaqui.eduardorodriguez.comeaqui.App.MAX_CONNECTIONS_TRIES;
 import static com.comeaqui.eduardorodriguez.comeaqui.App.USER;
@@ -257,6 +260,12 @@ public class MapFragment extends Fragment implements
                     Log.i("Websocket", "Error " + e.getMessage());
                 }
             };
+            try {
+                SSLContext sslContext = SSLContext.getDefault();
+                mWebSocketClient.setWebSocketFactory(new DefaultSSLWebSocketClientFactory(sslContext));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             mWebSocketClient.connect();
         } catch (URISyntaxException e) {
             e.printStackTrace();

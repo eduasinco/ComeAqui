@@ -34,6 +34,8 @@ import com.comeaqui.eduardorodriguez.comeaqui.server.ServerAPI;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import org.java_websocket.client.DefaultSSLWebSocketClientFactory;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -41,6 +43,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+
+import javax.net.ssl.SSLContext;
 
 import static com.comeaqui.eduardorodriguez.comeaqui.App.MAX_CONNECTIONS_TRIES;
 import static com.comeaqui.eduardorodriguez.comeaqui.App.USER;
@@ -331,6 +335,12 @@ public class MainActivity extends AppCompatActivity {
                 public void onError(Exception e) {
                 }
             };
+            try {
+                SSLContext sslContext = SSLContext.getDefault();
+                mWebSocketClient.setWebSocketFactory(new DefaultSSLWebSocketClientFactory(sslContext));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             mWebSocketClient.connect();
         } catch (URISyntaxException e) {
             e.printStackTrace();

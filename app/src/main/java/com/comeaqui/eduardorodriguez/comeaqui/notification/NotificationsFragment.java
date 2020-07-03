@@ -30,6 +30,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import org.java_websocket.client.DefaultSSLWebSocketClientFactory;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -38,6 +40,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+
+import javax.net.ssl.SSLContext;
 
 import okhttp3.Response;
 import okhttp3.WebSocket;
@@ -214,6 +218,12 @@ public class NotificationsFragment extends Fragment {
                     Log.i("Websocket", "Error " + e.getMessage());
                 }
             };
+            try {
+                SSLContext sslContext = SSLContext.getDefault();
+                mWebSocketClient.setWebSocketFactory(new DefaultSSLWebSocketClientFactory(sslContext));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             mWebSocketClient.connect();
         } catch (URISyntaxException e) {
             e.printStackTrace();

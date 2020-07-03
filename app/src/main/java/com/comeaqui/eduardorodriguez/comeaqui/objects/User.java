@@ -1,5 +1,6 @@
 package com.comeaqui.eduardorodriguez.comeaqui.objects;
 
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import java.io.Serializable;
 import java.util.TimeZone;
@@ -32,8 +33,8 @@ public class User implements Serializable {
             phone_number = jo.get("phone_number").getAsString();
             phone_code = jo.get("phone_number").getAsString();
         } catch (Exception ignored){}
-        profile_photo = ImageStringProcessor.processString(jo.get("profile_photo").getAsString());
-        background_photo = ImageStringProcessor.processString(jo.get("background_photo").getAsString());
+        profile_photo = jo.get("profile_photo") instanceof JsonNull ? "no-image" : ImageStringProcessor.processString(jo.get("profile_photo").getAsString());
+        background_photo = jo.get("background_photo") instanceof JsonNull ? "no-image" : ImageStringProcessor.processString(jo.get("background_photo").getAsString());
         is_active = jo.get("is_active").getAsString();
         is_admin = jo.get("is_admin").getAsString();
         rating = jo.get("rating").getAsFloat();
