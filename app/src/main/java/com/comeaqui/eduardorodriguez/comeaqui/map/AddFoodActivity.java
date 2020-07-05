@@ -574,7 +574,7 @@ public class AddFoodActivity extends AppCompatActivity implements
                 JsonObject jo = new JsonParser().parse(response).getAsJsonObject();
                 if (jo.get("error_message") == null){
                     StripeAccountInfoObject saio = new StripeAccountInfoObject(jo);
-                    if (saio.requirements.currently_due.size() > 0){
+                    if (saio.requirements.currently_due.size() > 0 && saio.payouts_enabled){
                         bankAccountInfo.setVisibility(View.VISIBLE);
                         submit.setAlpha(0.5f);
                         submit.setClickable(false);
