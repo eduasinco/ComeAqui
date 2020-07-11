@@ -662,9 +662,10 @@ public class MapFragment extends Fragment implements
 
     @Override
     public void onDestroy() {
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         mMapView.onDestroy();
         super.onDestroy();
     }

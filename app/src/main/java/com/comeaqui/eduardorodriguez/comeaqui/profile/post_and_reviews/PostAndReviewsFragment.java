@@ -99,16 +99,18 @@ public class PostAndReviewsFragment extends Fragment {
     void getPostFromUser(){
         foodPostReviews = new ArrayList<>();
         page = 1;
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/user_food_posts_reviews/" + userId + "/" + page + "/").execute());
     }
 
     void loadMorePosts(){
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/user_food_posts_reviews/" + userId + "/" + page + "/").execute());
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
@@ -160,9 +162,10 @@ public class PostAndReviewsFragment extends Fragment {
     }
     @Override
     public void onDestroy() {
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         super.onDestroy();
     }
 

@@ -121,18 +121,20 @@ public class ProfileImageGalleryFragment extends Fragment {
 
     int page = 1;
     void getPostFromUser(){
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         page = 1;
         GetAsyncTask process = new GetAsyncTask(getResources().getString(R.string.server) + "/user_images/" + userId + "/" + page + "/");
         tasks.add(process.execute());
     }
 
     void loadMoreImages(){
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         GetAsyncTask process = new GetAsyncTask(getResources().getString(R.string.server) + "/user_images/" + userId + "/" + page + "/");
         tasks.add(process.execute());
     }
@@ -252,9 +254,10 @@ public class ProfileImageGalleryFragment extends Fragment {
     }
     @Override
     public void onDestroy() {
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         super.onDestroy();
     }
     public interface OnFragmentInteractionListener {

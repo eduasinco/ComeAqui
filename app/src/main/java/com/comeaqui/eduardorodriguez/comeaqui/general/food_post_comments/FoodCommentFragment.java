@@ -264,9 +264,10 @@ public class FoodCommentFragment extends Fragment{
     @Override
     public void onDetach() {
         super.onDetach();
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         mListener = null;
     }
 

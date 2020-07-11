@@ -381,18 +381,20 @@ public class SearchFoodFragment extends Fragment implements
 
     int page = 1;
     void getFilteredPosts(){
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         foodPosts = new ArrayList<>();
         page = 1;
         String q = createQuery() + "&page=" + page;
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/food_query/" + q + "/").execute());
     }
     void loadMoreData(){
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         String q = createQuery() + "&page=" + page;
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/food_query/" + q + "/").execute());
     }
@@ -484,9 +486,10 @@ public class SearchFoodFragment extends Fragment implements
 
     @Override
     public void onDestroy() {
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         super.onDestroy();
     }
 

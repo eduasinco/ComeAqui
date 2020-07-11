@@ -151,17 +151,19 @@ public class SearchPeopleActivity extends AppCompatActivity {
 
     int page = 1;
     void getPeopleAndSet(){
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         page = 1;
         users = new ArrayList<>();
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/user_search/" + query + "&page=" + page +  "/").execute());
     }
     void loadMorePeople(){
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/user_search/" + query + "&page=" + page + "/").execute());
     }
 
@@ -216,9 +218,10 @@ public class SearchPeopleActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         super.onDestroy();
     }
 }

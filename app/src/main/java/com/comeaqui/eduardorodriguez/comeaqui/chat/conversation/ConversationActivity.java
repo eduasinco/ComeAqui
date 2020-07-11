@@ -295,9 +295,10 @@ public class ConversationActivity extends AppCompatActivity {
         tasks.add(new GetMessagesAsyncTask(getResources().getString(R.string.server) + "/chat_messages/" + chatId + "/" + page + "/").execute());
     }
     private void loadMoreMessages(String chatId){
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         tasks.add(new GetMessagesAsyncTask(getResources().getString(R.string.server) + "/chat_messages/" + chatId + "/" + page + "/").execute());
     }
 
@@ -515,9 +516,10 @@ public class ConversationActivity extends AppCompatActivity {
                 handler = null;
             }
         }
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         super.onDestroy();
     }
 

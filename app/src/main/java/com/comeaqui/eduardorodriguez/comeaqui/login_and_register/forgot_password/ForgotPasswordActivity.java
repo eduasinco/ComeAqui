@@ -231,9 +231,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
     @Override
     public void onDestroy() {
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         super.onDestroy();
     }
 

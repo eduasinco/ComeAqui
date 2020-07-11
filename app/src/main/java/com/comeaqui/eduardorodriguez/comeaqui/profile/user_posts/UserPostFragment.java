@@ -116,15 +116,17 @@ public class UserPostFragment extends Fragment {
     void getPostFromUser(int userId){
         page = 1;
         foodPosts = new ArrayList<>();
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/user_food_posts/" + userId + "/" + page + "/").execute());
     }
     void loadMorePosts(int userId){
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/user_food_posts/" + userId + "/" + page + "/").execute());
     }
 
@@ -170,9 +172,10 @@ public class UserPostFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         super.onDestroy();
     }
 }

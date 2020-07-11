@@ -16,16 +16,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.comeaqui.eduardorodriguez.comeaqui.MainActivity;
 import com.comeaqui.eduardorodriguez.comeaqui.objects.NotificationObject;
 import com.comeaqui.eduardorodriguez.comeaqui.R;
 import com.comeaqui.eduardorodriguez.comeaqui.server.ServerAPI;
-import com.comeaqui.eduardorodriguez.comeaqui.utilities.WaitFragment;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -39,14 +36,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 import javax.net.ssl.SSLContext;
-
-import okhttp3.Response;
-import okhttp3.WebSocket;
-import okhttp3.WebSocketListener;
-import okio.ByteString;
 
 import static com.comeaqui.eduardorodriguez.comeaqui.App.MAX_CONNECTIONS_TRIES;
 import static com.comeaqui.eduardorodriguez.comeaqui.App.USER;
@@ -126,17 +117,19 @@ public class NotificationsFragment extends Fragment {
 
     int page = 1;
     void getData(){
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         page = 1;
         data = new ArrayList<>();
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_notifications/" + page + "/").execute());
     }
     void loadMoreData(){
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_notifications/" + page + "/").execute());
     }
     class GetAsyncTask extends AsyncTask<String[], Void, String> {
@@ -246,6 +239,7 @@ public class NotificationsFragment extends Fragment {
         for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         super.onDestroy();
     }
 }

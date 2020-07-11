@@ -168,9 +168,10 @@ public class ChatActivity extends AppCompatActivity{
 
     int page = 1;
     void getChatsAndSet(){
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         page = 1;
         data = new ArrayList<>();
         chatObjectHashMap = new HashMap<>();
@@ -178,9 +179,10 @@ public class ChatActivity extends AppCompatActivity{
     }
 
     void loadMoreData(){
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_chats/" + query.toString() + "/" + page + "/").execute());
     }
 
@@ -300,9 +302,10 @@ public class ChatActivity extends AppCompatActivity{
 
     @Override
     public void onDestroy() {
-        for (AsyncTask task: tasks){
+for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
+        tasks = new ArrayList<>();
         super.onDestroy();
     }
 }
