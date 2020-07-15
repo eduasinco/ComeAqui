@@ -117,7 +117,7 @@ public class NotificationsFragment extends Fragment {
 
     int page = 1;
     void getData(){
-for (AsyncTask task: tasks){
+        for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
         tasks = new ArrayList<>();
@@ -126,7 +126,7 @@ for (AsyncTask task: tasks){
         tasks.add(new GetAsyncTask(getResources().getString(R.string.server) + "/my_notifications/" + page + "/").execute());
     }
     void loadMoreData(){
-for (AsyncTask task: tasks){
+        for (AsyncTask task: tasks){
             if (task != null) task.cancel(true);
         }
         tasks = new ArrayList<>();
